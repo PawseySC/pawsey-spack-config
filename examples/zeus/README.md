@@ -4,7 +4,7 @@ Test environments:
 1. Computational Chemistry
 2. Python
 
-The idea is to re-use a number of tools from the host system:
+The idea is to re-use a number of tools from the host system (providers are defined, too):
 * System GCC
 * Default GCC
 * Open MPI
