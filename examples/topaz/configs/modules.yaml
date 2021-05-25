@@ -1,0 +1,29 @@
+modules:
+  enable::
+    - tcl
+  tcl:
+    hash_length: 0
+    projections:
+      cp2k: 'apps/{name}/{version}-{compiler.name}-{compiler.version}'
+      gromacs: 'apps/{name}/{version}-{compiler.name}-{compiler.version}'
+      lammps: 'apps/{name}/{version}-{compiler.name}-{compiler.version}'
+
+      all: 'implicit/{name}/{version}-{compiler.name}-{compiler.version}'
+
+    blacklist:
+      - 'openmpi'
+      - 'cuda'
+      - 'gdrcopy'
+      - 'ucx'
+      - 'intel-mkl'
+    all:
+      conflict:
+        - '{name}'
+      suffixes:
+        ^openmpi: "openmpi"
+        ^cuda: "cuda"
+      environment:
+        set:
+          '{name}_HOME': '{prefix}'
+    ^python:
+      autoload:  direct

@@ -1,0 +1,44 @@
+packages:
+  all:
+    target: [broadwell]
+    compiler: [gcc@8.3.0, gcc@4.8.5]
+    providers:
+      mpi: [openmpi]
+      blas: [intel-mkl]
+      lapack: [intel-mkl]
+      scalapack: [intel-mkl]
+      fftw-api: [intel-mkl]
+      mkl: [intel-mkl]
+  intel-mkl:
+    externals:
+    - spec: intel-mkl@2019
+      prefix: /pawsey/intel/19.0.5
+    buildable: false
+  cuda:
+    externals:
+    - spec: cuda@10.1.243
+      prefix: /pawsey/centos7.6/devel/binary/cuda/10.1
+    buildable: false
+  gdrcopy:
+    externals:
+    - spec: gdrcopy@1.3
+      prefix: /pawsey/centos7.6/devel/binary/cuda/10.1/gdrcopy-gpu/1.3
+    buildable: false
+  ucx:
+    externals:
+    - spec: ucx@1.6+cuda+gdrcopy+thread_multiple~optimizations cuda_arch=60 ^gdrcopy@1.3 ^cuda@10.1.243
+      prefix: /pawsey/centos7.6/devel/gcc/4.8.5/cuda/10.1/ucx-gpu/1.6.0
+    buildable: false
+  openmpi:
+    externals:
+    - spec: openmpi@4.0.2%gcc@8.3.0+cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
+        fabrics=ofi,psm2,ucx,verbs schedulers=slurm ^ucx@1.6 ^cuda@10.1.243
+      prefix: /pawsey/centos7.6/devel/broadwell/gcc/8.3.0/cuda/10.1/openmpi-ucx-gpu/4.0.2
+  mpi:
+    buildable: false
+  gcc:
+    buildable: false
+  intel:
+    buildable: false
+  pgi:
+    buildable: false
