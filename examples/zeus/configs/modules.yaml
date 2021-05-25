@@ -1,0 +1,43 @@
+modules:
+  enable::
+    - tcl
+  tcl:
+    hash_length: 0
+    projections:
+      cp2k: 'apps/{name}/{version}-{compiler.name}-{compiler.version}'
+      gromacs: 'apps/{name}/{version}-{compiler.name}-{compiler.version}'
+      lammps: 'apps/{name}/{version}-{compiler.name}-{compiler.version}'
+      namd: 'apps/{name}/{version}-{compiler.name}-{compiler.version}'
+      nwchem: 'apps/{name}/{version}-{compiler.name}-{compiler.version}'
+      quantum-espresso: 'apps/{name}/{version}-{compiler.name}-{compiler.version}'
+
+      python: 'python/{name}/{version}-{compiler.name}-{compiler.version}'
+      py-cython: 'python/{name}/{version}-{compiler.name}-{compiler.version}'
+      py-dask: 'python/{name}/{version}-{compiler.name}-{compiler.version}'
+      py-h5py: 'python/{name}/{version}-{compiler.name}-{compiler.version}'
+      py-ipython: 'python/{name}/{version}-{compiler.name}-{compiler.version}'
+      py-matplotlib: 'python/{name}/{version}-{compiler.name}-{compiler.version}'
+      py-mpi4py: 'python/{name}/{version}-{compiler.name}-{compiler.version}'
+      py-numba: 'python/{name}/{version}-{compiler.name}-{compiler.version}'
+      py-numpy: 'python/{name}/{version}-{compiler.name}-{compiler.version}'
+      py-pandas: 'python/{name}/{version}-{compiler.name}-{compiler.version}'
+      py-plotly: 'python/{name}/{version}-{compiler.name}-{compiler.version}'
+      py-scikit-learn: 'python/{name}/{version}-{compiler.name}-{compiler.version}'
+      py-scipy: 'python/{name}/{version}-{compiler.name}-{compiler.version}'
+
+      hdf5~fortran+hl: 'implicit/{name}/{version}-{compiler.name}-{compiler.version}+hl'
+      hdf5+fortran+hl: 'implicit/{name}/{version}-{compiler.name}-{compiler.version}+fort+hl'
+      all: 'implicit/{name}/{version}-{compiler.name}-{compiler.version}'
+    blacklist:
+      - 'openmpi'
+      - 'intel-mkl'
+    all:
+      conflict:
+        - '{name}'
+      suffixes:
+        ^openmpi: "openmpi"
+      environment:
+        set:
+          '{name}_HOME': '{prefix}'
+    ^python:
+      autoload:  direct

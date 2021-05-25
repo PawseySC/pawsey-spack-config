@@ -1,0 +1,29 @@
+packages:
+  all:
+    target: [broadwell]
+    compiler: [gcc@8.3.0, gcc@4.8]
+    providers:
+      mpi: [openmpi]
+      blas: [intel-mkl]
+      lapack: [intel-mkl]
+      scalapack: [intel-mkl]
+      fftw-api: [intel-mkl, fftw]
+      mkl: [intel-mkl]
+  openmpi:
+    externals:
+    - spec: openmpi@2.1.2%gcc@8.3.0~cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
+        fabrics=psm2 schedulers=loadleveler,slurm
+      prefix: /pawsey/sles12sp3/devel/sandybridge/gcc/8.3.0/openmpi/2.1.2
+  intel-mkl:
+    externals:
+    - spec: intel-mkl@2017
+      prefix: /pawsey/intel/17.0.5
+    buildable: false
+  mpi:
+    buildable: false
+  gcc:
+    buildable: false
+  intel:
+    buildable: false
+  pgi:
+    buildable: false
