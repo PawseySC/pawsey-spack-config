@@ -1,8 +1,11 @@
 # Zeus test deployment
 
+Spack branch: releases/v0.16
+
 Test environments:
 1. Computational Chemistry
 2. Python
+3. Clingo (with view)
 
 The idea is to re-use a number of tools from the host system (providers are defined, too):
 * System GCC
@@ -24,3 +27,12 @@ Experimenting with module files:
 * Adding suffix for Open MPI
 * Loading dependency modules for applications needing Python
 * Adding *_HOME* variable
+
+Clingo installation
+* Using an environment with view, as per Spack Github issue
+* Once installed, use it with:
+  ```
+  viewdir="<PATH TO VIEW DIR>"
+  export PATH=$viewdir/bin:$PATH
+  export PYTHONPATH=$viewdir/lib/python3.9/site-packages:$PYTHONPATH
+  ```

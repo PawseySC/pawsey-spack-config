@@ -1,5 +1,7 @@
 # Zeus test deployment
 
+Spack branch: releases/v0.16
+
 Test environment:
 1. Computational Chemistry
 
