@@ -22,7 +22,7 @@ spack:
 
     # adios2 set
     - adios2@2.7.1 +blosc +dataspaces +hdf5
-    - adios@1.13.1 +blosc +bzip2 +dataspaces +hdf5
+    - adios@1.13.1 +blosc +bzip2 +hdf5
 
     # python io libraries
     # currently left blank as ideally 
