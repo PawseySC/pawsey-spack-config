@@ -1,13 +1,43 @@
 packages:
   # set packages for all builds
   # first is to use mpich for all mpi
-  # and cray-libsci for all blas and scalapack
+  # and cray-libsci for all blas, lapack and scalapack
   all:
+  # note the compiler and providers specifications 
+  # only suggest a priority order, they do not exclude other options
+  # suggested priority for compilers. 
+    compiler: [gcc@7.2.0,gcc@8.3.0,cce,intel]
     providers:
-      mpi: [mpich]
+      mpi: [cray-mpich]
       blas: [cray-libsci]
+      lapack: [cray-libsci]
       scalapack: [cray-libsci]
+      fftw-api: [cray-fftw,fftw]
       pkgconfig: [pkg-config]
+# don't build virtuals with a provider (probably tough)
+  mpi:
+    buildable: false
+  blas:
+    buildable: false
+  lapack:
+    buildable: false
+  scalapack:
+    buildable: false
+  # ideally want to use cray optimised fftw but there are issues with cmake, mpi fftw and spack
+  # hence set to true
+  fftw-api:
+    buildable: true
+  pkgconfig:
+    buildable: false
+# don't build compilers neither
+  gcc:
+    buildable: false
+  intel:
+    buildable: false
+  pgi:
+    buildable: false
+  cce:
+    buildable: false
 
   # packages found automatically by spack 
   # with spack external find
@@ -44,6 +74,7 @@ packages:
       prefix: /pawsey/cle60up07/devel/gcc/4.8.5/cmake/3.18.0
     - spec: cmake@3.5.2
       prefix: /usr
+    buildable: true 
   cpio:
     externals:
     - spec: cpio@2.11
@@ -174,6 +205,7 @@ packages:
     externals:
     - spec: ruby@2.1.9
       prefix: /usr
+    # for interpreter langauges allow for spack build specific versions 
     buildable: true
   tar:
     externals:
@@ -236,51 +268,54 @@ packages:
 
   # packages present in the modules 
   # added manually 
+  # spack is able to automatically find some of them 
+  # however to be certain of specifics, added manually
   
   # for cray libraries, have been careful to list the compiler family 
   # that libraries exist for. 
-  mpich:
+  cray-mpich:
     externals:
-    - spec: mpich@7.7.0%cce
-      modules:
-      - cray-mpich/7.7.0
-    - spec: mpich@7.7.0%gcc
-      modules:
-      - cray-mpich/7.7.0
-    - spec: mpich@7.7.0%intel
+    - spec: cray-mpich@7.7.0
       modules:
       - cray-mpich/7.7.0
     # force spack to use this mpi but setting this to false
     buildable: false
+
+    # note that NERSC on perlmutter lists 
+    # the package and the compiler family it has been 
+    # compiled with explicitly. This could be to address
+    # some issues with spack and cray but 
+    # tests on magnus show that such specificity is not 
+    # required. 
+    # example of the config would be  
+    # - spec: mpich@7.7.0%cce
+    #   modules:
+    #   - cray-mpich/7.7.0
+    # - spec: mpich@7.7.0%gcc
+    #   modules:
+    #   - cray-mpich/7.7.0
+    # - spec: mpich@7.7.0%intel
+    #   modules:
+    #   - cray-mpich/7.7.0
+    
   # use the cray provided blas and lapack 
   # really should do this for all cray provided packages
   cray-libsci:
     externals:
-    - spec: cray-libsci@19.06.1%cce
-      modules:
-      - cray-libsci/19.06.1
-    - spec: cray-libsci@19.06.1%gcc
-      modules:
-      - cray-libsci/19.06.1
-    - spec: cray-libsci@19.06.1%intel
+    - spec: cray-libsci@19.06.1
       modules:
       - cray-libsci/19.06.1
     # force spack to use this mpi but setting this to false
-    buildable: False
-  fftw:
+    buildable: false
+  cray-fftw:
     externals:
-    - spec: fftw@3.3.6.3+mpi~openmp~pfft_patches precision=double,float%cce
-      modules:
-      - cray-fftw/3.3.6.3
-    - spec: fftw@3.3.6.3+mpi~openmp~pfft_patches precision=double,float%gcc
-      modules:
-      - cray-fftw/3.3.6.3
-    - spec: fftw@3.3.6.3+mpi~openmp~pfft_patches precision=double,float%intel
+    - spec: cray-fftw@3.3.6.3  #+mpi~openmp precision=double,float
       modules:
       - cray-fftw/3.3.6.3
     # ideally want to use cray optimised fftw but there are issues with cmake, mpi fftw and spack
-    # hence set to true
-    buildable: true
+    # hence, though cray-fftw is not buildable, fftw-api is allowing 
+    # for other fftw library to be built. 
+    buildable: false 
 
   # there may be a need to build hdf5 variants with spack since 
   # cray does not provide all possible api's. 
@@ -354,22 +389,25 @@ packages:
       - cray-netcdf/4.4.1.1.6
     buildable: true
 
-  # other modules avail
+  # other modules avail 
+  # entries added manually 
   cmake:
+    # cmake has already has entry produced automatically with spack externals find 
+    # this entry added manually for the module 
     externals:
     - spec: cmake@3.18.0~doc+ncurses+openssl+ownlibs~qt build_type=Release
       modules:
-      - cmake@3.18.0
+      - cmake/3.18.0
     buildable: false
   yasm:
     externals:
     - spec: yasm@1.3.0
       modules:
-      - yasm@1.3.0
+      - yasm/1.3.0
     buildable: false
   ffmpeg:
     externals:
     - spec: ffmpeg@3.4.0
       modules:
-      - ffmpeg@3.4
+      - ffmpeg/3.4
     buildable: false
