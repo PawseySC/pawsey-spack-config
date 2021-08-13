@@ -4,7 +4,7 @@ Spack branch: develop
 
 Test environments:
 1. AstroComp (maintainer: Pascal)
-2. PascalComp (maintainer: Pascal)
+2. IOComp (maintainer: Pascal)
 3. ChemComp (maintainer: Marco)
 
 The idea is to re-use a number of tools from the host system (providers are defined, too):
@@ -35,3 +35,16 @@ Clingo installation
     export PATH=$viewdir/bin:$PATH
     export PYTHONPATH=$viewdir/lib/python3.9/site-packages:$PYTHONPATH
     ```
+
+## Notes 
+
+
+
+### Running on Magnus 
+
+Due to spack and group permissions, it will be necessary to run spack install commands with the 
+appropriate group permission 
+```
+sg pawsey0001 -c "spack install somepsec" 
+```
+
