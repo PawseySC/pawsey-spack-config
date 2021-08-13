@@ -5,7 +5,7 @@ Spack branch: develop
 Test environments:
 1. environment_astro (maintainer: Pascal): installs several useful astro packages
 2. environment_iolib (maintainer: Pascal): install several useful io libraries (adios, hdf5, netcdf)
-3. ChemComp (maintainer: Marco): to be added 
+3. ChemComp (maintainer: Marco): install six major computational chemistry applications
 
 The idea is to re-use a number of tools from the host system (providers are defined, too):
 * System compilers
@@ -42,8 +42,15 @@ Clingo installation
 
 ### Running on Magnus 
 
-Due to spack and group permissions, it will be necessary to run spack install commands with the 
-appropriate group permission 
+It's preferable to load the Python/3 module ahead of setting up Spack:
+```
+module load python/3.6.3
+
+. spack/share/spack/setup-env.sh
+```
+
+Due to Spack and group permissions, it will be necessary to run `spack install` commands with the 
+appropriate group permission:
 ```
 sg pawsey0001 -c "spack install somepsec" 
 ```
