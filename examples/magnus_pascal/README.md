@@ -3,9 +3,9 @@
 Spack branch: develop
 
 Test environments:
-1. AstroComp (maintainer: Pascal)
-2. IOComp (maintainer: Pascal)
-3. ChemComp (maintainer: Marco)
+1. environment_astro (maintainer: Pascal): installs several useful astro packages
+2. environment_iolib (maintainer: Pascal): install several useful io libraries (adios, hdf5, netcdf)
+3. ChemComp (maintainer: Marco): to be added 
 
 The idea is to re-use a number of tools from the host system (providers are defined, too):
 * System compilers
