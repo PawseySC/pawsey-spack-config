@@ -11,26 +11,33 @@ packages:
 
   # packages found automatically by spack 
   # with spack external find
+  # by default buildable: false has been added to these entries 
+  # that are /usr prefix installs 
   autoconf:
     externals:
     - spec: autoconf@2.69
       prefix: /usr
+    buildable: false 
   automake:
     externals:
     - spec: automake@1.13.4
       prefix: /usr
+    buildable: false 
   bash:
     externals:
     - spec: bash@4.3.48
       prefix: /
+    buildable: false 
   bison:
     externals:
     - spec: bison@2.7
       prefix: /usr
+    buildable: false 
   bzip2:
     externals:
     - spec: bzip2@1.0.6
       prefix: /usr
+    buildable: false 
   cmake:
     externals:
     - spec: cmake@3.18.0
@@ -41,123 +48,153 @@ packages:
     externals:
     - spec: cpio@2.11
       prefix: /usr
+    buildable: false 
   diffutils:
     externals:
     - spec: diffutils@3.3
       prefix: /usr
+    buildable: false 
   doxygen:
     externals:
     - spec: doxygen@1.8.6+graphviz~mscgen
       prefix: /usr
+    buildable: false 
   findutils:
     externals:
     - spec: findutils@4.5.12
       prefix: /usr
+    buildable: false 
   flex:
     externals:
     - spec: flex@2.6.4+lex
       prefix: /usr
+    buildable: false 
   gawk:
     externals:
     - spec: gawk@4.1.0
       prefix: /usr
-  gcc:
-    externals:
-    - spec: gcc@4.8 languages=c,c++
-      prefix: /usr
-      extra_attributes:
-        compilers:
-          c: /usr/bin/gcc
-          cxx: /usr/bin/g++-4.8
-    - spec: gcc@7.2.0 languages=c,c++,fortran
-      prefix: /opt/gcc/7.2.0
-      extra_attributes:
-        compilers:
-          c: /opt/gcc/7.2.0/bin/gcc
-          cxx: /opt/gcc/7.2.0/bin/g++
-          fortran: /opt/gcc/7.2.0/bin/gfortran
+    buildable: false 
+  # This is found by spack but is a compiler 
+  # Thus external find command will 
+  # need edits afterwards
+  # gcc:
+  #  externals:
+  #  - spec: gcc@4.8 languages=c,c++
+  #    prefix: /usr
+  #    extra_attributes:
+  #      compilers:
+  #        c: /usr/bin/gcc
+  #        cxx: /usr/bin/g++-4.8
+  #  - spec: gcc@7.2.0 languages=c,c++,fortran
+  #    prefix: /opt/gcc/7.2.0
+  #    extra_attributes:
+  #      compilers:
+  #        c: /opt/gcc/7.2.0/bin/gcc
+  #        cxx: /opt/gcc/7.2.0/bin/g++
+  #        fortran: /opt/gcc/7.2.0/bin/gfortran
   ghostscript:
     externals:
     - spec: ghostscript@9.52
       prefix: /usr
+    buildable: false 
   git:
     externals:
     - spec: git@2.26.2~tcltk
       prefix: /usr
+    buildable: false 
   gmake:
     externals:
     - spec: gmake@4.0
       prefix: /usr
+    buildable: false 
   groff:
     externals:
     - spec: groff@1.22.2
       prefix: /usr
+    buildable: false 
   krb5:
     externals:
     - spec: krb5@1.12.5
       prefix: /usr/lib/mit
+    buildable: false 
   libfuse:
     externals:
     - spec: libfuse@2.9.3
       prefix: /usr
+    buildable: false 
   libtool:
     externals:
     - spec: libtool@2.4.2
       prefix: /usr
+    buildable: false 
   lustre:
     externals:
     - spec: lustre@2.7.5.13
       prefix: /
+    buildable: false 
   m4:
     externals:
     - spec: m4@1.4.16
       prefix: /usr
+    buildable: false 
   ncurses:
     externals:
     - spec: ncurses@5.9.20140201+termlib abi=5
       prefix: /usr
     - spec: ncurses@5.9.20140201+termlib abi=6
       prefix: /usr
+    buildable: false 
   openssh:
     externals:
     - spec: openssh@7.2p2
       prefix: /usr
+    buildable: false 
   openssl:
     externals:
     - spec: openssl@1.0.2j-fips
       prefix: /usr
+    buildable: false 
   perl:
     externals:
     - spec: perl@5.18.2~cpanm+shared+threads
       prefix: /usr
+    # for interpreter langauges allow for spack build specific versions 
+    buildable: true
   pkg-config:
     externals:
     - spec: pkg-config@0.28
       prefix: /usr
+    buildable: false 
   rsync:
     externals:
     - spec: rsync@3.1.0
       prefix: /usr
+    buildable: false 
   ruby:
     externals:
     - spec: ruby@2.1.9
       prefix: /usr
+    buildable: true
   tar:
     externals:
     - spec: tar@1.27.1
       prefix: /usr
+    buildable: false 
   texinfo:
     externals:
     - spec: texinfo@4.13
       prefix: /usr
+    buildable: false 
   texlive:
     externals:
     - spec: texlive@20130530
       prefix: /usr
+    buildable: false 
   xz:
     externals:
     - spec: xz@5.0.5
       prefix: /usr
+    buildable: false 
 
   # manully added packages present on the system 
   # that were not found by spack external find
@@ -194,6 +231,8 @@ packages:
       prefix: /usr
     - spec: python@3.4.10+bz2+ctypes~dbm+lzma+nis~pyexpat~readline~sqlite3~ssl~tix~tkinter+uuid+zlib
       prefix: /usr
+    # allow for spack built specific versions 
+    buildable: true 
 
   # packages present in the modules 
   # added manually 
@@ -239,6 +278,8 @@ packages:
     - spec: fftw@3.3.6.3+mpi~openmp~pfft_patches precision=double,float%intel
       modules:
       - cray-fftw/3.3.6.3
+    # ideally want to use cray optimised fftw but there are issues with cmake, mpi fftw and spack
+    # hence set to true
     buildable: true
 
   # there may be a need to build hdf5 variants with spack since 
