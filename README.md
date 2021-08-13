@@ -4,7 +4,7 @@ Configuration files for Spack at Pawsey.
 
 ## Current contents
 
-* `examples/`: deployment examples
+* `examples/`: deployment examples and tests
 
 ## Future contents
 

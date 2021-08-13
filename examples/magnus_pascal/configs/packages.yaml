@@ -1,13 +1,38 @@
 packages:
   # set packages for all builds
   # first is to use mpich for all mpi
-  # and cray-libsci for all blas and scalapack
+  # and cray-libsci for all blas, lapack and scalapack
   all:
     providers:
       mpi: [mpich]
       blas: [cray-libsci]
+      lapack: [cray-libsci]
       scalapack: [cray-libsci]
+      fftw-api: [fftw]
       pkgconfig: [pkg-config]
+# MARCO: don't build virtuals with a provider (probably tough)
+  mpi:
+    buildable: false
+  blas:
+    buildable: false
+  lapack:
+    buildable: false
+  scalapack:
+    buildable: false
+# allow for fftw additional builds, Cray has issues
+  fftw-api:
+    buildable: true
+  pkgconfig:
+    buildable: false
+# MARCO: don't build compilers neither
+  gcc:
+    buildable: false
+  intel:
+    buildable: false
+  pgi:
+    buildable: false
+  cce:
+    buildable: false
 
   # packages found automatically by spack 
   # with spack external find
@@ -174,6 +199,7 @@ packages:
     externals:
     - spec: ruby@2.1.9
       prefix: /usr
+    # for interpreter langauges allow for spack build specific versions 
     buildable: true
   tar:
     externals:
@@ -266,7 +292,7 @@ packages:
       modules:
       - cray-libsci/19.06.1
     # force spack to use this mpi but setting this to false
-    buildable: False
+    buildable: false
   fftw:
     externals:
     - spec: fftw@3.3.6.3+mpi~openmp~pfft_patches precision=double,float%cce

@@ -6,57 +6,60 @@ compilers:
 
 # examples of compilers found by spack automatically 
 - compiler:
-    spec: gcc@4.8
+# MARCO: origin spec: gcc@4.8
+    spec: gcc@4.8.5
     paths:
       cc: /usr/bin/gcc
       cxx: /usr/bin/g++
       f77: null
       fc: null
     flags: {}
-    operating_system: sles12
-    target: x86_64
+# MARCO: original os: sles12 ; target: x86_64
+    operating_system: cnl6
+    target: any
     modules: []
     environment: {}
     extra_rpaths: []
-- compiler:
-    spec: gcc@4.9.3
-    paths:
-      cc: /opt/gcc/4.9.3/bin/gcc
-      cxx: /opt/gcc/4.9.3/bin/g++
-      f77: /opt/gcc/4.9.3/bin/gfortran
-      fc: /opt/gcc/4.9.3/bin/gfortran
-    flags: {}
-    operating_system: sles12
-    target: x86_64
-    modules: []
-    environment: {}
-    extra_rpaths: []
-- compiler:
-    spec: gcc@5.3.0
-    paths:
-      cc: /opt/gcc/5.3.0/bin/gcc
-      cxx: /opt/gcc/5.3.0/bin/g++
-      f77: /opt/gcc/5.3.0/bin/gfortran
-      fc: /opt/gcc/5.3.0/bin/gfortran
-    flags: {}
-    operating_system: sles12
-    target: x86_64
-    modules: []
-    environment: {}
-    extra_rpaths: []
-- compiler:
-    spec: gcc@6.1.0
-    paths:
-      cc: /opt/gcc/6.1.0/bin/gcc
-      cxx: /opt/gcc/6.1.0/bin/g++
-      f77: /opt/gcc/6.1.0/bin/gfortran
-      fc: /opt/gcc/6.1.0/bin/gfortran
-    flags: {}
-    operating_system: sles12
-    target: x86_64
-    modules: []
-    environment: {}
-    extra_rpaths: []
+# MARCO: I would probably leave just the system compiler as non-wrapped
+# - compiler:
+#     spec: gcc@4.9.3
+#     paths:
+#       cc: /opt/gcc/4.9.3/bin/gcc
+#       cxx: /opt/gcc/4.9.3/bin/g++
+#       f77: /opt/gcc/4.9.3/bin/gfortran
+#       fc: /opt/gcc/4.9.3/bin/gfortran
+#     flags: {}
+#     operating_system: sles12
+#     target: x86_64
+#     modules: []
+#     environment: {}
+#     extra_rpaths: []
+# - compiler:
+#     spec: gcc@5.3.0
+#     paths:
+#       cc: /opt/gcc/5.3.0/bin/gcc
+#       cxx: /opt/gcc/5.3.0/bin/g++
+#       f77: /opt/gcc/5.3.0/bin/gfortran
+#       fc: /opt/gcc/5.3.0/bin/gfortran
+#     flags: {}
+#     operating_system: sles12
+#     target: x86_64
+#     modules: []
+#     environment: {}
+#     extra_rpaths: []
+# - compiler:
+#     spec: gcc@6.1.0
+#     paths:
+#       cc: /opt/gcc/6.1.0/bin/gcc
+#       cxx: /opt/gcc/6.1.0/bin/g++
+#       f77: /opt/gcc/6.1.0/bin/gfortran
+#       fc: /opt/gcc/6.1.0/bin/gfortran
+#     flags: {}
+#     operating_system: sles12
+#     target: x86_64
+#     modules: []
+#     environment: {}
+#     extra_rpaths: []
 
 # note that for boostrapping clingo concretizer
 # it is useful to have a single non-cray wrapped 
@@ -151,6 +154,23 @@ compilers:
     modules:
     - PrgEnv-gnu
     - gcc/7.2.0
+    - cray-mpich/7.7.0
+    environment: {}
+    extra_rpaths: []
+# MARCO: adding also gcc@8.3.0, as it's also available as latest on Zeus/Topaz
+- compiler:
+    spec: gcc@8.3.0
+    paths:
+      cc: /opt/cray/pe/craype/2.5.13/bin/cc
+      cxx: /opt/cray/pe/craype/2.5.13/bin/CC
+      f77: /opt/cray/pe/craype/2.5.13/bin/ftn
+      fc: /opt/cray/pe/craype/2.5.13/bin/ftn
+    flags: {}
+    operating_system: cnl6
+    target: any
+    modules:
+    - PrgEnv-gnu
+    - gcc/8.3.0
     - cray-mpich/7.7.0
     environment: {}
     extra_rpaths: []
