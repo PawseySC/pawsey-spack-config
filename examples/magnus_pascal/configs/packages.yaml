@@ -313,8 +313,9 @@ packages:
       modules:
       - cray-fftw/3.3.6.3
     # ideally want to use cray optimised fftw but there are issues with cmake, mpi fftw and spack
-    # hence set to true
-    buildable: true
+    # hence, though cray-fftw is not buildable, fftw-api is allowing 
+    # for other fftw library to be built. 
+    buildable: false 
 
   # there may be a need to build hdf5 variants with spack since 
   # cray does not provide all possible api's. 
@@ -391,6 +392,8 @@ packages:
   # other modules avail 
   # entries added manually 
   cmake:
+    # cmake has already has entry produced automatically with spack externals find 
+    # this entry added manually for the module 
     externals:
     - spec: cmake@3.18.0~doc+ncurses+openssl+ownlibs~qt build_type=Release
       modules:
