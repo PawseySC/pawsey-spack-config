@@ -29,5 +29,6 @@ spack concretize
 sg pawsey0001 -c spack install
 
 ## AT THE VERY END
-# Clean build cache in spack/var/spack/stage
+# Make a copy of important files (environment yaml, logs of failed builds)
+# Wipe the spack root directory
 ```
