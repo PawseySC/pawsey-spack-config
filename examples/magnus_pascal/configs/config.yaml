@@ -1,6 +1,7 @@
 config:
   build_stage:
-    - $tempdir/$user/spack-stage
+# commenting this for the sprint, so we can more easily access the logs
+#    - $tempdir/$user/spack-stage
     - $spack/var/spack/stage
 
   # Directory in which to run tests and store test results.
