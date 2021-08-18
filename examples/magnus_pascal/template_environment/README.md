@@ -29,7 +29,7 @@ spack env activate .
 spack concretize -f
 
 # Install
-sg pawsey0001 -c spack install
+sg pawsey0001 -c "spack install"
 
 ## AT THE VERY END
 # Make a copy of important files (environment yaml, logs of failed builds)
