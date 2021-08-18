@@ -23,7 +23,7 @@ spack env activate .
 # Edit the yaml to add packages
 
 # Proposed installation tree
-spack concretize
+spack concretize -f
 
 # Install
 sg pawsey0001 -c spack install
