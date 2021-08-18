@@ -26,7 +26,7 @@ spack env activate .
 # Proposed installation tree
 spack concretize -f
 # Install
-sg pawsey0001 -c "spack install"
+sg pawsey0001 -c "spack install -y"
 
 ## AT THE VERY END
 # Make a copy of important files (environment yaml, logs of failed builds)
