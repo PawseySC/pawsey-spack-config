@@ -5,7 +5,7 @@
 git clone https://github.com/pawseysc/spack
 
 # Clone the Pawsey config repo
-git clone https://github.com/pawseysc/pawsey-spack/config
+git clone https://github.com/pawseysc/pawsey-spack-config
 
 # Load python3
 module load python/3.6.3
