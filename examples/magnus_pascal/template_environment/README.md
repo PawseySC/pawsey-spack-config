@@ -7,6 +7,9 @@ git clone https://github.com/pawseysc/spack
 # Clone the Pawsey config repo
 git clone https://github.com/pawseysc/pawsey-spack/config
 
+# Load python3
+module load python/3.6.3
+
 # Use provided configs for spack
 cp pawsey-spack-config/examples/magnus_pascal/configs/*.yaml spack/etc/spack/
 . spack/share/spack/setup-env.sh
