@@ -28,7 +28,10 @@ spack concretize -f
 # Install
 sg pawsey0001 -c "spack install -y"
 
-## AT THE VERY END
+# When done with all installations, you may deactivate the Spack environment
+spack env deactivate
+
+## At the VERY END
 # Make a copy of important files (environment yaml, logs of failed builds)
 # Wipe the spack root directory
 ```
