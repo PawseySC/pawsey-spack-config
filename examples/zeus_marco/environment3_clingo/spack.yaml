@@ -6,4 +6,5 @@ spack:
   config:
     install_tree:
       root: ./store
+    concretizer: original
   view: ./view

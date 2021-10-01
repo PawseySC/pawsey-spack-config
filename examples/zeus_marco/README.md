@@ -30,6 +30,7 @@ Experimenting with module files:
 
 Clingo installation
 * Using an environment with view, as per Spack Github issue
+* There is an environment YAML for clingo under `environment3_clingo/`
 * Once installed, use it with:
   ```
   viewdir="<PATH TO VIEW DIR>"
