@@ -1,5 +1,6 @@
 spack:
   specs:
+  #- clingo-bootstrap@spack+python %gcc
   - clingo-bootstrap@spack ^python@3.9.2
   - python@3.9.2
   concretization: together
