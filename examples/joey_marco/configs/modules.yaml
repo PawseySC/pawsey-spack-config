@@ -1,0 +1,43 @@
+modules:
+  enable::
+    - tcl
+  tcl:
+    # remove hashes from module name, can lead to more conflicts 
+    hash_length: 0
+
+    projections:
+      # modules on magnus have one of [apps, tools, python, devel] as start of module name 
+      # an then {name}/{version}-{compiler.name}-{compiler.version}'
+      # will be necessary to think of how to include variants 
+      # that does not require manual updates. Fortunately, not many packages 
+      # need this update 
+      
+      # example of module format 
+      gromacs: 'apps/{name}/{version}-{compiler.name}-{compiler.version}'
+
+    # prevent modules from being generated for any packages 
+    # build with this blacklist
+    # example below is for openmpi
+    # blacklist: ['openmpi']
+    # save those that are on the whitelist
+    # example below if for fftw
+    # whitelist: ['fftw'] 
+    
+    # for all packages produce module files that
+    all:
+      # add to module file a conflict with any other module that shares the same {name}
+      conflict:
+        - '{name}'
+      # add a suffice to module name for all modules with a specific dependancy 
+      suffixes:
+        ^mpi: "mpi"
+      # to be consistent with current module setup, 
+      # add to environment a {name}_HOME which stores the prefix 
+      # to the package
+      environment:
+        set:
+          '{name}_HOME': '{prefix}'
+    # select all packages that depend on python 
+    # and set the modules to autoload python
+    ^python:
+      autoload:  direct
