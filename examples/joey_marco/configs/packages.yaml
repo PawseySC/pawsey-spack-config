@@ -181,6 +181,7 @@ packages:
     buildable: false
 
   # cray packages (manually added)
+  # adding prefixes as in NERSC Perlmutter configs
   chapel:
     externals:
     - spec: chapel@1.23.1
@@ -189,20 +190,39 @@ packages:
     buildable: false
   cray-mpich:
     externals:
-    - spec: cray-mpich@7.7.0
+    - spec: cray-mpich@7.7.0%gcc
       modules:
       - cray-mpich/8.1.7
+      prefix: /opt/cray/pe/mpich/8.1.7/ofi/gnu/9.1
+    - spec: cray-mpich@7.7.0%cce
+      modules:
+      - cray-mpich/8.1.7
+      prefix: /opt/cray/pe/mpich/8.1.7/ofi/cray/10.0
+    - spec: cray-mpich@7.7.0%aocc
+      modules:
+      - cray-mpich/8.1.7
+      prefix: /opt/cray/pe/mpich/8.1.7/ofi/aocc/3.0
     buildable: false
   cray-libsci:
     externals:
-    - spec: cray-libsci@21.06.1.1
+    - spec: cray-libsci@21.06.1.1%gcc
       modules:
       - cray-libsci/21.06.1.1
+      prefix: /opt/cray/pe/libsci/21.06.1.1/gnu/9.1/x86_64
+    - spec: cray-libsci@21.06.1.1%cce
+      modules:
+      - cray-libsci/21.06.1.1
+      prefix: /opt/cray/pe/libsci/21.06.1.1/cray/9.0/x86_64
+    - spec: cray-libsci@21.06.1.1%aocc
+      modules:
+      - cray-libsci/21.06.1.1
+      prefix: /opt/cray/pe/libsci/21.06.1.1/aocc/2.0/x86_64
     buildable: false
   cray-fftw:
     externals:
     - spec: cray-fftw@3.3.8.10
       modules:
       - cray-fftw/3.3.8.10
+      prefix: /opt/cray/pe/fftw/3.3.8.10/x86_rome
     buildable: false
 
