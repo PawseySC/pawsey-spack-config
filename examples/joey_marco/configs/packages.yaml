@@ -182,12 +182,6 @@ packages:
 
   # cray packages (manually added)
   # adding prefixes as in NERSC Perlmutter configs
-  chapel:
-    externals:
-    - spec: chapel@1.23.1
-      modules:
-      - chapel/1.23.1
-    buildable: false
   cray-mpich:
     externals:
     - spec: cray-mpich@7.7.0%gcc
@@ -232,4 +226,39 @@ packages:
       - cray-fftw/3.3.8.10
       prefix: /opt/cray/pe/fftw/3.3.8.10/x86_milan
     buildable: false
-
+  # more cray
+  jemalloc:
+    externals:
+    - spec: jemalloc@5.1.0.4
+      modules:
+      - cray-jemalloc/5.1.0.4
+      prefix: /opt/cray/pe/jemalloc/5.1.0.4
+    buildable: false
+  libfabric:
+    externals:
+    - spec: libfabric@1.11.0.3.66
+      modules:
+      - libfabric/1.11.0.3.66
+      prefix: /opt/cray/libfabric/1.11.0.3.66
+    buildable: false
+  ucx:
+    externals:
+    - spec: ucx@2.7.0-1
+      modules:
+      - cray-ucx/2.7.0-1
+      prefix: /opt/cray/pe/cray-ucx/2.7.0-1/ucx
+    buildable: false
+  papi:
+    externals:
+    - spec: papi@6.0.0.7
+      modules:
+      - papi/6.0.0.7
+      prefix: /opt/cray/pe/papi/6.0.0.7
+    buildable: false
+  r:
+    externals:
+    - spec: r@4.0.5.1
+      prefix: /opt/cray/pe/R/4.0.5.1
+    buildable: true
+  # cray hdf5
+  # cray netcdf
