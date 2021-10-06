@@ -31,9 +31,16 @@ Experimenting with module files:
 Clingo installation
 * Using an environment with view, as per Spack Github issue
 * There is an environment YAML for clingo under `environment3_clingo/`
-* Once installed, use it with:
+* Once installed, start a new shell session, and use clingo with:
   ```
+  spackdir="<PATH TO SPACK INSTALLATION>"
   viewdir="<PATH TO VIEW DIR>"
   export PATH=$viewdir/bin:$PATH
   export PYTHONPATH=$viewdir/lib/python3.9/site-packages:$PYTHONPATH
+  . $spackdir/share/spack/setup-env.sh
   ```
+  * Note how you need to ensure that the Python used to install Clingo 
+    is configured in the shell prior to sourcing the Spack script
+  * This implies that, if a host Python is used rather than a Spack installed one, 
+    this one needs to be in the shell, *e.g.* by means of a `module load` if applicable
+
