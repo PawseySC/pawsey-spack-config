@@ -193,14 +193,17 @@ packages:
     - spec: cray-mpich@7.7.0%gcc
       modules:
       - cray-mpich/8.1.7
+      - craype-network-ofi
       prefix: /opt/cray/pe/mpich/8.1.7/ofi/gnu/9.1
     - spec: cray-mpich@7.7.0%cce
       modules:
       - cray-mpich/8.1.7
+      - craype-network-ofi
       prefix: /opt/cray/pe/mpich/8.1.7/ofi/cray/10.0
     - spec: cray-mpich@7.7.0%aocc
       modules:
       - cray-mpich/8.1.7
+      - craype-network-ofi
       prefix: /opt/cray/pe/mpich/8.1.7/ofi/aocc/3.0
     buildable: false
   cray-libsci:
@@ -220,9 +223,13 @@ packages:
     buildable: false
   cray-fftw:
     externals:
-    - spec: cray-fftw@3.3.8.10
+    - spec: cray-fftw@3.3.8.10 target=zen2
       modules:
       - cray-fftw/3.3.8.10
       prefix: /opt/cray/pe/fftw/3.3.8.10/x86_rome
+    - spec: cray-fftw@3.3.8.10 target=zen3
+      modules:
+      - cray-fftw/3.3.8.10
+      prefix: /opt/cray/pe/fftw/3.3.8.10/x86_milan
     buildable: false
 
