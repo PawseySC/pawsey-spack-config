@@ -11,6 +11,10 @@ packages:
       scalapack: [cray-libsci]
       fftw-api: [cray-fftw,fftw]
       pkgconfig: [pkg-config]
+    permissions:
+      read: world
+      write: group
+      group: pawsey0001
 
 # don't build virtuals with a provider (probably tough)
   mpi:
