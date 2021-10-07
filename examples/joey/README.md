@@ -25,5 +25,5 @@ Test environments:
 1. Clingo with Spack Python
 2. Clingo with host Python (will use cray-python module by default)
 3. FFTW2 to overcome buildable-false
-4. 
-5. 
+4. Computational Chemistry
+5. Python
