@@ -26,6 +26,7 @@ packages:
   scalapack:
     buildable: false
   # ideally want to use cray optimised fftw but there might be issues
+  # remember, need to spack install fftw@2.1.5
   fftw-api:
     buildable: false
   pkgconfig:
