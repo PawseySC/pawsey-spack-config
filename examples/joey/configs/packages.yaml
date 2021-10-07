@@ -89,16 +89,6 @@ packages:
     - spec: gawk@4.2.1
       prefix: /usr
     buildable: false
-  gcc:
-    externals:
-    - spec: gcc@7.5.0 languages=c,c++,fortran
-      prefix: /usr
-      extra_attributes:
-        compilers:
-          c: /usr/bin/gcc
-          cxx: /usr/bin/g++
-          fortran: /usr/bin/gfortran
-    buildable: false
   git:
     externals:
     - spec: git@2.26.2~tcltk
