@@ -238,6 +238,13 @@ packages:
       - cray-jemalloc/5.1.0.4
       prefix: /opt/cray/pe/jemalloc/5.1.0.4
     buildable: false
+  xpmem:
+    externals:
+    - spec: xpmem@2.2.40
+      modules:
+      - xpmem/2.2.40-7.0.1.0_1.9__g1d7a24d.shasta
+      prefix: /opt/cray/xpmem/2.2.40-7.0.1.0_1.9__g1d7a24d.shasta
+     buildable: false
   libfabric:
     externals:
     - spec: libfabric@1.11.0.3.66
