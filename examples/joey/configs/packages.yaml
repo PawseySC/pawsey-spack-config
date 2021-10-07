@@ -42,7 +42,7 @@ packages:
   cce:
     buildable: false
 
-  # packages found automatically by spack external find
+# packages found automatically by spack external find
   bison:
     externals:
     - spec: bison@3.0.4
@@ -183,8 +183,73 @@ packages:
       prefix: /usr
     buildable: false
 
-  # cray packages (manually added)
-  # adding prefixes as in NERSC Perlmutter configs
+# system packages (manually added)
+  slurm:
+    externals:
+    - spec: slurm@20-11-5-1
+      prefix: /usr
+    buildable: false
+  binutils:
+    externals:
+    - spec: binutils@2.35.1
+      prefix: /usr
+    buildable: false
+  curl:
+    externals:
+    - spec: curl@7.60.0
+      prefix: /usr
+    buildable: false
+  hwloc:
+    externals:
+    - spec: hwloc@2.0.0
+      prefix: /usr
+  # current system installation misses binaries (and headers), hence buildable for now
+    buildable: true
+  libxml2:
+    externals:
+    - spec: libxml2@2.9.7
+      prefix: /usr
+    buildable: false
+  libpciaccess:
+    externals:
+    - spec: libpciaccess@0.14
+      prefix: /usr
+    buildable: false
+  lz4:
+    externals:
+    - spec: lz4@1.8.0
+      prefix: /usr
+    buildable: false
+  ncurses:
+    externals:
+    - spec: ncurses@6.1
+      prefix: /usr
+    - spec: ncurses@5.9
+      prefix: /usr
+    buildable: false
+  numactl:
+    externals:
+    - spec: numactl@2.0.11
+      prefix: /usr
+    buildable: false
+  wget:
+    externals:
+    - spec: wget@1.20.3
+      prefix: /usr
+    buildable: false
+  zlib:
+    externals:
+    - spec: zlib@1.2.11
+      prefix: /usr
+    buildable: false
+  zstd:
+    externals:
+    - spec: zstd@1.4.4
+      prefix: /usr
+    buildable: false
+
+# cray packages (manually added)
+# adding prefixes as in NERSC Perlmutter configs
   cray-mpich:
     externals:
     - spec: cray-mpich@7.7.0%gcc
@@ -270,7 +335,8 @@ packages:
     - spec: r@4.0.5.1
       prefix: /opt/cray/pe/R/4.0.5.1
     buildable: true
-  # cray hdf5
+
+# cray hdf5
   hdf5:
     externals:
     - spec: hdf5@1.12.0.5%gcc~mpi
@@ -298,7 +364,8 @@ packages:
       - cray-hdf5-parallel/1.12.0.5
       prefix: /opt/cray/pe/hdf5-parallel/1.12.0.5/aocc/2.2
     buildable: false
-  # cray parallel-netcdf
+
+# cray parallel-netcdf
   parallel-netcdf:
     externals:
     - spec: parallel-netcdf@1.12.1.5%gcc
@@ -314,7 +381,8 @@ packages:
       - cray-parallel-netcdf/1.12.1.5
       prefix: /opt/cray/pe/parallel-netcdf/1.12.1.5/aocc/2.2
     buildable: false
-  # cray netcdf
+
+# cray netcdf
   netcdf-c:
     externals:
     - spec: netcdf-c@4.7.4.5%gcc~mpi
