@@ -25,9 +25,10 @@ packages:
     buildable: false
   scalapack:
     buildable: false
-  # ideally want to use cray optimised fftw but there might be issues
+  # ideally want to use cray optimised fftw but there are issues with cmake, mpi fftw and spack
+  # hence set to true
   fftw-api:
-    buildable: false
+    buildable: true
   pkgconfig:
     buildable: false
 # don't build compilers neither
@@ -243,7 +244,7 @@ packages:
       modules:
       - xpmem/2.2.40-7.0.1.0_1.9__g1d7a24d.shasta
       prefix: /opt/cray/xpmem/2.2.40-7.0.1.0_1.9__g1d7a24d.shasta
-     buildable: false
+    buildable: false
   libfabric:
     externals:
     - spec: libfabric@1.11.0.3.66
@@ -297,7 +298,7 @@ packages:
       modules:
       - cray-hdf5-parallel/1.12.0.5
       prefix: /opt/cray/pe/hdf5-parallel/1.12.0.5/aocc/2.2
-    buildable: false
+    buildable: true
   # cray parallel-netcdf
   parallel-netcdf:
     externals:
@@ -313,7 +314,7 @@ packages:
       modules:
       - cray-parallel-netcdf/1.12.1.5
       prefix: /opt/cray/pe/parallel-netcdf/1.12.1.5/aocc/2.2
-    buildable: false
+    buildable: true
   # cray netcdf
   netcdf-c:
     externals:
@@ -347,7 +348,7 @@ packages:
       - cray-hdf5-parallel/1.12.0.5
       - cray-netcdf-hdf5parallel/4.7.4.5
       prefix: /opt/cray/pe/netcdf-hdf5parallel/4.7.4.5/aocc/2.2
-    buildable: false
+    buildable: true
   netcdf-fortran:
     externals:
     - spec: netcdf-fortran@4.7.4.5%gcc
@@ -365,7 +366,7 @@ packages:
       - cray-hdf5/1.12.0.5
       - cray-netcdf/4.7.4.5
       prefix: /opt/cray/pe/netcdf/4.7.4.5/aocc/2.2
-    buildable: false
+    buildable: true
   netcdf-cxx4:
     externals:
     - spec: netcdf-cxx4@4.7.4.5%gcc
@@ -383,4 +384,4 @@ packages:
       - cray-hdf5/1.12.0.5
       - cray-netcdf/4.7.4.5
       prefix: /opt/cray/pe/netcdf/4.7.4.5/aocc/2.2
-    buildable: false
+    buildable: true
