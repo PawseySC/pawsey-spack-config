@@ -57,6 +57,7 @@ packages:
     externals:
     - spec: cmake@3.10.2
       prefix: /usr
+  # in the future, maybe spack install a couple of recent versions, and make not buildable
     buildable: true
   cpio:
     externals:
@@ -184,11 +185,6 @@ packages:
     buildable: false
 
 # system packages (manually added)
-  slurm:
-    externals:
-    - spec: slurm@20-11-5-1
-      prefix: /usr
-    buildable: false
   binutils:
     externals:
     - spec: binutils@2.35.1
@@ -202,6 +198,12 @@ packages:
   hwloc:
     externals:
     - spec: hwloc@2.0.0
+      prefix: /usr
+  # current system installation misses binaries (and headers), hence buildable for now
+    buildable: true
+  libfuse:
+    externals:
+    - spec: libfuse@2.9.7
       prefix: /usr
   # current system installation misses binaries (and headers), hence buildable for now
     buildable: true
@@ -230,6 +232,11 @@ packages:
   numactl:
     externals:
     - spec: numactl@2.0.11
+      prefix: /usr
+    buildable: false
+  slurm:
+    externals:
+    - spec: slurm@20-11-5-1
       prefix: /usr
     buildable: false
   wget:
