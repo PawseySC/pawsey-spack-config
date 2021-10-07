@@ -131,7 +131,7 @@ packages:
     buildable: false
   perl:
     externals:
-    - spec: perl@5.26.1~cpanm+shared+threads
+    - spec: perl@5.26.1~cpanm
       prefix: /usr
     buildable: true
   pkg-config:
