@@ -3,6 +3,9 @@
 # It describes a set of packages to be installed, along with
 # configuration settings.
 spack:
+  packages:
+    cmake:
+      version: [3.21.3]
   definitions:
   - packages:
     - python@3.9.6 +optimizations
