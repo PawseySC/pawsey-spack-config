@@ -330,8 +330,6 @@ class PyNumpy(PythonPackage):
             blas = 'atlas'
         elif spec['blas'].name == 'veclibfort':
             blas = 'accelerate'
-        elif spec['blas'].name == 'cray-libsci':
-            blas = 'cray-libsci'
         else:
             blas = 'blas'
 
@@ -351,8 +349,6 @@ class PyNumpy(PythonPackage):
             lapack = 'atlas'
         elif spec['lapack'].name == 'veclibfort':
             lapack = 'accelerate'
-        elif spec['lapack'].name == 'cray-libsci':
-            lapack = 'cray-libsci'
         else:
             lapack = 'lapack'
 
