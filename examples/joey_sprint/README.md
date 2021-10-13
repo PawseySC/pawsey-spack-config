@@ -1,13 +1,6 @@
 ## Key commands for the setup of this Joey sprint - 13 October 2021
 
 
-### Slurm interactive allocation
-
-```
-salloc -n 1 -c 16
-```
-
-
 ### First setup
 
 ```
@@ -50,9 +43,9 @@ spack env activate .
 # Edit the yaml to add packages
 
 # Proposed installation tree
-srun spack concretize -f
+spack concretize -f
 # Install
-srun spack install -y
+spack install -y    # -j 16
 
 # When done with all installations, you may deactivate the Spack environment
 spack env deactivate
