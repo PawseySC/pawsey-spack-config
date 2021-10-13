@@ -12,13 +12,18 @@
   - fftw@2.1.5 also provided as external
   - some externals are commented out due to missing headers: bzip2, hwloc, libxml2, ncurses
   - Cray libraries "should" now work
+- review your assigned packages on MS Teams
+  - **MS Teams -> Pawsey -> Software Stack -> Files -> "Setonix Software - Spacl.xlsx"**
 
 
 ### Focus on gcc
 - try all assigned packages
+- review versions and variants
+  - for performance, a few packages might need checking variants of key dependencies (eg Charmpp for NAMD)
 - start and analyse/solve errors
 - examples of typical errors on Confluence
   - **https://support.pawsey.org.au/documentation/display/PSSI/Spack+on+Joey**
+  - system utilities missing from Joey compute nodes (eg wget)
   - "buildable false" error (misleading)
   - missing headers in external packages
   - older cmakes such as system one (use latest!)
@@ -30,12 +35,14 @@
 
 ### Desired outputs
   - take notes of what you are getting
-  - report significant notes on Confluence
-    - **https://support.pawsey.org.au/documentation/display/PSSI/Spack+on+Joey**
+  - update versions variants on MS Teams, and tool-specific notes
+    - **MS Teams -> Pawsey -> Software Stack -> Files -> "Setonix Software - Spacl.xlsx"**
   - report system library requirements (eg -dev) on Jira
     - **https://support.pawsey.org.au/portal/browse/IS-2574**
   - branch "pawsey-spack-config" and add edited recipes
     - **https://github.com/PawseySC/pawsey-spack-config**
+  - report significant general notes on Confluence (incl interesting errors)
+    - **https://support.pawsey.org.au/documentation/display/PSSI/Spack+on+Joey**
 
 
 ### Out of scope
