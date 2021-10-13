@@ -50,9 +50,9 @@ spack env activate .
 # Edit the yaml to add packages
 
 # Proposed installation tree
-spack concretize -f
+srun spack concretize -f
 # Install
-spack install -y
+srun spack install -y
 
 # When done with all installations, you may deactivate the Spack environment
 spack env deactivate
