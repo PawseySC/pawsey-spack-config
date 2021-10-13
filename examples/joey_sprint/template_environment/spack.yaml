@@ -3,10 +3,6 @@
 # It describes a set of packages to be installed, along with
 # configuration settings.
 spack:
-  packages:
-    cmake:
-      version: [3.21.3]
-
   definitions:
   - packages:   # these are just examples
     - gromacs@2020.2 +double+lapack+plumed ^plumed@2.6.1
