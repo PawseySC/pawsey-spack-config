@@ -15,6 +15,8 @@ packages:
       read: world
       write: group
       group: pawsey0001
+  cmake:
+    version: [3.21.3]
 
 # don't build virtuals with a provider (probably tough)
   mpi:
