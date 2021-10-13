@@ -18,3 +18,5 @@ config:
   # This can be purged with `spack clean --misc-cache`
   misc_cache: $spack/var/spack/misc-cache
 
+  # concretizer: `clingo` or `original` (good for debugging concretisations)
+  concretizer: clingo
