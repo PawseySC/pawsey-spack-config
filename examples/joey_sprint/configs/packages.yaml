@@ -352,27 +352,27 @@ packages:
 # cray hdf5
   hdf5:
     externals:
-    - spec: hdf5@1.12.0.5%gcc~tools~mpi
+    - spec: hdf5@1.12.0.5%gcc~tools+hl+fortran~mpi
       modules:
       - cray-hdf5/1.12.0.5
       prefix: /opt/cray/pe/hdf5/1.12.0.5/gnu/9.1
-    - spec: hdf5@1.12.0.5%gcc~tools+mpi~cxx
+    - spec: hdf5@1.12.0.5%gcc~tools+hl+fortran+mpi~cxx
       modules:
       - cray-hdf5-parallel/1.12.0.5
       prefix: /opt/cray/pe/hdf5-parallel/1.12.0.5/gnu/9.1
-    - spec: hdf5@1.12.0.5%cce~tools~mpi
+    - spec: hdf5@1.12.0.5%cce~tools+hl+fortran~mpi
       modules:
       - cray-hdf5/1.12.0.5
       prefix: /opt/cray/pe/hdf5/1.12.0.5/crayclang/10.0
-    - spec: hdf5@1.12.0.5%cce~tools+mpi~cxx
+    - spec: hdf5@1.12.0.5%cce~tools+hl+fortran+mpi~cxx
       modules:
       - cray-hdf5-parallel/1.12.0.5
       prefix: /opt/cray/pe/hdf5-parallel/1.12.0.5/crayclang/10.0
-    - spec: hdf5@1.12.0.5%aocc~tools~mpi
+    - spec: hdf5@1.12.0.5%aocc~tools+hl+fortran~mpi
       modules:
       - cray-hdf5/1.12.0.5
       prefix: /opt/cray/pe/hdf5/1.12.0.5/aocc/2.2
-    - spec: hdf5@1.12.0.5%aocc~tools+mpi~cxx
+    - spec: hdf5@1.12.0.5%aocc~tools+hl+fortran+mpi~cxx
       modules:
       - cray-hdf5-parallel/1.12.0.5
       prefix: /opt/cray/pe/hdf5-parallel/1.12.0.5/aocc/2.2
