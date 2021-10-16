@@ -15,7 +15,7 @@ spack:
       +user-sdpd +user-smd +user-smtbq +user-sph +user-tally +user-uef +user-yaff
       ^kokkos@3.4.01+hpx+hpx_async_dispatch+hwloc+memkind+numactl+openmp+tuning
       ^plumed@2.7.2 ^hpx cxxstd=14
-    - namd@2.14 interface=python fftw=none ##fftw=3
+    - namd@2.14 interface=python fftw=3
     - quantum-espresso@6.8 +epw +openmp hdf5=parallel
     - kokkos@3.4.01 +hpx +hpx_async_dispatch +hwloc +memkind +numactl +openmp +tuning
     - plumed@2.7.2
