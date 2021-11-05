@@ -1,6 +1,6 @@
 config:
   build_stage:
-    - $tempdir/$user/spack-stage
+#    - $tempdir/$user/spack-stage
     - $spack/var/spack/stage
 
   # Directory in which to run tests and store test results.
@@ -16,5 +16,7 @@ config:
   # Cache directory for miscellaneous files, like the package index.
   # This can be purged with `spack clean --misc-cache`
   misc_cache: $spack/var/spack/misc-cache
-  
+
+  # concretizer: `clingo` or `original` (good for debugging concretisations)
+  concretizer: clingo
   
