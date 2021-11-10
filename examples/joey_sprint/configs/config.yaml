@@ -20,3 +20,4 @@ config:
 
   # concretizer: `clingo` or `original` (good for debugging concretisations)
   concretizer: clingo
+  #concretizer: original

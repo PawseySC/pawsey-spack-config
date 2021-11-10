@@ -1,4 +1,6 @@
-## Key commands for the setup of this Joey sprint - 13 October 2021
+## Key commands for the setup of the next Joey sprints - 9 November 2021
+
+**UPDATE**: now using tag `v0.17.0`
 
 
 ### First setup
@@ -15,6 +17,10 @@ mv ~/.spack ~/.spack_old
 cp pawsey-spack-config/examples/joey_sprint/configs/*.yaml spack/etc/spack/
 # Use provided json to avoid crash on compute nodes
 cp pawsey-spack-config/examples/joey_sprint/edits/microarchitectures.json spack/lib/spack/external/archspec/json/cpu/
+# Use appropriate version tag
+cd spack
+git checkout v0.17.0
+cd ..
 ```
 
 
