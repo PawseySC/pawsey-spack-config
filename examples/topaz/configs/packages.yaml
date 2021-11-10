@@ -9,6 +9,28 @@ packages:
       scalapack: [intel-mkl]
       fftw-api: [intel-mkl]
       mkl: [intel-mkl]
+    permissions:
+      read: world
+      write: group
+      group: pawsey0001
+  mpi:
+    buildable: false
+  blas:
+    buildable: false
+  lapack:
+    buildable: false
+  scalapack:
+    buildable: false
+  fftw-api:
+    buildable: false
+  mkl:
+    buildable: false
+  gcc:
+    buildable: false
+  intel:
+    buildable: false
+  pgi:
+    buildable: false
   intel-mkl:
     externals:
     - spec: intel-mkl@2019
@@ -34,11 +56,3 @@ packages:
     - spec: openmpi@4.0.2%gcc@8.3.0+cuda~cxx~cxx_exceptions~java~memchecker+pmi~sqlite3~static~thread_multiple~wrapper-rpath
         fabrics=ofi,psm2,ucx,verbs schedulers=slurm ^ucx@1.6 ^cuda@10.1.243
       prefix: /pawsey/centos7.6/devel/broadwell/gcc/8.3.0/cuda/10.1/openmpi-ucx-gpu/4.0.2
-  mpi:
-    buildable: false
-  gcc:
-    buildable: false
-  intel:
-    buildable: false
-  pgi:
-    buildable: false
