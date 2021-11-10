@@ -1,6 +1,9 @@
 ## Key commands for the setup of the next Joey sprints - 9 November 2021
 
-**UPDATE**: now using tag `v0.17.0`
+
+**NEWS**:
+- Now using tag `v0.17.0`
+- Added `repos.yaml` configuration file, to use Pawsey edited recipes from `pawsey-spack-config`, when available
 
 
 ### First setup
