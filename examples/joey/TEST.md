@@ -1,4 +1,4 @@
-#Joey early tests
+#Joey early tests - NOT for sprints/production
 
 The goal of these tests is to get ready for the team sprints.  
 
