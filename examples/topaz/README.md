@@ -1,6 +1,6 @@
 ## Topaz prototype deployment
 
-Spack tag: `v0.1.70`
+Spack tag: `v0.17.0`
 
 
 ### First setup
