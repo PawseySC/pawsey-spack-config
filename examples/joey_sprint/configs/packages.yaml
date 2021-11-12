@@ -181,11 +181,11 @@ packages:
     buildable: false
 
 # system packages (manually added)
-  binutils:
-    externals:
-    - spec: binutils@2.35.1
-      prefix: /usr
-    buildable: false
+#  binutils:
+#    externals:
+#    - spec: binutils@2.35.1
+#      prefix: /usr
+#    buildable: false
   curl:
     externals:
     - spec: curl@7.60.0
