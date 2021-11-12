@@ -1,9 +1,13 @@
-## Key commands for the setup of the next Joey sprints - 9 November 2021
+## Key commands for the setup of the next Joey sprints - 12 November 2021
 
 
 **NEWS**:
 - Now using tag `v0.17.0`
 - Added `repos.yaml` configuration file, to use Pawsey edited recipes from `pawsey-spack-config`, when available
+
+**NOTE**: Joey compute nodes are still unable to access the internet.  Solutions:
+1. run your Spack tests on the login node (recommended for now)
+2. predownload the tarballs from login node, and then build on compute nodes
 
 
 ### First setup
