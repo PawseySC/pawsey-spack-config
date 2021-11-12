@@ -19,7 +19,7 @@ mv ~/.spack ~/.spack_old
 # Use provided configs for spack
 cp pawsey-spack-config/examples/joey_sprint/configs/*.yaml spack/etc/spack/
 # Use provided json to avoid crash on compute nodes
-cp pawsey-spack-config/examples/joey_sprint/edits/microarchitectures.json spack/lib/spack/external/archspec/json/cpu/
+cp pawsey-spack-config/examples/joey_sprint/fixes/microarchitectures.json spack/lib/spack/external/archspec/json/cpu/
 # Use appropriate version tag
 cd spack
 git checkout v0.17.0
