@@ -12,6 +12,19 @@
 
 ### First setup
 
+```bash
+# Clone the Pawsey config repo
+git clone https://github.com/pawseysc/pawsey-spack-config
+cd pawsey-spack-config
+cd examples/joey_sprint
+# provides an easy single command to clone spack, bootstrap clingo, etc
+source spack_joey_utils.sh
+joey_spack_start # setup the spack environment if not present 
+
+```
+
+The command effectively does the following with additional verbosity to make sure setup seems correct. 
+
 ```
 # Clone the Pawsey spack repo
 git clone https://github.com/pawseysc/spack
