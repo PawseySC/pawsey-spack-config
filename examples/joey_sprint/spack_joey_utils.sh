@@ -64,7 +64,7 @@ function joey_spack_start() {
         spack external find >> ${HOME}/.spack/joeyspackset.txt
 }
 
-function joey_spack_keep()
+function joey_spack_keep_record()
 {
         if [ -f ${HOME}/.spack/joeyspackset.txt ]
         then
@@ -85,5 +85,29 @@ function joey_spack_keep()
  		cp ${SPACKROOT}/etc/spack/*yaml ~/.spack/joey_sprint/ 
                 cp -r ~/.spack ~/.spack_unset_${cur}
         fi
+}
+
+function joey_spack_debug_spec()
+{
+	echo "Debug spec using original concretiser"
+	if [ ! -z $2 ] 
+	then
+		echo "Provide speck within quotes as a single argument, \"<spec>\" "
+		return 0
+	fi
+	spec=$1
+	echo "Spec of $spec"
+	cur=$(date -Iminutes)
+	echo $spec > spec_$cur.txt
+	echo "Clingo " >> spec_$cur.txt
+	spack spec $spec >> spec_$cur.txt
+	echo "Original " >> spec_$cur.txt
+	# update config file to use original
+	sed -i 's|concretizer: clingo|#concretizer: clingo|'g ${SPACKROOT}/etc/spack/config.yaml
+	sed -i 's|#concretizer: original|concretizer: original|'g ${SPACKROOT}/etc/spack/config.yaml
+	spack spec $spec >> spec_$cur.txt
+        sed -i 's|#concretizer: clingo|concretizer: clingo|'g ${SPACKROOT}/etc/spack/config.yaml
+        sed -i 's|concretizer: original|#concretizer: original|'g ${SPACKROOT}/etc/spack/config.yaml
+	echo "See spec_$cur.txt for concretization with clingo and original"
 }
 

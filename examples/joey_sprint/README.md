@@ -46,6 +46,15 @@ cd ..
 
 ### Spack setup
 
+The spack setup can now be done with the joey_spack_start command provided in spack_joey_utils.sh
+The script also provides two other commands 
+```
+# run spec through both clingo and original for debugging 
+joey_spack_debug_spec 
+# save all the configs and current list of installs by spack 
+joey_spack_keep_record
+
+
 ```
 # Load cray-python
 module load cray-python
