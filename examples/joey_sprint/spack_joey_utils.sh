@@ -106,8 +106,8 @@ function joey_spack_debug_spec()
 	sed -i 's|concretizer: clingo|#concretizer: clingo|'g ${SPACKROOT}/etc/spack/config.yaml
 	sed -i 's|#concretizer: original|concretizer: original|'g ${SPACKROOT}/etc/spack/config.yaml
 	spack spec $spec >> spec_$cur.txt
-        sed -i 's|#concretizer: clingo|concretizer: clingo|'g ${SPACKROOT}/etc/spack/config.yaml
-        sed -i 's|concretizer: original|#concretizer: original|'g ${SPACKROOT}/etc/spack/config.yaml
+	sed -i 's|#concretizer: clingo|concretizer: clingo|'g ${SPACKROOT}/etc/spack/config.yaml
+	sed -i 's|concretizer: original|#concretizer: original|'g ${SPACKROOT}/etc/spack/config.yaml
 	echo "See spec_$cur.txt for concretization with clingo and original"
 }
 

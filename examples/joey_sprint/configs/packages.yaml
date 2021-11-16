@@ -181,11 +181,37 @@ packages:
     buildable: false
 
 # system packages (manually added)
+
+# packages that are missing dev install with zypper 
+# so commented out 
 #  binutils:
 #    externals:
 #    - spec: binutils@2.35.1
 #      prefix: /usr
 #    buildable: false
+#  hwloc:
+#    externals:
+#    - spec: hwloc@2.0.0
+#      prefix: /usr
+#    buildable: false
+#  libxml2:
+#    externals:
+#    - spec: libxml2@2.9.7
+#      prefix: /usr
+#    buildable: false
+#  libpciaccess:
+#    externals:
+#    - spec: libpciaccess@0.14
+#      prefix: /usr
+#    buildable: false
+#  ncurses:
+#    externals:
+#    - spec: ncurses@6.1
+#      prefix: /usr
+#    - spec: ncurses@5.9
+#      prefix: /usr
+#    buildable: false
+
   curl:
     externals:
     - spec: curl@7.60.0
@@ -201,40 +227,17 @@ packages:
     - spec: fftw@2.1.5%aocc target=zen2
       prefix: /lus/joey/home/mdelapierre/spack/opt/spack/cray-sles15-zen2/aocc-3.0.0/fftw-2.1.5-bh4tcpc5blq6rdflw7rinkmtie5qqjmn
     buildable: false
-#  hwloc:
-#    externals:
-#    - spec: hwloc@2.0.0
-#      prefix: /usr
-#  # current system installation misses binaries (and headers), hence buildable for now
-#    buildable: false
   libfuse:
     externals:
     - spec: libfuse@2.9.7
       prefix: /usr
   # current system installation misses binaries (and headers), hence buildable for now
     buildable: false
-#  libxml2:
-#    externals:
-#    - spec: libxml2@2.9.7
-#      prefix: /usr
-#    buildable: false
-#  libpciaccess:
-#    externals:
-#    - spec: libpciaccess@0.14
-#      prefix: /usr
-#    buildable: false
   lz4:
     externals:
     - spec: lz4@1.8.0
       prefix: /usr
     buildable: false
-#  ncurses:
-#    externals:
-#    - spec: ncurses@6.1
-#      prefix: /usr
-#    - spec: ncurses@5.9
-#      prefix: /usr
-#    buildable: false
   numactl:
     externals:
     - spec: numactl@2.0.11
@@ -465,3 +468,215 @@ packages:
       - cray-netcdf/4.7.4.5
       prefix: /opt/cray/pe/netcdf/4.7.4.5/aocc/2.2
     buildable: false
+
+
+# python additions 
+# based on loading cray-python and 
+# running pip list 
+# standard python packages 
+  py-atomicwrites:
+    externals:
+    - spec: py-atomicwrites@1.3.0
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: false 
+  py-attrs:
+    externals:
+    - spec: py-attrs@19.3.0
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: false 
+  py-cython:
+    externals:
+    - spec: py-cython@0.29.15
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: true 
+  # not certain about dask-mpi in spack and 
+  # whether cray provides it. Normally it 
+  # would be listed separately 
+  py-fsspec:
+    externals:
+    - spec: py-fsspec@0.7.4
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: false 
+  py-importlib-metadata:
+    externals:
+    - spec: py-importlib-metadata@1.5.0
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: false
+  py-locket:
+    externals:
+    - spec: py-locket@0.2.0
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: false
+  py-more-itertools:
+    externals:
+    - spec: py-more-itertools@8.2.0
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: false
+  py-nose:
+    externals:
+    - spec: py-nose@1.3.7
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: false
+  py-packaging:
+    externals:
+    - spec: py-packaging@1.18.2
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: false
+  py-partd:
+    externals:
+    - spec: py-partd@1.1.0
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: false
+  py-pip:
+    externals:
+    - spec: py-pip@20.1.1
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: false
+  py-pluggy:
+    externals:
+    - spec: py-pluggy@0.13.1
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: false
+  py-py:
+    externals:
+    - spec: py-py@1.8.1
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: false
+  py-pyparsing:
+    externals:
+    - spec: py-pyparsing@2.4.6
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: false
+  # this is an old verison of pytest so buildable
+  py-pytest:
+    externals:
+    - spec: py-pytest@5.3.5
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: true
+  py-python-dateutil:
+    externals:
+    - spec: py-python-dateutil@2.8.1
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: false
+  py-pytz:
+    externals:
+    - spec: py-pytz@2020.1
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: false
+  # this is an old verison so buildable
+  py-setuptools:
+    externals:
+    - spec: py-setuptools@47.1.0
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: true
+  # this is an old verison so buildable
+  py-setuptools-scm:
+    externals:
+    - spec: py-setuptools-scm@3.4.3
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: true
+  py-six:
+    externals:
+    - spec: py-six@1.14.0
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: false
+  py-toolz:
+    externals:
+    - spec: py-toolz@0.10.0
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: false
+  py-wcwidth:
+    externals:
+    - spec: py-wcwidth@0.1.8
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: false
+  # this is an old verison so buildable
+  py-zipp:
+    externals:
+    - spec: py-zipp@2.2.0
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: true
+
+# python packages that might want to rebuild 
+  py-dask:
+    externals:
+    - spec: py-dask@2.13.0
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: true 
+  # wonder if this should be buildable
+  py-mpi4py:
+    externals:
+    - spec: py-mpi4py@3.0.3
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: false
+  py-numpy:
+    externals:
+    - spec: py-numpy@1.18.2
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: true 
+  py-pandas:
+    externals:
+    - spec: py-pandas@1.0.5
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: true
+  py-scipy:
+    externals:
+    - spec: py-scipy@1.4.1
+      modules:
+      - cray-python
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: true
