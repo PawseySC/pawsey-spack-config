@@ -53,8 +53,6 @@ function joey_spack_start() {
 	spack spec zlib # >> /dev/null 
 	echo "External packages are "
 	spack external list
-	#echo "Building cmake if necessary "
-	#spack install cmake % gcc
 	echo "Currently loaded modules"
 	module list
 	echo "-------------------------"
@@ -70,23 +68,32 @@ function joey_spack_keep_record()
 {
 	if [ -f ${HOME}/.spack/joeyspackset.txt ]
 	then
+		echo "Keeping record of current spack setup and installed packages"
 		SPACKROOT=$(head -n 1 ${HOME}/.spack/joeyspackset.txt)
 		JOEYSPACKDATE=$(head -n 2 ${HOME}/.spack/joeyspackset.txt | tail -n 1)
-		echo "Cleaning up spack setup at ${JOEYSPACKDATE}, resourcing paths"
+		echo "Recording current spack, which was setup at ${JOEYSPACKDATE}"
 		cur=$(date -Iminutes)
-		echo $SPACKROOT > ${HOME}/.spack/joeyspack_unset.txt
-		date -Iminutes >> ${HOME}/.spack/joeyspack_unset.txt
-		spack debug report >> ${HOME}/.spack/joeyspack_unset.txt
-		echo "Compilers"
-		spack compilers >> ${HOME}/.spack/joeyspack_unset.txt
-		echo "Externals"
-		spack external find -lvd >> ${HOME}/.spack/joeyspack_unset.txt
-		echo "Installed"
-		spack find -ldv >> ${HOME}/.spack/joeyspack_unset.txt
-		mkdir -p ~/.spack/joey_sprint/
-		cp ${SPACKROOT}/etc/spack/*yaml ~/.spack/joey_sprint/ 
-		cp -r ~/.spack ~/.spack_unset_${cur}
+		record=${HOME}/.spack/joey_record_${cur}.txt
+		record_dir=${HOME}/.spack/joey_record_${cur}_configs/
+		echo $SPACKROOT > ${record}
+		date -Iminutes >> ${record}
+		spack debug report >> ${record}
+		echo "Compilers" >> ${record}
+		echo "-------------------------" >>${record}
+		spack compilers >> ${record}
+		echo "Externals">> ${record}
+		echo "-------------------------" >> ${record}
+		spack external list >> ${record}
+		echo "Installed" >> ${record}
+		echo "-------------------------"
+		spack find -ldv >> ${record}
+		mkdir -p ${record_dir}
+		cp ${SPACKROOT}/etc/spack/*yaml ${record_dir}
+		echo "Finished, see ${record} and ${record_dir}"
+	else 
+		echo "Not recording as there is no joeyspackset file"
 	fi
+	
 }
 
 function joey_spack_debug_spec()
@@ -111,7 +118,7 @@ function joey_spack_debug_spec()
 	# revert back to clingo
 	sed -i 's|#concretizer: clingo|concretizer: clingo|'g ${SPACKROOT}/etc/spack/config.yaml
 	sed -i 's|concretizer: original|#concretizer: original|'g ${SPACKROOT}/etc/spack/config.yaml
-	
+
 	echo "See spec_$cur.txt for concretization with clingo and original"
 }
 
