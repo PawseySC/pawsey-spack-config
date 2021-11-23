@@ -1,2 +1,2 @@
 repos:
-- $spack/../pawsey-spack-config/examples/joey_sprint/repo_joey
+- REPOPATH/examples/joey_sprint/repo_joey
