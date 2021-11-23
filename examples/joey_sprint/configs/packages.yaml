@@ -211,6 +211,11 @@ packages:
 #    - spec: ncurses@5.9
 #      prefix: /usr
 #    buildable: false
+#  numactl:
+#    externals:
+#    - spec: numactl@2.0.11
+#      prefix: /usr
+#    buildable: false
 
   curl:
     externals:
@@ -236,11 +241,6 @@ packages:
   lz4:
     externals:
     - spec: lz4@1.8.0
-      prefix: /usr
-    buildable: false
-  numactl:
-    externals:
-    - spec: numactl@2.0.11
       prefix: /usr
     buildable: false
   slurm:
