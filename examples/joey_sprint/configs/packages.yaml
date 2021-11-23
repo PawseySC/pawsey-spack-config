@@ -376,13 +376,6 @@ packages:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
     buildable: false 
-  py-cython:
-    externals:
-    - spec: py-cython@0.29.15 ^python@3.8.5
-      modules:
-      - cray-python/3.8.5.1
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: true 
   # not certain about dask-mpi in spack and 
   # whether cray provides it. Normally it 
   # would be listed separately 
@@ -532,6 +525,13 @@ packages:
     buildable: true
 
 # python packages that might want to rebuild 
+  py-cython:
+    externals:
+    - spec: py-cython@0.29.15 ^python@3.8.5
+      modules:
+      - cray-python/3.8.5.1
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: true 
   py-dask:
     externals:
     - spec: py-dask@2.13.0 ^python@3.8.5
