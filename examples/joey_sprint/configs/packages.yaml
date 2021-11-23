@@ -235,11 +235,11 @@ packages:
 #    - spec: ncurses@5.9
 #      prefix: /usr
 #    buildable: false
-  numactl:
-    externals:
-    - spec: numactl@2.0.11
-      prefix: /usr
-    buildable: false
+#  numactl:
+#    externals:
+#    - spec: numactl@2.0.11
+#      prefix: /usr
+#    buildable: false
   slurm:
     externals:
     - spec: slurm@20-11-5-1
