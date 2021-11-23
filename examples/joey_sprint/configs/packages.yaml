@@ -539,14 +539,13 @@ packages:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
     buildable: true 
-  # wonder if this should be buildable
   py-mpi4py:
     externals:
     - spec: py-mpi4py@3.0.3 ^python@3.8.5
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
+    buildable: true
   py-numpy:
     externals:
     - spec: py-numpy@1.18.2 ^python@3.8.5
