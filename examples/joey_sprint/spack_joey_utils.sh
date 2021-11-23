@@ -1,5 +1,7 @@
 #!/bin/bash
 
+joey_spack_repodir=$( dirname $(pwd)/${BASH_SOURCE} )
+
 function joey_spack_start() {
 	module load cray-python
 	if [ -f ${HOME}/.spack/joeyspackset.txt ]
@@ -34,12 +36,10 @@ function joey_spack_start() {
 	cd ${SPACKROOT}; git checkout ${SPACKVER}; cd ${curdir}
 
 	# copy configs if necessary
-	repodir=$(git rev-parse --show-toplevel)
-	scriptpath=${repodir}/examples/joey_sprint
-	cp ${scriptpath}/configs/*.yaml ${SPACKROOT}/etc/spack/
-	sed -i 's|REPOPATH|'"${repodir}"'|g' ${SPACKROOT}/etc/spack/repos.yaml
+	cp ${joey_spack_repodir}/configs/*.yaml ${SPACKROOT}/etc/spack/
+	sed -i 's|REPOPATH|'"${joey_spack_repodir}"'|g' ${SPACKROOT}/etc/spack/repos.yaml
 	# Use provided json to avoid crash on compute nodes
-	cp ${scriptpath}/fixes/microarchitectures.json ${SPACKROOT}/lib/spack/external/archspec/json/cpu/
+	cp ${joey_spack_repodir}/fixes/microarchitectures.json ${SPACKROOT}/lib/spack/external/archspec/json/cpu/
 	# do a clean of the older spack
 	cur=$(date -Iminutes)
 	mv ~/.spack ~/.spack_${cur}
