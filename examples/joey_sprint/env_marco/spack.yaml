@@ -21,7 +21,7 @@ spack:
     - python@3.9.7 +optimizations
     - py-pip@21.3 ^python@3.9.7+optimizations ^py-setuptools@58.2.0
     - py-setuptools@58.2.0 ^python@3.9.7+optimizations
-    - snakemake@6.9.1 ^py-setuptools@58.2.0 ^python@3.9.7+optimizations
+ #   - snakemake@6.9.1 ^py-setuptools@58.2.0 ^python@3.6.12+optimizations  # we will advise conda install, as per tool docs
 
   specs:
   - matrix:
