@@ -48,5 +48,13 @@ module load python/3.6.3
 - Packages: CUDA aware OpenMPI, UCX, GDRcopy, CUDA, Intel MKL
 - Modules: test only, will need edits for production
 
+### Modulefile generation
 
+```
+spack module lmod refresh --delete-tree -y
+```
+Here we are assuming the following:
+- a `modules.yaml` has been written, with the desired features
+- *Lmod* is being used (for *EnvModules*, replace `lmod` with `tcl` above)
+- full moduletree purge before building, to avoid silly refresh errors (good for familiarising, to turn off get rid of `--delete-tree`)
 
