@@ -147,11 +147,14 @@ packages:
     buildable: false
   python:
     externals:
-    - spec: python@2.7.17+bz2+ctypes~dbm~lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
+    - spec: python@2.7.17
+#    - spec: python@2.7.17+bz2+ctypes~dbm~lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
       prefix: /usr
-    - spec: python@3.6.12+bz2+ctypes~dbm+lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
+    - spec: python@3.6.12
+#    - spec: python@3.6.12+bz2+ctypes~dbm+lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
       prefix: /usr
-    - spec: python@3.8.5+bz2+ctypes+dbm+lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
+    - spec: python@3.8.5
+#    - spec: python@3.8.5+bz2+ctypes+dbm+lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
       prefix: /opt/cray/pe/python/3.8.5.1
     buildable: true
   rsync:
