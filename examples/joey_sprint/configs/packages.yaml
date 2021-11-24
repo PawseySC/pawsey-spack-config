@@ -371,14 +371,14 @@ packages:
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false 
+    #buildable: false 
   py-attrs:
     externals:
     - spec: py-attrs@19.3.0 ^python@3.8.5
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false 
+    #buildable: false 
   # not certain about dask-mpi in spack and 
   # whether cray provides it. Normally it 
   # would be listed separately 
@@ -388,77 +388,77 @@ packages:
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false 
+    #buildable: false 
   py-importlib-metadata:
     externals:
     - spec: py-importlib-metadata@1.5.0 ^python@3.8.5
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
+    #buildable: false
   py-locket:
     externals:
     - spec: py-locket@0.2.0 ^python@3.8.5
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
+    #buildable: false
   py-more-itertools:
     externals:
     - spec: py-more-itertools@8.2.0 ^python@3.8.5
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
+    #buildable: false
   py-nose:
     externals:
     - spec: py-nose@1.3.7 ^python@3.8.5
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
+    #buildable: false
   py-packaging:
     externals:
     - spec: py-packaging@1.18.2 ^python@3.8.5
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
+    #buildable: false
   py-partd:
     externals:
     - spec: py-partd@1.1.0 ^python@3.8.5
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
+    #buildable: false
   py-pip:
     externals:
     - spec: py-pip@20.1.1 ^python@3.8.5
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
+    #buildable: false
   py-pluggy:
     externals:
     - spec: py-pluggy@0.13.1 ^python@3.8.5
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
+    #buildable: false
   py-py:
     externals:
     - spec: py-py@1.8.1 ^python@3.8.5
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
+    #buildable: false
   py-pyparsing:
     externals:
     - spec: py-pyparsing@2.4.6 ^python@3.8.5
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
+    #buildable: false
   # this is an old verison of pytest so buildable
   py-pytest:
     externals:
@@ -466,21 +466,21 @@ packages:
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: true
+    #buildable: true
   py-python-dateutil:
     externals:
     - spec: py-python-dateutil@2.8.1 ^python@3.8.5
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
+    #buildable: false
   py-pytz:
     externals:
     - spec: py-pytz@2020.1 ^python@3.8.5
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
+    #buildable: false
   # this is an old verison so buildable
   py-setuptools:
     externals:
@@ -488,7 +488,7 @@ packages:
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: true
+    #buildable: true
   # this is an old verison so buildable
   py-setuptools-scm:
     externals:
@@ -496,28 +496,28 @@ packages:
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: true
+    #buildable: true
   py-six:
     externals:
     - spec: py-six@1.14.0 ^python@3.8.5
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
+    #buildable: false
   py-toolz:
     externals:
     - spec: py-toolz@0.10.0 ^python@3.8.5
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
+    #buildable: false
   py-wcwidth:
     externals:
     - spec: py-wcwidth@0.1.8 ^python@3.8.5
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
+    #buildable: false
   # this is an old verison so buildable
   py-zipp:
     externals:
@@ -525,7 +525,7 @@ packages:
       modules:
       - cray-python/3.8.5.1
       prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: true
+    #buildable: true
 
 # python packages that might want to rebuild 
   py-cython:
