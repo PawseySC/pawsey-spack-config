@@ -1,6 +1,8 @@
 spack:
   definitions:
   - packages:
+# cmake to be installed alone as first thing (see env_cmake)
+# pip and setuptools in python environment
     - autoconf@2.71
     - automake@1.16.3
     - emacs@27.2 +X toolkit=gtk
@@ -12,7 +14,6 @@ spack:
     - parallel@20210922
     - reframe@3.6.1
     - singularity@3.8.5
-    - 
   specs:
   - matrix:
     - [$packages]
