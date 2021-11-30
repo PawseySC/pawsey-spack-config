@@ -7,5 +7,5 @@ spack:
   specs:
   - matrix:
     - [$packages]
-    - ['%gcc@10.3.0']
+    - ['%gcc@7.5.0']
   view: false
