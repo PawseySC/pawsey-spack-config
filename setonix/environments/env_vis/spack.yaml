@@ -1,0 +1,11 @@
+spack:
+  definitions:
+  - packages:
+# igv and vmd on vis nodes only
+    - paraview@5.9.1 +adios2 +hdf5 +osmesa +python3 +qt
+    - visit@3.2 +adios2 +python
+  specs:
+  - matrix:
+    - [$packages]
+    - ['%gcc@10.3.0']
+  view: false
