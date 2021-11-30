@@ -1,0 +1,32 @@
+config:
+
+  # This is the path to the root of the Spack install tree.
+  install_tree:
+    root: /sofware/setonix/2022.01/software
+
+  # Locations where templates should be found
+  template_dirs:
+    - /sofware/setonix/2022.01/setonix/pawsey-spack-config/setonix/templates_setonix
+    - $spack/share/spack/templates
+
+  # Temporary locations Spack can try to use for builds.
+  # See recommended options in defaults/config.yaml
+  build_stage:
+#    - $tempdir/$user/spack-stage
+    - /sofware/setonix/2022.01/software/$user/stage
+
+  # Directory in which to run tests and store test results.
+  test_stage: /sofware/setonix/2022.01/software/$user/test
+
+  # Cache directory for already downloaded source tarballs and archived
+  # repositories. This can be purged with `spack clean --downloads`.
+  source_cache: $spack/var/spack/cache
+
+
+  # Cache directory for miscellaneous files, like the package index.
+  # This can be purged with `spack clean --misc-cache`
+  misc_cache: /sofware/setonix/2022.01/software/$user/cache
+
+  # concretizer: `clingo` or `original` (good for debugging concretisations)
+  concretizer: clingo
+  #concretizer: original
