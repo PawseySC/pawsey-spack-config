@@ -5,9 +5,9 @@ spack:
   specs:
   - matrix:
     - [$packages]
-    - ['%gcc@10.3.0']  # in other yamls there may be more, eg for fftw
-#    - [target=zen2]  # the target may be useful for similar yamls, eg for fftw
+    - ['%gcc@7.5.0']
   packages:
-    cmake::   # double colon, so that existing externals are ignored
+# double colon in the next line, so that existing externals are ignored
+    cmake::
       buildable: true
   view: false
