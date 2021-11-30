@@ -4,20 +4,21 @@ compilers:
 # compilers hence we do not here 
 # list all that are found. 
 
-- compiler:
-    spec: gcc@7.5.0
-    paths:
-      cc: /usr/bin/gcc
-      cxx: /usr/bin/g++
-      f77: /usr/bin/gfortran
-      fc: /usr/bin/gfortran
-    flags: {}
-    operating_system: sles15
-    target: any
-    modules:
-    - craype-network-ofi
-    environment: {}
-    extra_rpaths: []
+# cray stack is not built with this one (eg libsci), so using it results in link errors
+#- compiler:
+#    spec: gcc@7.5.0
+#    paths:
+#      cc: /usr/bin/gcc
+#      cxx: /usr/bin/g++
+#      f77: /usr/bin/gfortran
+#      fc: /usr/bin/gfortran
+#    flags: {}
+#    operating_system: sles15
+#    target: any
+#    modules:
+#    - craype-network-ofi
+#    environment: {}
+#    extra_rpaths: []
 
 # updated to list explicit paths 
 # and also have mpi module explicitly loaded as well  
