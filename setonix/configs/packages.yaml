@@ -7,7 +7,7 @@ packages:
     providers:
       mpi: [cray-mpich]
       blas: [cray-libsci, amdblis, openblas]
-      lapack: [cray-libsci, amdlibflame, openblas]
+      lapack: [cray-libsci, amdlibflame, netlib-lapack, openblas]
       scalapack: [cray-libsci, amdscalapack, netlib-scalapack]
       fftw-api: [cray-fftw, amdfftw, fftw]
       pkgconfig: [pkg-config]
