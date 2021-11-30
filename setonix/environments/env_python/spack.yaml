@@ -30,7 +30,8 @@ spack:
     - py-setuptools@57.4.0
 
   specs:
-  - python@3.9.7 +optimizations %gcc@10.3.0
+# TODO: check and enable cpu arch optimisations
+  - python@3.9.7 +optimizations %gcc@10.3.0 #target=zen3
   - matrix:
     - [$packages, $utilities]
     - ['%gcc@10.3.0']
