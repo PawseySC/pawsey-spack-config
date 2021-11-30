@@ -2,16 +2,18 @@ spack:
   definitions:
   - packages:
 # aocc, rocm, gcc, llvm: provided by system installations
-# python: in python environment
     - go@1.16.4
     - julia@1.6.1
     - openjdk@17.0
     - r@4.1.0
     - perl@5.34.0
+    - python@3.9.7 +optimizations
     - ruby@3.0.1
     - rust@1.52.1
   specs:
   - matrix:
     - [$packages]
-    - ['%gcc@7.5.0']
+    - ['%gcc@10.3.0']
+# TODO: check and enable cpu arch optimisations
+#    - ['target=zen2', 'target=zen3']
   view: false
