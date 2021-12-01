@@ -10,6 +10,9 @@ spack:
   - matrix:
     - [$packages]
     - ['%gcc@10.3.0']
-# TODO: enable target, ensure listing as external in packages.yaml
+# TODO: enable target
 #    - ['target=zen2']
   view: false
+# TODO: list as external in packages.yaml
+# TODO: write module projections
+# TODO: module as core module
