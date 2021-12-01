@@ -1,11 +1,20 @@
 spack:
+  packages:
+# double colon in the next line, so that existing externals are ignored
+    autoconf:
+      version: [2.71]
+    automake:
+      version: [1.16.3]
+    cmake::
+      version: [3.21.4]
+      buildable: true
   definitions:
   - packages:
-# cmake: to be installed alone as first thing (see env_cmake)
 # py-pip and py-setuptools: installed in env_python
 # snakemake: docs recommend to install with conda
     - autoconf@2.71
     - automake@1.16.3
+    - cmake@3.21.4
     - emacs@27.2 +X toolkit=gtk
     - ffmpeg@4.4 +avresample
     - gnuplot@5.4.1 +X
