@@ -15,8 +15,10 @@ spack:
     - fftw@2.1.5 +openmp
     - fftw@3.3.9 +openmp
     - gsl@2.6
-    - hpx@1.6.0 +async_mpi max_cpu_count=24 networking=mpi
+    - hpx@1.6.0 +async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi
     - kokkos@3.4.01 +hwloc +memkind +numactl +openmp +tuning
+    - kokkos@3.4.01 +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ^hpx@1.6.0
+      +async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi
     - netlib-lapack@3.9.1
     - magma@2.5.4 cuda=off
     - openblas@0.3.15 threads=openmp
