@@ -14,6 +14,6 @@ spack:
   - matrix:
     - [$packages]
     - ['%gcc@10.3.0']
-# TODO: check and enable cpu arch optimisations
+# TODO: enable targets, ensure listing as external in packages.yaml
 #    - ['target=zen2', 'target=zen3']
   view: false
