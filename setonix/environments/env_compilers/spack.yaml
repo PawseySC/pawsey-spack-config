@@ -2,12 +2,12 @@ spack:
   definitions:
   - packages:
 # aocc, rocm, gcc, llvm: provided by system installations
+# python: installed in env_python
     - go@1.16.4
     - julia@1.6.1
     - openjdk@17.0
     - r@4.1.0
     - perl@5.34.0
-    - python@3.9.7 +optimizations
     - ruby@3.0.1
     - rust@1.52.1
   specs:
