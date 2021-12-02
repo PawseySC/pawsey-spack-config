@@ -5,11 +5,9 @@ config:
     root: /sofware/setonix/2022.01/software
 
   # Locations where templates should be found
-#  template_dirs:
-# already in site config
-#    - /sofware/setonix/2022.01/pawsey-spack-config/setonix/templates_setonix
-
-
+  template_dirs:
+# this one is only for the Spack user (Pawsey staff)
+    - /sofware/setonix/2022.01/pawsey-spack-config/setonix/templates_setonix
 
   # Temporary locations Spack can try to use for builds.
   # See recommended options in defaults/config.yaml
