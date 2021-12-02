@@ -26,7 +26,14 @@ The software stack is installed under `/sofware/setonix/YYYY.MM/` with the follo
 * `examples/`: deployment examples and tests
 * `examples/joey_sprint/`: team sprints on Joey
 
+
 ## Useful tips
 
-* check spec first before install. Use `spack spec -I` to see what will be installed.  
+* check spec first before install. Use `spack spec -I` to see what will be installed. 
+* When playing with compiler flags or compilers, use `spack spec -I` and `spack spec -I --reuse` to see if there are significant changes to the packages that will be installed. Reuse is quite good at reducing the number of dependencies that will be installed. Remember that compiler flags are propagated to dependencies, which may not be desirable. An example is debugging, where it is unlikely that debugging symbols are required for libraries. 
+* Beware of `spack load` as it will edit `PATH` and `LD_LIBRARY_PATH` with not just the package being loaded but all the dependencies (despite spack using rpaths). This can cause issues when running codes like gdb. 
 
+### Testing Modules
+
+Current modules.yaml and the template rely on additional features of spack found in the feature/improved-lmod-modules (https://github.com/PawseySC/spack/tree/feature/improved-lmod-modules)
+The update provides extra tokens that can be used when creating the module name and also extra keywords to the template.
