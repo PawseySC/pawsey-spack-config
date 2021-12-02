@@ -12,7 +12,6 @@ The `setonix/` directory contains the following:
 * `environments/`: environments for deployment on Setonix
 * `repo_setonix/`: custom package recipes for Setonix
 * `templates_setonix/`: custom templates 
-* `
 
 The software stack is installed under `/sofware/setonix/YYYY.MM/` with the following sub-directories:
 * `software`: software installations
@@ -26,3 +25,8 @@ The software stack is installed under `/sofware/setonix/YYYY.MM/` with the follo
 
 * `examples/`: deployment examples and tests
 * `examples/joey_sprint/`: team sprints on Joey
+
+## Useful tips
+
+* check spec first before install. Use `spack spec -I` to see what will be installed.  
+
