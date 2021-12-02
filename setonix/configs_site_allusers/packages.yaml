@@ -1,0 +1,359 @@
+packages:
+  all:
+  # note the compiler and providers specifications
+  # only suggest a priority order, they do not exclude other options
+  # suggested priority for compilers.
+    compiler: [gcc@10.3.0,cce,aocc]
+    providers:
+      mpi: [cray-mpich]
+      blas: [cray-libsci, amdblis, openblas]
+      lapack: [cray-libsci, amdlibflame, netlib-lapack, openblas]
+      scalapack: [cray-libsci, amdscalapack, netlib-scalapack]
+      fftw-api: [cray-fftw, amdfftw, fftw]
+      pkgconfig: [pkg-config]
+    permissions:
+      read: world
+      write: group
+      group: pawsey0001
+  cmake:
+    version: [3.21.4]
+
+# don't build virtuals with an external provider
+  mpi:
+    buildable: false
+  blas:
+    buildable: false
+  lapack:
+    buildable: false
+  scalapack:
+    buildable: false
+  fftw-api:
+    buildable: false
+  pkgconfig:
+    buildable: false
+# don't build compilers neither
+  cce:
+    buildable: false
+  gcc:
+    buildable: false
+  aocc:
+    buildable: false
+  intel:
+    buildable: false
+  pgi:
+    buildable: false
+
+# packages found automatically by spack external find
+  bison:
+    externals:
+    - spec: bison@3.0.4
+      prefix: /usr
+    buildable: false
+#  bzip2:
+#    externals:
+#    - spec: bzip2@1.0.6
+#      prefix: /usr
+#    buildable: false
+  cmake:
+    externals:
+  # manual addition with the latest version
+# TODO : set final path for cmake on Setonix
+#    - spec: cmake@3.21.4
+#      prefix: /lus/joey/home/mdelapierre/spack/opt/spack/cray-sles15-zen2/gcc-10.3.0/cmake-3.21.3-ws6puo53ecnvukfyps2beb23dgv4imsg
+    - spec: cmake@3.10.2
+      prefix: /usr
+  # in the future, maybe spack install a couple of recent versions, and make not buildable
+    buildable: false
+  cpio:
+    externals:
+    - spec: cpio@2.12
+      prefix: /usr
+    buildable: false
+  diffutils:
+    externals:
+    - spec: diffutils@3.6
+      prefix: /usr
+    buildable: false
+  file:
+    externals:
+    - spec: file@5.32
+      prefix: /usr
+    buildable: false
+  findutils:
+    externals:
+    - spec: findutils@4.6.0
+      prefix: /usr
+    buildable: false
+  flex:
+    externals:
+    - spec: flex@2.6.4+lex
+      prefix: /usr
+    buildable: false
+  gawk:
+    externals:
+    - spec: gawk@4.2.1
+      prefix: /usr
+    buildable: false
+  git:
+    externals:
+    - spec: git@2.26.2~tcltk
+      prefix: /usr
+    buildable: false
+  gmake:
+    externals:
+    - spec: gmake@4.2.1
+      prefix: /usr
+    buildable: false
+  groff:
+    externals:
+    - spec: groff@1.22.3
+      prefix: /usr
+    buildable: false
+  lustre:
+    externals:
+    - spec: lustre@2.12.4.2_cray_18_g0120bae
+      prefix: /usr
+    buildable: false
+  m4:
+    externals:
+    - spec: m4@1.4.18
+      prefix: /usr
+    buildable: false
+  maven:
+    externals:
+    - spec: maven@3.6.0
+      prefix: /usr/local/maven
+    buildable: false
+  openssh:
+    externals:
+    - spec: openssh@7.9p1
+      prefix: /usr
+    buildable: false
+  openssl:
+    externals:
+    - spec: openssl@1.1.0i-fips
+      prefix: /usr
+    buildable: false
+  perl:
+    externals:
+    - spec: perl@5.26.1~cpanm
+      prefix: /usr
+    buildable: true
+  pkg-config:
+    externals:
+    - spec: pkg-config@0.29.2
+      prefix: /usr
+    buildable: false
+  python:
+    externals:
+    - spec: python@2.7.17
+#    - spec: python@2.7.17+bz2+ctypes~dbm~lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
+      prefix: /usr
+    - spec: python@3.6.12
+#    - spec: python@3.6.12+bz2+ctypes~dbm+lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
+      prefix: /usr
+    - spec: python@3.8.5
+#    - spec: python@3.8.5+bz2+ctypes+dbm+lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
+      prefix: /opt/cray/pe/python/3.8.5.1
+    buildable: true
+  rsync:
+    externals:
+    - spec: rsync@3.1.3
+      prefix: /usr
+    buildable: false
+  sed:
+    externals:
+    - spec: sed@4.4
+      prefix: /usr
+    buildable: false
+  tar:
+    externals:
+    - spec: tar@1.30
+      prefix: /usr
+    buildable: false
+  texinfo:
+    externals:
+    - spec: texinfo@6.5
+      prefix: /usr
+    buildable: false
+  xz:
+    externals:
+    - spec: xz@5.2.3
+      prefix: /usr
+    buildable: false
+
+# system packages (manually added)
+
+# packages that are missing dev install with zypper 
+# so commented out 
+#  binutils:
+#    externals:
+#    - spec: binutils@2.35.1
+#      prefix: /usr
+#    buildable: false
+#  hwloc:
+#    externals:
+#    - spec: hwloc@2.0.0
+#      prefix: /usr
+#    buildable: false
+#  libxml2:
+#    externals:
+#    - spec: libxml2@2.9.7
+#      prefix: /usr
+#    buildable: false
+#  libpciaccess:
+#    externals:
+#    - spec: libpciaccess@0.14
+#      prefix: /usr
+#    buildable: false
+#  ncurses:
+#    externals:
+#    - spec: ncurses@6.1
+#      prefix: /usr
+#    - spec: ncurses@5.9
+#      prefix: /usr
+#    buildable: false
+#  numactl:
+#    externals:
+#    - spec: numactl@2.0.11
+#      prefix: /usr
+#    buildable: false
+
+  curl:
+    externals:
+    - spec: curl@7.60.0
+      prefix: /usr
+    buildable: false
+  libfuse:
+    externals:
+    - spec: libfuse@2.9.7
+      prefix: /usr
+  # current system installation misses binaries (and headers), hence buildable for now
+    buildable: false
+  lz4:
+    externals:
+    - spec: lz4@1.8.0
+      prefix: /usr
+    buildable: false
+  slurm:
+    externals:
+    - spec: slurm@20-11-5-1
+      prefix: /usr
+    buildable: false
+  wget:
+    externals:
+    - spec: wget@1.20.3
+      prefix: /usr
+    buildable: false
+  zlib:
+    externals:
+    - spec: zlib@1.2.11
+      prefix: /usr
+    buildable: false
+  zstd:
+    externals:
+    - spec: zstd@1.4.4
+      prefix: /usr
+    buildable: false
+
+# cray packages (manually added)
+# adding prefixes as in NERSC Perlmutter configs
+  cray-mpich:
+    externals:
+    - spec: cray-mpich@7.7.0%gcc
+      modules:
+      - cray-mpich/8.1.7
+      - craype-network-ofi
+      prefix: /opt/cray/pe/mpich/8.1.7/ofi/gnu/9.1
+    - spec: cray-mpich@7.7.0%cce
+      modules:
+      - cray-mpich/8.1.7
+      - craype-network-ofi
+      prefix: /opt/cray/pe/mpich/8.1.7/ofi/cray/10.0
+    - spec: cray-mpich@7.7.0%aocc
+      modules:
+      - cray-mpich/8.1.7
+      - craype-network-ofi
+      prefix: /opt/cray/pe/mpich/8.1.7/ofi/aocc/3.0
+    buildable: false
+  cray-libsci:
+    externals:
+    - spec: cray-libsci@21.06.1.1%gcc
+      modules:
+      - cray-libsci/21.06.1.1
+      prefix: /opt/cray/pe/libsci/21.06.1.1/gnu/9.1/x86_64
+    - spec: cray-libsci@21.06.1.1%cce
+      modules:
+      - cray-libsci/21.06.1.1
+      prefix: /opt/cray/pe/libsci/21.06.1.1/cray/9.0/x86_64
+    - spec: cray-libsci@21.06.1.1%aocc
+      modules:
+      - cray-libsci/21.06.1.1
+      prefix: /opt/cray/pe/libsci/21.06.1.1/aocc/2.0/x86_64
+    buildable: false
+  cray-fftw:
+    externals:
+    - spec: cray-fftw@3.3.8.10 target=zen2
+      modules:
+      - cray-fftw/3.3.8.10
+      prefix: /opt/cray/pe/fftw/3.3.8.10/x86_rome
+    - spec: cray-fftw@3.3.8.10 target=zen3
+      modules:
+      - cray-fftw/3.3.8.10
+      prefix: /opt/cray/pe/fftw/3.3.8.10/x86_milan
+    buildable: false
+  # more cray
+  jemalloc:
+    externals:
+    - spec: jemalloc@5.1.0.4
+      modules:
+      - cray-jemalloc/5.1.0.4
+      prefix: /opt/cray/pe/jemalloc/5.1.0.4
+    buildable: false
+  xpmem:
+    externals:
+    - spec: xpmem@2.2.40
+      modules:
+      - xpmem/2.2.40-7.0.1.0_1.9__g1d7a24d.shasta
+      prefix: /opt/cray/xpmem/2.2.40-7.0.1.0_1.9__g1d7a24d.shasta
+    buildable: false
+  libfabric:
+    externals:
+    - spec: libfabric@1.11.0.3.66
+      modules:
+      - libfabric/1.11.0.3.66
+      prefix: /opt/cray/libfabric/1.11.0.3.66
+    buildable: false
+  ucx:
+    externals:
+    - spec: ucx@2.7.0-1
+      modules:
+      - cray-ucx/2.7.0-1
+      prefix: /opt/cray/pe/cray-ucx/2.7.0-1/ucx
+    buildable: false
+  papi:
+    externals:
+    - spec: papi@6.0.0.7
+      modules:
+      - papi/6.0.0.7
+      prefix: /opt/cray/pe/papi/6.0.0.7
+    buildable: false
+  r:
+    externals:
+    - spec: r@4.0.5.1
+      prefix: /opt/cray/pe/R/4.0.5.1
+    buildable: true
+
+# cray hdf5
+# cray parallel-netcdf
+# cray netcdf
+# taken out, as cray is dropping support, and there are missing APIs any way
+# available in examples/joey_sprint/configs/packages.yaml up to commit 5c797eefebf8264cba1930c64c5fba7aa0ac6edd
+
+# python additions, based on loading cray-python and running pip list 
+# we have tried to use them as externals, but Spack does not use them correctly:
+# 1. if specified with ^python@3.9.7, concretisation always fail
+# 2. if specified without ^python@3.9.7, would be used also with the wrong python versions
+# therefore, taken out
+# available in examples/joey_sprint/configs/packages.yaml up to commit bfef602ee1e7f5ae7bdb5c6b5120f116df4bea18
+

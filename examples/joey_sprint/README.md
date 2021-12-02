@@ -53,7 +53,7 @@ The script also provides two other commands
 joey_spack_debug_spec 
 # save all the configs and current list of installs by spack 
 joey_spack_keep_record
-
+```
 
 ```
 # Load cray-python
