@@ -43,11 +43,11 @@ compilers:
     operating_system: sles15
     target: any
     modules:
+    - PrgEnv-cray
+    - cce/12.0.1
     - craype
     - craype-x86-rome
     - craype-network-ofi
-    - PrgEnv-cray
-    - cce/12.0.1
     environment: {}
     extra_rpaths: []
 
@@ -66,11 +66,11 @@ compilers:
     operating_system: sles15
     target: any
     modules:
+    - PrgEnv-gnu
+    - gcc/10.3.0
     - craype
     - craype-x86-rome
     - craype-network-ofi
-    - PrgEnv-gnu
-    - gcc/10.3.0
     environment: {}
     extra_rpaths: []
 
@@ -89,11 +89,11 @@ compilers:
     operating_system: sles15
     target: any
     modules:
+    - PrgEnv-aocc
+    - aocc/3.0.0
     - craype
     - craype-x86-rome
     - craype-network-ofi
-    - PrgEnv-aocc
-    - aocc/3.0.0
     environment: {}
     extra_rpaths: []
 
@@ -115,11 +115,11 @@ compilers:
     operating_system: sles15
     target: any
     modules:
+    - PrgEnv-gnu
+    - gcc/10.3.0
     - craype
     - craype-x86-rome
     - craype-network-ofi
-    - PrgEnv-gnu
-    - gcc/10.3.0
     environment: {}
     extra_rpaths: []
 
