@@ -7,9 +7,12 @@ Configuration files for Spack at Pawsey.
 ## Setonix setup
 
 The `setonix/` directory contains the following:
-* `configs/`: configuration files for Setonix
+* `configs_all_users/`: configuration files for Setonix that is valid for all users 
+* `config_spackuser_pawseystaff/`: configuration files for system-wide installs
 * `environments/`: environments for deployment on Setonix
 * `repo_setonix/`: custom package recipes for Setonix
+* `templates_setonix/`: custom templates 
+* `
 
 The software stack is installed under `/sofware/setonix/YYYY.MM/` with the following sub-directories:
 * `software`: software installations
