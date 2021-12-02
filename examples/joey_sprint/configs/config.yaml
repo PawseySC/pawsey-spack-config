@@ -21,3 +21,6 @@ config:
   # concretizer: `clingo` or `original` (good for debugging concretisations)
   concretizer: clingo
   #concretizer: original
+  
+  template_dirs:
+    - $home/pawsey-spack-config/examples/joey_sprint/templates
