@@ -11,10 +11,10 @@ packages:
       scalapack: [cray-libsci]
       fftw-api: [cray-fftw,fftw]
       pkgconfig: [pkg-config]
-  permissions:
-    read: world
-    write: group
-    group: pawsey0001    
+    permissions:
+      read: world
+      write: group
+      group: pawsey0001    
   cmake:
     version: [3.21.3]
 
@@ -64,7 +64,7 @@ packages:
     - spec: cmake@3.10.2
       prefix: /usr
   # in the future, maybe spack install a couple of recent versions, and make not buildable
-    buildable: true
+    buildable: false
   cpio:
     externals:
     - spec: cpio@2.12
