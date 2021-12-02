@@ -344,14 +344,16 @@ packages:
       prefix: /opt/cray/pe/R/4.0.5.1
     buildable: true
 
-# cray is dropping support, and there are missing APIs any way
 # cray hdf5
 # cray parallel-netcdf
 # cray netcdf
-# available up to commit 5c797eefebf8264cba1930c64c5fba7aa0ac6edd
+# taken out, as cray is dropping support, and there are missing APIs any way
+# available in examples/joey_sprint/configs/packages.yaml up to commit 5c797eefebf8264cba1930c64c5fba7aa0ac6edd
 
-# python additions 
-# based on loading cray-python and running pip list 
-# seem not to be working
-# available under examples/joey_sprint/configs/packages.yaml
+# python additions, based on loading cray-python and running pip list 
+# we have tried to use them as externals, but Spack does not use them correctly:
+# 1. if specified with ^python@3.9.7, concretisation always fail
+# 2. if specified without ^python@3.9.7, would be used also with the wrong python versions
+# therefore, taken out
+# available in examples/joey_sprint/configs/packages.yaml up to commit bfef602ee1e7f5ae7bdb5c6b5120f116df4bea18
 
