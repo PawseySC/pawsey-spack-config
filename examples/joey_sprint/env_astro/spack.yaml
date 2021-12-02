@@ -3,6 +3,17 @@
 # It describes a set of packages to be installed, along with
 # configuration settings.
 spack:
+
+  packages:
+    py-numpy:
+      version: [1.20.3]
+    py-pip:
+      version: [21.1.2]
+    py-scipy:
+      version: [1.7.1]
+    py-setuptools:
+      version: [57.4.0]
+
   definitions:
   
   # casacore variants
@@ -37,10 +48,11 @@ spack:
     # - stilts # will need new recipe 
     - pgplot
 
+  # TODO add versions 
   - python-astro-set:
     - py-funcsigs
     - py-pyfits
-    - astropy
+    - py-astropy
     - py-boto3
     - py-healpy
     - py-emcee
@@ -57,17 +69,21 @@ spack:
     - [$casacore-set]
     - ['%gcc@10.3.0 fflags=-fallow-argument-mistmach']
     - [^bzip2@1.0.8]
-    - [+python build_type=Release]
+    - [+python build_type=Release ^python@3.9.7 +optimizations]
     - [+openmp, ~openmp]
     - [~adios2 ~hdf5, +adios2 +hdf5 ^adios2@2.7.1 +hdf5 ^hdf5@1.12.1 +hl +fortran
         +szip api=v110]
   - matrix:
     - [$casacore-legacy]
-    - ['%gcc@10.3.0 fflags=-fallow-argument-mismatch']
+    - ['%gcc@10.3.0 fflags=-fallow-argument-mismatch ^python@3.9.7 +optimizations']
+
   - matrix:
     - [$astro-util-set, $askap-util-set, $mwa-util-set]
     - ['%gcc@10.3.0 fflags=-fallow-argument-mismatch']
+    - [^python@3.9.7 +optimizations]
   - matrix:
     - [$python-astro-set]
+    - ['%gcc@10.3.0']
+    - [^python@3.9.7 +optimizations]
 
   view: false

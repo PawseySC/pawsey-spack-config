@@ -11,10 +11,6 @@ packages:
       scalapack: [cray-libsci]
       fftw-api: [cray-fftw,fftw]
       pkgconfig: [pkg-config]
-    permissions:
-      read: world
-      write: group
-      group: pawsey0001
   cmake:
     version: [3.21.3]
 
@@ -64,7 +60,7 @@ packages:
     - spec: cmake@3.10.2
       prefix: /usr
   # in the future, maybe spack install a couple of recent versions, and make not buildable
-    buildable: false
+    buildable: true
   cpio:
     externals:
     - spec: cpio@2.12
@@ -179,6 +175,36 @@ packages:
     - spec: xz@5.2.3
       prefix: /usr
     buildable: false
+  util-linux:
+    externals:
+    - spec: util-linux@2.33
+      prefix: /usr
+    buildable: false
+  shadow:
+    externals:
+    - spec: shadow@4.6
+      prefix: /usr
+    buildable: false
+  lvm2:
+    externals:
+    - spec: lvm2@2.02.180
+      prefix: /usr
+    buildable: false
+  cryptsetup:
+    externals:
+    - spec: cryptsetup@2.0.6
+      prefix: /usr
+    buildable: false
+  libgpg-error:
+    externals:
+    - spec: libgpg-error@1.29
+      prefix: /usr
+    buildable: false
+  popt:
+    externals:
+    - spec: popt@1.16
+      prefix: /usr
+    buildable: false 
 
 # system packages (manually added)
 
@@ -379,7 +405,7 @@ packages:
       modules:
       - cray-hdf5-parallel/1.12.0.5
       prefix: /opt/cray/pe/hdf5-parallel/1.12.0.5/aocc/2.2
-    buildable: false
+    buildable: true
 
 # cray parallel-netcdf
   parallel-netcdf:
