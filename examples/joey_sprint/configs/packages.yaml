@@ -11,6 +11,10 @@ packages:
       scalapack: [cray-libsci]
       fftw-api: [cray-fftw,fftw]
       pkgconfig: [pkg-config]
+  permissions:
+    read: world
+    write: group
+    group: pawsey0001    
   cmake:
     version: [3.21.3]
 
@@ -284,9 +288,54 @@ packages:
     - spec: zlib@1.2.11
       prefix: /usr
     buildable: false
+  # might be missing dev except on nid001008
   zstd:
     externals:
     - spec: zstd@1.4.4
+      prefix: /usr
+    buildable: false
+  
+# There are packages that should be installed by platforms
+# which are required to install singularity
+# currently only available on nid001008
+  cryptsetup:
+    externals:
+    - spec: cryptsetup@2.0.6
+      prefix: /usr
+    buildable: false
+  libgpb-error:
+    externals:
+    - spec: libgpg-error@1.29
+      prefix: /usr
+    buildable: false
+  popt:
+    externals:
+    - spec: popt@1.16
+      prefix: /usr
+    buildable: false
+  icu4c:
+    externals:
+    - spec: icu4c@60.2
+      prefix: /usr
+    buildable: false 
+  lvm2:
+    externals:
+    - spec: lvm2@2.02
+      prefix: /usr
+    buildable: false
+  blkid:
+    externals:
+    - spec: blkid@2.33
+      prefix: /usr
+    buildable: false
+  squashfs:
+    externals:
+    - spec: squashfs@4.3
+      prefix: /usr
+    buildable: false
+  shadow: 
+    externals:
+    - spec: shadow@4.6
       prefix: /usr
     buildable: false
 
@@ -378,331 +427,335 @@ packages:
       prefix: /opt/cray/pe/R/4.0.5.1
     buildable: true
 
-# cray hdf5
-  hdf5:
-    externals:
-    - spec: hdf5@1.12.0.5%gcc~tools~mpi
-      modules:
-      - cray-hdf5/1.12.0.5
-      prefix: /opt/cray/pe/hdf5/1.12.0.5/gnu/9.1
-    - spec: hdf5@1.12.0.5%gcc~tools+mpi~cxx
-      modules:
-      - cray-hdf5-parallel/1.12.0.5
-      prefix: /opt/cray/pe/hdf5-parallel/1.12.0.5/gnu/9.1
-    - spec: hdf5@1.12.0.5%cce~tools~mpi
-      modules:
-      - cray-hdf5/1.12.0.5
-      prefix: /opt/cray/pe/hdf5/1.12.0.5/crayclang/10.0
-    - spec: hdf5@1.12.0.5%cce~tools+mpi~cxx
-      modules:
-      - cray-hdf5-parallel/1.12.0.5
-      prefix: /opt/cray/pe/hdf5-parallel/1.12.0.5/crayclang/10.0
-    - spec: hdf5@1.12.0.5%aocc~tools~mpi
-      modules:
-      - cray-hdf5/1.12.0.5
-      prefix: /opt/cray/pe/hdf5/1.12.0.5/aocc/2.2
-    - spec: hdf5@1.12.0.5%aocc~tools+mpi~cxx
-      modules:
-      - cray-hdf5-parallel/1.12.0.5
-      prefix: /opt/cray/pe/hdf5-parallel/1.12.0.5/aocc/2.2
-    buildable: true
+# IO packages provided by cray. As these are not 
+# going to be supported from here on, remove entry
+ 
+# # cray hdf5
+#   hdf5:
+#     externals:
+#     - spec: hdf5@1.12.0.5%gcc~tools~mpi
+#       modules:
+#       - cray-hdf5/1.12.0.5
+#       prefix: /opt/cray/pe/hdf5/1.12.0.5/gnu/9.1
+#     - spec: hdf5@1.12.0.5%gcc~tools+mpi~cxx
+#       modules:
+#       - cray-hdf5-parallel/1.12.0.5
+#       prefix: /opt/cray/pe/hdf5-parallel/1.12.0.5/gnu/9.1
+#     - spec: hdf5@1.12.0.5%cce~tools~mpi
+#       modules:
+#       - cray-hdf5/1.12.0.5
+#       prefix: /opt/cray/pe/hdf5/1.12.0.5/crayclang/10.0
+#     - spec: hdf5@1.12.0.5%cce~tools+mpi~cxx
+#       modules:
+#       - cray-hdf5-parallel/1.12.0.5
+#       prefix: /opt/cray/pe/hdf5-parallel/1.12.0.5/crayclang/10.0
+#     - spec: hdf5@1.12.0.5%aocc~tools~mpi
+#       modules:
+#       - cray-hdf5/1.12.0.5
+#       prefix: /opt/cray/pe/hdf5/1.12.0.5/aocc/2.2
+#     - spec: hdf5@1.12.0.5%aocc~tools+mpi~cxx
+#       modules:
+#       - cray-hdf5-parallel/1.12.0.5
+#       prefix: /opt/cray/pe/hdf5-parallel/1.12.0.5/aocc/2.2
+#     buildable: true
 
-# cray parallel-netcdf
-  parallel-netcdf:
-    externals:
-    - spec: parallel-netcdf@1.12.1.5%gcc
-      modules:
-      - cray-parallel-netcdf/1.12.1.5
-      prefix: /opt/cray/pe/parallel-netcdf/1.12.1.5/gnu/9.1
-    - spec: parallel-netcdf@1.12.1.5%cce
-      modules:
-      - cray-parallel-netcdf/1.12.1.5
-      prefix: /opt/cray/pe/parallel-netcdf/1.12.1.5/crayclang/10.0
-    - spec: parallel-netcdf@1.12.1.5%aocc
-      modules:
-      - cray-parallel-netcdf/1.12.1.5
-      prefix: /opt/cray/pe/parallel-netcdf/1.12.1.5/aocc/2.2
-    buildable: false
+# # cray parallel-netcdf
+#   parallel-netcdf:
+#     externals:
+#     - spec: parallel-netcdf@1.12.1.5%gcc
+#       modules:
+#       - cray-parallel-netcdf/1.12.1.5
+#       prefix: /opt/cray/pe/parallel-netcdf/1.12.1.5/gnu/9.1
+#     - spec: parallel-netcdf@1.12.1.5%cce
+#       modules:
+#       - cray-parallel-netcdf/1.12.1.5
+#       prefix: /opt/cray/pe/parallel-netcdf/1.12.1.5/crayclang/10.0
+#     - spec: parallel-netcdf@1.12.1.5%aocc
+#       modules:
+#       - cray-parallel-netcdf/1.12.1.5
+#       prefix: /opt/cray/pe/parallel-netcdf/1.12.1.5/aocc/2.2
+#     buildable: false
 
-# cray netcdf
-  netcdf-c:
-    externals:
-    - spec: netcdf-c@4.7.4.5%gcc~mpi
-      modules:
-      - cray-hdf5/1.12.0.5
-      - cray-netcdf/4.7.4.5
-      prefix: /opt/cray/pe/netcdf/4.7.4.5/gnu/9.1
-    - spec: netcdf-c@4.7.4.5%gcc+mpi
-      modules:
-      - cray-hdf5-parallel/1.12.0.5
-      - cray-netcdf-hdf5parallel/4.7.4.5
-      prefix: /opt/cray/pe/netcdf-hdf5parallel/4.7.4.5/gnu/9.1
-    - spec: netcdf-c@4.7.4.5%cce~mpi
-      modules:
-      - cray-hdf5/1.12.0.5
-      - cray-netcdf/4.7.4.5
-      prefix: /opt/cray/pe/netcdf/4.7.4.5/crayclang/10.0
-    - spec: netcdf-c@4.7.4.5%cce+mpi
-      modules:
-      - cray-hdf5-parallel/1.12.0.5
-      - cray-netcdf-hdf5parallel/4.7.4.5
-      prefix: /opt/cray/pe/netcdf-hdf5parallel/4.7.4.5/crayclang/10.0
-    - spec: netcdf-c@4.7.4.5%aocc~mpi
-      modules:
-      - cray-hdf5/1.12.0.5
-      - cray-netcdf/4.7.4.5
-      prefix: /opt/cray/pe/netcdf/4.7.4.5/aocc/2.2
-    - spec: netcdf-c@4.7.4.5%aocc+mpi
-      modules:
-      - cray-hdf5-parallel/1.12.0.5
-      - cray-netcdf-hdf5parallel/4.7.4.5
-      prefix: /opt/cray/pe/netcdf-hdf5parallel/4.7.4.5/aocc/2.2
-    buildable: false
-  netcdf-fortran:
-    externals:
-    - spec: netcdf-fortran@4.7.4.5%gcc
-      modules:
-      - cray-hdf5/1.12.0.5
-      - cray-netcdf/4.7.4.5
-      prefix: /opt/cray/pe/netcdf/4.7.4.5/gnu/9.1
-    - spec: netcdf-fortran@4.7.4.5%cce
-      modules:
-      - cray-hdf5/1.12.0.5
-      - cray-netcdf/4.7.4.5
-      prefix: /opt/cray/pe/netcdf/4.7.4.5/crayclang/10.0
-    - spec: netcdf-fortran@4.7.4.5%aocc
-      modules:
-      - cray-hdf5/1.12.0.5
-      - cray-netcdf/4.7.4.5
-      prefix: /opt/cray/pe/netcdf/4.7.4.5/aocc/2.2
-    buildable: false
-  netcdf-cxx4:
-    externals:
-    - spec: netcdf-cxx4@4.7.4.5%gcc
-      modules:
-      - cray-hdf5/1.12.0.5
-      - cray-netcdf/4.7.4.5
-      prefix: /opt/cray/pe/netcdf/4.7.4.5/gnu/9.1
-    - spec: netcdf-cxx4@4.7.4.5%cce
-      modules:
-      - cray-hdf5/1.12.0.5
-      - cray-netcdf/4.7.4.5
-      prefix: /opt/cray/pe/netcdf/4.7.4.5/crayclang/10.0
-    - spec: netcdf-cxx4@4.7.4.5%aocc
-      modules:
-      - cray-hdf5/1.12.0.5
-      - cray-netcdf/4.7.4.5
-      prefix: /opt/cray/pe/netcdf/4.7.4.5/aocc/2.2
-    buildable: false
+# # cray netcdf
+#   netcdf-c:
+#     externals:
+#     - spec: netcdf-c@4.7.4.5%gcc~mpi
+#       modules:
+#       - cray-hdf5/1.12.0.5
+#       - cray-netcdf/4.7.4.5
+#       prefix: /opt/cray/pe/netcdf/4.7.4.5/gnu/9.1
+#     - spec: netcdf-c@4.7.4.5%gcc+mpi
+#       modules:
+#       - cray-hdf5-parallel/1.12.0.5
+#       - cray-netcdf-hdf5parallel/4.7.4.5
+#       prefix: /opt/cray/pe/netcdf-hdf5parallel/4.7.4.5/gnu/9.1
+#     - spec: netcdf-c@4.7.4.5%cce~mpi
+#       modules:
+#       - cray-hdf5/1.12.0.5
+#       - cray-netcdf/4.7.4.5
+#       prefix: /opt/cray/pe/netcdf/4.7.4.5/crayclang/10.0
+#     - spec: netcdf-c@4.7.4.5%cce+mpi
+#       modules:
+#       - cray-hdf5-parallel/1.12.0.5
+#       - cray-netcdf-hdf5parallel/4.7.4.5
+#       prefix: /opt/cray/pe/netcdf-hdf5parallel/4.7.4.5/crayclang/10.0
+#     - spec: netcdf-c@4.7.4.5%aocc~mpi
+#       modules:
+#       - cray-hdf5/1.12.0.5
+#       - cray-netcdf/4.7.4.5
+#       prefix: /opt/cray/pe/netcdf/4.7.4.5/aocc/2.2
+#     - spec: netcdf-c@4.7.4.5%aocc+mpi
+#       modules:
+#       - cray-hdf5-parallel/1.12.0.5
+#       - cray-netcdf-hdf5parallel/4.7.4.5
+#       prefix: /opt/cray/pe/netcdf-hdf5parallel/4.7.4.5/aocc/2.2
+#     buildable: false
+#   netcdf-fortran:
+#     externals:
+#     - spec: netcdf-fortran@4.7.4.5%gcc
+#       modules:
+#       - cray-hdf5/1.12.0.5
+#       - cray-netcdf/4.7.4.5
+#       prefix: /opt/cray/pe/netcdf/4.7.4.5/gnu/9.1
+#     - spec: netcdf-fortran@4.7.4.5%cce
+#       modules:
+#       - cray-hdf5/1.12.0.5
+#       - cray-netcdf/4.7.4.5
+#       prefix: /opt/cray/pe/netcdf/4.7.4.5/crayclang/10.0
+#     - spec: netcdf-fortran@4.7.4.5%aocc
+#       modules:
+#       - cray-hdf5/1.12.0.5
+#       - cray-netcdf/4.7.4.5
+#       prefix: /opt/cray/pe/netcdf/4.7.4.5/aocc/2.2
+#     buildable: false
+#   netcdf-cxx4:
+#     externals:
+#     - spec: netcdf-cxx4@4.7.4.5%gcc
+#       modules:
+#       - cray-hdf5/1.12.0.5
+#       - cray-netcdf/4.7.4.5
+#       prefix: /opt/cray/pe/netcdf/4.7.4.5/gnu/9.1
+#     - spec: netcdf-cxx4@4.7.4.5%cce
+#       modules:
+#       - cray-hdf5/1.12.0.5
+#       - cray-netcdf/4.7.4.5
+#       prefix: /opt/cray/pe/netcdf/4.7.4.5/crayclang/10.0
+#     - spec: netcdf-cxx4@4.7.4.5%aocc
+#       modules:
+#       - cray-hdf5/1.12.0.5
+#       - cray-netcdf/4.7.4.5
+#       prefix: /opt/cray/pe/netcdf/4.7.4.5/aocc/2.2
+#     buildable: false
 
 
 # python additions 
 # based on loading cray-python and 
 # running pip list 
-# standard python packages 
-  py-atomicwrites:
-    externals:
-    - spec: py-atomicwrites@1.3.0
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false 
-  py-attrs:
-    externals:
-    - spec: py-attrs@19.3.0
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false 
-  py-cython:
-    externals:
-    - spec: py-cython@0.29.15
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: true 
-  # not certain about dask-mpi in spack and 
-  # whether cray provides it. Normally it 
-  # would be listed separately 
-  py-fsspec:
-    externals:
-    - spec: py-fsspec@0.7.4
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false 
-  py-importlib-metadata:
-    externals:
-    - spec: py-importlib-metadata@1.5.0
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
-  py-locket:
-    externals:
-    - spec: py-locket@0.2.0
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
-  py-more-itertools:
-    externals:
-    - spec: py-more-itertools@8.2.0
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
-  py-nose:
-    externals:
-    - spec: py-nose@1.3.7
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
-  py-packaging:
-    externals:
-    - spec: py-packaging@1.18.2
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
-  py-partd:
-    externals:
-    - spec: py-partd@1.1.0
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
-  py-pip:
-    externals:
-    - spec: py-pip@20.1.1
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
-  py-pluggy:
-    externals:
-    - spec: py-pluggy@0.13.1
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
-  py-py:
-    externals:
-    - spec: py-py@1.8.1
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
-  py-pyparsing:
-    externals:
-    - spec: py-pyparsing@2.4.6
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
-  # this is an old verison of pytest so buildable
-  py-pytest:
-    externals:
-    - spec: py-pytest@5.3.5
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: true
-  py-python-dateutil:
-    externals:
-    - spec: py-python-dateutil@2.8.1
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
-  py-pytz:
-    externals:
-    - spec: py-pytz@2020.1
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
-  # this is an old verison so buildable
-  py-setuptools:
-    externals:
-    - spec: py-setuptools@47.1.0
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: true
-  # this is an old verison so buildable
-  py-setuptools-scm:
-    externals:
-    - spec: py-setuptools-scm@3.4.3
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: true
-  py-six:
-    externals:
-    - spec: py-six@1.14.0
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
-  py-toolz:
-    externals:
-    - spec: py-toolz@0.10.0
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
-  py-wcwidth:
-    externals:
-    - spec: py-wcwidth@0.1.8
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
-  # this is an old verison so buildable
-  py-zipp:
-    externals:
-    - spec: py-zipp@2.2.0
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: true
+# As there are issues with the current packages 
+# in cray-python this section is commented out
+#   py-atomicwrites:
+#     externals:
+#     - spec: py-atomicwrites@1.3.0
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: false 
+#   py-attrs:
+#     externals:
+#     - spec: py-attrs@19.3.0
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: false 
+#   py-cython:
+#     externals:
+#     - spec: py-cython@0.29.15
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: true 
+#   # not certain about dask-mpi in spack and 
+#   # whether cray provides it. Normally it 
+#   # would be listed separately 
+#   py-fsspec:
+#     externals:
+#     - spec: py-fsspec@0.7.4
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: false 
+#   py-importlib-metadata:
+#     externals:
+#     - spec: py-importlib-metadata@1.5.0
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: false
+#   py-locket:
+#     externals:
+#     - spec: py-locket@0.2.0
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: false
+#   py-more-itertools:
+#     externals:
+#     - spec: py-more-itertools@8.2.0
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: false
+#   py-nose:
+#     externals:
+#     - spec: py-nose@1.3.7
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: false
+#   py-packaging:
+#     externals:
+#     - spec: py-packaging@1.18.2
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: false
+#   py-partd:
+#     externals:
+#     - spec: py-partd@1.1.0
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: false
+#   py-pip:
+#     externals:
+#     - spec: py-pip@20.1.1
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: false
+#   py-pluggy:
+#     externals:
+#     - spec: py-pluggy@0.13.1
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: false
+#   py-py:
+#     externals:
+#     - spec: py-py@1.8.1
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: false
+#   py-pyparsing:
+#     externals:
+#     - spec: py-pyparsing@2.4.6
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: false
+#   # this is an old verison of pytest so buildable
+#   py-pytest:
+#     externals:
+#     - spec: py-pytest@5.3.5
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: true
+#   py-python-dateutil:
+#     externals:
+#     - spec: py-python-dateutil@2.8.1
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: false
+#   py-pytz:
+#     externals:
+#     - spec: py-pytz@2020.1
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: false
+#   # this is an old verison so buildable
+#   py-setuptools:
+#     externals:
+#     - spec: py-setuptools@47.1.0
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: true
+#   # this is an old verison so buildable
+#   py-setuptools-scm:
+#     externals:
+#     - spec: py-setuptools-scm@3.4.3
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: true
+#   py-six:
+#     externals:
+#     - spec: py-six@1.14.0
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: false
+#   py-toolz:
+#     externals:
+#     - spec: py-toolz@0.10.0
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: false
+#   py-wcwidth:
+#     externals:
+#     - spec: py-wcwidth@0.1.8
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: false
+#   # this is an old verison so buildable
+#   py-zipp:
+#     externals:
+#     - spec: py-zipp@2.2.0
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: true
 
-# python packages that might want to rebuild 
-  py-dask:
-    externals:
-    - spec: py-dask@2.13.0
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: true 
-  # wonder if this should be buildable
-  py-mpi4py:
-    externals:
-    - spec: py-mpi4py@3.0.3
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: false
-  py-numpy:
-    externals:
-    - spec: py-numpy@1.18.2
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: true 
-  py-pandas:
-    externals:
-    - spec: py-pandas@1.0.5
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: true
-  py-scipy:
-    externals:
-    - spec: py-scipy@1.4.1
-      modules:
-      - cray-python
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: true
+# # python packages that might want to rebuild 
+#   py-dask:
+#     externals:
+#     - spec: py-dask@2.13.0
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: true 
+#   # wonder if this should be buildable
+#   py-mpi4py:
+#     externals:
+#     - spec: py-mpi4py@3.0.3
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: false
+#   py-numpy:
+#     externals:
+#     - spec: py-numpy@1.18.2
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: true 
+#   py-pandas:
+#     externals:
+#     - spec: py-pandas@1.0.5
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: true
+#   py-scipy:
+#     externals:
+#     - spec: py-scipy@1.4.1
+#       modules:
+#       - cray-python
+#       prefix: /opt/cray/pe/python/3.8.5.1
+#     buildable: true
