@@ -15,7 +15,7 @@ modules:
       # however, since there will only be a single 
       # mpi we do not use this hierarchy
       # instead use compiler (name and version)
-      hierarchy:
+      hierarchy::
         - compiler
       
       # remove hashes from module name, can lead to more conflicts 
