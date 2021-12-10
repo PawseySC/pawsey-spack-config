@@ -38,6 +38,7 @@ function joey_spack_start() {
 	# copy configs if necessary
 	cp ${joey_spack_repodir}/configs/*.yaml ${SPACKROOT}/etc/spack/
 	sed -i 's|REPOPATH|'"${joey_spack_repodir}"'|g' ${SPACKROOT}/etc/spack/repos.yaml
+	sed -i 's|REPOPATH|'"${joey_spack_repodir}"'|g' ${SPACKROOT}/etc/spack/config.yaml
 	# Use provided json to avoid crash on compute nodes
 	cp ${joey_spack_repodir}/fixes/microarchitectures.json ${SPACKROOT}/lib/spack/external/archspec/json/cpu/
 	# do a clean of the older spack

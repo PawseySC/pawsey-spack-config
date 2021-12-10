@@ -23,4 +23,4 @@ config:
   #concretizer: original
   
   template_dirs:
-    - $home/pawsey-spack-config/examples/joey_sprint/templates
+    - REPOPATH/templates
