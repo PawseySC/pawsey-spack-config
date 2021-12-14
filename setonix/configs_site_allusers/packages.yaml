@@ -295,10 +295,12 @@ packages:
     externals:
     - spec: cray-fftw@3.3.8.10 target=zen2
       modules:
+      - craype-x86-rome
       - cray-fftw/3.3.8.10
       prefix: /opt/cray/pe/fftw/3.3.8.10/x86_rome
     - spec: cray-fftw@3.3.8.10 target=zen3
       modules:
+      - craype-x86-milan
       - cray-fftw/3.3.8.10
       prefix: /opt/cray/pe/fftw/3.3.8.10/x86_milan
     buildable: false
