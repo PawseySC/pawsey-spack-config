@@ -83,6 +83,14 @@ spack concretize -f
 # Install
 spack install -y    # -j 16
 
+# To run a parallel installation one can use 
+# bash function ParallelSpackInstall #number_of_cores_for_compilation #number_of_separate_spack_instances_invoked
+# which is provided by spack_joey_utils.sh
+# Since spack uses file locks, it is possible to run several instances 
+# of spack at once to install different portions of the dependency tree
+# Example
+ParallelSpackInstall 4 4 
+
 # When done with all installations, you may deactivate the Spack environment
 spack env deactivate
 
