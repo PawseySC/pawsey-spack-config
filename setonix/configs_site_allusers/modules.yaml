@@ -1,0 +1,48 @@
+modules:
+
+  default:
+    enable::
+      - lmod 
+    roots:
+      lmod: /software/$PAWSEY_PROJECT/$USER/setonix/modules
+    lmod:
+      # set the hierarchy. Typical start point is mpi 
+      # however, since there will only be a single 
+      # mpi we do not use this hierarchy
+      # instead use compiler (name and version)
+      hierarchy::
+        - compiler
+
+      # set the core compilers for lmod
+      # these are placed in core 
+      core_compilers:
+        - gcc@7.5.0
+
+      # remove hashes from module name, can lead to more conflicts 
+      # this can be addressed in other ways
+      hash_length: 0
+
+      # for all packages
+      all:
+        # to be consistent with current module setup, 
+        # add to environment a {name}_HOME which stores the prefix 
+        # to the package
+        environment:
+          set:
+            '{name}_HOME': '{prefix}'
+          # for backwards compatibility we could implement
+          # the following environment variable 
+          #set:
+          #  'MAALI_{name}_HOME': '{prefix}'
+    
+        # select all packages that depend on python 
+        # and set these modules to autoload their dependencies
+        # this is based on tcl and needs update for lmod
+        #^python:
+        #  autoload:  direct
+
+      projections:
+        # keeping these simple for user-specific installations
+        # name, version, hash to avoid conflicts, no categories
+        # adding /module.lua to enforce explicit usage of versions
+        all: '{name}/{version}-{hash:7}/module.lua'
