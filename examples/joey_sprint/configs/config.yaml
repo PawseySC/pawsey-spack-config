@@ -1,4 +1,9 @@
 config:
+
+  # Locations where templates should be found
+  template_dirs:
+    - REPOPATH/templates
+
   build_stage:
 # commenting this for the sprint, so we can more easily access the logs
 #    - $tempdir/$user/spack-stage
@@ -13,7 +18,6 @@ config:
   # repositories. This can be purged with `spack clean --downloads`.
   source_cache: $spack/var/spack/cache
 
-
   # Cache directory for miscellaneous files, like the package index.
   # This can be purged with `spack clean --misc-cache`
   misc_cache: $spack/var/spack/misc-cache
@@ -21,6 +25,3 @@ config:
   # concretizer: `clingo` or `original` (good for debugging concretisations)
   concretizer: clingo
   #concretizer: original
-  
-  template_dirs:
-    - REPOPATH/templates
