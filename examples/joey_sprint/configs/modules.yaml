@@ -43,11 +43,10 @@ modules:
           set:
             'MAALI_{name}_HOME': '{prefix}'
     
-        # select all packages that depend on python 
-        # and set the modules to autoload python
-        # this is based on tcl and needs update for lmod
-        #^python:
-        #  autoload:  direct
+      # select all packages that depend on python 
+      # and set these modules to autoload their dependencies
+      ^python:
+        autoload: direct
 
       projections:
         # modules on magnus have one of [apps, tools, python, devel] as start of module name 
