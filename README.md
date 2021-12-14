@@ -7,18 +7,22 @@ Configuration files for Spack at Pawsey.
 ## Setonix setup
 
 The `setonix/` directory contains the following:
-* `configs_all_users/`: configuration files for Setonix that is valid for all users 
-* `config_spackuser_pawseystaff/`: configuration files for system-wide installs
+* `configs_site_allusers/`: configuration files for Setonix that is valid for all users 
+* `config_spackuser_pawseystaff/`: configuration files for system-wide installs (Pawsey staff)
 * `environments/`: environments for deployment on Setonix
 * `repo_setonix/`: custom package recipes for Setonix
-* `templates_setonix/`: custom templates 
+* `templates_setonix/`: custom templates
 
-The software stack is installed under `/sofware/setonix/YYYY.MM/` with the following sub-directories:
+The system-wide software stack is installed under `/sofware/setonix/YYYY.MM/` with the following sub-directories:
 * `software`: software installations
 * `modules`: modulefules
 * `spack`: Spack installation
 * `pawsey-spack-config`: this repo, including `setonix/repo_setonix` for customised package recipes
 
+As regards configuration YAMLs, note that Spack prioritises user configs to site configs (*i.e.* those in the Spack installation directory).  
+In order to minimise edits in users' home directories, we're putting:
+* user-specific settings in the site YAMLs
+* system-wide settings (Pawsey staff) in the *spack* user's YAMLs
 
 
 ## Other setups
