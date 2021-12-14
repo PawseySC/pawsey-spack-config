@@ -3,7 +3,7 @@ packages:
   # note the compiler and providers specifications
   # only suggest a priority order, they do not exclude other options
   # suggested priority for compilers.
-    compiler: [gcc@10.3.0,cce,aocc]
+    compiler: [gcc@10.3.0,cce@12.0.1,aocc@3.0.0]
     providers:
       mpi: [cray-mpich]
       blas: [cray-libsci, amdblis, openblas]

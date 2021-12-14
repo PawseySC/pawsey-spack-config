@@ -1,0 +1,7 @@
+upstreams:
+# this is the location of the system wide installation
+# it acts as an upstream installation for user-specific installations
+  system_wide:
+    install_tree: /sofware/setonix/2022.01/software
+    modules:
+      lmod: /sofware/setonix/2022.01/modules

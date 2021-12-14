@@ -1,0 +1,15 @@
+modules:
+
+  default:
+    roots:
+      lmod: /sofware/setonix/2022.01/modules
+
+    lmod:
+      projections:
+        # modules on magnus have one of [apps, tools, python, devel] as start of module name 
+        # an then {name}/{version}'
+        # will be necessary to think of how to include variants 
+        # that does not require manual updates. Fortunately, not many packages 
+        # need this update 
+        # adding /module.lua to enforce explicit usage of versions
+        all: '{name}/{version}/module.lua'
