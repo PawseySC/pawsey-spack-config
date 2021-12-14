@@ -1,0 +1,87 @@
+Package libz1@1.2.11
+Package zlib-devel@1.2.11
+Package libpopt0@1.16
+Package popt-devel: Not installed!
+Package shadow@4.6
+Package libuuid-devel: Not installed!
+Package libuuid1@2.33.1
+Package util-linux@2.33.1
+Package lvm2@2.02.180
+Package lvm2-devel: Not installed!
+Package squashfs: Not installed!
+Package cryptsetup: Not installed!
+Package libcryptsetup-devel: Not installed!
+Package alsa-lib: Not installed!
+Package autoconf: Not installed!
+Package autogen: Not installed!
+Package automake: Not installed!
+Package binutils@2.35.1
+Package bison@3.0.4
+Package bzip2@1.0.6
+Package bzip2-devel: Not installed!
+Package curl@7.60.0
+Package diffutils@3.6
+Package emacs: Not installed!
+Package ffmpeg: Not installed!
+Package flex@2.6.4
+Package libfreetype6@2.10.1
+Package freetype-devel: Not installed!
+Package gettext-runtime@0.19.8.1
+Package perl-gettext: Not installed!
+Package gettext-tools: Not installed!
+Package make@4.2.1
+Package hwloc: Not installed!
+Package hwloc-devel: Not installed!
+Package libedit0@3.1.snap20150325
+Package libedit-devel: Not installed!
+Package libelf1@0.168
+Package libelf-devel@0.168
+Package libffi7@3.2.1.git259
+Package libffi-devel: Not installed!
+Package libfuse2@2.9.7
+Package fuse-devel: Not installed!
+Package libicu????: Not installed!
+Package libicu-devel: Not installed!
+Package libjpeg8@8.1.2
+Package libjpeg?-devel: Not installed!
+Package libnuma1@2.0.11
+Package libnuma-devel: Not installed!
+Package libpciaccess0@0.14
+Package libpciaccess-devel: Not installed!
+Package libpng12-0@1.2.57
+Package libpng??-devel: Not installed!
+Package libxml2-2@2.9.7
+Package libxml2-devel: Not installed!
+Package libX11-6@1.6.5
+Package libX11-devel: Not installed!
+Package libyaml-0-2@0.1.7
+Package libyaml-devel: Not installed!
+Package nano: Not installed!
+Package nasm: Not installed!
+Package ncurses-utils@6.1
+Package ncurses-devel: Not installed!
+Package ninja: Not installed!
+Package numactl@2.0.11
+Package openssl@1.1.0i
+Package perl@5.26.1
+Package pkgconfig: Not installed!
+Package libreadline7 libreadline7-32bit libreadline-java@7.0 7.0 0.8.0
+Package readline-devel: Not installed!
+Package rsync@3.1.3
+Package sqlite3: Not installed!
+Package sqlite3-devel: Not installed!
+Package squashfs: Not installed!
+Package subversion: Not installed!
+Package swig: Not installed!
+Package tar@1.30
+Package tcl@8.6.7
+Package texinfo: Not installed!
+Package vim@8.0.1568
+Package wget@1.20.3
+Package libxz: Not installed!
+Package xz-devel: Not installed!
+Package yasm: Not installed!
+Package libz1@1.2.11
+Package zlib-devel@1.2.11
+Package zstd: Not installed!
+Package zstd-devel: Not installed!

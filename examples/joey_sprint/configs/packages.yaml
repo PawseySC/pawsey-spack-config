@@ -51,6 +51,7 @@ packages:
     - spec: bison@3.0.4
       prefix: /usr
     buildable: false
+# missing headers so must be built
 #  bzip2:
 #    externals:
 #    - spec: bzip2@1.0.6
@@ -182,36 +183,12 @@ packages:
     - spec: xz@5.2.3
       prefix: /usr
     buildable: false
-  util-linux:
+  # slurm 
+  slurm:
     externals:
-    - spec: util-linux@2.33
+    - spec: slurm@20-11-5-1
       prefix: /usr
     buildable: false
-  shadow:
-    externals:
-    - spec: shadow@4.6
-      prefix: /usr
-    buildable: false
-  lvm2:
-    externals:
-    - spec: lvm2@2.02.180
-      prefix: /usr
-    buildable: false
-  cryptsetup:
-    externals:
-    - spec: cryptsetup@2.0.6
-      prefix: /usr
-    buildable: false
-  libgpg-error:
-    externals:
-    - spec: libgpg-error@1.29
-      prefix: /usr
-    buildable: false
-  popt:
-    externals:
-    - spec: popt@1.16
-      prefix: /usr
-    buildable: false 
 
 # system packages (manually added)
 
@@ -249,36 +226,19 @@ packages:
 #    - spec: numactl@2.0.11
 #      prefix: /usr
 #    buildable: false
-
   curl:
     externals:
     - spec: curl@7.60.0
       prefix: /usr
     buildable: false
-  fftw:
-  # manual addition for fftw@2
-    externals:
-    - spec: fftw@2.1.5%gcc target=zen2
-      prefix: /lus/joey/home/mdelapierre/spack/opt/spack/cray-sles15-zen2/gcc-10.3.0/fftw-2.1.5-qsx3jouinnj3e7e7hfy3uendvzn3x5mx
-    - spec: fftw@2.1.5%cce target=zen2
-      prefix: /lus/joey/home/mdelapierre/spack/opt/spack/cray-sles15-zen2/cce-12.0.1/fftw-2.1.5-3jxqf443ihzeu5ftm23kkxd7vdj4nhbv
-    - spec: fftw@2.1.5%aocc target=zen2
-      prefix: /lus/joey/home/mdelapierre/spack/opt/spack/cray-sles15-zen2/aocc-3.0.0/fftw-2.1.5-bh4tcpc5blq6rdflw7rinkmtie5qqjmn
-    buildable: false
   libfuse:
     externals:
     - spec: libfuse@2.9.7
       prefix: /usr
-  # current system installation misses binaries (and headers), hence buildable for now
     buildable: false
   lz4:
     externals:
     - spec: lz4@1.8.0
-      prefix: /usr
-    buildable: false
-  slurm:
-    externals:
-    - spec: slurm@20-11-5-1
       prefix: /usr
     buildable: false
   wget:
@@ -297,7 +257,7 @@ packages:
     - spec: zstd@1.4.4
       prefix: /usr
     buildable: false
-  
+
 # There are packages that should be installed by platforms
 # which are required to install singularity
 # currently only available on nid001008
@@ -340,6 +300,27 @@ packages:
     externals:
     - spec: shadow@4.6
       prefix: /usr
+    buildable: false
+  util-linux:
+    externals:
+    - spec: util-linux@2.33
+      prefix: /usr
+    buildable: false
+  util-linux-uuid:
+    externals:
+    - spec: util-linux-uuid@2.33
+      prefix: /usr
+    buildable: false
+
+  # manual addition for fftw@2
+  fftw:
+    externals:
+    - spec: fftw@2.1.5%gcc target=zen2
+      prefix: /lus/joey/home/mdelapierre/spack/opt/spack/cray-sles15-zen2/gcc-10.3.0/fftw-2.1.5-qsx3jouinnj3e7e7hfy3uendvzn3x5mx
+    - spec: fftw@2.1.5%cce target=zen2
+      prefix: /lus/joey/home/mdelapierre/spack/opt/spack/cray-sles15-zen2/cce-12.0.1/fftw-2.1.5-3jxqf443ihzeu5ftm23kkxd7vdj4nhbv
+    - spec: fftw@2.1.5%aocc target=zen2
+      prefix: /lus/joey/home/mdelapierre/spack/opt/spack/cray-sles15-zen2/aocc-3.0.0/fftw-2.1.5-bh4tcpc5blq6rdflw7rinkmtie5qqjmn
     buildable: false
 
 # cray packages (manually added)
