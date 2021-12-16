@@ -1,0 +1,12 @@
+# seperate yaml file for wrf
+# wrf users will want to build their own version, so only install dependencies
+# use "--only dependecies" option with spack install
+spack:
+  definitions:
+  - packages:
+    - wrf@4.2
+  specs:
+  - matrix:
+    - [$packages]
+    - ['%gcc@10.3.0']
+  view: false
