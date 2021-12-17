@@ -58,6 +58,9 @@ class Charmpp(Package):
     # Ignore compiler warnings while configuring
     patch("strictpass.patch", when="@:6.8.2")
 
+    # Update v6.10.2 with shasta targets (backport from 7.0.0).
+    patch("shasta.patch", when="@:6.10.2")
+
     # Build targets
     # "target" is reserved, so we have to use something else.
     variant(
@@ -102,6 +105,8 @@ class Charmpp(Package):
     variant("tracing", default=False, description="Enable tracing modules")
 
     depends_on("cmake@3.4.0:", when="@7.0.0:", type='build' )
+    depends_on("autoconf", when="@:6.99.99", type='build' ) # Anything pre-7.0.
+    depends_on("automake", when="@:6.99.99", type='build' )
 
     depends_on("mpi", when="backend=mpi")
     depends_on("papi", when="+papi")
@@ -111,6 +116,8 @@ class Charmpp(Package):
     depends_on("slurm@:17-11-9-2", when="pmi=slurmpmi")
     depends_on("slurm@17-11-9-2:", when="pmi=slurmpmi2")
 
+    depends_on("libfabric", when="backend=ofi")
+
     # FIXME : As of now spack's OpenMPI recipe does not have a PMIx variant
     # But if users have external installs of OpenMPI with PMIx support, this
     # will allow them to build charm++ with it.
@@ -119,10 +126,8 @@ class Charmpp(Package):
     depends_on("mpi", when="pmi=simplepmi")
     depends_on("mpi", when="pmi=slurmpmi")
     depends_on("mpi", when="pmi=slurmpmi2")
-
-    # Git versions of Charm++ require automake and autoconf
-    depends_on("automake", when="@develop")
-    depends_on("autoconf", when="@develop")
+    # If pmi is not specified, simplepmi will be used for ofi.
+    depends_on("mpi", when="backend=ofi")
 
     conflicts("~tracing", "+papi")
 
@@ -135,7 +140,7 @@ class Charmpp(Package):
         platplat = platform.platform()
         specplat = self.spec.platform
 
-        if "shasta" in platplat and self.spec.satisfies('@7.0.0:'):
+        if "shasta" in platplat and self.spec.satisfies('@6.8.2:'):
             plat = "shasta"
         elif specplat.startswith("cray"):
             plat = "cnl"
@@ -183,7 +188,7 @@ class Charmpp(Package):
             ("win",     "x86_64",   "netlrts"):     "netlrts-win-x86_64",
             ("cnl",     "x86_64",   "gni"):         "gni-crayxc",
             ("cnl",     "x86_64",   "mpi"):         "mpi-crayxc",
-# TODO            ("shasta",  "x86_64",   "ofi"):         "ofi-crayshasta",
+            ("shasta",  "x86_64",   "ofi"):         "ofi-crayshasta",
             ("shasta",  "x86_64",   "mpi"):         "mpi-crayshasta",
         }
 
@@ -209,6 +214,10 @@ class Charmpp(Package):
 
         return versions[(plat, mach, comm)]
 
+    def setup_build_environment(self, env):
+        if ("backend=ofi") in self.spec:
+            env.set('LIBFABRIC', self.spec['libfabric'].prefix)
+
     # FIXME: backend=mpi also provides mpi, but spack does not support
     # depends_on("mpi") and provides("mpi") in the same package currently.
     # for b in ['multicore', 'netlrts', 'verbs', 'gni', 'ofi', 'pami',
@@ -227,15 +236,6 @@ class Charmpp(Package):
                                     available on the Netlrts and MPI \
                                     network layers.")
 
-        if ("backend=ucx" in self.spec) or \
-           ("backend=ofi" in self.spec) or \
-           ("backend=gni" in self.spec):
-            if ("pmi=none" in self.spec):
-                raise InstallError("The UCX/OFI/GNI backends need \
-                                    PMI to run. Please add pmi=... \
-                                    Note that PMIx is the preferred \
-                                    option.")
-
         if ("pmi=simplepmi" in self.spec) or \
            ("pmi=slurmpmi" in self.spec) or \
            ("pmi=slurmpmi2" in self.spec):
@@ -251,7 +251,7 @@ class Charmpp(Package):
         # We assume that Spack's compiler wrappers make this work. If
         # not, then we need to query the compiler vendor from Spack
         # here.
-        if spec.satisfies('@7.0.0:') and "shasta" in platform.platform():
+        if spec.satisfies('@6.8.2:') and "shasta" in platform.platform():
             options = [ ]
         else:
             options = [
