@@ -28,7 +28,7 @@ spack:
     - plumed@2.7.2 ^python@3.9.7+optimizations
     - netlib-scalapack@2.1.0
     - slate@2021.05.02 cuda=off
-    - trilinos@13.0.1 +adios2 +openmp +python ^python@3.9.7 +optimizations #alexis tested and passed with gcc@10.3.0 just: trilinos@13.0.1 +adios2 +openmp +python
+    - trilinos@13.0.1 +adios2 +openmp +python ^python@3.9.7 +optimizations
   specs:
   - matrix:
     - [$packages]
