@@ -59,7 +59,7 @@ class Charmpp(Package):
     patch("strictpass.patch", when="@:6.8.2")
 
     # Update v6.10.2 with shasta targets (backport from 7.0.0).
-    patch("shasta.patch", when="@:6.10.2")
+    patch("shasta.patch.1", when="@:6.10.2")
 
     # Build targets
     # "target" is reserved, so we have to use something else.
