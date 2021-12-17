@@ -1,0 +1,31 @@
+diff --git a/src/Node.C b/src/Node.C
+index d4f70ac8..9efd2877 100644
+--- a/src/Node.C
++++ b/src/Node.C
+@@ -94,7 +94,7 @@ extern "C" {
+   void recvCheckpointCAck_handler(envelope*);
+ }
+ 
+-#ifdef CMK_BALANCED_INJECTION_API
++#if defined(CMK_BALANCED_INJECTION_API) && CMK_BALANCED_INJECTION_API
+ #include "ckBIconfig.h"
+ #endif
+ 
+@@ -338,7 +338,7 @@ Node::Node(GroupInitMsg *msg)
+   //Note: Binding BOC vars such as workDistrib has been moved
+   //to the 1st phase of startup because the in-order message delivery
+   //is not always guaranteed --Chao Mei
+-#ifdef CMK_BALANCED_INJECTION_API
++#if defined(CMK_BALANCED_INJECTION_API) && CMK_BALANCED_INJECTION_API
+   if(CkMyRank() == 0){
+     balancedInjectionLevel=ck_get_GNI_BIConfig();
+     // CkPrintf("[%d] get retrieved BI=%d\n",CkMyPe(),balancedInjectionLevel);
+@@ -869,7 +869,7 @@ void Node::startup() {
+     // computes may create proxies on the fly so put these in separate phase
+     Sync::Object()->openSync();  // decide if to open local Sync 
+     if (proxySendSpanning || proxyRecvSpanning ) proxyMgr->buildProxySpanningTree();
+-#ifdef CMK_BALANCED_INJECTION_API
++#if defined(CMK_BALANCED_INJECTION_API) && CMK_BALANCED_INJECTION_API
+     if(CkMyRank() == 0){
+       // CkPrintf("[%d] get retrieved BI=%d\n",CkMyPe(),balancedInjectionLevel);
+       ck_set_GNI_BIConfig(balancedInjectionLevel);
