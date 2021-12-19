@@ -40,6 +40,7 @@ class Namd(MakefilePackage, CudaPackage):
     patch('inherited-member-2.13.patch', when='@2.13')
     patch('inherited-member-2.14.patch', when='@2.14')
     patch('charmpp-shasta-2.14.patch', when='@2.14')
+    patch('lpython-2.14.patch.2')
 
     depends_on('charmpp@6.10.1:', when="@2.14:")
     depends_on('charmpp@6.8.2', when="@2.13")
