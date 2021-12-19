@@ -302,28 +302,29 @@ packages:
 #    - spec: binutils@2.35.1
 #      prefix: /usr
 #    buildable: false
-#  hwloc:
-#    externals:
-#    - spec: hwloc@2.0.0
-#      prefix: /usr
-#    buildable: false
-#  libxml2:
-#    externals:
-#    - spec: libxml2@2.9.7
-#      prefix: /usr
-#    buildable: false
-#  libpciaccess:
-#    externals:
-#    - spec: libpciaccess@0.14
-#      prefix: /usr
-#    buildable: false
-#  ncurses:
-#    externals:
-#    - spec: ncurses@6.1
-#      prefix: /usr
+  hwloc:
+    externals:
+    - spec: hwloc@2.0.0
+      prefix: /usr
+    buildable: false
+  libxml2:
+    externals:
+    - spec: libxml2@2.9.7
+      prefix: /usr
+    buildable: false
+  libpciaccess:
+    externals:
+    - spec: libpciaccess@0.14
+      prefix: /usr
+    buildable: false
+  ncurses:
+    externals:
+    - spec: ncurses@6.1
+      prefix: /usr
+# this one still has no devel
 #    - spec: ncurses@5.9
 #      prefix: /usr
-#    buildable: false
+    buildable: false
 #  numactl:
 #    externals:
 #    - spec: numactl@2.0.11
@@ -339,7 +340,6 @@ packages:
     externals:
     - spec: libfuse@2.9.7
       prefix: /usr
-  # current system installation misses binaries (and headers), hence buildable for now
     buildable: false
   lz4:
     externals:
