@@ -23,7 +23,9 @@ spack:
       backend=mpi
     - nektar@5.0.2
     - nwchem@7.0.2
-    - openfoam@v2012 +paraview +vtk
+#NotReadyYet:    - openfoam@v2012 +paraview +vtk #Failing due to failure in paraview due to failure in llvm
+#This other one works:
+    - openfoam@v2012
     - openfoam-org@8
     - quantum-espresso@6.8 +epw +openmp hdf5=parallel
     - vasp@5.4.4 +scalapack +vaspsol
