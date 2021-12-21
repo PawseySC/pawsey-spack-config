@@ -109,7 +109,7 @@ class Plumed(AutotoolsPackage):
 
         out = plumed_patch('-q', '-l', output=str)
         available = out.split(':')[-1].split()
-        if self.spec.satisfies('@2.6.1:2.7.2'): available.extend(["gromacs-2021", "gromacs-2021.4"]) 
+        if self.spec.satisfies('@2.7.2'): available.extend(["gromacs-2021.4"]) 
 	
         # Check that `other` is among the patchable applications
         if get_md(other) not in available:
