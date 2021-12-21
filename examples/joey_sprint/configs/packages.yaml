@@ -165,6 +165,28 @@ packages:
   trilinos:
     version: [13.0.1]
     variants: '+adios2 +openmp +python'
+# preferred versions (for 2022.01) and variants, io_libs
+  hdf5:
+    version: [1.12.1]
+    variants: 'api=v112 +hl +fortran +szip'
+  adios2:
+    version: [2.7.1]
+    variants: '+python +hdf5'
+  netcdf-c:
+    version: [4.8.1]
+    variants: '+hdf4 +parallel-netcdf'
+  netcdf-cxx:
+    version: [4.2]
+  netcdf-cxx4:
+    version: [4.3.1]
+  netcdf-fortran:
+    version: [4.5.3]
+  parallel-netcdf:
+    version: [1.12.2]
+  py-h5netcdf:
+    version: [0.10.0]
+  py-netcdf4:
+    version: [1.5.3]
 
 # packages found automatically by spack external find
   bison:
