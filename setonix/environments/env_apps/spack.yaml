@@ -19,7 +19,7 @@ spack:
       +user-uef +user-yaff ^kokkos@3.4.01+hwloc+memkind+numactl+openmp+tuning ^plumed@2.7.2
       ^python@3.9.7+optimizations
 # TODO: charmpp+namd yet to be made to work with Shasta/Slingshot
-    - namd@2.14 interface=python fftw=cray ^python@3.9.7+optimizations ^charmpp@7.0.0
+    - namd@2.14 interface=python fftw=3 ^python@3.9.7+optimizations ^charmpp@7.0.0
       backend=mpi
     - nektar@5.0.2
     - nwchem@7.0.2
