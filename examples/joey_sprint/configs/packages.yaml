@@ -3,20 +3,18 @@ packages:
   # note the compiler and providers specifications
   # only suggest a priority order, they do not exclude other options
   # suggested priority for compilers.
-    compiler: [gcc@10.3.0,cce,aocc]
+    compiler: [ gcc@10.3.0, cce@12.0.1, aocc@3.0.0 ]
     providers:
-      mpi: [cray-mpich]
-      blas: [cray-libsci]
-      lapack: [cray-libsci]
-      scalapack: [cray-libsci]
-      fftw-api: [cray-fftw,fftw]
-      pkgconfig: [pkg-config]
+      mpi: [ cray-mpich ]
+      blas: [ openblas, amdblis ] #, cray-libsci ] # commenting out cray-libsci as bug was identified
+      lapack: [ openblas, netlib-lapack, amdlibflame ] #, cray-libsci ]
+      scalapack: [ netlib-scalapack, amdscalapack ] #, cray-libsci ]
+      fftw-api: [ fftw, amdfftw ] #, cray-fftw ] # commenting out cray-fftw for now, similar to cray-libsci
+      pkgconfig: [ pkg-config ]
     permissions:
       read: world
       write: group
-      group: pawsey0001    
-  cmake:
-    version: [3.21.3]
+      group: pawsey0001
 
 # don't build virtuals with a provider (probably tough)
   mpi:
@@ -45,6 +43,151 @@ packages:
   cce:
     buildable: false
 
+  # preferred versions (for 2022.01) and variants, utils
+  cmake:
+    version: [3.21.4]
+    externals:
+  # manual addition with the latest version
+# TODO : set final path for cmake on Setonix
+    - spec: cmake@3.21.4
+      prefix: /lus/joey/home/mdelapierre/Spack-sprints/v0.17.0_new/spack/opt/spack/cray-sles15-zen2/gcc-10.3.0/cmake-3.21.4-dgyicf6mmctyfw2fdzeja2jt5jf5gzl5
+    - spec: cmake@3.10.2
+      prefix: /usr
+    buildable: false
+  ffmpeg:
+    version: [4.4]
+    variants: '+avresample'
+  gnuplot:
+    version: [5.4.1]
+    variants: '+X'
+  # preferred versions (for 2022.01) and variants, python
+  python:
+    version: [3.9.7]
+    variants: '+optimizations'
+# Commented out - see GENERAL NOTES above
+#    externals:
+#    - spec: python@3.9.7+optimizations
+#      prefix: /lus/joey/home/mdelapierre/Spack-sprints/v0.17.0_new/spack/opt/spack/cray-sles15-zen2/gcc-10.3.0/python-3.9.7-2nk3ozgzzug2migecarn5ez4ppjov2oe
+#    - spec: python@3.8.5
+#      prefix: /opt/cray/pe/python/3.8.5.1
+#    - spec: python@3.6.12
+#      prefix: /usr
+#    - spec: python@2.7.17
+#      prefix: /usr
+  py-cython:
+    version: [0.29.24]
+  py-dask:
+    version: [2021.6.2]
+  py-h5py:
+    version: [3.4.0]
+  py-ipython:
+    version: [7.28.0]
+  py-matplotlib:
+    version: [3.4.3]
+    variants: '+movies'
+  py-mpi4py:
+    version: [3.1.2]
+  py-numba:
+    version: [0.54.0]
+  py-numpy:
+    version: [1.20.3]
+  py-pandas:
+    version: [1.3.4]
+  py-pip:
+    version: [21.1.2]
+  py-plotly:
+    version: [5.2.2]
+  py-scikit-learn:
+    version: [1.0.1]
+  py-scipy:
+    version: [1.7.1]
+  py-setuptools:
+    version: [57.4.0]
+  # preferred versions (for 2022.01) and variants, compilers
+  go:
+    version: [1.16.4]
+  julia:
+     version: [1.6.1]
+  openjdk:
+    version: [17.0.0_35]
+  r:
+    version: [4.1.0]
+# Commented out - see GENERAL NOTES above
+#    externals:
+#    - spec: r@4.0.5.1
+#      prefix: /opt/cray/pe/R/4.0.5.1
+  perl:
+    version: [5.34.0]
+# Commented out - see GENERAL NOTES above
+#    externals:
+#    - spec: perl@5.26.1~cpanm
+#      prefix: /usr
+  ruby:
+    version: [3.0.1]
+  rust:
+    version: [1.52.1]
+  # preferred versions (for 2022.01) and variants, num_libs
+  boost:
+    version: [1.76.0]
+    variants: '+mpi +numpy +python'
+  eigen:
+    version: [3.4]
+  fftw:
+    version: [3.3.9,2.1.5]
+    variants: '+openmp precision=float,double,long_double'
+  gsl:
+    version: [2.6]
+  hpx:
+    version: [1.6.0]
+    variants: '+async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi'
+  kokkos:
+    version: [3.4.01]
+    variants: '+hwloc +memkind +numactl +openmp +tuning'
+  netlib-lapack:
+    version: [3.9.1]
+  openblas:
+    version: [0.3.15]
+    variants: 'threads=openmp'
+  opencv:
+     version: [4.5.2]
+  plasma:
+    version: [20.9.20]
+  petsc:
+    version: [3.15]
+    variants: '+fftw +trilinos'
+  plumed:
+    version: [2.7.2]
+  netlib-scalapack:
+    version: [@2.1.0]
+  slate:
+    version: [2021.05.02]
+    variants: 'cuda=off'
+  trilinos:
+    version: [13.0.1]
+    variants: '+adios2 +openmp +python'
+# preferred versions (for 2022.01) and variants, io_libs
+  hdf5:
+    version: [1.12.1]
+    variants: 'api=v112 +hl +fortran +szip'
+  adios2:
+    version: [2.7.1]
+    variants: '+python +hdf5'
+  netcdf-c:
+    version: [4.8.1]
+    variants: '+hdf4 +parallel-netcdf'
+  netcdf-cxx:
+    version: [4.2]
+  netcdf-cxx4:
+    version: [4.3.1]
+  netcdf-fortran:
+    version: [4.5.3]
+  parallel-netcdf:
+    version: [1.12.2]
+  py-h5netcdf:
+    version: [0.10.0]
+  py-netcdf4:
+    version: [1.5.3]
+
 # packages found automatically by spack external find
   bison:
     externals:
@@ -57,15 +200,6 @@ packages:
 #    - spec: bzip2@1.0.6
 #      prefix: /usr
 #    buildable: false
-  cmake:
-    externals:
-  # manual addition with the latest version
-    - spec: cmake@3.21.3
-      prefix: /lus/joey/home/mdelapierre/spack/opt/spack/cray-sles15-zen2/gcc-10.3.0/cmake-3.21.3-ws6puo53ecnvukfyps2beb23dgv4imsg
-    - spec: cmake@3.10.2
-      prefix: /usr
-  # in the future, maybe spack install a couple of recent versions, and make not buildable
-    buildable: false
   cpio:
     externals:
     - spec: cpio@2.12
@@ -136,28 +270,11 @@ packages:
     - spec: openssl@1.1.0i-fips
       prefix: /usr
     buildable: false
-  perl:
-    externals:
-    - spec: perl@5.26.1~cpanm
-      prefix: /usr
-    buildable: true
   pkg-config:
     externals:
     - spec: pkg-config@0.29.2
       prefix: /usr
     buildable: false
-  python:
-    externals:
-    - spec: python@2.7.17
-#    - spec: python@2.7.17+bz2+ctypes~dbm~lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
-      prefix: /usr
-    - spec: python@3.6.12
-#    - spec: python@3.6.12+bz2+ctypes~dbm+lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
-      prefix: /usr
-    - spec: python@3.8.5
-#    - spec: python@3.8.5+bz2+ctypes+dbm+lzma+nis+pyexpat+readline+sqlite3+ssl~tix~tkinter+uuid+zlib
-      prefix: /opt/cray/pe/python/3.8.5.1
-    buildable: true
   rsync:
     externals:
     - spec: rsync@3.1.3
@@ -181,12 +298,6 @@ packages:
   xz:
     externals:
     - spec: xz@5.2.3
-      prefix: /usr
-    buildable: false
-  # slurm 
-  slurm:
-    externals:
-    - spec: slurm@20-11-5-1
       prefix: /usr
     buildable: false
 
@@ -241,6 +352,11 @@ packages:
     - spec: lz4@1.8.0
       prefix: /usr
     buildable: false
+  slurm:
+    externals:
+    - spec: slurm@20-11-5-1
+      prefix: /usr
+    buildable: false
   wget:
     externals:
     - spec: wget@1.20.3
@@ -258,7 +374,7 @@ packages:
       prefix: /usr
     buildable: false
 
-# There are packages that should be installed by platforms
+# These are additional packages that should be installed by platforms
 # which are required to install singularity
 # currently only available on nid001008
   cryptsetup:
@@ -266,7 +382,7 @@ packages:
     - spec: cryptsetup@2.0.6
       prefix: /usr
     buildable: false
-  libgpb-error:
+  libgpg-error:
     externals:
     - spec: libgpg-error@1.29
       prefix: /usr
@@ -312,17 +428,6 @@ packages:
       prefix: /usr
     buildable: false
 
-  # manual addition for fftw@2
-  fftw:
-    externals:
-    - spec: fftw@2.1.5%gcc target=zen2
-      prefix: /lus/joey/home/mdelapierre/spack/opt/spack/cray-sles15-zen2/gcc-10.3.0/fftw-2.1.5-qsx3jouinnj3e7e7hfy3uendvzn3x5mx
-    - spec: fftw@2.1.5%cce target=zen2
-      prefix: /lus/joey/home/mdelapierre/spack/opt/spack/cray-sles15-zen2/cce-12.0.1/fftw-2.1.5-3jxqf443ihzeu5ftm23kkxd7vdj4nhbv
-    - spec: fftw@2.1.5%aocc target=zen2
-      prefix: /lus/joey/home/mdelapierre/spack/opt/spack/cray-sles15-zen2/aocc-3.0.0/fftw-2.1.5-bh4tcpc5blq6rdflw7rinkmtie5qqjmn
-    buildable: false
-
 # cray packages (manually added)
 # adding prefixes as in NERSC Perlmutter configs
   cray-mpich:
@@ -343,32 +448,34 @@ packages:
       - craype-network-ofi
       prefix: /opt/cray/pe/mpich/8.1.7/ofi/aocc/3.0
     buildable: false
-  cray-libsci:
-    externals:
-    - spec: cray-libsci@21.06.1.1%gcc
-      modules:
-      - cray-libsci/21.06.1.1
-      prefix: /opt/cray/pe/libsci/21.06.1.1/gnu/9.1/x86_64
-    - spec: cray-libsci@21.06.1.1%cce
-      modules:
-      - cray-libsci/21.06.1.1
-      prefix: /opt/cray/pe/libsci/21.06.1.1/cray/9.0/x86_64
-    - spec: cray-libsci@21.06.1.1%aocc
-      modules:
-      - cray-libsci/21.06.1.1
-      prefix: /opt/cray/pe/libsci/21.06.1.1/aocc/2.0/x86_64
-    buildable: false
-  cray-fftw:
-    externals:
-    - spec: cray-fftw@3.3.8.10 target=zen2
-      modules:
-      - cray-fftw/3.3.8.10
-      prefix: /opt/cray/pe/fftw/3.3.8.10/x86_rome
-    - spec: cray-fftw@3.3.8.10 target=zen3
-      modules:
-      - cray-fftw/3.3.8.10
-      prefix: /opt/cray/pe/fftw/3.3.8.10/x86_milan
-    buildable: false
+# Cray-LibSci: commenting out, as bug was identified (21 December 2021)
+#  cray-libsci:
+#    externals:
+#    - spec: cray-libsci@21.06.1.1%gcc
+#      modules:
+#      - cray-libsci/21.06.1.1
+#      prefix: /opt/cray/pe/libsci/21.06.1.1/gnu/9.1/x86_64
+#    - spec: cray-libsci@21.06.1.1%cce
+#      modules:
+#      - cray-libsci/21.06.1.1
+#      prefix: /opt/cray/pe/libsci/21.06.1.1/cray/9.0/x86_64
+#    - spec: cray-libsci@21.06.1.1%aocc
+#      modules:
+#      - cray-libsci/21.06.1.1
+#      prefix: /opt/cray/pe/libsci/21.06.1.1/aocc/2.0/x86_64
+#    buildable: false
+# Cray-FFTW: commenting out, as for Cray-Libsci
+#  cray-fftw:
+#    externals:
+#    - spec: cray-fftw@3.3.8.10 target=zen2
+#      modules:
+#      - cray-fftw/3.3.8.10
+#      prefix: /opt/cray/pe/fftw/3.3.8.10/x86_rome
+#    - spec: cray-fftw@3.3.8.10 target=zen3
+#      modules:
+#      - cray-fftw/3.3.8.10
+#      prefix: /opt/cray/pe/fftw/3.3.8.10/x86_milan
+#    buildable: false
   # more cray
   jemalloc:
     externals:
@@ -405,11 +512,6 @@ packages:
       - papi/6.0.0.7
       prefix: /opt/cray/pe/papi/6.0.0.7
     buildable: false
-  r:
-    externals:
-    - spec: r@4.0.5.1
-      prefix: /opt/cray/pe/R/4.0.5.1
-    buildable: true
 
 # IO packages provided by cray. 
 # cray hdf5
