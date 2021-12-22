@@ -24,7 +24,9 @@ spack:
       backend=mpi
     - nektar@5.0.2
     - nwchem@7.0.2
-    - openfoam@v2012 +paraview +vtk
+# Failing:    - openfoam@v2012 +paraview +vtk #paraview is failing to be installed, then breaking this spec.
+# Current alternative:
+    - openfoam@v2012
 # Failing:    - openfoam-org@8 #Alexis still working on it
     - quantum-espresso@6.8 +epw +openmp hdf5=parallel
     - vasp@5.4.4 +scalapack +vaspsol
