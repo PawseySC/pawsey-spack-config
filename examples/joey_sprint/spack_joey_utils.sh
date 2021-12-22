@@ -129,7 +129,7 @@ function PackageCheck()
     # ncdu z3
     # package list
     packages=(\
-    libz1 zlib-devel libpopt0 popt-devel \
+    libpopt0 popt-devel \
     shadow \
     libuuid-devel libuuid1 util-linux \
     lvm2 lvm2-devel \
@@ -141,7 +141,7 @@ function PackageCheck()
     automake \
     binutils \
     bison \
-    bzip2 bzip2-devel \
+    bzip2 libbz2-devel \
     curl \
     diffutils \
     emacs \
@@ -159,7 +159,8 @@ function PackageCheck()
     "libjpeg?" "libjpeg?-devel" \
     "libnuma?" libnuma-devel \
     "libpciaccess?" libpciaccess-devel \
-    "libpng????" "libpng??-devel" \
+    "libpng16???" "libpng16-devel" \
+    "libpng12??" "libpng12-devel" \
     "libxml2-?" "libxml2-devel" \
     "libX11-?" "libX11-devel" \
     "libyaml????" "libyaml-devel" \
@@ -170,7 +171,7 @@ function PackageCheck()
     numactl \
     openssl \
     perl \
-    "pkgconfig" 
+    "pkg-config" 
     "libreadline*" "readline-devel" \ 
     rsync \
     sqlite3 sqlite3-devel \
@@ -182,10 +183,10 @@ function PackageCheck()
     texinfo \
     vim \
     wget \
-    libxz xz-devel \
+    xz xz-devel \
     yasm \
-    libz1 zlib-devel \
-    zstd zstd-devel \
+    "libz?" zlib-devel \
+    "libzstd?" zstd-devel \
     )
     
     runarg="zypper info"
@@ -223,8 +224,9 @@ function NodeCheck()
     basename="package_results.node"
     echo "Checking system-wide root installs of packges @ ${timestamp}"
     check_login=1
-    check_compute=0
+    check_compute=1
     nodelist=(001008 001009 001010 001011 001020 001021 001022 001023 001028 001029 001030 001031)
+    nodelist=(001008)
     while getopts l:n: flag
     do
         case "${flag}" in
