@@ -15,7 +15,7 @@ modules:
 
       # set the core compilers for lmod
       # these are placed in core 
-      core_compilers:
+      core_compilers::
         - gcc@7.5.0
 
       # remove hashes from module name, can lead to more conflicts 
@@ -28,6 +28,7 @@ modules:
         # add to environment a {name}_HOME which stores the prefix 
         # to the package
         environment:
+          # question: shall we prepend `SPACK_` ?
           set:
             '{name}_HOME': '{prefix}'
           # for backwards compatibility we could implement
