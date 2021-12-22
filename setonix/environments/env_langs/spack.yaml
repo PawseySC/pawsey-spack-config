@@ -5,12 +5,13 @@ spack:
 # python: installed in env_python
     - go@1.16.4
     # NotReadyYet:    
-    # - julia@1.6.1 #Alexis is working on it.
+    # - julia@1.6.1 #Default recipe is very weak. Faulty. Lots of needed dependencies are missing.
     - openjdk@17.0.0_35
     - r@4.1.0
     - perl@5.34.0
     - ruby@3.0.1
-    - rust@1.52.1
+    # latest version of rust available may have issues but spack listed latest release is fine. 
+    - rust@1.51.0
   specs:
   - matrix:
     - [$packages]

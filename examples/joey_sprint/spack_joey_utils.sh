@@ -129,7 +129,7 @@ function PackageCheck()
     # ncdu z3
     # package list
     packages=(\
-    libz1 zlib-devel libpopt0 popt-devel \
+    libpopt0 popt-devel \
     shadow \
     libuuid-devel libuuid1 util-linux \
     lvm2 lvm2-devel \
@@ -141,7 +141,7 @@ function PackageCheck()
     automake \
     binutils \
     bison \
-    bzip2 bzip2-devel \
+    bzip2 libbz2-devel \
     curl \
     diffutils \
     emacs \
@@ -159,7 +159,8 @@ function PackageCheck()
     "libjpeg?" "libjpeg?-devel" \
     "libnuma?" libnuma-devel \
     "libpciaccess?" libpciaccess-devel \
-    "libpng????" "libpng??-devel" \
+    "libpng16???" "libpng16-devel" \
+    "libpng12??" "libpng12-devel" \
     "libxml2-?" "libxml2-devel" \
     "libX11-?" "libX11-devel" \
     "libyaml????" "libyaml-devel" \
@@ -170,7 +171,7 @@ function PackageCheck()
     numactl \
     openssl \
     perl \
-    "pkgconfig" 
+    "pkg-config" 
     "libreadline*" "readline-devel" \ 
     rsync \
     sqlite3 sqlite3-devel \
@@ -182,10 +183,10 @@ function PackageCheck()
     texinfo \
     vim \
     wget \
-    libxz xz-devel \
+    xz xz-devel \
     yasm \
-    libz1 zlib-devel \
-    zstd zstd-devel \
+    "libz?" zlib-devel \
+    "libzstd?" zstd-devel \
     )
     
     runarg="zypper info"
