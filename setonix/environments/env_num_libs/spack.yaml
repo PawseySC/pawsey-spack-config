@@ -20,7 +20,7 @@ spack:
     - kokkos@3.4.01 +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ^hpx@1.6.0
       +async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi
     - netlib-lapack@3.9.1
-    - magma@2.5.4 cuda=off
+#    - magma@2.5.4 cuda=off  # this is GPU only
     - openblas@0.3.15 threads=openmp
     - opencv@4.5.2
     - plasma@20.9.20
