@@ -10,6 +10,7 @@ spack:
       buildable: true
   definitions:
   - packages:
+    - boost@1.76.0 +mpi +numpy +python
     - boost@1.76.0 +mpi +numpy +python ^py-numpy@1.20.3 ^python@3.9.7 +optimizations
     - eigen@3.4 # charris: build ok on Joey 2021-12-16
     - fftw@2.1.5 +openmp precision=float,double,long_double
@@ -23,11 +24,19 @@ spack:
     - magma@2.5.4 cuda=off
     - openblas@0.3.15 threads=openmp
     - opencv@4.5.2
-    - plasma@20.9.20
+    # for plasma@ setting blas and lapack buildable to true in spack.yaml file
+    # issue with building with blas and lapack using cray-libsci. 
+    # Moving to openblas as default address this issue 
+    - plasma@20.9.20 ^openblas
     - petsc@3.15 +fftw +trilinos
     - plumed@2.7.2 ^python@3.9.7+optimizations
     - netlib-scalapack@2.1.0
-    - slate@2021.05.02 cuda=off
+    # adding blaspp 
+    - blaspp ^openblas
+    # TODO: for slate@ unable to patch source commits
+    # however, patch only required for cray-libsci builds
+    # may be addressed with openblas 
+    - slate@2021.05.02 ^openblas cuda=off
     - trilinos@13.0.1 +adios2 +openmp +python ^python@3.9.7 +optimizations
   specs:
   - matrix:

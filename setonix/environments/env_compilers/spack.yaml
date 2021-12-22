@@ -10,7 +10,8 @@ spack:
     - r@4.1.0
     - perl@5.34.0
     - ruby@3.0.1
-    - rust@1.52.1
+    # latest version of rust available may have issues but spack listed latest release is fine. 
+    - rust@1.51.0
   specs:
   - matrix:
     - [$packages]
