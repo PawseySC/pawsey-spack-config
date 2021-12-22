@@ -297,13 +297,11 @@ packages:
     - spec: tar@1.30
       prefix: /usr
     buildable: false
-#AEG: modification for OpenFOAM@2012 to work (texinfo->mpfr->cgal->openfoam)
   texinfo:
-##    externals:
-##    - spec: texinfo@6.5
-##      prefix: /usr
-##    buildable: false
-    buildable: true
+    externals:
+    - spec: texinfo@6.5
+      prefix: /usr
+    buildable: false
   xz:
     externals:
     - spec: xz@5.2.3
