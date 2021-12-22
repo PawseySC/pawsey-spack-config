@@ -10,13 +10,13 @@ The `setonix/` directory contains the following:
 * `templates_setonix/`: custom templates (modulefiles, Dockerfiles)
 
 The system-wide software stack is installed under `/sofware/setonix/YYYY.MM/` with the following sub-directories:
-* `software/`: software installations
-* `modules/`: modulefules (also contains container modules via SHPC, see below)
+* `software/`: Spack software installations
+* `modules/`: Spack modulefules
 * `spack/`: Spack installation
 * `pawsey-spack-config/`: this repo, including `setonix/repo_setonix` for customised package recipes
 
 A couple of sub-directories also sit here, that are unrelated to Spack:
-* `containers/`: system-wide container deployments (eg bioinformatic through SHPC)
+* `containers/`: system-wide container and container module deployments (eg bioinformatic through SHPC)
 * `shpc/`: SHPC installation
 
 As regards configuration YAMLs, note that Spack prioritises user configs to site configs (*i.e.* those in the Spack installation directory).  
