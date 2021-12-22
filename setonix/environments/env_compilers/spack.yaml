@@ -8,11 +8,9 @@ spack:
     - openjdk@17.0
     - r@4.1.0
     - perl@5.34.0
-# Warning: cannot perform the requested write operation on module files,Did you check your "modules.yaml" configuration?
-# while installing ruby@3.0.1
     - ruby@3.0.1
-#for rust@none installation is okay,but for rust@21.52.1 is not, error ==> /install.sh: No such file or directory
-    - rust@1.52.1
+    # latest version of rust available may have issues but spack listed latest release is fine. 
+    - rust@1.51.0
   specs:
   - matrix:
     - [$packages]
