@@ -67,12 +67,10 @@ setenv("LMOD_{{ name|upper() }}_VERSION", "{{ version_part }}")
 
 {% block autoloads %}
 {% for module in autoload %}
-if not isloaded("{{ module }}") then
 {% if verbose %}
-    LmodMessage("Autoloading {{ module }}")
+LmodMessage("Autoloading {{ module }}")
 {% endif %}
-    load("{{ module }}")
-end
+load("{{ module }}")
 {% endfor %}
 {% endblock %}
 
