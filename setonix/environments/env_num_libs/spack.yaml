@@ -11,7 +11,6 @@ spack:
   definitions:
   - packages:
     - boost@1.76.0 +mpi +numpy +python
-    - boost@1.76.0 +mpi +numpy +python ^py-numpy@1.20.3 ^python@3.9.7 +optimizations
     - eigen@3.4 # charris: build ok on Joey 2021-12-16
     - fftw@2.1.5 +openmp precision=float,double,long_double
     - fftw@3.3.9 +openmp precision=float,double,long_double
