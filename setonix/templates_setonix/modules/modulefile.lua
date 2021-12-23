@@ -67,12 +67,10 @@ setenv("LMOD_{{ name|upper() }}_VERSION", "{{ version_part }}")
 
 {% block autoloads %}
 {% for module in autoload %}
-if not isloaded("{{ module }}") then
 {% if verbose %}
-    LmodMessage("Autoloading {{ module }}")
+LmodMessage("Autoloading {{ module |replace("astro-applications/", "") |replace("bio-applications/", "") |replace("applications/", "") |replace("libraries/", "") |replace("programming-languages/", "") |replace("utilities/", "") |replace("visualisation/", "") |replace("python-packages/", "") |replace("dependencies/", "") }}")
 {% endif %}
-    load("{{ module }}")
-end
+load("{{ module |replace("astro-applications/", "") |replace("bio-applications/", "") |replace("applications/", "") |replace("libraries/", "") |replace("programming-languages/", "") |replace("utilities/", "") |replace("visualisation/", "") |replace("python-packages/", "") |replace("dependencies/", "") }}")
 {% endfor %}
 {% endblock %}
 

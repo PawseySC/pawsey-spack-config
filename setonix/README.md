@@ -25,10 +25,27 @@ In order to minimise edits in users' home directories, we're putting:
 * system-wide settings (Pawsey staff) in the *spack* user's YAMLs
 
 
+## Module categories in use
+
+* Spack
+  - `astro-applications/`
+  - `bio-applications/`
+  - `applications/`
+  - `libraries/`
+  - `programming-languages/`
+  - `utilities/`
+  - `visualisation/`
+  - `python-packages/`
+  - `dependencies/`
+* SHPC
+  - `biocontainers/`  (constrained by container repo name, unless we simlink)
+
+
 ## To-do list (incomplete)
 
-* Create automations for updating the date tag `YYYY.MM` for full rebuilds
-* Create automations for software installations
+* Automations for updating the date tag `YYYY.MM` for full rebuilds
+* Automations in case we need to update the set of module categories
+* Automations for software installations
 * ...
 
 
