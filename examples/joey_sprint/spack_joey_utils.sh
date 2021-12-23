@@ -147,8 +147,10 @@ function PackageCheck()
     emacs \
     ffmpeg \
     flex \
-    "libfreetype?" freetype-devel \
-    gettext-runtime perl-gettext gettext-tools \
+    "libfreetype?" freetype2-devel \
+    gettext-runtime \
+    perl-gettext \
+    gettext-tools \
     make \
     hwloc hwloc-devel \
     "libedit?" libedit-devel \
@@ -186,7 +188,7 @@ function PackageCheck()
     xz xz-devel \
     yasm \
     "libz?" zlib-devel \
-    "libzstd?" zstd-devel \
+    "libzstd?" libzstd-devel \
     )
     
     runarg="zypper info"
