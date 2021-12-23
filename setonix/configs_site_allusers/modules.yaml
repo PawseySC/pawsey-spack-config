@@ -29,10 +29,14 @@ modules:
         # to the package
         environment:
           # question: shall we prepend `SPACK_` ?
+          # PJE: Typically it is more useful to have 
+          # {name}_HOME since configures and cmake 
+          # often will make use of {name}_ROOT or {name}_HOME
           set:
             '{name}_HOME': '{prefix}'
           # for backwards compatibility we could implement
           # the following environment variable 
+          # this may be required for installs on Topaz
           #set:
           #  'MAALI_{name}_HOME': '{prefix}'
     

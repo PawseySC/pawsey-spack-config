@@ -2,7 +2,7 @@ modules:
 
   default:
     roots:
-      lmod: /sofware/setonix/2022.01/modules
+      lmod: /software/setonix/2022.01/modules
 
     lmod:
       projections:
@@ -12,7 +12,11 @@ modules:
         # that does not require manual updates. Fortunately, not many packages 
         # need this update 
         # adding /module.lua to enforce explicit usage of versions
+        # Also, by default all packages are hidden modules 
+        # unless explicitly added here 
 
+
+        # hpc applications
         amber: 'applications/{name}/{version}/module.lua'
         cpmd: 'applications/{name}/{version}/module.lua'
         cp2k: 'applications/{name}/{version}/module.lua'
@@ -24,15 +28,24 @@ modules:
         openfoam: 'applications/{name}/{version}/module.lua'
         openfoam-org: 'applications/{name}/{version}/module.lua'
         quantum-espresso: 'applications/{name}/{version}/module.lua'
-        roms: 'applications/{name}/{version}/module.lua'
         vasp: 'applications/{name}/{version}/module.lua'
-        wrf: 'applications/{name}/{version}/module.lua'
+        # since wrf and roms are currently not installed 
+        # no need to add an explicity module
+        # However, it may be useful to add our own module 
+        # that provides all the dependencies needed by 
+        # these packages
+        #roms: 'applications/{name}/{version}/module.lua'
+        #wrf: 'applications/{name}/{version}/module.lua'
 
-        boost: 'libraries/{name}/{version}/module.lua'
+        # numerical or parallelisation libraries 
+        "boost +python": 'libraries/{name}/{version}-python/module.lua'
+        "boost ~python": 'libraries/{name}/{version}/module.lua'
         eigen: 'libraries/{name}/{version}/module.lua'
         fftw: 'libraries/{name}/{version}/module.lua'
         gsl: 'libraries/{name}/{version}/module.lua'
         hpx: 'libraries/{name}/{version}/module.lua'
+        "kokkos +hpx": 'libraries/{name}/{version}-hpx/module.lua'
+        "kokkos +openmp": 'libraries/{name}/{version}-openmp/module.lua'
         kokkos: 'libraries/{name}/{version}/module.lua'
         netlib-lapack: 'libraries/{name}/{version}/module.lua'
         openblas: 'libraries/{name}/{version}/module.lua'
@@ -44,14 +57,30 @@ modules:
         slate: 'libraries/{name}/{version}/module.lua'
         trilinos: 'libraries/{name}/{version}/module.lua'
 
-        hdf5: 'libraries/{name}/{version}/module.lua'
-        adios2: 'libraries/{name}/{version}/module.lua'
+
+        # IO libraries 
+        # to account for all the hdf5 variants 
+        # serial
+        "hdf5 +cxx~mpi api=v112": libraries/{name}/{version}-api-v112/module.lua
+        "hdf5 +cxx~mpi api=v110": libraries/{name}/{version}-api-v110/module.lua
+        "hdf5 +cxx~mpi api=v18": libraries/{name}/{version}-api-v18/module.lua
+        #parallel 
+        "hdf5 ~cxx+mpi api=v112": libraries/{name}/{version}-parallel-api-v112/module.lua
+        "hdf5 ~cxx+mpi api=v110": libraries/{name}/{version}-parallel-api-v110/module.lua
+        "hdf5 ~cxx+mpi api=v18": libraries/{name}/{version}-parallel-api-v18/module.lua
+        # and when api is default assume it is a dependency. 
+        "hdf5 api=default +cxx~mpi": dependencies/.{name}/{version}/module.lua
+        "hdf5 api=default ~cxx+mpi": dependencies/.{name}/{version}-parallel/module.lua
+        # adios also has similar variants 
+        "adios2 +hdf5 +python": 'libraries/{name}/{version}-hdf5/module.lua'
+        "adios2 ~hdf5 +python": 'libraries/{name}/{version}/module.lua'
         netcdf-c: 'libraries/{name}/{version}/module.lua'
         netcdf-cxx: 'libraries/{name}/{version}/module.lua'
         netcdf-cxx4: 'libraries/{name}/{version}/module.lua'
         netcdf-fortran: 'libraries/{name}/{version}/module.lua'
         parallel-netcdf: 'libraries/{name}/{version}/module.lua'
 
+        # programing languages 
         go: 'programming-languages/{name}/{version}/module.lua'
         julia: 'programming-languages/{name}/{version}/module.lua'
         openjdk: 'programming-languages/{name}/{version}/module.lua'
@@ -61,6 +90,7 @@ modules:
         ruby: 'programming-languages/{name}/{version}/module.lua'
         rust: 'programming-languages/{name}/{version}/module.lua'
 
+        # utilities 
         autoconf: 'utilities/{name}/{version}/module.lua'
         automake: 'utilities/{name}/{version}/module.lua'
         cmake: 'utilities/{name}/{version}/module.lua'
@@ -74,11 +104,13 @@ modules:
         reframe: 'utilities/{name}/{version}/module.lua'
         singularity: 'utilities/{name}/{version}/module.lua'
 
+        # visualisation
         igv: 'visualisation/{name}/{version}/module.lua'
         paraview: 'visualisation/{name}/{version}/module.lua'
         visit: 'visualisation/{name}/{version}/module.lua'
         vmd: 'visualisation/{name}/{version}/module.lua'
         
+        # python
         py-cython: 'python-packages/{name}/{version}/module.lua'
         py-dask: 'python-packages/{name}/{version}/module.lua'
         py-h5netcdf: 'python-packages/{name}/{version}/module.lua'
@@ -96,9 +128,11 @@ modules:
         py-pip: 'python-packages/{name}/{version}/module.lua'
         py-setuptools: 'python-packages/{name}/{version}/module.lua'
 
+        #bio 
         exabayes: 'bio-applications/{name}/{version}/module.lua'
         examl: 'bio-applications/{name}/{version}/module.lua'
 
+        #astro 
         casacore: 'astro-applications/{name}/{version}/module.lua'
         cfitsio: 'astro-applications/{name}/{version}/module.lua'
         wcslib: 'astro-applications/{name}/{version}/module.lua'
@@ -119,5 +153,9 @@ modules:
         py-healpy: 'astro-applications/{name}/{version}/module.lua'
         py-emcee: 'astro-applications/{name}/{version}/module.lua'
 
-        all: 'dependencies/.{name}/{version}/module.lua'
+        # by default all others are hidden
+        # PJE: Marco had no hash for dependencies 
+        # but just to be careful to avoid name conflicts
+        # added hash
+        all: 'dependencies/.{name}/{version}-{hash:7}/module.lua'
 
