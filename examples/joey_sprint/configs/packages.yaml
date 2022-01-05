@@ -58,7 +58,7 @@ packages:
     version: [4.4]
     variants: '+avresample'
   gnuplot:
-    version: [5.4.1]
+    version: [5.4.2]
     variants: '+X'
   # preferred versions (for 2022.01) and variants, python
   python:
@@ -158,7 +158,7 @@ packages:
   plumed:
     version: [2.7.2]
   netlib-scalapack:
-    version: [@2.1.0]
+    version: [2.1.0]
   slate:
     version: [2021.05.02]
     variants: 'cuda=off'
