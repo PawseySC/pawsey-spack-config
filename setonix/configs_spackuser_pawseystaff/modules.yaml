@@ -152,6 +152,11 @@ modules:
         py-boto3: 'astro-applications/{name}/{version}/module'
         py-healpy: 'astro-applications/{name}/{version}/module'
         py-emcee: 'astro-applications/{name}/{version}/module'
+        
+        # S3 clients 
+        awscli: 'utilities/{name}/{version}/module'
+        rclone: 'utilities/{name}/{version}/module'
+        miniocli: 'utilities/{name}/{version}/module'
 
         # by default all others are hidden
         # PJE: Marco had no hash for dependencies 
