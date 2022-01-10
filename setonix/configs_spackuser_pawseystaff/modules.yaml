@@ -152,6 +152,11 @@ modules:
         py-boto3: 'astro-applications/{name}/{version}/module.lua'
         py-healpy: 'astro-applications/{name}/{version}/module.lua'
         py-emcee: 'astro-applications/{name}/{version}/module.lua'
+        
+        # S3 clients 
+        awscli: 'utilities/{name}/{version}/module.lua'
+        rclone: 'utilities/{name}/{version}/module.lua'
+        miniocli: 'utilities/{name}/{version}/module.lua'
 
         # by default all others are hidden
         # PJE: Marco had no hash for dependencies 
