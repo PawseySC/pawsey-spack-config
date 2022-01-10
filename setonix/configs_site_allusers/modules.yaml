@@ -49,4 +49,4 @@ modules:
         # keeping these simple for user-specific installations
         # name, version, hash to avoid conflicts, no categories
         # adding /module.lua to enforce explicit usage of versions
-        all: '{name}/{version}-{hash:7}/module.lua'
+        all: '{name}/{version}-{hash:7}/module'
