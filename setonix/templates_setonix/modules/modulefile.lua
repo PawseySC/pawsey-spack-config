@@ -7,6 +7,7 @@
 {% block header %}
 {% if short_description %}
 whatis([[Name : {{ spec.name }}]])
+whatis([[Short description : {{ short_description }}]])
 whatis([[Version : {{ spec.version }}]])
 whatis([[Compiler : {{ spec.compiler }}]])
 whatis([[Flags : {{ spec.compiler_flags }}]])
@@ -14,7 +15,6 @@ whatis([[Target : {{ spec.target }}]])
 whatis([[Build date : {{ spec.installation_time }}]])
 whatis([[Spack configuration : {{ spec.variants }}]])
 whatis([[Path : {{ spec.prefix }}]])
-whatis([[Short description : {{ short_description }}]])
 {% endif %}
 {% if configure_options %}
 whatis([[Configure options : {{ configure_options }}]])
