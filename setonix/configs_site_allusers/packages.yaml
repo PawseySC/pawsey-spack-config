@@ -166,7 +166,7 @@ packages:
   plumed:
     version: [2.7.2]
   netlib-scalapack:
-    version: [@2.1.0]
+    version: [2.1.0]
   slate:
     version: [2021.05.02]
     variants: 'cuda=off'
