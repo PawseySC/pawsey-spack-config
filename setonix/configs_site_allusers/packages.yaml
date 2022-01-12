@@ -48,10 +48,6 @@ packages:
 
   # preferred versions (for 2022.01) and variants, utils
   # Note: setting autoconf/automake/cmake as non buildable
-  autoconf:
-    buildable: false
-  automake:
-    buildable: false
   cmake:
     version: [3.21.4]
 # Commented out - see GENERAL NOTES above
@@ -72,6 +68,12 @@ packages:
   python:
     version: [3.9.7]
     variants: '+optimizations'
+  gdbm:
+    version: [1.19]
+  sqlite:
+    version: [3.28.0]
+  gettext:
+    version: [0.19.8.1]
 # Commented out - see GENERAL NOTES above
 #    externals:
 #    - spec: python@3.9.7+optimizations
@@ -166,10 +168,10 @@ packages:
   plumed:
     version: [2.7.2]
   netlib-scalapack:
-    version: [@2.1.0]
+    version: [2.1.0]
   slate:
     version: [2021.05.02]
-    variants: 'cuda=off'
+    variants: '~cuda'
   trilinos:
     version: [13.0.1]
     variants: '+adios2 +openmp +python'
@@ -202,11 +204,11 @@ packages:
     - spec: bison@3.0.4
       prefix: /usr
     buildable: false
-#  bzip2:
-#    externals:
-#    - spec: bzip2@1.0.6
-#      prefix: /usr
-#    buildable: false
+  bzip2:
+    externals:
+    - spec: bzip2@1.0.6
+      prefix: /usr
+    buildable: false
   cpio:
     externals:
     - spec: cpio@2.12
@@ -309,14 +311,31 @@ packages:
     buildable: false
 
 # system packages (manually added)
-
-# packages that are missing dev install with zypper 
-# so commented out 
-#  binutils:
-#    externals:
-#    - spec: binutils@2.35.1
-#      prefix: /usr
-#    buildable: false
+  autoconf:
+    externals:
+    - spec: autoconf@2.69
+      prefix: /usr
+    buildable: false
+  autogen:
+    externals:
+    - spec: autogen@5.18.12
+      prefix: /usr
+    buildable: false
+  automake:
+    externals:
+    - spec: automake@1.15.1
+      prefix: /usr
+    buildable: false
+  binutils:
+    externals:
+    - spec: binutils@2.35.1
+      prefix: /usr
+    buildable: false
+  gettext:
+    externals:
+    - spec: gettext@0.19.8.1
+      prefix: /usr
+    buildable: false 
   hwloc:
     externals:
     - spec: hwloc@2.0.0
@@ -340,11 +359,16 @@ packages:
 #    - spec: ncurses@5.9
 #      prefix: /usr
     buildable: false
-#  numactl:
-#    externals:
-#    - spec: numactl@2.0.11
-#      prefix: /usr
-#    buildable: false
+  numactl:
+    externals:
+    - spec: numactl@2.0.11
+      prefix: /usr
+    buildable: false
+  sqlite:
+    externals:
+    - spec: sqlite@3.28.0
+      prefix: /usr
+    buildable: false
   curl:
     externals:
     - spec: curl@7.60.0
@@ -378,6 +402,56 @@ packages:
   zstd:
     externals:
     - spec: zstd@1.4.4
+      prefix: /usr
+    buildable: false
+  cryptsetup:
+    externals:
+    - spec: cryptsetup@2.0.6
+      prefix: /usr
+    buildable: false
+  libgpg-error:
+    externals:
+    - spec: libgpg-error@1.29
+      prefix: /usr
+    buildable: false
+  popt:
+    externals:
+    - spec: popt@1.16
+      prefix: /usr
+    buildable: false
+  icu4c:
+    externals:
+    - spec: icu4c@60.2
+      prefix: /usr
+    buildable: false 
+  lvm2:
+    externals:
+    - spec: lvm2@2.02
+      prefix: /usr
+    buildable: false
+  blkid:
+    externals:
+    - spec: blkid@2.33
+      prefix: /usr
+    buildable: false
+  squashfs:
+    externals:
+    - spec: squashfs@4.3
+      prefix: /usr
+    buildable: false
+  shadow: 
+    externals:
+    - spec: shadow@4.6
+      prefix: /usr
+    buildable: false
+  util-linux:
+    externals:
+    - spec: util-linux@2.33
+      prefix: /usr
+    buildable: false
+  util-linux-uuid:
+    externals:
+    - spec: util-linux-uuid@2.33
       prefix: /usr
     buildable: false
 
