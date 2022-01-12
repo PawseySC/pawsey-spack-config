@@ -34,7 +34,7 @@ spack:
     
     # adding blaspp 
     - blaspp ~cuda ^openblas
-    
+
     # updates to lapack/blas for new hardware like GPUs  
     # TODO: no need for magma in phase 1 as it is GPU only 
     #- magma@2.5.4 
@@ -42,17 +42,17 @@ spack:
     # issue with building with blas and lapack using cray-libsci. 
     # Moving to openblas as default address this issue 
     - plasma@20.9.20 ^openblas
-    
+
     # TODO: for slate@ unable to patch source commits
     # however, patch only required for cray-libsci builds
     # may be addressed with openblas 
     - slate@2021.05.02 ^openblas
     - plumed@2.7.2 ^python@3.9.7+optimizations
-    
+
     # some heavier numerical library builds 
     - opencv@4.5.2
     - trilinos@13.0.1 +adios2 +openmp +python ~cuda ^python@3.9.7 +optimizations
-    - petsc@3.15 +fftw +trilinos ~cuda
+    - petsc@3.15.5 +fftw +trilinos ~cuda
 
   specs:
   - matrix:
