@@ -164,7 +164,7 @@ packages:
     version: [20.9.20]
   petsc:
     version: [3.15.5]
-    variants: '+fftw +trilinos'
+    variants: '+fftw' # commenting out trilinos as per environment note # +trilinos'
   plumed:
     version: [2.7.2]
   netlib-scalapack:
