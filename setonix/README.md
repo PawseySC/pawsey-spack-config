@@ -9,7 +9,7 @@ The `setonix/` directory contains the following:
 * `repo_setonix/`: custom package recipes for Setonix
 * `templates_setonix/`: custom templates (modulefiles, Dockerfiles)
 
-The system-wide software stack is installed under `/sofware/setonix/YYYY.MM/` with the following sub-directories:
+The system-wide software stack is installed under `/software/setonix/YYYY.MM/` with the following sub-directories:
 * `software/`: Spack software installations
 * `modules/`: Spack modulefules
 * `spack/`: Spack installation
