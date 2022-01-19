@@ -454,6 +454,11 @@ packages:
     - spec: util-linux-uuid@2.33
       prefix: /usr
     buildable: false
+  time:
+    externals: 
+    - spec: time@1.9
+      prefix: /usr
+    buildable: false
 
 # cray packages (manually added)
 # adding prefixes as in NERSC Perlmutter configs
