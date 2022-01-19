@@ -274,16 +274,18 @@ function NodeCheck()
 
 function ParallelSpackInstall() 
 {
-	echo "Running an install of an activated environment in spack"
+    echo "Running an install of an activated environment in spack"
     if [ $# -ne 2 ]
     then 
-		echo "Provide number of cores to run per spack installation and number of these to run in parallel, separated by sleep 10. "
-		echo "ParallelSpackInstall 4 4 # runs 4 \"spack install -j4 \" "
+        echo "Provide number of cores to run per spack installation and number of these to run in parallel, separated by sleep 10. "
+        echo "ParallelSpackInstall 4 4 # runs 4 \"spack install -j4 \" "
         return 
     fi
 	for ((i=0;i<$2;i++))
 	do 
-		spack install -j$1 1> spack.${i}.out 2> spack.${i}.err &
-		sleep 10 
+                startcpu=$(($i*$1))
+                endcpu=$(($startcpu+$1)) 
+		taskset -c ${startcpu}-${endcpu} spack install -j$1 1> spack.${i}.out 2> spack.${i}.err &
+		sleep 30 
 	done
 }
