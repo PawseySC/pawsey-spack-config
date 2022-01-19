@@ -38,8 +38,12 @@ modules:
         #wrf: 'applications/{name}/{version}/module'
 
         # numerical or parallelisation libraries 
-        "boost +python": 'libraries/{name}/{version}-python/module'
-        "boost ~python": 'libraries/{name}/{version}/module'
+        "boost +python cxxstd=14": 'libraries/{name}/{version}-c++14-python/module'
+        "boost +python cxxstd=11": 'libraries/{name}/{version}-c++11-python/module'
+        "boost +python cxxstd=98": 'libraries/{name}/{version}-c++98-python/module'
+        "boost ~python cxxstd=14": 'libraries/{name}/{version}-c++14/module'
+        "boost ~python cxxstd=11": 'libraries/{name}/{version}-c++11/module'
+        "boost ~python cxxstd=98": 'libraries/{name}/{version}-c++98/module'
         eigen: 'libraries/{name}/{version}/module'
         fftw: 'libraries/{name}/{version}/module'
         gsl: 'libraries/{name}/{version}/module'
@@ -133,7 +137,10 @@ modules:
         examl: 'bio-applications/{name}/{version}/module'
 
         #astro 
-        casacore: 'astro-applications/{name}/{version}/module'
+        "casacore +adios2 +openmp": 'astro-applications/{name}/{version}-adios2-openmp/module'
+        "casacore +adios2 ~openmp": 'astro-applications/{name}/{version}-adios2/module'
+        "casacore ~adios2 +openmp": 'astro-applications/{name}/{version}-openmp/module'
+        "casacore ~adios2 ~openmp": 'astro-applications/{name}/{version}/module'
         cfitsio: 'astro-applications/{name}/{version}/module'
         wcslib: 'astro-applications/{name}/{version}/module'
         cppzmq: 'astro-applications/{name}/{version}/module'
