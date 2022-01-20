@@ -62,7 +62,7 @@ packages:
     version: [4.4]
     variants: '+avresample'
   gnuplot:
-    version: [5.4.1]
+    version: [5.4.2]
     variants: '+X'
   # preferred versions (for 2022.01) and variants, python
   python:
@@ -331,11 +331,6 @@ packages:
     - spec: binutils@2.35.1
       prefix: /usr
     buildable: false
-  gettext:
-    externals:
-    - spec: gettext@0.19.8.1
-      prefix: /usr
-    buildable: false 
   hwloc:
     externals:
     - spec: hwloc@2.0.0
