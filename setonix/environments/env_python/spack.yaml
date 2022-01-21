@@ -40,5 +40,4 @@ spack:
   - python@3.9.7
   view: false
 # TODO: list python, py-pip and py-setuptools as external in packages.yaml
-# TODO: write module projections
 # TODO: python, py-pip and py-setuptools modules as core modules

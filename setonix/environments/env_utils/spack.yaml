@@ -35,5 +35,4 @@ spack:
   #- libxpm ^gettext@0.21
   view: false
 # TODO: list as external in packages.yaml
-# TODO: write module projections
 # TODO: modules as core modules
