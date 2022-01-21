@@ -12,8 +12,6 @@ spack:
       version: [1.7.1]
     py-setuptools:
       version: [57.4.0]
-    'fftw:':
-      buildable: true
   definitions:
   
   # casacore variants

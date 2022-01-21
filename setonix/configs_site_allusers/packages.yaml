@@ -19,14 +19,16 @@ packages:
 # don't build virtuals with an external provider
   mpi:
     buildable: false
-  blas:
-    buildable: false
-  lapack:
-    buildable: false
-  scalapack:
-    buildable: false
-  fftw-api:
-    buildable: false
+# Left buildable, as currently built by Spack, 
+# because cray-libsci and cray-fftw are not in use (see below)
+#  blas:
+#    buildable: false
+#  lapack:
+#    buildable: false
+#  scalapack:
+#    buildable: false
+#  fftw-api:
+#    buildable: false
   pkgconfig:
     buildable: false
 # don't build compilers neither
