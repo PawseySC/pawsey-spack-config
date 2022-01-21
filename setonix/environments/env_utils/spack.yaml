@@ -1,13 +1,5 @@
 spack:
-  packages:
-    autoconf:
-      version: [2.69]
-    autogen:
-      version: [5.18.12]
-    automake:
-      version: [1.15.1]
-    'cmake:':
-      version: [3.21.4]
+# note: preferred versions are set in packages.yaml
   definitions:
   - packages:
     
