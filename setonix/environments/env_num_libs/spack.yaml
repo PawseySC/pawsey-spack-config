@@ -1,15 +1,15 @@
 spack:
 # They are currently buildable,
 # because cray-libsci and cray-fftw are not in use (see packages.yaml)
-#  packages:
+  packages:
 #    'blas:':
 #      buildable: true
 #    'lapack:':
 #      buildable: true
 #    'scalapack:':
 #      buildable: true
-#    'fftw-api:':
-#      buildable: true
+    'fftw-api:':
+      buildable: true
   definitions:
   - parallel:
     - boost@1.76.0 +mpi +numpy +python cxxstd=14 # might need several boosts with different stadards

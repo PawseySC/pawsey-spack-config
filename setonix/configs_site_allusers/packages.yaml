@@ -27,8 +27,10 @@ packages:
 #    buildable: false
 #  scalapack:
 #    buildable: false
-#  fftw-api:
-#    buildable: false
+# FFTW non buildable, to avoid proliferation of variants, 
+# that are ultimately a subset of the system-wide one (env_num_libs)
+  fftw-api:
+    buildable: false
   pkgconfig:
     buildable: false
 # don't build compilers neither
