@@ -8,7 +8,6 @@ spack:
       version: [1.15.1]
     'cmake:':
       version: [3.21.4]
-      buildable: true
     'gettext:':
       version: [0.21]
       buildable: true

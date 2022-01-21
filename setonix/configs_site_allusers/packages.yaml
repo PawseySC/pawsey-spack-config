@@ -59,7 +59,6 @@ packages:
 #      prefix: /lus/joey/home/mdelapierre/Spack-sprints/v0.17.0_new/spack/opt/spack/cray-sles15-zen2/gcc-10.3.0/cmake-3.21.4-dgyicf6mmctyfw2fdzeja2jt5jf5gzl5
 #    - spec: cmake@3.10.2
 #      prefix: /usr
-    buildable: false
   ffmpeg:
     version: [4.4]
     variants: '+avresample'
