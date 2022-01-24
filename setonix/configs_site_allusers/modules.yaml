@@ -1,5 +1,18 @@
 modules:
 
+  # ensure that environment paths are properly updated 
+  # based on what is installed
+  prefix_inspections:
+    bin:
+      - PATH
+    lib:
+      - LIBRARY_PATH
+      - LD_LIBRARY_PATH
+    include:
+      - CPATH
+    '':
+      - CMAKE_PREFIX_PATH
+
   default:
     enable::
       - lmod 
