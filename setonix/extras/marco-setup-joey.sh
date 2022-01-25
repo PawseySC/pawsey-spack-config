@@ -1,10 +1,7 @@
 #!/bin/bash
   
 # minimal script to initialise Spack on Joey for personal testing
-# everything is done in the current working directory
-
-# this is the date tag to be replaced in the config yamls, with the current directory
-date_tag="2022.01"
+# everything is done in the current working directory, and in the ~/.spack
 
 
 if [ -e ~/.spack ] ; then
@@ -26,5 +23,7 @@ patch spack/lib/spack/spack/modules/lmod.py pawsey-spack-config/setonix/fixes/lm
 # Joey specific
 rm -r spack/etc/spack/upstreams.yaml ~/.spack/upstreams.yaml
 sed -i '/USER/ s;^;#;g' spack/etc/spack/repos.yaml
+# this is the date tag to be replaced in the config yamls, with the current directory
+date_tag="2022.01"
 install_dir="$(pwd)"
 sed -i "s;/software/setonix/$date_tag;$install_dir;g" spack/etc/spack/*.yaml ~/.spack/*.yaml
