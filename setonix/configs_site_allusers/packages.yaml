@@ -16,8 +16,9 @@ packages:
       # this should be user, we do not want pawsey0001 users 
       # to accidentally edit the system wide installation
       write: user
-      # using $PAWSEY_PROJECT will work for all users
-      group: $PAWSEY_PROJECT
+      # using default group
+      # fine, considering world readable and user writable
+      # could not use $PAWSEY_PROJECT, as variables are apparently not evaluated here
 
 # don't build virtuals with an external provider
   mpi:
