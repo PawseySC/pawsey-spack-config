@@ -19,12 +19,16 @@ packages:
 # don't build virtuals with an external provider
   mpi:
     buildable: false
-  blas:
-    buildable: false
-  lapack:
-    buildable: false
-  scalapack:
-    buildable: false
+# Left buildable, as currently built by Spack, 
+# because cray-libsci and cray-fftw are not in use (see below)
+#  blas:
+#    buildable: false
+#  lapack:
+#    buildable: false
+#  scalapack:
+#    buildable: false
+# FFTW non buildable, to avoid proliferation of variants, 
+# that are ultimately a subset of the system-wide one (env_num_libs)
   fftw-api:
     buildable: false
   pkgconfig:
@@ -57,7 +61,6 @@ packages:
 #      prefix: /lus/joey/home/mdelapierre/Spack-sprints/v0.17.0_new/spack/opt/spack/cray-sles15-zen2/gcc-10.3.0/cmake-3.21.4-dgyicf6mmctyfw2fdzeja2jt5jf5gzl5
 #    - spec: cmake@3.10.2
 #      prefix: /usr
-    buildable: false
   ffmpeg:
     version: [4.4]
     variants: '+avresample'
@@ -70,8 +73,6 @@ packages:
     variants: '+optimizations'
   gdbm:
     version: [1.19]
-  sqlite:
-    version: [3.28.0]
   gettext:
     version: [0.21]
 # Commented out - see GENERAL NOTES above

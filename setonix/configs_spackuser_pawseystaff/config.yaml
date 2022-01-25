@@ -36,21 +36,21 @@ config:
   # identifies Spack staging to avoid accidentally wiping out non-Spack work.
   build_stage:
 #    - $tempdir/$user/spack-stage
-    - /software/setonix/2022.01/software/$user/build_stage
+    - /software/setonix/2022.01/software/$USER/build_stage
 
   # Directory in which to run tests and store test results.
   # Tests will be stored in directories named by date/time and package
   # name/hash.
-  test_stage: /software/setonix/2022.01/software/$user/test_stage
+  test_stage: /software/setonix/2022.01/software/$USER/test_stage
 
   # Cache directory for already downloaded source tarballs and archived
   # repositories. This can be purged with `spack clean --downloads`.
-  source_cache: /software/setonix/2022.01/software/$user/source_cache
+  source_cache: /software/setonix/2022.01/software/$USER/source_cache
 
 
   # Cache directory for miscellaneous files, like the package index.
   # This can be purged with `spack clean --misc-cache`
-  misc_cache: /software/setonix/2022.01/software/$user/misc_cache
+  misc_cache: /software/setonix/2022.01/software/$USER/misc_cache
 
   # concretizer: `clingo` or `original` (good for debugging concretisations)
   concretizer: clingo
