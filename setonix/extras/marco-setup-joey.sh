@@ -5,7 +5,7 @@
 
 
 if [ -e ~/.spack ] ; then
-  mv ~/.spack ~/.spack.old
+  mv ~/.spack ~/.spack.old.$(date -Iminutes)
 fi
 mkdir ~/.spack
 
