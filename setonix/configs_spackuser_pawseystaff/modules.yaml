@@ -165,6 +165,10 @@ modules:
         py-healpy: 'astro-applications/{name}/{version}/module'
         py-emcee: 'astro-applications/{name}/{version}/module'
 
+        #performance tests 
+        "hpl ~openmp": 'benchmarking/{name}/{version}/module'
+        "hpl +openmp": 'benchmarking/{name}/{version}+openmp/module'
+
         # by default all others are hidden
         # PJE: Marco had no hash for dependencies 
         # but just to be careful to avoid name conflicts
