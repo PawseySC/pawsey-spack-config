@@ -36,6 +36,7 @@ In order to minimise edits in users' home directories, we're putting:
   - `utilities/`
   - `visualisation/`
   - `python-packages/`
+  - `benchmarking/`
   - `dependencies/`
 * SHPC
   - `biocontainers/`  (constrained by container repo name, unless we simlink)
