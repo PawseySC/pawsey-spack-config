@@ -108,6 +108,12 @@ modules:
         reframe: 'utilities/{name}/{version}/module'
         singularity: 'utilities/{name}/{version}/module'
 
+        # S3 clients 
+        awscli: 'utilities/{name}/{version}/module'
+        py-boto3: 'utilities/{name}/{version}/module'
+        rclone: 'utilities/{name}/{version}/module'
+        miniocli: 'utilities/{name}/{version}/module'
+
         # visualisation
         igv: 'visualisation/{name}/{version}/module'
         paraview: 'visualisation/{name}/{version}/module'
@@ -156,14 +162,8 @@ modules:
         py-funcsigs: 'astro-applications/{name}/{version}/module'
         py-pyfits: 'astro-applications/{name}/{version}/module'
         py-astropy: 'astro-applications/{name}/{version}/module'
-        py-boto3: 'astro-applications/{name}/{version}/module'
         py-healpy: 'astro-applications/{name}/{version}/module'
         py-emcee: 'astro-applications/{name}/{version}/module'
-        
-        # S3 clients 
-        awscli: 'utilities/{name}/{version}/module'
-        rclone: 'utilities/{name}/{version}/module'
-        miniocli: 'utilities/{name}/{version}/module'
 
         # by default all others are hidden
         # PJE: Marco had no hash for dependencies 
