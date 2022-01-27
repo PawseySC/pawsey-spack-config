@@ -7,6 +7,7 @@ config:
   # Locations where templates should be found
   template_dirs:
 # this one is only for the Spack user (Pawsey staff)
+# some of the edits here are specific to the system-wide modules configuration
     - /software/setonix/2022.01/pawsey-spack-config/setonix/templates_setonix
 
   # Temporary locations Spack can try to use for builds.
