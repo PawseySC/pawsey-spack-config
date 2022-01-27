@@ -21,7 +21,6 @@ cp -p pawsey-spack-config/setonix/fixes/microarchitectures.json spack/lib/spack/
 patch spack/lib/spack/spack/modules/lmod.py pawsey-spack-config/setonix/fixes/lmod_arch_family.patch
 
 # Joey specific
-sed -i '/USER/ s;^;#;g' spack/etc/spack/repos.yaml
 # this is the date tag to be replaced in the config yamls, with the current directory
 date_tag="2022.01"
 install_dir="$(pwd)"
