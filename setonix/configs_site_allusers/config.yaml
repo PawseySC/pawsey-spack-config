@@ -4,11 +4,6 @@ config:
   install_tree:
     root: /software/$PAWSEY_PROJECT/$USER/setonix/software
 
-  # Locations where templates should be found
-  template_dirs:
-# this one is only for end-users
-    - /software/$PAWSEY_PROJECT/$USER/setonix/templates_setonix
-
   # Temporary locations Spack can try to use for builds.
   #
   # Recommended options are given below.

@@ -3,7 +3,6 @@ repos:
 # in that items higher up in the list are inspected first
 # and take precedence
 # 
-# this one should only be used by end-users (and be empty for the Spack user)
-- /software/$PAWSEY_PROJECT/$USER/setonix/repo_setonix
-# Spack user (Pawsey staff) should populate this one
+# Spack user (Pawsey staff) populates this one with fixed recipes for Setonix
+# that are not (yet) in the Spack public repo
 - /software/setonix/2022.01/pawsey-spack-config/setonix/repo_setonix
