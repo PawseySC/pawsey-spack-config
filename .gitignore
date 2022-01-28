@@ -6,4 +6,6 @@ __pycache__/
 *$py.class
 # C extensions
 *.so
-
+## Ignores for testing Spack environments
+spack.lock
+.spack-env/
