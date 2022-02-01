@@ -12,8 +12,9 @@ help([[A package management tool designed to support multiple versions and confi
 -- see https://lmod.readthedocs.io/en/latest/050_lua_modulefiles.html
 -- Joey has 8.3, so this is not usable
 
+load("python/3.9.7")
+
 setenv("SPACK_HOME","/software/setonix/2022.01/spack")
 
-load("cray-python/3.8.5.1")
 -- The following is NOT unloadable
 execute{cmd=". /software/setonix/2022.01/spack/share/spack/setup-env.sh", modeA={"load"}}

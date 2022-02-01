@@ -10,6 +10,7 @@ help([[A container technology focused on building portable encapsulated environm
 
 -- Rationale for considering a Pawsey custom module for Singularity
 -- is to have better control of the variables required to have MPI working
+-- Alternative: to add these variables to Spack module configuration
 
 -- TODO: review this path
 setenv("SINGULARITY_HOME","/software/pawsey0001/spack-tests/setonix/2022.01/software/cray-sles15-zen2/gcc-10.3.0/singularity-3.8.5-eig5ikxq2yyrkklutfqpwq6khk2mcxah")

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# TODO: can edits be done within a modified Spack recipe?
+
 # assuming Singularity was installed by Spack
 # here, only editing some configurations
 
