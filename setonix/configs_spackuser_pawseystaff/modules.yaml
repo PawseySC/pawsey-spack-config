@@ -105,6 +105,8 @@ modules:
         nano: 'utilities/{name}/{version}/module'
         nextflow: 'utilities/{name}/{version}/module'
         parallel: 'utilities/{name}/{version}/module'
+        py-pip: 'utilities/{name}/{version}/module'
+        py-setuptools: 'utilities/{name}/{version}/module'
         reframe: 'utilities/{name}/{version}/module'
         singularity: 'utilities/{name}/{version}/module'
 
@@ -135,8 +137,6 @@ modules:
         py-plotly: 'python-packages/{name}/{version}/module'
         py-scikit-learn: 'python-packages/{name}/{version}/module'
         py-scipy: 'python-packages/{name}/{version}/module'
-        py-pip: 'python-packages/{name}/{version}/module'
-        py-setuptools: 'python-packages/{name}/{version}/module'
 
         #bio 
         exabayes: 'bio-applications/{name}/{version}/module'
