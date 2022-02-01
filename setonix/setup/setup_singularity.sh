@@ -8,7 +8,8 @@ singularity_path="$(which singularity)"
 singularity_dir="${singularity_path%/bin/singularity}"
 
 # Cray: use RAMFS
-sed -i 's/^ *memory *fs *type *=.*/memory fs type = ramfs/g' ${singularity_dir}/etc/singularity/singularity.conf
+# beyond CLE6up05, this is not needed any more
+#sed -i 's/^ *memory *fs *type *=.*/memory fs type = ramfs/g' ${singularity_dir}/etc/singularity/singularity.conf
 
 # do not allow execution of encrypted containers
 sed -i 's/^ *allow *container *encrypted *=.*/allow container encrypted = no/g' ${singularity_dir}/etc/singularity/singularity.conf
