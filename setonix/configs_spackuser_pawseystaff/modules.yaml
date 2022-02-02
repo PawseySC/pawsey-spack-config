@@ -5,6 +5,51 @@ modules:
       lmod: /software/setonix/2022.01/modules
 
     lmod:
+
+      # for applications for which it is unlikely
+      # dependencies are needed, set autoload to none
+      gromacs:
+        autoload: none
+      amber:
+        autoload: none
+      cpmd:
+        autoload: none
+      cp2k:
+        autoload: none
+      lammps:
+        autoload: none
+      namd:
+        autoload: none
+      nektar:
+        autoload: none
+      nwchem:
+        autoload: none
+      openfoam:
+        autoload: none
+      openfoam-org:
+        autoload: none
+      quantum-espresso:
+        autoload: none
+      vasp:
+        autoload: none
+      miniocli:
+        autoload: none
+      rclone:
+        autoload: none
+      awscli:
+        autoload: none
+      hpl:
+        autoload: none
+      exabayes:
+        autoload: none
+      examl:
+        autoload: none
+
+      # select all packages that depend on python
+      # and set these modules to autoload their dependencies
+      ^python:
+        autoload: direct
+
       projections:
         # modules on magnus have one of [apps, tools, python, devel] as start of module name 
         # an then {name}/{version}'
@@ -53,6 +98,7 @@ modules:
         kokkos: 'libraries/{name}/{version}/module'
         netlib-lapack: 'libraries/{name}/{version}/module'
         openblas: 'libraries/{name}/{version}/module'
+        blaspp: 'libraries/{name}/{version}/module'
         opencv: 'libraries/{name}/{version}/module'
         plasma: 'libraries/{name}/{version}/module'
         petsc: 'libraries/{name}/{version}/module'
