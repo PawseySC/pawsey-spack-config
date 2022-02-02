@@ -11,9 +11,12 @@ module load $python_module/$python_version
 module load setuptools/$setuptools_version
 module load pip/$pip_version
 
+# decide this once and for all: singularity-hpc or shpc?
+shpc_name="singularity-hpc"
+
 # create and enter install directory
-mkdir shpc
-cd shpc
+mkdir $shpc_name
+cd $shpc_name
 
 # pip install package
 pip install --prefix=$(pwd) singularity-hpc==$shpc_version
@@ -60,7 +63,7 @@ shpc config set default_version:false
 # enable X11 graphics
 shpc config set container_features:x11:true
 # location for container fake home
-shpc config set container_features:home:\$HOME/.shpc_home
+shpc config set container_features:home:\$HOME/.${shpc_name}-home
 
 ## SPACK USER
 shpc config inituser

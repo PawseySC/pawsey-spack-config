@@ -13,7 +13,7 @@ help([[Local filesystem registry for containers (intended for HPC) using Lmod or
 load("python/3.9.7")
 load("singularity/3.8.5")
 
-setenv("SHPC_HOME","/software/setonix/2022.01/shpc")
+setenv("SINGULARITY_HPC_HOME","/software/setonix/2022.01/singularity-hpc")
 
-prepend_path("PATH","/software/setonix/2022.01/shpc/bin")
-prepend_path("PYTHONPATH","/software/setonix/2022.01/shpc/lib/python3.9/site-packages")
+prepend_path("PATH","/software/setonix/2022.01/singularity-hpc/bin")
+prepend_path("PYTHONPATH","/software/setonix/2022.01/singularity-hpc/lib/python3.9/site-packages")

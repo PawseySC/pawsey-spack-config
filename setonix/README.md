@@ -16,8 +16,8 @@ The system-wide software stack is installed under `/software/setonix/YYYY.MM/` w
 * `pawsey-spack-config/`: this repo, including `setonix/repo_setonix` for customised package recipes
 
 A couple of sub-directories also sit here, that are unrelated to Spack:
-* `containers/`: system-wide container and container module deployments (eg bioinformatic through SHPC)
-* `shpc/`: SHPC installation
+* `containers/`: system-wide container and container module deployments (eg bioinformatics through SHPC)
+* `singularity-hpc/`: Singularity-HPC (SHPC) installation
 
 As regards configuration YAMLs, note that Spack prioritises user configs to site configs (*i.e.* those in the Spack installation directory).  
 In order to minimise edits in users' home directories, we're putting:
