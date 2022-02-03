@@ -32,15 +32,19 @@ modules:
         autoload: none
       vasp:
         autoload: none
+      exabayes:
+        autoload: none
+      examl:
+        autoload: none
+      # s3 clients 
+      # awscli and py-boto not set to none
+      # as they depend on python
       miniocli:
         autoload: none
       rclone:
         autoload: none
+      # benchmarking 
       hpl:
-        autoload: none
-      exabayes:
-        autoload: none
-      examl:
         autoload: none
 
       # select all packages that depend on python
