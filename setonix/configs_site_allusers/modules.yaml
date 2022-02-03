@@ -55,6 +55,9 @@ modules:
           # this may be required for installs on Topaz
           #set:
           #  'MAALI_{name}_HOME': '{prefix}'
+        # for libraries make sure to load direct dependencies
+        autoload: direct
+      
     
       # select all packages that depend on python 
       # and set these modules to autoload their dependencies
