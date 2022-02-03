@@ -12,9 +12,10 @@ class Miniocli(MakefilePackage):
     Amazon S3 compatible cloud storage service (AWS Signature v2 and v4)."""
 
     homepage = "https://docs.min.io/docs/minio-client-complete-guide.html"
-    url      = "https://github.com/minio/mc/archive/refs/tags/RELEASE.2022-01-05T23-52-51Z.tar.gz"
+    url      = "https://github.com/minio/mc/archive/refs/tags/RELEASE.2022-02-02T02-03-24Z.tar.gz"
 
     version('2022-01-05T23-52-51Z', sha256='d5dbd32b7a7f79baace09dd6518121798d2fcbb84b81046b61ff90f980c8f963')
+    version('2022-02-02T02-03-24Z', sha256='2d4a64c17935d40d0e325761cc214b2efceb19ce006101c192da9b31f8920a97')
 
     depends_on('go', type='build')
 
