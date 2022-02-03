@@ -36,8 +36,6 @@ modules:
         autoload: none
       rclone:
         autoload: none
-      awscli:
-        autoload: none
       hpl:
         autoload: none
       exabayes:
