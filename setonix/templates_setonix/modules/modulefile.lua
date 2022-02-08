@@ -93,6 +93,8 @@ unsetenv("{{ cmd.name }}")
 {% endif %}
 {% if spec.name == 'openjdk' %}setenv("GRADLE_USER_HOME",os.getenv("MYSOFTWARE").."/.gradle")
 {% endif %}
+{% if spec.name == 'singularity' %}setenv("SINGULARITY_CACHEDIR",os.getenv("MYSOFTWARE").."/.singularity")
+{% endif %}
 
 {% block footer %}
 -- Access is granted only to specific groups
