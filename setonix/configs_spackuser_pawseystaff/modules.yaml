@@ -47,11 +47,6 @@ modules:
       hpl:
         autoload: none
 
-      # select all packages that depend on python
-      # and set these modules to autoload their dependencies
-      ^python:
-        autoload: direct
-
       projections:
         # modules on magnus have one of [apps, tools, python, devel] as start of module name 
         # an then {name}/{version}'
