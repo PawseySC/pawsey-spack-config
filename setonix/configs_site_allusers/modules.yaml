@@ -58,9 +58,11 @@ modules:
         # for libraries make sure to load direct dependencies
         autoload: direct
     
-      # select all packages that depend on python, or java,
+      # select all packages that depend on python, or r, or java,
       # and set these modules to autoload their dependencies
       ^python:
+        autoload: direct
+      ^r:
         autoload: direct
       ^java:
         autoload: direct
