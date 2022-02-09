@@ -1,0 +1,219 @@
+Index: configure/SPECIFIC-EQUIPMESO-LINUX-IA64I_INTEL-MPI
+===================================================================
+--- configure/SPECIFIC-EQUIPMESO-LINUX-IA64I_INTEL-MPI	(revision 4621)
++++ configure/SPECIFIC-EQUIPMESO-LINUX-IA64I_INTEL-MPI	(revision 4624)
+@@ -1,7 +1,7 @@
+ #INFO#
+ #INFO# Configuration for Linux HPC (NEC) cluster Equip@Meso / CPER AlsaCalcul
+ #INFO# Intel Composer v.16 or later - OpenMPI/IntelMPI + OMP 3.0 (or later)
+-#INFO# (IPCMS/Nagoya University, January 2019)
++#INFO# (IPCMS/Nagoya University, April 2019)
+ #INFO#
+      IRAT=2
+      FC='mpiifort'
+@@ -21,7 +21,7 @@
+        FFLAGS='-g'
+        CFLAGS='-g -Wall -m64'
+      else
+-       FFLAGS='-O2 -pc64 -funroll-loops -fpp -heap-arrays 64'
++       FFLAGS='-O2 -pc64 -funroll-loops -fpp -heap-arrays 64 -xHost'
+        CFLAGS='-O2 -Wall  '
+      fi
+      if [ $omp ]; then
+Index: doc/manual/manual.tex
+===================================================================
+--- doc/manual/manual.tex	(revision 4621)
++++ doc/manual/manual.tex	(revision 4624)
+@@ -5630,7 +5630,7 @@
+      ... \\
+    FRAGMENT BOND \\
+      tollength  \\
+-   DAMPING \\
++   DAMPING [DIPOLE] \\
+      a6 \\
+    RESTART WANNIER \\
+    ENERGY MONOMER \\
+@@ -5653,6 +5653,14 @@
+   of your fragments (e.g. the ETOT you get by a standard calculation
+   not including vdW corrections). For a6 the suggested parameter is
+   20.0 \cite{molphy}.
++  An alternative method avoiding the use of the empirical parameter a6
++  is the one exploiting the replacement of the short-range damping function
++  by an estimation of the Pauli exchange repulsion given in terms of solely
++  Wannier function centers and spreads, as reported in arxiv.org/abs/1902.07646.
++  To activate this option the keyword DAMPING has to be given along with DIPOLE
++  on the same line. 
++  The following line (a6) has to be obviously removed, since anyhow is neither
++  read nor used in this (DAMPING DIPOLE) case.
+   Note that the two possible vdW options, EMPIRICAL CORRECTION  and
+   WANNIER CORRECTION are mutually exclusive.}
+ 
+Index: src/vdw_utils.mod.F90
+===================================================================
+--- src/vdw_utils.mod.F90	(revision 4621)
++++ src/vdw_utils.mod.F90	(revision 4624)
+@@ -418,12 +418,19 @@
+                                efac=0.0_real_8
+                                ffac=0.0_real_8
+                             ELSE
+-                               efac=c6vdw&
+-                                    *POT59(DISTN,vdwwfr%a6,SPR(L,ICFR,ipx),SPR(M,JCFR,ipx),&
+-                                    vdwwfi%iswitchvdw)/DISTN6
+-                               ffac=c6vdw&
+-                                    *FPOT59(DISTN,vdwwfr%a6,SPR(L,ICFR,ipx),SPR(M,JCFR,ipx),&
+-                                    vdwwfi%iswitchvdw)/DISTN
++                               IF (vdwwfl%tdampda) THEN
++                                  efac=c6vdw/distn6&
++                                       +potda(distn,vdwwfi%nelpwf,spr(l,icfr,ipx),spr(m,jcfr,ipx))
++                                  ffac=(-6._real_8*c6vdw/(distn6*distn)&
++                                       +fpotda(distn,vdwwfi%nelpwf,spr(l,icfr,ipx),spr(m,jcfr,ipx)))/distn
++                               ELSE
++                                  efac=c6vdw&
++                                       *POT59(DISTN,vdwwfr%a6,SPR(L,ICFR,ipx),SPR(M,JCFR,ipx),&
++                                       vdwwfi%iswitchvdw)/DISTN6
++                                  ffac=c6vdw&
++                                       *FPOT59(DISTN,vdwwfr%a6,SPR(L,ICFR,ipx),SPR(M,JCFR,ipx),&
++                                       vdwwfi%iswitchvdw)/DISTN
++                               ENDIF
+                             ENDIF
+                             ! Energy
+                             vdwr%evdw=vdwr%evdw+efac
+@@ -524,6 +531,44 @@
+     RETURN
+   END SUBROUTINE vdw_wf
+   ! ==================================================================
++  REAL(real_8) FUNCTION fpotda(r,nel,s1,s2)
++    ! ==--------------------------------------------------------------==
++    IMPLICIT NONE
++    ! Arguments
++    INTEGER :: nel
++    REAL(real_8) :: r,s1,s2
++    ! Local variables
++    REAL(real_8) :: q,ss,f1,f2,es
++    ! ==--------------------------------------------------------------==
++    q=REAL(nel,KIND=real_8)
++    ss=s1*s1+s2*s2
++    f1=s1*s2/ss
++    f2=r*r/ss
++    es=EXP(-1.5_real_8*f2)
++    fpotda=-4._real_8*q**2*f1**3*(1._real_8+3._real_8*f2)*es/(r*r)
++    ! ==--------------------------------------------------------------==
++    RETURN
++  END FUNCTION fpotda
++  ! ==================================================================
++  REAL(real_8) FUNCTION potda(r,nel,s1,s2)
++    ! ==--------------------------------------------------------------==
++    IMPLICIT NONE
++    ! Arguments
++    INTEGER :: nel
++    REAL(real_8) :: r,s1,s2
++    ! Local variables
++    REAL(real_8) :: q,ss,f1,f2,es
++    ! ==--------------------------------------------------------------==
++    q=REAL(nel,KIND=real_8)
++    ss=s1*s1+s2*s2
++    f1=s1*s2/ss
++    f2=r*r/ss
++    es=EXP(-1.5_real_8*f2)
++    potda=4._real_8*q**2*f1**3*es/r
++    ! ==--------------------------------------------------------------==
++    RETURN
++  END FUNCTION potda
++  ! ==================================================================
+   REAL(real_8) FUNCTION fpot59(r,a,s1,s2,iswitchvdw)
+     ! ==--------------------------------------------------------------==
+     IMPLICIT NONE
+Index: src/vdwcmod.mod.F90
+===================================================================
+--- src/vdwcmod.mod.F90	(revision 4621)
++++ src/vdwcmod.mod.F90	(revision 4624)
+@@ -79,6 +79,7 @@
+      LOGICAL :: tpc6
+      LOGICAL :: tpforce
+      LOGICAL :: treffit
++     LOGICAL :: tdampda
+   END TYPE vdwwfl_t
+   TYPE(vdwwfl_t) :: vdwwfl
+   TYPE :: vdwwfi_t
+Index: src/vdwin_utils.mod.F90
+===================================================================
+--- src/vdwin_utils.mod.F90	(revision 4621)
++++ src/vdwin_utils.mod.F90	(revision 4624)
+@@ -67,8 +67,8 @@
+     ! ==                                                              ==
+     ! ==  Added support for DCACP.                                    ==
+     ! ==                          12.06.2017 M.P.Bircher @ LCBC/EPFL  ==
+-    ! ==  Previous releases:                                          ==
+-    ! ==             Strasbourg/Tokyo/Zurich/Hyogo, 23 May 2013       ==
++    ! ==  Present release:                                            ==
++    ! ==             Strasbourg/Tokyo/Zurich/Hyogo, 2 April 2019      ==
+     ! ==--------------------------------------------------------------==
+     CHARACTER(*), PARAMETER                  :: procedureN = 'vdwin'
+ 
+@@ -695,7 +695,7 @@
+     ! ==    FRAGMENT BOND [COVRAD]                                    ==
+     ! ==      xmfacwf                                                 ==
+     ! ==      covrad2 ...                                             ==
+-    ! ==    DAMPING                                                   ==
++    ! ==    DAMPING [DIPOLE]                                          ==
+     ! ==      a6                                                      ==
+     ! ==    RESTART WANNIER                                           ==
+     ! ==    ENERGY MONOMER                                            ==
+@@ -761,6 +761,7 @@
+     vdwwfl%tpc6=.FALSE.
+     vdwwfl%tpforce=.FALSE.
+     vdwwfl%treffit=.FALSE.
++    vdwwfl%tdampda=.FALSE.
+     !
+     !
+     !
+@@ -848,18 +849,22 @@
+              resetcb=.TRUE.
+           ENDIF
+        ELSEIF (keyword_contains(line,'DAMPING')) THEN
+-          READ(iunit,*,iostat=ierr) vdwwfr%a6
+-          IF (ierr /= 0) THEN
+-             error_message        = 'ERROR WHILE READING LINE'
+-             something_went_wrong = .TRUE.
+-             go_on_reading        = .FALSE.
++          IF (keyword_contains(line,'DIPOLE')) THEN
++             vdwwfl%tdampda=.TRUE.
++          ELSE
++             READ(iunit,*,iostat=ierr) vdwwfr%a6
++             IF (ierr /= 0) THEN
++                error_message        = 'ERROR WHILE READING LINE'
++                something_went_wrong = .TRUE.
++                go_on_reading        = .FALSE.
++             ENDIF
++             IF (vdwwfr%a6 < 1.0e-05_real_8) THEN
++                WRITE(output_unit,'(/,1X,A,1X,A,/)')&
++                     'DAMPING FACTOR TOO SMALL. SET TO 20.0',&
++                     'ACCORDING TO: MOL. PHYS. 107, 999 (2009)'
++                vdwwfr%a6=20.0_real_8
++             ENDIF
+           ENDIF
+-          IF (vdwwfr%a6 < 1.0e-05_real_8) THEN
+-             WRITE(output_unit,'(/,1X,A,1X,A,/)')&
+-                  'DAMPING FACTOR TOO SMALL. SET TO 20.0',&
+-                  'ACCORDING TO: MOL. PHYS. 107, 999 (2009)'
+-             vdwwfr%a6=20.0_real_8
+-          ENDIF
+        ELSEIF(keyword_contains(line,'RESTART') .AND.&
+             keyword_contains(line,'WANN',alias='WANNIER')) THEN
+           vdwwfl%trwannc=.TRUE.
+@@ -1035,6 +1040,15 @@
+          WRITE(output_unit,'(A)')&
+               '    USE REFERENCES OF ATOM/BOND CENTERS'
+       ENDIF
++      IF (vdwwfl%tdampda) THEN
++         WRITE(output_unit,'(A)')&
++              '    USE DIPOLE APPROXIMATION OF DAMPING FUNCTION'
++         WRITE(output_unit,'(A)')&
++              '    AS IN SILVESTRELLI-AMBROSETTI arXiv:1902.07646'
++      ELSE
++         WRITE(output_unit,'(A,T56,F10.3)')&
++              '    USE SEMIEMPIRICAL DAMPING FUNCTION WITH A6 FACTOR:',vdwwfr%a6
++      ENDIF
+       WRITE(output_unit,'(A,T56,F10.3)')&
+            '    TOLERANCE FOR EXTRAPOLATION OF WF CENTERS(A.U.):',vdwwfr%tolwann
+       WRITE(output_unit,'(A,T56,F10.3)')&

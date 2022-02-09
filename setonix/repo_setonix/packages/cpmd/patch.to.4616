@@ -1,0 +1,168 @@
+Index: src/initclust_utils.mod.F90
+===================================================================
+--- src/initclust_utils.mod.F90	(revision 4615)
++++ src/initclust_utils.mod.F90	(revision 4616)
+@@ -166,24 +166,32 @@
+                       __LINE__,__FILE__)
+        ENDIF
+ 
+-       ! same thing for MTS low functional
+-       IF (mts_low_func_mhfx == functional_mhfx) THEN
+-          IF (functional_msrx /= mts_low_func_msrx) CALL stopgm(procedureN,&
+-             'MTS: LOW and HIGH level FUNCTIONALS must imperatively use the same HFX screening function',&
+-             __LINE__,__FILE__)
+-          IF (functional_srxa /= mts_low_func_srxa) CALL stopgm(procedureN,&
+-             'MTS: LOW and HIGH level FUNCTIONALS must imperatively use the same HFX screening parameter',&
+-             __LINE__,__FILE__)
+-          CALL cp_xc_functional%get(mhfx=mhfx,msrx=msrx,srxa=srxa,cam_alpha=cam_alpha,cam_beta=cam_beta)
+-       ELSEIF (mts_low_func_mhfx > 0 .and. functional_mhfx == 0) THEN
+-          ! No HFX in functional, but in MTS low func., thus get the parameters from the MTS low func.
+-          CALL cp_xc_mts_low_func%get(mhfx=mhfx,msrx=msrx,srxa=srxa,cam_alpha=cam_alpha,cam_beta=cam_beta)
+-       ELSEIF (mts_low_func_mhfx == 0 .and. functional_mhfx > 0) THEN
+-          ! No HFX in MTS low func., but in the main functional, thus get the parameters from the main functional
+-          CALL cp_xc_functional%get(mhfx=mhfx,msrx=msrx,srxa=srxa,cam_alpha=cam_alpha,cam_beta=cam_beta)
+-       ELSE
+-          CALL stopgm(procedureN,'MTS: Invalid HFX combination between secomdary and primary functionals',&
+-                      __LINE__,__FILE__)
++       ! Martin:
++       ! MTS type is NOT copied from the standard functional if it is not used.
++       ! Need an IF to skip bugs with screened functionals
++       !
++       IF (cntl%use_mts) THEN
++          ! 
++          ! same thing for MTS low functional
++          !
++          IF (mts_low_func_mhfx == functional_mhfx) THEN
++             IF (functional_msrx /= mts_low_func_msrx) CALL stopgm(procedureN,&
++                'MTS: LOW and HIGH level FUNCTIONALS must imperatively use the same HFX screening function',&
++                __LINE__,__FILE__)
++             IF (functional_srxa /= mts_low_func_srxa) CALL stopgm(procedureN,&
++                'MTS: LOW and HIGH level FUNCTIONALS must imperatively use the same HFX screening parameter',&
++                __LINE__,__FILE__)
++             CALL cp_xc_functional%get(mhfx=mhfx,msrx=msrx,srxa=srxa,cam_alpha=cam_alpha,cam_beta=cam_beta)
++          ELSEIF (mts_low_func_mhfx > 0 .and. functional_mhfx == 0) THEN
++             ! No HFX in functional, but in MTS low func., thus get the parameters from the MTS low func.
++             CALL cp_xc_mts_low_func%get(mhfx=mhfx,msrx=msrx,srxa=srxa,cam_alpha=cam_alpha,cam_beta=cam_beta)
++          ELSEIF (mts_low_func_mhfx == 0 .and. functional_mhfx > 0) THEN
++             ! No HFX in MTS low func., but in the main functional, thus get the parameters from the main functional
++             CALL cp_xc_functional%get(mhfx=mhfx,msrx=msrx,srxa=srxa,cam_alpha=cam_alpha,cam_beta=cam_beta)
++          ELSE
++             CALL stopgm(procedureN,'MTS: Invalid HFX combination between secomdary and primary functionals',&
++                         __LINE__,__FILE__)
++          ENDIF
+        ENDIF
+     ELSE
+        mhfx      = func1%mhfx
+Index: src/cp_xc_driver.mod.F90
+===================================================================
+--- src/cp_xc_driver.mod.F90	(revision 4615)
++++ src/cp_xc_driver.mod.F90	(revision 4616)
+@@ -18,7 +18,8 @@
+                                              lxc_lda_exc_vxc
+   USE parac,                           ONLY: paral
+   USE system,                          ONLY: cntl,&
+-                                             cntr
++                                             cntr,&
++                                             dual00
+   USE timer,                           ONLY: tiset,&
+                                              tihalt
+ 
+@@ -117,7 +118,7 @@
+          ! Preliminaries
+          !
+          CALL cp_xc%set_scratch( get_scratch, needs_gradients, needs_tau )
+-         CALL cp_xc%set_functional( functional )
++         CALL cp_xc%set_functional( functional, dual_is_set=dual00%dual )
+ 
+          ! Get xc energies and potentials
+          !
+@@ -198,7 +199,7 @@
+          ! Preliminaries
+          !
+          CALL cp_xc%set_scratch( get_scratch, needs_gradients, needs_tau )
+-         CALL cp_xc%set_functional( functional )
++         CALL cp_xc%set_functional( functional, dual_is_set=dual00%dual )
+ 
+          ! Get xc energies and potentials
+          !
+Index: src/cp_xc_utils.mod.F90
+===================================================================
+--- src/cp_xc_utils.mod.F90	(revision 4615)
++++ src/cp_xc_utils.mod.F90	(revision 4616)
+@@ -2137,7 +2137,7 @@
+   ! ==================================================================
+ 
+   ! ==================================================================
+-  SUBROUTINE cp_xc_set_functional( cp_xc, functional )
++  SUBROUTINE cp_xc_set_functional( cp_xc, functional, dual_is_set)
+     ! ==--------------------------------------------------------------==
+     ! Sets a functional pointer to the procedure specified in
+     ! cp_xc%cpfunc for n_funcs functionals; sets Coulomb attenuation
+@@ -2146,6 +2146,7 @@
+ 
+     CLASS(cp_xc_t), INTENT(in)               :: cp_xc
+     TYPE(cp_xc_functional_p_t), INTENT(out)  :: functional
++    LOGICAL, INTENT(in), OPTIONAL            :: dual_is_set
+ 
+     CHARACTER(len=*), PARAMETER              :: procedureN = 'set_functional'
+ 
+@@ -2152,10 +2153,16 @@
+     INTEGER                                  :: i_func
+ 
+     LOGICAL                                  :: initialisation_OK
++    LOGICAL                                  :: dual_set_manually
++    LOGICAL                                  :: dual_OK
+ 
++    dual_set_manually = .false.
++    IF (present(dual_is_set)) dual_set_manually = dual_is_set
++
+     DO i_func=1,cp_xc%cpfunc%n_funcs
+ 
+        initialisation_OK = .false.
++       dual_OK           = .true.
+ 
+        SELECT CASE(TRIM(ADJUSTL(cp_xc%cpfunc%funcs( i_func ))))
+        !
+@@ -2207,14 +2214,17 @@
+           functional%K( i_func )%compute  => CP_MGGA_X_M05_M06
+           functional%Ks( i_func )%compute => CP_SPIN_MGGA_X_M05_M06
+           initialisation_OK               =  cp_mgga_x_check(cp_xc%cpfunc%funcs( i_func ))
++          dual_OK                         =  dual_set_manually
+        CASE("CP_MGGA_X_M08_M11")
+           functional%K( i_func )%compute  => CP_MGGA_X_M08_M11
+           functional%Ks( i_func )%compute => CP_SPIN_MGGA_X_M08_M11
+           initialisation_OK               =  cp_mgga_x_check(cp_xc%cpfunc%funcs( i_func ))
++          dual_OK                         =  dual_set_manually
+        CASE("CP_MGGA_X_MN12")
+           functional%K( i_func )%compute  => CP_MGGA_X_MN12
+           functional%Ks( i_func )%compute => CP_SPIN_MGGA_X_MN12
+           initialisation_OK               =  cp_mgga_x_check(cp_xc%cpfunc%funcs( i_func ))
++          dual_OK                         =  dual_set_manually
+        !
+        ! Correlation functionals
+        !
+@@ -2270,10 +2280,12 @@
+           functional%K( i_func )%compute  => CP_MGGA_C_M05_M06
+           functional%Ks( i_func )%compute => CP_SPIN_MGGA_C_M05_M06
+           initialisation_OK               =  cp_mgga_c_check(cp_xc%cpfunc%funcs( i_func ))
++          dual_OK                         =  dual_set_manually
+        CASE("CP_MGGA_C_M08_M11")
+           functional%K( i_func )%compute  => CP_MGGA_C_M08_M11
+           functional%Ks( i_func )%compute => CP_SPIN_MGGA_C_M08_M11
+           initialisation_OK               =  cp_mgga_c_check(cp_xc%cpfunc%funcs( i_func ))
++          dual_OK                         =  dual_set_manually
+           !
+           ! This should not happen
+           !
+@@ -2282,6 +2294,11 @@
+                &functional '//trim(adjustl(cp_xc%cpfunc%funcs( i_func )))//' n/a',&
+                __LINE__,__FILE__)
+        END SELECT
++       
++       IF (.not. dual_OK)  CALL stopgm(procedureN,'Invalid setup for Minnesota functional. Please set DUAL to 8-12 '// &
++                                 'and refer to the manual for more information. See also: '// &
++                                 'dx.doi.org/10.1021/acs.jctc.8b00897', &
++                                 __LINE__,__FILE__)
+ 
+        IF (.not. initialisation_OK) CALL stopgm(procedureN,'Functional parameters have not been properly set; &
+                &concerns '//trim(adjustl(cp_xc%cpfunc%funcs( i_func ))), &

@@ -1,0 +1,404 @@
+Index: configure/LINUX-HASWELL-INTEL-MPI17
+===================================================================
+--- configure/LINUX-HASWELL-INTEL-MPI17	(revision 4612)
++++ configure/LINUX-HASWELL-INTEL-MPI17	(nonexistent)
+@@ -1,39 +0,0 @@
+-#INFO#
+-#INFO# Configuration for Haswell Linux Supercluster
+-#INFO# Haswell is the codename for the Intel processor 
+-#INFO# successor to the Ivy Bridge microarchitecture. 
+-#INFO# See http://ark.intel.com/products/codename/42174/Haswell
+-#INFO# Intel Composer v.15 or later - BullMPI/OpenMPI + OMP 3.0 (or later)
+-#INFO# Processor Intel Haswell 12-Core E5-2690 (e.g. Occigen@CINES)
+-#INFO# Cluster IB 4x FDR Fat Tree / 9 blades socket
+-#INFO# (University of Strasbourg-University of Tokyo, January 2018). 
+-#INFO#
+-     IRAT=2
+-     FC='mpif90'
+-     CC='mpicc'
+-     LD='mpif90'
+-     CPP='/lib/cpp -P -C -traditional'
+-     CPPFLAGS='-D__HAS_FFT_DEFAULT -D__ALPHALINUX -D__HPC -D__HASNT_OMP_45 \
+-         -D__PARALLEL -D__HAS_SIZEOF -D__HAS_BF_STREAM_IO -D__HASNT_F08_ISO_FORTRAN_ENV'
+-     CPPFLAGS_GROMOS='-DEWALD -DEWATCUT -DHAT_SHAPE -DUNPACKED_GRID \
+-             -D__HAS_FFT_DEFAULT -D__ALPHALINUX -D__HPC -D__HASNT_OMP_45 \
+-             -D__PARALLEL -D__HAS_SIZEOF -D__HAS_BF_STREAM_IO -D__HASNT_F08_ISO_FORTRAN_ENV'
+-     FFLAGS_GROMOS='-fixed $(FFLAGS)'
+-     FFLAGS_GROMOS_MODULES='$(FFLAGS)'
+-     AR='/usr/bin/ar -r'
+-     RANLIB='/usr/bin/ranlib'
+-     if [ $debug ]; then
+-       FFLAGS='-g'
+-       CFLAGS='-g -Wall -m64'
+-     else
+-       FFLAGS='-O3 -xHost -pc64 -funroll-loops -fpp -heap-arrays 64 -no-prec-div'
+-       CFLAGS='-O2 -Wall  '
+-     fi
+-     if [ $omp ]; then
+-       FFLAGS=${FFLAGS}' -qopenmp'
+-       OMP3_DISABLED='false'
+-       LIBS='-mkl=parallel -lm'
+-     else
+-       LIBS='-static-intel -mkl=serial -lm -lpthread -liomp5'
+-     fi
+-     LFLAGS=${LIBS}
+Index: configure/SPECIFIC-EQUIPMESO-LINUX-IA64I_INTEL-MPI
+===================================================================
+--- configure/SPECIFIC-EQUIPMESO-LINUX-IA64I_INTEL-MPI	(revision 4612)
++++ configure/SPECIFIC-EQUIPMESO-LINUX-IA64I_INTEL-MPI	(revision 4615)
+@@ -1,16 +1,7 @@
+ #INFO#
+-#INFO# Configuration for Linux HPC (NEC) cluster Equip@Meso
+-#INFO# Intel Composer v.16 or later - OpenMPI + OMP 3.0 (or later)
+-#INFO# WARNING: The clause "collapse(n)" may not work in old compilers and
+-#INFO#          is known to have troubles on the Fujitsu compiler (K-computer
+-#INFO#          and Fujitsu FX10 machine) and Intel Fortran Compiler version
+-#INFO#          11 and former ones. Since ifort v.12.0.3 bugs have been fixed.
+-#INFO#          Please, refer to the discussion in
+-#INFO#          http://openmp.org/forum/viewtopic.php?f=3&t=1023&start=10
+-#INFO#          and check carefully your compiler and OS.
+-#INFO# For optimal performance you should use a specifically tuned BLAS/LAPACK
+-#INFO# library as in this specific configuration file 
+-#INFO# (IPCMS-University of Tokyo/Nagoya University, September 2018). 
++#INFO# Configuration for Linux HPC (NEC) cluster Equip@Meso / CPER AlsaCalcul
++#INFO# Intel Composer v.16 or later - OpenMPI/IntelMPI + OMP 3.0 (or later)
++#INFO# (IPCMS/Nagoya University, January 2019)
+ #INFO#
+      IRAT=2
+      FC='mpiifort'
+@@ -30,16 +21,15 @@
+        FFLAGS='-g'
+        CFLAGS='-g -Wall -m64'
+      else
+-       FFLAGS='-ipo -O2 -no-prec-div -pc64 -funroll-loops -fpp -heap-arrays 64'
++       FFLAGS='-O2 -pc64 -funroll-loops -fpp -heap-arrays 64'
+        CFLAGS='-O2 -Wall  '
+      fi
+-     MKLPATH='/opt/intel/compilers_and_libraries_2016.0.109/linux/mkl/lib/intel64_lin'
+      if [ $omp ]; then
+        FFLAGS=${FFLAGS}' -qopenmp'
+        OMP3_DISABLED='false'
+        LIBS='-mkl=parallel -lm'
+      else
+-       LIBS='-static-intel -L$(MKLPATH) -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core \
++       LIBS='-static-intel -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core \
+              -lm -lpthread -liomp5 '
+      fi
+      LFLAGS=${LIBS}
+Index: configure/IBM-BGQ-MPI-OPT
+===================================================================
+--- configure/IBM-BGQ-MPI-OPT	(revision 4612)
++++ configure/IBM-BGQ-MPI-OPT	(revision 4615)
+@@ -2,7 +2,14 @@
+ #INFO#   IBM BG/Q - SMP and optimized version
+ #INFO#   Note: All Fortran2008 (F08) extensions have
+ #INFO#   to be switched off to allow for compilation
+-#INFO#   non GPU-oriented
++#INFO#   non GPU-oriented.
++#INFO#   WARNING: On standard IBM XL Fortran for Blue Gene, V14.1
++#INFO#   Version: 14.01.0000.0015 (and later) 
++#INFO#   I/O Streaming should better be used (-D__HAS_BF_STREAM_IO)
++#INFO#   for fast RESTART writing.
++#INFO#   OMP versions 4.5 and 5.0 should better be switched off to
++#INFO#   avoid crashing and compilation errors of the type:
++#INFO#   Identifier omp_get_num_places appeared in a USE statement but is not publicly accessible from this module
+ #INFO#
+ 
+      IRAT=2
+@@ -15,8 +22,9 @@
+      CPPFLAGS=' -D__IBM -D__HAS_FFT_DEFAULT -D__BG -D__PARALLEL -D__PWRLinux \
+                 -D__SUMFNL_ISNT_TRHEADED -D__HAS_IBM_QPX_INTRINSIC \
+                 -D__FFT_HAS_SPECIAL_COPY=1 -D__FFT_HAS_OMP_COLLAPSE \
+-                 -D__HAS_SIZEOF -D__HAS_EXTERNAL_IDAMIN \
+-                -D__HASNT_F08_CONTIGUOUS -D__HASNT_F08_ASYNCHRONOUS -D__HASNT_F08_POINTER_REMAPPING -D__HASNT_MPI_30'
++                -D__HAS_BF_STREAM_IO -D__HAS_SIZEOF -D__HAS_EXTERNAL_IDAMIN \
++                -D__HASNT_F08_CONTIGUOUS -D__HASNT_F08_ASYNCHRONOUS -D__HASNT_F08_POINTER_REMAPPING \
++                -D__HASNT_MPI_30 -D__HASNT_OMP_45'
+      CPPFLAGS_GROMOS='-DEWALD -DEWATCUT -DHAT_SHAPE -DUNPACKED_GRID -D__BG'
+      NOOPT_FLAG=' -O0  '
+      NOOPT_OBJS='control_utils.mod.o meta_colvar_inp_utils.mod.o respin_p_utils.mod.o '
+Index: configure/IBM-x3750-MPI
+===================================================================
+--- configure/IBM-x3750-MPI	(revision 4612)
++++ configure/IBM-x3750-MPI	(revision 4615)
+@@ -5,28 +5,27 @@
+ #INFO# NOTE: Recent versions of the cpp pre-compiler require to omit 
+ #INFO# the deprecated option -C
+ #INFO# See https://software.intel.com/en-us/forums/topic/330003
+-#INFO# In these cases the syntax you have to use is
+-#INFO# cpp -P -traditional
++#INFO# (IPCMS/Nagoya University, January 2019).
+ #INFO#
+      IRAT=2
+      FC='mpiifort'
+      CC='mpiicc'
+      LD='mpiifort'
+-     CPP='/usr/bin/cpp -P -C -traditional'
+-     CPPFLAGS='-D__Linux  -DLINUX_IFC -D__HAS_FFT_DEFAULT  \
++     CPP='/usr/bin/cpp -P -traditional'
++     CPPFLAGS='-D__Linux -DLINUX_IFC -D__HAS_FFT_DEFAULT -D__HAS_BF_STREAM_IO \
+                -D__PARALLEL -D__HASNT_F03_EXECUTE_COMMAND_LINE \
+                -D__HASNT_F08_ISO_FORTRAN_ENV -D__HASNT_OMP_45'
+      CPPFLAGS_GROMOS='-DEWALD -DEWATCUT -DHAT_SHAPE -DUNPACKED_GRID \
+-                      -D__Linux  -DLINUX_IFC -D__HAS_FFT_DEFAULT \
++                      -D__Linux  -DLINUX_IFC -D__HAS_FFT_DEFAULT -D__HAS_BF_STREAM_IO\
+                       -D__PARALLEL -D__HASNT_F03_EXECUTE_COMMAND_LINE \
+                       -D__HASNT_F08_ISO_FORTRAN_ENV -D__HASNT_OMP_45'
+      FFLAGS_GROMOS='-fixed $(FFLAGS)'
+      FFLAGS_GROMOS_MODULES=' $(FFLAGS)'
+      if [ $debug ]; then
+-       FFLAGS='-g  -pc64  -unroll -heap-arrays 64 '
++       FFLAGS='-g -pc64 -funroll-loops -heap-arrays 64'
+        CFLAGS='-g -Wall -m64  -Wall -m64'
+      else
+-       FFLAGS=' -pc64  -O2 -unroll -heap-arrays 64 '
++       FFLAGS='-O2 -pc64 -funroll-loops -heap-arrays 64'
+        CFLAGS='-O2 -Wall -m64'
+      fi
+      if [ $omp ]; then
+@@ -34,6 +33,6 @@
+        OMP3_DISABLED=`{ ${FC} -v; } 2>&1 | ${AWK} '{ print ( $2 < "12.0.4" ) ? "true" : "false" }'`
+        LIBS='-mkl=parallel -lm'
+      else
+-       LIBS='-lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lm -lpthread'
++       LIBS='-lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lm -lpthread -liomp5'
+      fi
+      LFLAGS='-static-intel '${LIBS}
+Index: configure/LINUX-HASWELL-INTEL-MPI
+===================================================================
+--- configure/LINUX-HASWELL-INTEL-MPI	(revision 4612)
++++ configure/LINUX-HASWELL-INTEL-MPI	(revision 4615)
+@@ -29,11 +29,11 @@
+      AR='/usr/bin/ar -r'
+      RANLIB='/usr/bin/ranlib'
+      if [ $debug ]; then
+-       FFLAGS='-g -traceback -O0 -no-prec-div -pc64 -fpp -heap-arrays 64'
++       FFLAGS='-g -traceback -O0 -no-prec-div -pc64 -fpp -heap-arrays 64 -xHost'
+        CFLAGS='-g -Wall -m64'
+      else
+-       FFLAGS='-ipo -O3 -no-prec-div -pc64 -funroll-loops -fpp -heap-arrays 64'
+-       CFLAGS='-O2 -Wall  '
++       FFLAGS='-ipo -O2 -no-prec-div -pc64 -funroll-loops -fpp -heap-arrays 64'
++       CFLAGS='-O2 -Wall -xhost'
+      fi
+      if [ $omp ]; then
+        FFLAGS=${FFLAGS}' -qopenmp'
+@@ -40,6 +40,6 @@
+        OMP3_DISABLED='false'
+        LIBS='-mkl=parallel -lm'
+      else
+-       LIBS='-static-intel -mkl=serial -lm -lpthread -liomp5'
++       LIBS='-static-intel -mkl=cluster -lm -lpthread -liomp5'
+      fi
+      LFLAGS=${LIBS}
+Index: configure/LINUX-HASWELL-INTEL-MPI-FFTW3
+===================================================================
+--- configure/LINUX-HASWELL-INTEL-MPI-FFTW3	(revision 4612)
++++ configure/LINUX-HASWELL-INTEL-MPI-FFTW3	(revision 4615)
+@@ -34,14 +34,14 @@
+        FFLAGS='-g -O0 -I${MKLROOT}/include/fftw -traceback -O0 -no-prec-div -pc64 -fpp -heap-arrays 64'
+        CFLAGS='-g -O0 -Wall -m64'
+      else
+-       FFLAGS='-ipo -O3 -no-prec-div -pc64 -funroll-loops -fpp -heap-arrays 64 -I${MKLROOT}/include/fftw -axAVX'
+-       CFLAGS='-O2 -Wall  '
++       FFLAGS='-ipo -O2 -no-prec-div -pc64 -funroll-loops -fpp -heap-arrays 64 -I${MKLROOT}/include/fftw -xHost'
++       CFLAGS='-O2 -Wall -xHost'
+      fi
+      if [ $omp ]; then
+        FFLAGS=${FFLAGS}' -qopenmp -fpp'
+        OMP3_DISABLED='false'
+-       LIBS='-mkl=parallel -axAVX'
++       LIBS='-mkl=parallel'
+      else
+-       LIBS='-static-intel -mkl=serial -lm -lpthread -liomp5'
++       LIBS='-static-intel -mkl=cluster -lm -lpthread -liomp5'
+      fi
+      LFLAGS=${LIBS}
+Index: configure/LINUX-HASWELL-INTEL-MPI18
+===================================================================
+--- configure/LINUX-HASWELL-INTEL-MPI18	(nonexistent)
++++ configure/LINUX-HASWELL-INTEL-MPI18	(revision 4615)
+@@ -0,0 +1,45 @@
++#INFO#
++#INFO# Configuration for Haswell/Broadwell Linux Supercluster
++#INFO# Haswell is the codename for the Intel processor 
++#INFO# successor to the Ivy Bridge microarchitecture. 
++#INFO# Broadwell is the 14 nanometer die shrink of Haswell.
++#INFO# See http://ark.intel.com/products/codename/42174/Haswell
++#INFO# Intel Composer v.18 or later - OpenMPI + OMP 3.0/4.5/5,0 (or later)
++#INFO# Processor Intel Haswell 12-Core E5-2690 (e.g. Occigen@CINES)
++#INFO# Cluster IB 4x FDR Fat Tree / 9 blades socket
++#INFO# WARNING: A bug in the IntelMPI from version 2017.0.098 until 2018.1.163
++#INFO# WARNING: is responsible for a memory overflow during parallel execution
++#INFO# WARNING: under MPI / OMP or hybrid MPI-OMP. The recommended combination
++#INFO# WARNING: tested and verified by CINES is to switch to OpenMPI
++#INFO# WARNING: i.e. modules intel/18.1 openmpi/intel/2.0.1
++#INFO# (University of Strasbourg-University of Nagoya, January 2019). 
++#INFO#
++     IRAT=2
++     FC='mpif90'
++     CC='mpicc'
++     LD='mpif90'
++     CPP='/lib/cpp -P -C -traditional'
++     CPPFLAGS='-D__HAS_FFT_DEFAULT -D__ALPHALINUX -D__HPC -D__HASNT_OMP_45 \
++         -D__PARALLEL -D__HAS_SIZEOF -D__HAS_BF_STREAM_IO -D__HASNT_F08_ISO_FORTRAN_ENV'
++     CPPFLAGS_GROMOS='-DEWALD -DEWATCUT -DHAT_SHAPE -DUNPACKED_GRID \
++             -D__HAS_FFT_DEFAULT -D__ALPHALINUX -D__HPC -D__HASNT_OMP_45 \
++             -D__PARALLEL -D__HAS_SIZEOF -D__HAS_BF_STREAM_IO -D__HASNT_F08_ISO_FORTRAN_ENV'
++     FFLAGS_GROMOS='-fixed $(FFLAGS)'
++     FFLAGS_GROMOS_MODULES='$(FFLAGS)'
++     AR='/usr/bin/ar -r'
++     RANLIB='/usr/bin/ranlib'
++     if [ $debug ]; then
++       FFLAGS='-g -traceback -O0 -no-prec-div -pc64 -fpp -heap-arrays 64 -xHost'
++       CFLAGS='-g -Wall -m64'
++     else
++       FFLAGS='-O2 -pc64 -funroll-loops -fpp -heap-arrays 64 -xHost'
++       CFLAGS='-O2 -Wall -xhost'
++     fi
++     if [ $omp ]; then
++       FFLAGS=${FFLAGS}' -qopenmp'
++       OMP3_DISABLED='false'
++       LIBS='-mkl=parallel -lm'
++     else
++       LIBS='-static-intel -mkl=cluster -lm -lpthread -liomp5'
++     fi
++     LFLAGS=${LIBS}
+Index: doc/manual/manual.tex
+===================================================================
+--- doc/manual/manual.tex	(revision 4612)
++++ doc/manual/manual.tex	(revision 4615)
+@@ -641,10 +641,14 @@
+ %
+ With the version 4.3, we have ported some of the core-procedures to gpu. The XC procedures
+ have been refactored and it was added the possibility to link to libxc.
++Coulomb-attenuated functionals (CAM) and the Minnesota functionals (M05, M06, M08 and
++M11 families) are now available as internal xc procedures.
+ A new development for Eherenfest dynamics with ionized states is deployed.
+-Few novel implementation: a multiple time step scheme for MD and the stress tensor LSD and UltraSoft Vanderbilt pseudopotentials and NPT
++Few novel implementations are available: a multiple time step scheme for MD,
++accelerated exact exchange for isolated systems, 
++the stress tensor, LSD and UltraSoft Vanderbilt pseudopotentials and NPT.
+ Also a new bicanonical ensemble method is made available with version 4.3.
+-Extensive cleanup and bug fixes and strenghten of the regression test suite.
++Extensive cleanup and bug fixes and strenghtening of the regression test suite.
+ 
+ 
+ % XXX tutorial added.
+@@ -1447,6 +1451,8 @@
+ \refspekeyword{HFX\_BLOCK\_SIZE}{HFX BLOCK SIZE}\options{}{}{}
+ \refspekeyword{HFX\_DISTRIBUTION}{HFX DISTRIBUTION}\options{}{[BLOCK\_CYCLIC,DYNAMIC]}{}
+ \refkeyword{HFX SCREENING}\options{\{WFC,DIAG,EPS\_INT,RECOMPUTE\_TWO\_INT\_LIST\_EVERY\}}{}{}
++\refkeyword{SCEX}\options{}{}{}
++\refkeyword{SCALED EXCHANGE}\options{}{}{}
+ \refkeyword{GC-CUTOFF}\options{}{}{}
+ \refkeyword{GRADIENT CORRECTION}\options{}{}{functionals}
+ \refkeyword{LIBRARY}\options{}{}{library\_for\_functional\_1, library\_for\_functional\_2, \dots}
+@@ -3010,6 +3016,13 @@
+       \\
+       \textbf{HYB\_MGGA\_XC} \_M05, \_M05\_2X, \_M06, \_M06\_2X, \_M06\_HF, \_M08\_SO, \_M08\_HX, \_M11, \_MN12\_SX
+       \\~\\
++      \textbf{Important note on Minnesota functionals:}
++      \\
++      At the usual plane wave cutoff values, the Minnesota functionals require unusually dense integration grids.
++      In order to avoid introducing noise, this should be achieved by increasing the value of the \refkeyword{DUAL}.
++      For usage recommendations and more details: Bircher, Lopez-Tarifa and Rothlisberger\cite{bircher_rothlisberger19},
++      DOI: 10.1021/acs.jctc.8b00897.
++      \\~\\
+       % MPB: No space for this on one page
+       % Please note that, for your convenience, some of these combinations have been hard-coded in the internal library only,
+       % they may not be available directly in libxc.
+@@ -4963,6 +4976,16 @@
+   \desc{Identical functionality as described in \refspekeyword{HFX\_SCALE}{HFX SCALE}, but applies to the \refkeyword{LR KERNEL}
+         rather than the \refkeyword{FUNCTIONAL}.}
+ 
++\keyword{SCEX}{}{}{}{\&DFT}
++  \desc{Activate the use of the coordinate-scaled exact exchange scheme by Bircher and
++        Rothlisberger\cite{bircher_rothlisberger18b} for \emph{isolated systems}.
++        Speedups of up to one order of magnitude can be achieved. Please note that
++        the simulation supercell must imperatively span twice the size of the charge density,
++        and that the molecule has to remain centred in the box.}
++
++\keyword{SCALED EXCHANGE}{}{}{}{\&DFT}
++  \desc{Alias for \refkeyword{SCEX}.}
++
+ \keyword{SCREENED EXCHANGE}{\{ASHCROFT,CAM,ERFC,EXP\}}{}{}{\&DFT}
+   \desc{Screening / range separation applied to the Hartree-Fock exchange term \emph{only}.
+         Possible options are: 
+@@ -11079,7 +11102,7 @@
+    using ``better'' wavefunctions does not pay off.
+ \end{enumerate}
+ %
+-% jgh
++% xc_driver
+ %%%%%%%%%%
+ 
+ \faqquestion{newdft}
+@@ -11097,6 +11120,52 @@
+ range separation are currently still found in func.mod.F90 and the range separated exact exchange
+ is handled in initclust\_utils.mod.F90.
+ %
++% Minnesota
++%%%%%%%%%%
++
++\faqquestion{minnesotaconv}
++I am trying to use the Minnesota functionals (M06, M11, \dots), but the results I get are most erratic,
++or they require very high values for the \refkeyword{CUTOFF}.
++What is wrong?
++
++\faqanswer
++The Minnesota functionals require unusually dense integration grids. Simply increasing the cutoff will
++introduce numerical noise and make the wavefunction optimisation unstable. This issue can be overcome by
++increasing the \refkeyword{DUAL} up to 8-12. A detailled assessment of these effects along with recommendations
++for appropriate values can be found in the following reference: M.P. Bircher, P. Lopez-Tarifa and U. Rothlisberger:
++\emph{J.\ Chem.\ Theory Comput.}, \textbf{15} (1), 557 (2019). DOI: 10.1021/acs.jctc.8b00897
++
++\faqquestion{minnesotacomp}
++Results obtained from the Minnesota functionals (M05, M06, M08, M11) seem well converged, but exhibit significant differences with
++respect to Gaussian bases. Is there something wrong?
++
++\faqanswer
++Due to their highly flexible functional form, the Minnesota functionals are extremely sensitive to the
++choice and flexibility of the underlying basis set. Since Gaussian functions always impose a certain rigidity,
++results obtained in Gaussian basis sets may occasionally differ by more than just chemical accuracy from the
++plane wave results. This effect is not limited to plane waves, it can also be observed - to a lesser extent -
++when comparing plane waves and Slater functions, and can be rather pronounced when comparing Gaussian and Slater functions.
++A detailled study of basis set effects is provided in the following article: M.P. Bircher, P. Lopez-Tarifa and U. Rothlisberger:
++\emph{J.\ Chem.\ Theory Comput.}, \textbf{15} (1), 557 (2019). DOI: 10.1021/acs.jctc.8b00897
++%
++% Minnesota
++%%%%%%%%%%
++
++\faqquestion{hfxslow}
++I am running a calculation with exact exchange, but it is exceedingly slow compared to a GGA or MGGA run.
++Can this issue be resolved?
++
++\faqanswer
++The implementation of exact (or Hartree-Fock) exchange in CPMD is highly efficient and parallel. If the number of
++available nodes is limited, increasing the value in \refspekeyword{HFX\_BLOCK\_SIZE}{HFX BLOCK SIZE} can substantially speed up
++the calculation. In the presence of ample computational resources, the calculation can be sped up by using
++\refspekeyword{CP\_GROUPS}{CP GROUPS}.
++
++In isolated systems, the calculation can be sped up by up to an additional order of magnitude by using the coordinate-scaling
++scheme by Bircher and Rothlisberger. For details, see \refkeyword{SCEX}.
++
++
++%
+ % AK
+ %%%%%%%%%%
+ 
+@@ -11834,6 +11903,14 @@
+ M.~Schw\"{o}rer, K.~Lorenzen, G.~Mathias, and P.~Tavan,
+  J.\ Chem.\ Phys., {\bf 142}   (2015).
+ 
++\bibitem{bircher_rothlisberger18b}
++M.P.~Bircher and U.~Rothlisberger,
++ J.\ Phys.\ Chem.\ Lett., {\bf 9} (14), 3886 (2018).
++
++\bibitem{bircher_rothlisberger19}
++M.P.~Bircher, P.~Lopez-Tarifa and U.~Rothlisberger,
++ J.\ Chem.\ Theory Comput., {\bf 15} (1), 557 (2019).
++
+ %-> References correctly reordered until this point.
+ 
+ %\bibitem{LeSar}

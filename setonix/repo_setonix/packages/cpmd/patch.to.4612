@@ -1,0 +1,74 @@
+Index: src/pw_hfx.mod.F90
+===================================================================
+--- src/pw_hfx.mod.F90	(revision 4611)
++++ src/pw_hfx.mod.F90	(revision 4612)
+@@ -2352,7 +2352,7 @@
+     ! ==--------------------------------------------------------------==
+   END SUBROUTINE hfx_get_pair_density
+   ! ==================================================================
+-  PURE SUBROUTINE hfx_set_vpotr(psic,vpotr,vpotr_2)
++  SUBROUTINE hfx_set_vpotr(psic,vpotr,vpotr_2)
+     ! ==--------------------------------------------------------------==
+ 
+     COMPLEX(real_8), DIMENSION(:), &
+@@ -2380,7 +2380,7 @@
+     ! ==--------------------------------------------------------------==
+   END SUBROUTINE hfx_set_vpotr
+   ! ==================================================================
+-  PURE SUBROUTINE hfx_get_potential(psia,psib,psic,vpotr,a_stored_in_real,b_stored_in_real)
++  SUBROUTINE hfx_get_potential(psia,psib,psic,vpotr,a_stored_in_real,b_stored_in_real)
+     ! ==--------------------------------------------------------------==
+ 
+     COMPLEX(real_8), DIMENSION(:), &
+@@ -2441,7 +2441,7 @@
+     ! ==--------------------------------------------------------------==
+   END SUBROUTINE hfx_get_potential
+   ! ==================================================================
+-  PURE SUBROUTINE hfx_get_c2_real_space(psic,c2,c2_2)
++  SUBROUTINE hfx_get_c2_real_space(psic,c2,c2_2)
+     ! ==--------------------------------------------------------------==
+           
+     COMPLEX(real_8), DIMENSION(:), &
+@@ -2454,13 +2454,13 @@
+     INTEGER         :: ir
+ 
+     IF (present(c2_2)) THEN
+-       !$omp parallel do private(IG)
++       !$omp parallel do private(ir)
+        DO ir=1,llr1
+           c2(ir)   = c2(ir)   + REAL(psic(ir)) 
+           c2_2(ir) = c2_2(ir) + AIMAG(psic(ir)) 
+        ENDDO
+     ELSE
+-       !$omp parallel do private(IG)
++       !$omp parallel do private(ir)
+        DO ir=1,llr1
+           c2(ir)   = c2(ir) + REAL(psic(ir))
+        ENDDO
+@@ -2469,7 +2469,7 @@
+     ! ==--------------------------------------------------------------==
+   END SUBROUTINE hfx_get_c2_real_space
+   ! ================================================================== 
+-  PURE SUBROUTINE hfx_get_c2(psic,c2,c2_2)
++  SUBROUTINE hfx_get_c2(psic,c2,c2_2)
+     ! ==--------------------------------------------------------------==
+           
+     COMPLEX(real_8), DIMENSION(:), &
+@@ -2521,7 +2521,7 @@
+   ! ==================================================================
+ 
+   ! ==================================================================
+-  PURE SUBROUTINE hfxaa_ab_get_ehfx(psic,vpotg,pf,ef,ehfx_nothresh)
++  SUBROUTINE hfxaa_ab_get_ehfx(psic,vpotg,pf,ef,ehfx_nothresh)
+     ! ==--------------------------------------------------------------==
+ 
+     COMPLEX(real_8), DIMENSION(:), &
+@@ -2550,7 +2550,7 @@
+     ! ==--------------------------------------------------------------==
+   END SUBROUTINE hfxaa_ab_get_ehfx
+   ! ==================================================================
+-  PURE SUBROUTINE hfxab2_get_ehfx(psic,vpotg,pf1,pf2,ehfx_nothresh_1,ehfx_nothresh_2)
++  SUBROUTINE hfxab2_get_ehfx(psic,vpotg,pf1,pf2,ehfx_nothresh_1,ehfx_nothresh_2)
+     ! ==--------------------------------------------------------------==
+ 
+     COMPLEX(real_8), DIMENSION(:), &
