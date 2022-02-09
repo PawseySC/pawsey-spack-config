@@ -211,6 +211,7 @@ modules:
         #performance tests 
         "hpl ~openmp": 'benchmarking/{name}/{version}/module'
         "hpl +openmp": 'benchmarking/{name}/{version}+openmp/module'
+        osu-micro-benchmarks: 'benchmarking/{name}/{version}/module'
 
         # by default all others are hidden
         # PJE: Marco had no hash for dependencies 
