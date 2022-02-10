@@ -89,11 +89,16 @@ unsetenv("{{ cmd.name }}")
 {% endif %}
 {% endfor %}
 {% endblock %}
-{% if spec.name == 'nextflow' %}setenv("NXF_HOME",os.getenv("MYSOFTWARE").."/.nextflow")
+{% if spec.name == 'nextflow' %}setenv("NXF_HOME", os.getenv("MYSOFTWARE").."/.nextflow")
 {% endif %}
-{% if spec.name == 'openjdk' %}setenv("GRADLE_USER_HOME",os.getenv("MYSOFTWARE").."/.gradle")
+{% if spec.name == 'openjdk' %}setenv("GRADLE_USER_HOME", os.getenv("MYSOFTWARE").."/.gradle")
 {% endif %}
-{% if spec.name == 'singularity' %}setenv("SINGULARITY_CACHEDIR",os.getenv("MYSOFTWARE").."/.singularity")
+{% if spec.name == 'singularity' %}setenv("SINGULARITY_CACHEDIR", os.getenv("MYSOFTWARE").."/.singularity")
+{% endif %}
+{% if spec.name == 'r' %}setenv("R_LIBS_USER", os.getenv("MYSOFTWARE").."/r/%v")
+{% endif %}
+{% if spec.name == 'python' %}setenv("PYTHONUSERBASE", os.getenv("MYSOFTWARE").."/python")
+prepend_path("PATH", os.getenv("PYTHONUSERBASE").."/bin")
 {% endif %}
 
 {% block footer %}
