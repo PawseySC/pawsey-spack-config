@@ -6,8 +6,11 @@ The `setonix/` directory contains the following:
 * `configs/spackuser_pawseystaff/`: configuration files for system-wide installs (Pawsey staff), which will sit in ~/.spack/, allowing spack user overrides of config
 * `environments/`: environments for deployment on Setonix
 * `fixes/`: Pawsey fixes to be applied to Spack prior to production use
+* `registry_setonix/`: custom Singularity-HPC (SHPC) recipes for Pawsey (non-Spack related)
 * `repo_setonix/`: custom package recipes for Setonix
 * `templates_setonix/`: custom templates (modulefiles, Dockerfiles)
+* `setup/`: files for system-wide installation (scripts and custom modulefiles)
+
 
 The system-wide software stack is installed under `/software/setonix/YYYY.MM/` with the following sub-directories:
 * `software/`: Spack software installations
@@ -18,6 +21,7 @@ The system-wide software stack is installed under `/software/setonix/YYYY.MM/` w
 A couple of sub-directories also sit here, that are unrelated to Spack:
 * `containers/`: system-wide container and container module deployments (eg bioinformatics through SHPC)
 * `singularity-hpc/`: Singularity-HPC (SHPC) installation
+
 
 As regards configuration YAMLs, note that Spack prioritises user configs to site configs (*i.e.* those in the Spack installation directory).  
 In order to minimise edits in users' home directories, we're putting:
@@ -68,3 +72,4 @@ In order to minimise edits in users' home directories, we're putting:
 
 Current `modules.yaml` and the template `modulefile.lua` rely on additional features of spack found in the feature/improved-lmod-modules (https://github.com/PawseySC/spack/tree/feature/improved-lmod-modules).  
 The update provides extra tokens that can be used when creating the module name and also extra keywords to the template.
+
