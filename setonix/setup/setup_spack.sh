@@ -34,4 +34,6 @@ patch spack/lib/spack/spack/modules/lmod.py pawsey-spack-config/setonix/fixes/lm
 patch lib/spack/spack/modules/common.py modulenames_plus_common.patch
 patch lib/spack/spack/cmd/modules/__init__.py modulenames_plus_init.patch
 
+# TODO: copy license-protected patches/files in appropriate location, change group ownership of their directory
+
 # TODO: use $date_tag above to update across the spack yamls
