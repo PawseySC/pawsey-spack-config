@@ -15,8 +15,8 @@ cd spack/
 git checkout v0.17.0
 cd ..
 
-cp -p pawsey-spack-config/setonix/configs_site_allusers/*.yaml spack/etc/spack/
-cp -p pawsey-spack-config/setonix/configs_spackuser_pawseystaff/*.yaml ~/.spack/
+cp -p pawsey-spack-config/setonix/configs/site_allusers/*.yaml spack/etc/spack/
+cp -p pawsey-spack-config/setonix/configs/spackuser_pawseystaff/*.yaml ~/.spack/
 cp -p pawsey-spack-config/setonix/fixes/microarchitectures.json spack/lib/spack/external/archspec/json/cpu/
 patch spack/lib/spack/spack/modules/lmod.py pawsey-spack-config/setonix/fixes/lmod_arch_family.patch
 

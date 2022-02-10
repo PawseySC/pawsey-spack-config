@@ -23,8 +23,8 @@ git checkout ${spack_version}
 cd ..
 
 # copy configs into spack tree
-cp -p pawsey-spack-config/setonix/configs_site_allusers/*.yaml spack/etc/spack/
-cp -p pawsey-spack-config/setonix/configs_spackuser_pawseystaff/*.yaml ~/.spack/
+cp -p pawsey-spack-config/setonix/configs/site_allusers/*.yaml spack/etc/spack/
+cp -p pawsey-spack-config/setonix/configs/spackuser_pawseystaff/*.yaml ~/.spack/
 
 # apply fixes into spack tree
 cp -p pawsey-spack-config/setonix/fixes/microarchitectures.json spack/lib/spack/external/archspec/json/cpu/

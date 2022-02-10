@@ -2,8 +2,8 @@
 
 
 The `setonix/` directory contains the following:
-* `configs_site_allusers/`: configuration files for Setonix that is valid for all users, which will sit in $spack/etc/spack
-* `config_spackuser_pawseystaff/`: configuration files for system-wide installs (Pawsey staff), which will sit in ~/.spack/, allowing spack user overrides of config
+* `configs/site_allusers/`: configuration files for Setonix that is valid for all users, which will sit in $spack/etc/spack
+* `configs/spackuser_pawseystaff/`: configuration files for system-wide installs (Pawsey staff), which will sit in ~/.spack/, allowing spack user overrides of config
 * `environments/`: environments for deployment on Setonix
 * `fixes/`: Pawsey fixes to be applied to Spack prior to production use
 * `repo_setonix/`: custom package recipes for Setonix
