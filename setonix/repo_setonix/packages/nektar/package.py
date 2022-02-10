@@ -18,6 +18,7 @@ class Nektar(CMakePackage):
     version('4.4.1', sha256='71cfd93d848a751ae9ae5e5ba336cee4b4827d4abcd56f6b8dc5c460ed6b738c')
 
     variant('mpi', default=True, description='Builds with mpi support')
+    variant('avx2', default=True, description='Builds with simd avx2 support')
     # variant('fftw', default=True, description='Builds with fftw support')
     # variant('arpack', default=True, description='Builds with arpack support')
     # variant('hdf5', default=True, description='Builds with hdf5 support')
@@ -59,5 +60,6 @@ class Nektar(CMakePackage):
         # args.append('-DNEKTAR_USE_ARPACK=%s' % hasfeature('+arpack'))
         # args.append('-DNEKTAR_USE_HDF5=%s' % hasfeature('+hdf5'))
         args.append('-DNEKTAR_USE_SCOTCH=%s' % hasfeature('+scotch'))
+        args.append('-DNEKTAR_ENABLE_SIMD_AVX2=%s' % hasfeature('+avx2'))
         args.append('-DNEKTAR_USE_PETSC=OFF')
         return args
