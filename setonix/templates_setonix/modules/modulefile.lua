@@ -95,6 +95,11 @@ unsetenv("{{ cmd.name }}")
 {% endif %}
 {% if spec.name == 'singularity' %}setenv("SINGULARITY_CACHEDIR",os.getenv("MYSOFTWARE").."/.singularity")
 {% endif %}
+{% if spec.name == 'r' %}setenv("R_LIBS_USER",os.getenv("MYSOFTWARE").."/r/%v")
+{% endif %}
+{% if spec.name == 'python' %}setenv("PYTHONUSERBASE",os.getenv("MYSOFTWARE").."/python")
+prepend_path("PATH",os.getenv("PYTHONUSERBASE").."/bin")
+{% endif %}
 
 {% block footer %}
 -- Access is granted only to specific groups
