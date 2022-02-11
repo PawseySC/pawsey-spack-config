@@ -63,7 +63,7 @@ shpc config set default_version:false
 # enable X11 graphics
 shpc config set container_features:x11:true
 # location for container fake home
-shpc config set container_features:home:\$HOME/.${shpc_name}-home
+shpc config set container_features:home:\$MYSOFTWARE/.${shpc_name}-home
 
 ## SPACK USER
 shpc config inituser
