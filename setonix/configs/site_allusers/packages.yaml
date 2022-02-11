@@ -409,6 +409,11 @@ packages:
     - spec: cryptsetup@2.0.6
       prefix: /usr
     buildable: false
+  libseccomp:
+    externals:
+    - spec: libseccomp@2.4.1
+      prefix: /usr
+    buildable: false
   libgpg-error:
     externals:
     - spec: libgpg-error@1.29
