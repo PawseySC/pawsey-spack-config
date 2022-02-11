@@ -26,6 +26,7 @@ class Singularity(SingularityBase):
     maintainers = ['alalazo']
 
     version('master', branch='master')
+    version('3.8.6', sha256='bb5a3b7670ac9c7a4b3ce5b2c9f3d6b5be60e21b08d338c9dfdabb7b2a99f528')
     version('3.8.5', sha256='7fff78b5c07b5d4d08269bd267ac5e994390f933321e54efd6b7c86683153ce4')
     version('3.8.4', sha256='cb95e6d68b0d20f2b87d60f23a3bf707b7d3e87cee0dd4aa4380f8f481a57ebc')
     version('3.8.3', sha256='2e22eb9ee1b73fdd51b8783149f0e4d83c0d2d8a0c1edf6034157d50eeefb835')
@@ -48,3 +49,20 @@ class Singularity(SingularityBase):
     version('3.1.1', sha256='7f0df46458d8894ba0c2071b0848895304ae6b1137d3d4630f1600ed8eddf1a4')
 
     patch('singularity_v3.4.0_remove_root_check.patch', level=0, when='@3.4.0:3.4.1')
+
+    @run_after('install')
+    def set_pawsey_configuration(self):
+       configuration_file = join_path(self.spec.prefix.etc, 'singularity', 'singularity.conf')
+# do not allow execution of encrypted containers
+       filter_file(r'^ *allow *container *encrypted *=.*',
+                    'allow container encrypted = no',
+                    configuration_file)
+# do not mount home by default at runtime
+       filter_file(r'^ *mount *home *=.*',
+                    'mount home = no',
+                    configuration_file)
+# # Cray: use RAMFS
+# # beyond CLE6up05, this is not needed any more
+#       filter_file(r'^ *memory *fs *type *=.*',
+#                    'memory fs type = ramfs',
+#                    configuration_file)

@@ -120,7 +120,7 @@ packages:
     version: [57.4.0]
   # preferred versions (for 2022.01) and variants, compilers
   go:
-    version: [1.16.4]
+    version: [1.16.12]
   julia:
      version: [1.6.1]
   openjdk:
@@ -407,6 +407,11 @@ packages:
   cryptsetup:
     externals:
     - spec: cryptsetup@2.0.6
+      prefix: /usr
+    buildable: false
+  libseccomp:
+    externals:
+    - spec: libseccomp@2.4.1
       prefix: /usr
     buildable: false
   libgpg-error:

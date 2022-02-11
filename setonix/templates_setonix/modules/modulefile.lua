@@ -94,6 +94,12 @@ unsetenv("{{ cmd.name }}")
 {% if spec.name == 'openjdk' %}setenv("GRADLE_USER_HOME", os.getenv("MYSOFTWARE").."/.gradle")
 {% endif %}
 {% if spec.name == 'singularity' %}setenv("SINGULARITY_CACHEDIR", os.getenv("MYSOFTWARE").."/.singularity")
+-- TODO: review these for MPI configuration
+setenv("SINGULARITYENV_LD_LIBRARY_PATH","")
+setenv("SINGULARITY_BINDPATH","/askapbuffer,/astro,/scratch,/software")
+-- TODO: check if the 2 below are still needed (taken from Magnus)
+-- setenv("MPICH_GNI_MALLOC_FALLBACK","1")
+-- setenv("PMI_MMAP_SYNC_WAIT_TIME","14000")
 {% endif %}
 {% if spec.name == 'r' %}setenv("R_LIBS_USER", os.getenv("MYSOFTWARE").."/r/%v")
 {% endif %}
