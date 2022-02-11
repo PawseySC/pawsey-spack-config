@@ -49,3 +49,20 @@ class Singularity(SingularityBase):
     version('3.1.1', sha256='7f0df46458d8894ba0c2071b0848895304ae6b1137d3d4630f1600ed8eddf1a4')
 
     patch('singularity_v3.4.0_remove_root_check.patch', level=0, when='@3.4.0:3.4.1')
+
+    @run_after('install')
+    def set_pawsey_configuration(self):
+       configuration_file = join_path(self.spec.prefix.etc, 'singularity', 'singularity.conf')
+# do not allow execution of encrypted containers
+       filter_file(r'^ *allow *container *encrypted *=.*',
+                    'allow container encrypted = no',
+                    configuration_file)
+# do not mount home by default at runtime
+       filter_file(r'^ *mount *home *=.*',
+                    'mount home = no',
+                    configuration_file)
+# # Cray: use RAMFS
+# # beyond CLE6up05, this is not needed any more
+#       filter_file(r'^ *memory *fs *type *=.*',
+#                    'memory fs type = ramfs',
+#                    configuration_file)
