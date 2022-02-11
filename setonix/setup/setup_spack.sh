@@ -31,8 +31,8 @@ cp -p pawsey-spack-config/setonix/fixes/microarchitectures.json spack/lib/spack/
 # Marco,s Lmod arch family fix for the module tree
 patch spack/lib/spack/spack/modules/lmod.py pawsey-spack-config/setonix/fixes/lmod_arch_family.patch
 # Pascal,s enhancements to modulefiles
-patch lib/spack/spack/modules/common.py modulenames_plus_common.patch
-patch lib/spack/spack/cmd/modules/__init__.py modulenames_plus_init.patch
+patch spack/lib/spack/spack/modules/common.py pawsey-spack-config/setonix/fixes/modulenames_plus_common.patch
+patch spack/lib/spack/spack/cmd/modules/__init__.py pawsey-spack-config/setonix/fixes/modulenames_plus_init.patch
 
 # TODO: copy license-protected patches/files in appropriate location, change group ownership of their directory
 
