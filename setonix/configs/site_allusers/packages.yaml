@@ -120,7 +120,7 @@ packages:
     version: [57.4.0]
   # preferred versions (for 2022.01) and variants, compilers
   go:
-    version: [1.16.4]
+    version: [1.16.12]
   julia:
      version: [1.6.1]
   openjdk:
