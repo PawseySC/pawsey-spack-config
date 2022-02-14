@@ -469,17 +469,17 @@ packages:
 # adding prefixes as in NERSC Perlmutter configs
   cray-mpich:
     externals:
-    - spec: cray-mpich@7.7.0%gcc
+    - spec: cray-mpich@8.1.7%gcc
       modules:
       - cray-mpich/8.1.7
       - craype-network-ofi
       prefix: /opt/cray/pe/mpich/8.1.7/ofi/gnu/9.1
-    - spec: cray-mpich@7.7.0%cce
+    - spec: cray-mpich@8.1.7%cce
       modules:
       - cray-mpich/8.1.7
       - craype-network-ofi
       prefix: /opt/cray/pe/mpich/8.1.7/ofi/cray/10.0
-    - spec: cray-mpich@7.7.0%aocc
+    - spec: cray-mpich@8.1.7%aocc
       modules:
       - cray-mpich/8.1.7
       - craype-network-ofi
