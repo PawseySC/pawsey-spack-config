@@ -55,8 +55,9 @@ modules:
           # this may be required for installs on Topaz
           #set:
           #  'MAALI_{name}_HOME': '{prefix}'
-        # for libraries make sure to load direct dependencies
-        autoload: direct
+        # autoload none by default: limits unnecessary module loading
+        # good for majority of end users 
+        autoload: none
     
       # select all packages that depend on python, or r, or java,
       # and set these modules to autoload their dependencies
@@ -66,6 +67,74 @@ modules:
         autoload: direct
       ^java:
         autoload: direct
+
+      # for libraries make sure to load direct dependencies
+      # this is useful for developer workflows
+
+      # library APIs
+      blas:
+        autoload: direct
+      lapack:
+        autoload: direct
+      scalapack:
+        autoload: direct
+      fftw-api:
+        autoload: direct
+
+      # parallel libraries
+      boost:
+        autoload: direct
+      hpx:
+        autoload: direct
+      kokkos:
+        autoload: direct
+
+      # numerical libraries
+      openblas:
+        autoload: direct
+      netlib-lapack:
+        autoload: direct
+      netlib-scalapack:
+        autoload: direct
+      eigen:
+        autoload: direct
+      fftw:
+        autoload: direct
+      gsl:
+        autoload: direct
+      blaspp:
+        autoload: direct
+      magma:
+        autoload: direct
+      plasma:
+        autoload: direct
+      slate:
+        autoload: direct
+      plumed:
+        autoload: direct
+      opencv:
+        autoload: direct
+      trilinos:
+        autoload: direct
+      petsc:
+        autoload: direct
+
+      # i/o libraries
+      hdf5:
+        autoload: direct
+      adios2:
+        autoload: direct
+      netcdf-c:
+        autoload: direct
+      netcdf-cxx:
+        autoload: direct
+      netcdf-cxx4:
+        autoload: direct
+      netcdf-fortran:
+        autoload: direct
+      parallel-netcdf:
+        autoload: direct
+
 
       projections:
         # keeping these simple for user-specific installations
