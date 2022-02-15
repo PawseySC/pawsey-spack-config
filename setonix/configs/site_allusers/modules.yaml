@@ -55,8 +55,9 @@ modules:
           # this may be required for installs on Topaz
           #set:
           #  'MAALI_{name}_HOME': '{prefix}'
-        # for libraries make sure to load direct dependencies
-        autoload: direct
+        # autoload none by default: limits unnecessary module loading
+        # good for majority of end users 
+        autoload: none
     
       # select all packages that depend on python, or r, or java,
       # and set these modules to autoload their dependencies
@@ -67,46 +68,73 @@ modules:
       ^java:
         autoload: direct
 
-      # for applications for which it is unlikely
-      # dependencies are needed, set autoload to none
-      gromacs:
-        autoload: none
-      amber:
-        autoload: none
-      cpmd:
-        autoload: none
-      cp2k:
-        autoload: none
-      lammps:
-        autoload: none
-      namd:
-        autoload: none
-      nektar:
-        autoload: none
-      nwchem:
-        autoload: none
-      openfoam:
-        autoload: none
-      openfoam-org:
-        autoload: none
-      quantum-espresso:
-        autoload: none
-      vasp:
-        autoload: none
-      exabayes:
-        autoload: none
-      examl:
-        autoload: none
-      # s3 clients 
-      # awscli and py-boto not set to none
-      # as they depend on python
-      miniocli:
-        autoload: none
-      rclone:
-        autoload: none
-      # benchmarking 
-      hpl:
-        autoload: none
+      # for libraries make sure to load direct dependencies
+      # this is useful for developer workflows
+
+      # library APIs
+      blas:
+        autoload: direct
+      lapack:
+        autoload: direct
+      scalapack:
+        autoload: direct
+      fftw-api:
+        autoload: direct
+
+      # parallel libraries
+      boost:
+        autoload: direct
+      hpx:
+        autoload: direct
+      kokkos:
+        autoload: direct
+
+      # numerical libraries
+      openblas:
+        autoload: direct
+      netlib-lapack:
+        autoload: direct
+      netlib-scalapack:
+        autoload: direct
+      eigen:
+        autoload: direct
+      fftw:
+        autoload: direct
+      gsl:
+        autoload: direct
+      blaspp:
+        autoload: direct
+      magma:
+        autoload: direct
+      plasma:
+        autoload: direct
+      slate:
+        autoload: direct
+      plumed:
+        autoload: direct
+      opencv:
+        autoload: direct
+      trilinos:
+        autoload: direct
+      petsc:
+        autoload: direct
+
+      # i/o libraries
+      hdf5:
+        autoload: direct
+      adios2:
+        autoload: direct
+      netcdf-c:
+        autoload: direct
+      netcdf-cxx:
+        autoload: direct
+      netcdf-cxx4:
+        autoload: direct
+      netcdf-fortran:
+        autoload: direct
+      parallel-netcdf:
+        autoload: direct
+
 
       projections:
         # keeping these simple for user-specific installations
