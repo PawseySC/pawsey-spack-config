@@ -6,47 +6,6 @@ modules:
 
     lmod:
 
-      # for applications for which it is unlikely
-      # dependencies are needed, set autoload to none
-      gromacs:
-        autoload: none
-      amber:
-        autoload: none
-      cpmd:
-        autoload: none
-      cp2k:
-        autoload: none
-      lammps:
-        autoload: none
-      namd:
-        autoload: none
-      nektar:
-        autoload: none
-      nwchem:
-        autoload: none
-      openfoam:
-        autoload: none
-      openfoam-org:
-        autoload: none
-      quantum-espresso:
-        autoload: none
-      vasp:
-        autoload: none
-      exabayes:
-        autoload: none
-      examl:
-        autoload: none
-      # s3 clients 
-      # awscli and py-boto not set to none
-      # as they depend on python
-      miniocli:
-        autoload: none
-      rclone:
-        autoload: none
-      # benchmarking 
-      hpl:
-        autoload: none
-
       projections:
         # modules on magnus have one of [apps, tools, python, devel] as start of module name 
         # an then {name}/{version}'
