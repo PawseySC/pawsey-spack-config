@@ -34,11 +34,15 @@ class Namd(MakefilePackage, CudaPackage):
     variant('interface', default='none', values=('none', 'tcl', 'python'),
             description='Enables TCL and/or python interface')
 
+    variant('plumed', default=False, description='Enable PLUMED support')
+
     # init_tcl_pointers() declaration and implementation are inconsistent
     # "src/colvarproxy_namd.C", line 482: error: inherited member is not
     # allowed
     patch('inherited-member-2.13.patch', when='@2.13')
     patch('inherited-member-2.14.patch', when='@2.14')
+    patch('charmpp-shasta-2.14.patch', when='@2.14')
+    patch('lpython-2.14.patch.2')
 
     depends_on('charmpp@6.10.1:', when="@2.14:")
     depends_on('charmpp@6.8.2', when="@2.13")
@@ -56,6 +60,9 @@ class Namd(MakefilePackage, CudaPackage):
 
     depends_on('tcl', when='interface=python')
     depends_on('python', when='interface=python')
+
+    depends_on('plumed@2.6:+mpi', when='@2.12:2.13+plumed')
+    depends_on('plumed@2.7:+mpi', when='@2.14+plumed')
 
     # https://www.ks.uiuc.edu/Research/namd/2.12/features.html
     # https://www.ks.uiuc.edu/Research/namd/2.13/features.html
@@ -247,6 +254,9 @@ class Namd(MakefilePackage, CudaPackage):
             filter_file(r"^CHARM = \$\(CHARMBASE\)/\$\(CHARMARCH\)",
                         "CHARM = $(CHARMBASE)",
                         join_path(self.build_directory, "Make.config"))
+    def patch(self):
+        if '+plumed' in self.spec:
+            self.spec['plumed'].package.apply_patch(self, force=True)
 
     def install(self, spec, prefix):
         with working_dir(self.build_directory):

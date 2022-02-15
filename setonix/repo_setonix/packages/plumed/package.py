@@ -91,7 +91,7 @@ class Plumed(AutotoolsPackage):
 
     parallel = False
 
-    def apply_patch(self, other):
+    def apply_patch(self, other, force=False):
 
         # The name of MD engines differ slightly from the ones used in Spack
         format_strings = collections.defaultdict(
@@ -122,7 +122,10 @@ class Plumed(AutotoolsPackage):
 
         # Call plumed-patch to patch executables
         target = format_strings[other.name].format(other)
-        plumed_patch('-p', '-e', target)
+        if force:
+            plumed_patch('-p', '-f', '-e', target)
+        else:
+            plumed_patch('-p', '-e', target)
 
     def setup_dependent_package(self, module, dependent_spec):
         # Make plumed visible from dependent packages
