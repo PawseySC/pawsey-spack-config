@@ -1,0 +1,58 @@
+--- AmberTools/src/cpptraj/configure	2020-04-28 09:19:43.000000000 +0800
++++ AmberTools/src/cpptraj/configure	2022-01-14 16:00:05.000000000 +0800
+@@ -10,7 +10,7 @@
+ #-------------------------------------------------------------------------------
+ # Print simple help message
+ UsageSimple() {
+-  echo "Usage: ./configure <OPTIONS> [gnu | intel | pgi | clang | cray]"
++  echo "Usage: ./configure <OPTIONS> [gnu | intel | pgi | clang | cray | cray-shasta-gnu | cray-shasta-cray | cray-shasta-aocc]"
+   echo "  OPTIONS:"
+   echo "    --help         : Display this message."
+   echo "    --prefix <dir> : Install CPPTRAJ to specified directory (default is this directory)."
+@@ -1104,13 +1104,35 @@
+       if [ $USE_OPENMP -eq 0 ] ; then
+         commonflags='-h noomp'
+       fi
++      PLATFORM='cray'
++      ;;
++    "cray-shasta-gnu" )
++      if [ -z "$CC" ]; then CC=cc; fi
++      if [ -z "$CXX" ]; then CXX=CC; fi
++      if [ -z "$FC" ]; then FC=ftn; fi
++      CXXFLAGS="-O3 $CXXFLAGS"
++      CFLAGS="-O3 $CFLAGS"
++      hostflags=''
++      optflags=''
++      ompflag='-fopenmp'
++      warnflag='-Wall' # This will also print cautions
++      fwarnflag='-Wall'
++      freefmtflag='-fallow-argument-mismatch -ffree-form'
++      foptflags=''
++      FLINK='-lgfortran'
++      picflag='-fpic'
++      C11FLAG='-std=c++11'
++      if [ $USE_OPENMP -eq 0 ] ; then
++        commonflags=''
++      fi
++      PLATFORM='cray'
+       ;;
+     * ) Err "Unknown compilers: $1" ;;
+   esac
+   # Unless specified fortran warnflag is same as C/C++
+   if [ -z "$fwarnflag" ] ; then fwarnflag=$warnflag ; fi
+   # Change to MPI compiler wrappers if specified. Not needed for cray.
+-  if [ $USE_MPI -ne 0 -a "$COMPILERS" != 'cray' ] ; then
++  if [ $USE_MPI -ne 0 -a "$COMPILERS" != 'cray' -a "$COMPILERS" != 'cray-shasta-gnu' -a "$COMPILERS" != 'cray-shasta-cray' -a "$COMPILERS" != 'cray-shasta-aocc' ] ; then
+     if [ $USE_MPI -eq 1 ] ; then
+       mpi_cc='mpicc'
+       mpi_cxx='mpicxx'
+@@ -1817,6 +1839,9 @@
+     'intel'      ) COMPILERS=$KEY ;;
+     'pgi'        ) COMPILERS=$KEY ;;
+     'cray'       ) COMPILERS=$KEY ;;
++    'cray-shasta-gnu'       ) COMPILERS=$KEY ;;
++    'cray-shasta-cray'       ) COMPILERS=$KEY ;;
++    'cray-shasta-aocc'       ) COMPILERS=$KEY ;;
+     'CXX'        ) CXX="$VALUE" ;;
+     'CC'         ) CC="$VALUE" ;;
+     'FC'         ) FC="$VALUE" ;;
