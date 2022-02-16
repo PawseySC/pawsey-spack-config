@@ -133,11 +133,7 @@ modules:
       parallel-netcdf:
         autoload: direct
 
-    projections:
-      cp2k: 'apps/{name}/{version}'
-      gromacs: 'apps/{name}/{version}'
-      lammps: 'apps/{name}/{version}'
-
+      projections:
         # hpc applications
         amber: 'applications/{name}/{version}/module'
         cpmd: 'applications/{name}/{version}/module'
@@ -290,5 +286,5 @@ modules:
         "hpl +openmp": 'benchmarking/{name}/{version}+openmp/module'
         osu-micro-benchmarks: 'benchmarking/{name}/{version}/module'
 
-      all: 'dependencies/.{name}/{version}-{hash:7}'
+        all: 'dependencies/.{name}/{version}-{hash:7}'
 
