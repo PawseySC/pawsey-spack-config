@@ -6,7 +6,7 @@ compilers:
       cxx: /usr/bin/g++
       f77: /usr/bin/gfortran
       fc: /usr/bin/gfortran
-    operating_system: centos7
+    operating_system: sles12
     target: x86_64
     modules: []
     environment: {}
@@ -19,7 +19,7 @@ compilers:
       cxx: g++
       f77: gfortran
       fc: gfortran
-    operating_system: centos7
+    operating_system: sles12
     target: x86_64
     modules: 
       - gcc/10.1.0
