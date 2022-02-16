@@ -52,8 +52,8 @@ mv tmp.txt ${package}.concretize
 package_hash=$(head -1 ${package}.concretize | awk '{print $2}')
 package_spec=$(head -1 ${package}.concretize | awk '{$1="";$2="";print}')
 
-sed -i 's/PACKAGE_VERSION/"${package_spec}"/g' ${modfile}
-sed -i 's/PACKAGE_NAME/"${package}"/g' ${modfile}
+sed -i 's/PACKAGE_VERSION/'"${package_spec}"'/g' ${modfile}
+sed -i 's/PACKAGE_NAME/'"${package}"'/g' ${modfile}
 
 # now get all the other packages 
 for ((i=2;i<${numlines};i++))
@@ -61,7 +61,7 @@ do
     hash=$(head -n ${i} ${package}.concretize | tail -n 1 | awk '{print $2}')
     dep=$(head -n ${i} ${package}.concretize | tail -n 1 | awk '{print $3}')
     basemodname=$(spack module lmod find /${hash})
-    if [ -z ${basemodname} ]; then
+    if [ ! -z ${basemodname} ]; then
         echo "load(\"${basemodname}\")" >> ${modfile}
     else 
         echo "Dependency module not found! "
