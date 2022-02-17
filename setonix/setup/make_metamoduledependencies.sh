@@ -10,6 +10,7 @@ fi
 package=$1
 envpath=$2
 modpath=$3
+script_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 if [ ! -d $envpath ]; then
     echo "Environment path ${envpath} does not exist. Exiting"
@@ -21,9 +22,7 @@ if [ ! -d $modpath ]; then
     exit
 fi 
 
-modfilebase=base-meta-module-dependencies.lua
-modfile=${modpath}/${package}-dependencies.lua
-cp ${modfilebase} ${modfile}
+modfilebase=${script_dir}/base-meta-module-dependencies.lua
 
 echo "Setting up $package"
 isspack=$(which spack)
@@ -51,8 +50,13 @@ mv tmp.txt ${package}.concretize
 # now for the first line, get the hash and the spec of the main package 
 package_hash=$(head -1 ${package}.concretize | awk '{print $2}')
 package_spec=$(head -1 ${package}.concretize | awk '{$1="";$2="";print}')
+package_version=$(head -1 ${package}.concretize | sed 's/@/ /'g | sed 's/%/ /g' | awk '{$1="";$2="";print $4}')
+echo ${package_version}
+modfile=${modpath}/${package}-dependency-set/module.lua
+cp ${modfilebase} ${modfile}
 
-sed -i 's/PACKAGE_VERSION/'"${package_spec}"'/g' ${modfile}
+sed -i 's/PACKAGE_SPEC/'"${package_spec}"'/g' ${modfile}
+sed -i 's/PACKAGE_VERSION/'"${package_version}"'/g' ${modfile}
 sed -i 's/PACKAGE_NAME/'"${package}"'/g' ${modfile}
 
 # now get all the other packages 
@@ -71,6 +75,23 @@ do
 done
 
 rm ${package}.concretize
+
+# now strip key strings from the modules that are loaded. 
+string_list=("astro-applications/" \
+"bio-applications/" \
+"applications/" \
+"libraries/" \
+"programming-languages/" \
+"utilities/" \
+"visualisation/" \
+"python-packages/" \
+"benchmarking/" \
+"dependencies/")
+
+for s in ${string_list[@]}
+do
+    sed -i 's:load("'"${s}"':load(:g' ${modfile}
+done
 
 echo "Done updating module. Now have "
 more ${modfile}
