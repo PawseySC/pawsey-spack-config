@@ -51,7 +51,6 @@ mv tmp.txt ${package}.concretize
 package_hash=$(head -1 ${package}.concretize | awk '{print $2}')
 package_spec=$(head -1 ${package}.concretize | awk '{$1="";$2="";print}')
 package_version=$(head -1 ${package}.concretize | sed 's/@/ /'g | sed 's/%/ /g' | awk '{$1="";$2="";print $4}')
-echo ${package_version}
 modfile=${modpath}/${package}-dependency-set/module.lua
 cp ${modfilebase} ${modfile}
 
