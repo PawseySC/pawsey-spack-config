@@ -286,5 +286,5 @@ modules:
         "hpl +openmp": 'benchmarking/{name}/{version}+openmp/module'
         osu-micro-benchmarks: 'benchmarking/{name}/{version}/module'
 
-        all: 'dependencies/.{name}/{version}-{hash:7}'
+        all: 'devel/dependencies/.{name}/{version}-{hash:7}'
 
