@@ -21,3 +21,8 @@ config:
   concretizer: clingo
   #concretizer: original
   
+  install_tree:
+    root: /pawsey/centos7.6/spack/software/
+
+  template_dirs:
+    - /group/pawsey0001/maali/pawsey-spack-config/examples/topaz/templates

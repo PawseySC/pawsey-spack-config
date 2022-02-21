@@ -1,29 +1,290 @@
 modules:
   enable::
-    - tcl
-  tcl:
-    hash_length: 0
-    projections:
-      cp2k: 'apps/{name}/{version}-{compiler.name}-{compiler.version}'
-      gromacs: 'apps/{name}/{version}-{compiler.name}-{compiler.version}'
-      lammps: 'apps/{name}/{version}-{compiler.name}-{compiler.version}'
+    - lmod
+  # ensure that environment paths are properly updated 
+  # based on what is installed
+  prefix_inspections:
+    bin:
+      - PATH
+    lib:
+      - LIBRARY_PATH
+      - LD_LIBRARY_PATH
+    lib64:
+      - LIBRARY_PATH
+      - LD_LIBRARY_PATH
+    include:
+      - CPATH
+    '':
+      - CMAKE_PREFIX_PATH
 
-      all: 'implicit/{name}/{version}-{compiler.name}-{compiler.version}'
+  default:
+    enable::
+      - lmod 
+    roots:
+      lmod: /pawsey/centos7.6/modulefiles/
+    lmod:
+      # set the hierarchy. Typical start point is mpi 
+      # however, since there will only be a single 
+      # mpi we do not use this hierarchy
+      # instead use compiler (name and version)
+      hierarchy::
+        - compiler
 
-    blacklist:
-      - 'openmpi'
-      - 'cuda'
-      - 'gdrcopy'
-      - 'ucx'
-      - 'intel-mkl'
-    all:
-      conflict:
-        - '{name}'
-      suffixes:
-        ^openmpi: "openmpi"
-        ^cuda: "cuda"
-      environment:
-        set:
-          '{name}_HOME': '{prefix}'
-    ^python:
-      autoload:  direct
+      # set the core compilers for lmod
+      # these are placed in core 
+      core_compilers::
+        - gcc@4.8.5
+
+      # remove hashes from module name, can lead to more conflicts 
+      # this can be addressed in other ways
+      hash_length: 0
+
+      # for all packages
+      all:
+        # to be consistent with current module setup, 
+        # add to environment a {name}_HOME which stores the prefix 
+        # to the package
+        environment:
+          # question: shall we prepend `SPACK_` ?
+          # PJE: Typically it is more useful to have 
+          # {name}_HOME since configures and cmake 
+          # often will make use of {name}_ROOT or {name}_HOME
+          set:
+            '{name}_HOME': '{prefix}'
+          # for backwards compatibility we could implement
+          # the following environment variable 
+          # this may be required for installs on Topaz
+          #set:
+          #  'MAALI_{name}_HOME': '{prefix}'
+        # autoload none by default: limits unnecessary module loading
+        # good for majority of end users 
+        autoload: none
+    
+      # select all packages that depend on python, or r, or java,
+      # and set these modules to autoload their dependencies
+      ^python:
+        autoload: direct
+      ^r:
+        autoload: direct
+      ^java:
+        autoload: direct
+
+      # library APIs
+      blas:
+        autoload: direct
+      lapack:
+        autoload: direct
+      scalapack:
+        autoload: direct
+      fftw-api:
+        autoload: direct
+
+      # parallel libraries
+      boost:
+        autoload: direct
+      hpx:
+        autoload: direct
+      kokkos:
+        autoload: direct
+
+      # numerical libraries
+      openblas:
+        autoload: direct
+      netlib-lapack:
+        autoload: direct
+      netlib-scalapack:
+        autoload: direct
+      eigen:
+        autoload: direct
+      fftw:
+        autoload: direct
+      gsl:
+        autoload: direct
+      blaspp:
+        autoload: direct
+      magma:
+        autoload: direct
+      plasma:
+        autoload: direct
+      slate:
+        autoload: direct
+      plumed:
+        autoload: direct
+      opencv:
+        autoload: direct
+      trilinos:
+        autoload: direct
+      petsc:
+        autoload: direct
+
+      # i/o libraries
+      hdf5:
+        autoload: direct
+      adios2:
+        autoload: direct
+      netcdf-c:
+        autoload: direct
+      netcdf-cxx:
+        autoload: direct
+      netcdf-cxx4:
+        autoload: direct
+      netcdf-fortran:
+        autoload: direct
+      parallel-netcdf:
+        autoload: direct
+
+      projections:
+        # hpc applications
+        amber: 'applications/{name}/{version}/module'
+        cpmd: 'applications/{name}/{version}/module'
+        cp2k: 'applications/{name}/{version}/module'
+        gromacs: 'applications/{name}/{version}/module'
+        lammps: 'applications/{name}/{version}/module'
+        namd: 'applications/{name}/{version}/module'
+        nektar: 'applications/{name}/{version}/module'
+        nwchem: 'applications/{name}/{version}/module'
+        openfoam: 'applications/{name}/{version}/module'
+        openfoam-org: 'applications/{name}/{version}/module'
+        quantum-espresso: 'applications/{name}/{version}/module'
+        vasp: 'applications/{name}/{version}/module'
+        # since wrf and roms are currently not installed 
+        # no need to add an explicity module
+        # However, it may be useful to add our own module 
+        # that provides all the dependencies needed by 
+        # these packages
+        #roms: 'applications/{name}/{version}/module'
+        #wrf: 'applications/{name}/{version}/module'
+
+        # numerical or parallelisation libraries 
+        "boost +python cxxstd=14": 'libraries/{name}/{version}-c++14-python/module'
+        "boost +python cxxstd=11": 'libraries/{name}/{version}-c++11-python/module'
+        "boost +python cxxstd=98": 'libraries/{name}/{version}-c++98-python/module'
+        "boost ~python cxxstd=14": 'libraries/{name}/{version}-c++14/module'
+        "boost ~python cxxstd=11": 'libraries/{name}/{version}-c++11/module'
+        "boost ~python cxxstd=98": 'libraries/{name}/{version}-c++98/module'
+        eigen: 'libraries/{name}/{version}/module'
+        fftw: 'libraries/{name}/{version}/module'
+        gsl: 'libraries/{name}/{version}/module'
+        hpx: 'libraries/{name}/{version}/module'
+        "kokkos +hpx": 'libraries/{name}/{version}-hpx/module'
+        "kokkos +openmp": 'libraries/{name}/{version}-openmp/module'
+        kokkos: 'libraries/{name}/{version}/module'
+        netlib-lapack: 'libraries/{name}/{version}/module'
+        openblas: 'libraries/{name}/{version}/module'
+        blaspp: 'libraries/{name}/{version}/module'
+        opencv: 'libraries/{name}/{version}/module'
+        plasma: 'libraries/{name}/{version}/module'
+        petsc: 'libraries/{name}/{version}/module'
+        plumed: 'libraries/{name}/{version}/module'
+        netlib-scalapack: 'libraries/{name}/{version}/module'
+        slate: 'libraries/{name}/{version}/module'
+        trilinos: 'libraries/{name}/{version}/module'
+
+
+        # IO libraries 
+        # to account for all the hdf5 variants 
+        # serial
+        "hdf5 +cxx~mpi api=v112": libraries/{name}/{version}-api-v112/module
+        "hdf5 +cxx~mpi api=v110": libraries/{name}/{version}-api-v110/module
+        "hdf5 +cxx~mpi api=v18": libraries/{name}/{version}-api-v18/module
+        #parallel 
+        "hdf5 ~cxx+mpi api=v112": libraries/{name}/{version}-parallel-api-v112/module
+        "hdf5 ~cxx+mpi api=v110": libraries/{name}/{version}-parallel-api-v110/module
+        "hdf5 ~cxx+mpi api=v18": libraries/{name}/{version}-parallel-api-v18/module
+        # and when api is default assume it is a dependency. 
+        "hdf5 api=default +cxx~mpi": dependencies/.{name}/{version}/module
+        "hdf5 api=default ~cxx+mpi": dependencies/.{name}/{version}-parallel/module
+        # adios also has similar variants 
+        "adios2 +hdf5 +python": 'libraries/{name}/{version}-hdf5/module'
+        "adios2 ~hdf5 +python": 'libraries/{name}/{version}/module'
+        netcdf-c: 'libraries/{name}/{version}/module'
+        netcdf-cxx: 'libraries/{name}/{version}/module'
+        netcdf-cxx4: 'libraries/{name}/{version}/module'
+        netcdf-fortran: 'libraries/{name}/{version}/module'
+        parallel-netcdf: 'libraries/{name}/{version}/module'
+
+        # programing languages 
+        go: 'programming-languages/{name}/{version}/module'
+        julia: 'programming-languages/{name}/{version}/module'
+        openjdk: 'programming-languages/{name}/{version}/module'
+        python: 'programming-languages/{name}/{version}/module'
+        r: 'programming-languages/{name}/{version}/module'
+        perl: 'programming-languages/{name}/{version}/module'
+        ruby: 'programming-languages/{name}/{version}/module'
+        rust: 'programming-languages/{name}/{version}/module'
+
+        # utilities 
+        autoconf: 'utilities/{name}/{version}/module'
+        automake: 'utilities/{name}/{version}/module'
+        cmake: 'utilities/{name}/{version}/module'
+        emacs: 'utilities/{name}/{version}/module'
+        ffmpeg: 'utilities/{name}/{version}/module'
+        gnuplot: 'utilities/{name}/{version}/module'
+        matlab: 'utilities/{name}/{version}/module'
+        nano: 'utilities/{name}/{version}/module'
+        nextflow: 'utilities/{name}/{version}/module'
+        parallel: 'utilities/{name}/{version}/module'
+        py-pip: 'utilities/{name}/{version}/module'
+        py-setuptools: 'utilities/{name}/{version}/module'
+        reframe: 'utilities/{name}/{version}/module'
+        singularity: 'utilities/{name}/{version}/module'
+
+        # S3 clients 
+        awscli: 'utilities/{name}/{version}/module'
+        py-boto3: 'utilities/{name}/{version}/module'
+        rclone: 'utilities/{name}/{version}/module'
+        miniocli: 'utilities/{name}/{version}/module'
+
+        # visualisation
+        igv: 'visualisation/{name}/{version}/module'
+        paraview: 'visualisation/{name}/{version}/module'
+        visit: 'visualisation/{name}/{version}/module'
+        vmd: 'visualisation/{name}/{version}/module'
+        
+        # python
+        py-cython: 'python-packages/{name}/{version}/module'
+        py-dask: 'python-packages/{name}/{version}/module'
+        py-h5netcdf: 'python-packages/{name}/{version}/module'
+        py-h5py: 'python-packages/{name}/{version}/module'
+        py-ipython: 'python-packages/{name}/{version}/module'
+        py-matplotlib: 'python-packages/{name}/{version}/module'
+        py-mpi4py: 'python-packages/{name}/{version}/module'
+        py-netcdf4: 'python-packages/{name}/{version}/module'
+        py-numba: 'python-packages/{name}/{version}/module'
+        py-numpy: 'python-packages/{name}/{version}/module'
+        py-pandas: 'python-packages/{name}/{version}/module'
+        py-plotly: 'python-packages/{name}/{version}/module'
+        py-scikit-learn: 'python-packages/{name}/{version}/module'
+        py-scipy: 'python-packages/{name}/{version}/module'
+
+
+        #astro 
+        "casacore +adios2 +openmp": 'astro-applications/{name}/{version}-adios2-openmp/module'
+        "casacore +adios2 ~openmp": 'astro-applications/{name}/{version}-adios2/module'
+        "casacore ~adios2 +openmp": 'astro-applications/{name}/{version}-openmp/module'
+        "casacore ~adios2 ~openmp": 'astro-applications/{name}/{version}/module'
+        cfitsio: 'astro-applications/{name}/{version}/module'
+        wcslib: 'astro-applications/{name}/{version}/module'
+        cppzmq: 'astro-applications/{name}/{version}/module'
+        libzmq: 'astro-applications/{name}/{version}/module'
+        apr: 'astro-applications/{name}/{version}/module'
+        apr-util: 'astro-applications/{name}/{version}/module'
+        cppunit: 'astro-applications/{name}/{version}/module'
+        log4cxx: 'astro-applications/{name}/{version}/module'
+        mcpp: 'astro-applications/{name}/{version}/module'
+        xerces-c: 'astro-applications/{name}/{version}/module'
+        subversion: 'astro-applications/{name}/{version}/module'
+        pgplot: 'astro-applications/{name}/{version}/module'
+        py-funcsigs: 'astro-applications/{name}/{version}/module'
+        py-pyfits: 'astro-applications/{name}/{version}/module'
+        py-astropy: 'astro-applications/{name}/{version}/module'
+        py-healpy: 'astro-applications/{name}/{version}/module'
+        py-emcee: 'astro-applications/{name}/{version}/module'
+
+        #performance tests 
+        "hpl ~openmp": 'benchmarking/{name}/{version}/module'
+        "hpl +openmp": 'benchmarking/{name}/{version}+openmp/module'
+        osu-micro-benchmarks: 'benchmarking/{name}/{version}/module'
+
+        all: 'devel/dependencies/.{name}/{version}-{hash:7}'
+
