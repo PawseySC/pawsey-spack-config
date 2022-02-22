@@ -21,7 +21,7 @@ modules:
     enable::
       - lmod 
     roots:
-      lmod: /pawsey/centos7.6/modulefiles/
+      lmod: /pawsey/centos7.6/spack/modulefiles/
     lmod:
       # set the hierarchy. Typical start point is mpi 
       # however, since there will only be a single 
@@ -54,8 +54,8 @@ modules:
           # for backwards compatibility we could implement
           # the following environment variable 
           # this may be required for installs on Topaz
-          #set:
-          #  'MAALI_{name}_HOME': '{prefix}'
+          set:
+           'MAALI_{name}_HOME': '{prefix}'
         # autoload none by default: limits unnecessary module loading
         # good for majority of end users 
         autoload: none
