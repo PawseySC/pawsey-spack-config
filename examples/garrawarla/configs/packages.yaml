@@ -11,7 +11,7 @@ packages:
       mkl: [intel-mkl]
     permissions:
       read: world
-      write: group
+      write: user
       group: pawsey0001
   mpi:
     buildable: false
