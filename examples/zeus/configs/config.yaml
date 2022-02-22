@@ -17,3 +17,8 @@ config:
   # This can be purged with `spack clean --misc-cache`
   misc_cache: $spack/var/spack/misc-cache
 
+  install_tree:
+    root: /pawsey/sles12sp3/spack/software/
+
+  template_dirs:
+    - /group/pawsey0001/maali/pawsey-spack-config/examples/zeus/templates
