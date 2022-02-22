@@ -22,7 +22,7 @@ config:
   #concretizer: original
 
   install_tree:
-    root: /pawsey/mwa_sles12sp4/spack/software/
+    root: /pawsey/mwa_sles12sp5/spack/software/
 
   template_dirs:
     - /astro/pawsey0001/maali/pawsey-spack-config/examples/garrawarla/templates
