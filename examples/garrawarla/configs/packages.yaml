@@ -1,7 +1,7 @@
 packages:
   all:
     target: [broadwell]
-    compiler: [gcc@8.3.0, gcc@4.8.5]
+    compiler: [gcc@8.3.0, gcc@10.1.0, gcc@4.8.5]
     providers:
       mpi: [openmpi]
       blas: [intel-mkl]
