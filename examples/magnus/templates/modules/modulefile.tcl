@@ -12,8 +12,8 @@
 {% block header %}
 
 {% if short_description %}
-module-whatis "{{ Name : spec.name }}"
-module-whatis "{{ Short description : short_description }}"
+module-whatis "Name : {{ spec.name }}"
+module-whatis "Short description : {{ short_description }}"
 module-whatis "Version : {{ spec.version }}"
 module-whatis "Compiler : {{ spec.compiler }}"
 module-whatis "Flags : {{ spec.compiler_flags }}"
@@ -54,7 +54,6 @@ if {{ '{' }} [ module-info mode load ] && ![ is-loaded {{ module }} ] {{ '}' }} 
 {% endblock %}
 
 
-{#  #}
 
 {% block prerequisite %}
 {% for module in prerequisites %}
