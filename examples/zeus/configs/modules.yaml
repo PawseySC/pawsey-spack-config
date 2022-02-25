@@ -1,7 +1,7 @@
 modules:
   enable::
     - lmod
-  # ensure that environment paths are properly updated 
+  # ensure that environment paths are properly updated
   # based on what is installed
   prefix_inspections:
     bin:
@@ -19,23 +19,25 @@ modules:
 
   default:
     enable::
-      - lmod 
+      - lmod
     roots:
-      lmod: /pawsey/sles12sp3/spack/modulefiles/
+      # with file lock issues write modules initially not to the standard path
+      #lmod: /pawsey/sles12sp3/spack/modulefiles/
+      lmod: /group/pawsey0001/maali/software/sles12sp3/spack/modulefiles/
     lmod:
-      # set the hierarchy. Typical start point is mpi 
-      # however, since there will only be a single 
+      # set the hierarchy. Typical start point is mpi
+      # however, since there will only be a single
       # mpi we do not use this hierarchy
       # instead use compiler (name and version)
       hierarchy::
         - compiler
 
       # set the core compilers for lmod
-      # these are placed in core 
+      # these are placed in core
       core_compilers::
         - gcc@4.8.5
 
-      # remove hashes from module name, can lead to more conflicts 
+      # remove hashes from module name, can lead to more conflicts
       # this can be addressed in other ways
       hash_length: 0
 
@@ -224,8 +226,8 @@ modules:
         nano: 'utilities/{name}/{version}/module'
         nextflow: 'utilities/{name}/{version}/module'
         parallel: 'utilities/{name}/{version}/module'
-        py-pip: 'utilities/{name}/{version}/module'
-        py-setuptools: 'utilities/{name}/{version}/module'
+        #py-pip: 'utilities/{name}/{version}/module'
+        #py-setuptools: 'utilities/{name}/{version}/module'
         reframe: 'utilities/{name}/{version}/module'
         singularity: 'utilities/{name}/{version}/module'
 

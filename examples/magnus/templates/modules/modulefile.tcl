@@ -45,15 +45,12 @@ if {{ '{' }} [ module-info mode load ] && ![ is-loaded {{ module }} ] {{ '}' }} 
 {{ '}' }}
 {% endfor %}
 { }
-
 ##question is if tcl whether python updates paths and user base 
 ##{% if spec.name == 'python' %} 
 ##setenv("PYTHONUSERBASE", os.getenv("MYSOFTWARE").."/python")
 ##prepend_path("PATH", os.getenv("PYTHONUSERBASE").."/bin")
 ##{% endif %}
 {% endblock %}
-
-
 
 {% block prerequisite %}
 {% for module in prerequisites %}
