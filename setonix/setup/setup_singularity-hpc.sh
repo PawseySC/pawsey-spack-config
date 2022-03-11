@@ -39,7 +39,7 @@ shpc config set module_sys:lmod
 # singularity for containers
 shpc config set container_tech:singularity
 # custom Pawsey registry
-shpc config add registry:/software/setonix/${date_tag}/pawsey-spack-config/setonix/registry_setonix
+shpc config add registry:${root_dir}/pawsey-spack-config/setonix/registry_setonix
 # user install location for modulefiles
 shpc config set module_base:/software/\$PAWSEY_PROJECT/\$USER/setonix/containers/modules
 # disable default version for modulefiles
@@ -60,9 +60,9 @@ shpc config set container_features:home:\$MYSOFTWARE/.${shpc_name}-home
 ## SPACK USER (system wide installation)
 shpc config inituser
 # system install location for modulefiles
-shpc config set module_base:/software/setonix/${date_tag}/containers/${shpc_spackuser_modules_dir}
+shpc config set module_base:${root_dir}/containers/${shpc_spackuser_modules_dir_long}
 # system install location for containers
-shpc config set container_base:/software/setonix/${date_tag}/containers/sif
+shpc config set container_base:${root_dir}/containers/sif
 
 # back to root_dir
 cd ..

@@ -18,7 +18,8 @@ pip_version="21.1.2"
 # decide this once and for all: singularity-hpc or shpc?
 shpc_name="singularity-hpc"
 # shpc module directory for SPACK USER (system wide installation)
-shpc_spackuser_modules_dir="modules_full"
+shpc_spackuser_modules_dir_long="modules_long"
+shpc_spackuser_modules_dir_short="modules"
 
 # python version info (no editing needed)
 python_version_major="$( echo $python_version | cut -d '.' -f 1 )"
