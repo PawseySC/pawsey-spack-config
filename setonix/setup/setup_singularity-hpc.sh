@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# TODO: most of this to be turned into Spack recipe
+# TODO: this script could be turned into Spack recipe (not urgent)
 
 # source setup variables
 script_dir="$(dirname $0)"
@@ -11,28 +11,15 @@ module load $python_module/$python_version
 module load setuptools/$setuptools_version
 module load pip/$pip_version
 
-# decide this once and for all: singularity-hpc or shpc?
-shpc_name="singularity-hpc"
-
-# create and enter install directory
-mkdir $shpc_name
+# clone singularity-hpc repo and enter it
+cd ${root_dir}
+git clone https://github.com/singularityhub/singularity-hpc $shpc_name
 cd $shpc_name
 
-# pip install package
-pip install --prefix=$(pwd) singularity-hpc==$shpc_version
-
-# get registry from github repo
-git clone https://github.com/singularityhub/singularity-hpc
-cd singularity-hpc
-# checkout registry, too, for reproducibility
+# checkout version, for reproducibility
 git checkout $shpc_version
-cd ..
-mv singularity-hpc/registry .
-cd lib/python${python_version_major}.${python_version_minor}/site-packages
-# symlink here, so that registry is in a more visible location
-ln -s ../../../registry .
-cd ../../..
-rm -fr singularity-hpc
+# install package (dev mode)
+pip install --prefix=$(pwd) -e .[all]
 
 # fix long shebang
 sed -i "s;/.*/python.*$;/bin/sh\n'''exec' & \"\$0\" \"\$@\"\n' ''';g" bin/shpc
@@ -45,19 +32,24 @@ export PYTHONPATH=$(pwd)/lib/python${python_version_major}.${python_version_mino
 
 #### ALL SHPC CONFIG COMMANDS HERE
 # in alternative, we could provide edited yamls, just to copy over
+
 ## ALL USERS
+# lmod for modules
+shpc config set module_sys:lmod
+# singularity for containers
+shpc config set container_tech:singularity
+# custom Pawsey registry
+shpc config add registry:/software/setonix/${date_tag}/pawsey-spack-config/setonix/registry_setonix
 # user install location for modulefiles
 shpc config set module_base:/software/\$PAWSEY_PROJECT/\$USER/setonix/containers/modules
-# user install location for containers
-shpc config set container_base:/software/\$PAWSEY_PROJECT/\$USER/setonix/containers/sif
-# custom Pawsey registry
-shpc config add registry:/software/setonix/2022.01/pawsey-spack-config/setonix/registry_setonix
-# singularity module
-shpc config set singularity_module:singularity/3.8.5
 # disable default version for modulefiles
 shpc config set default_version:false
+# user install location for containers
+shpc config set container_base:/software/\$PAWSEY_PROJECT/\$USER/setonix/containers/sif
+# singularity module
+shpc config set singularity_module:singularity/${singularity_version}
 # enable wrapper scripts
-#shpc config set wrapper_scripts:true
+shpc config set wrapper_scripts:enabled:true
 # GPU support (Phase 2)
 #shpc config set container_features:gpu:amd
 # enable X11 graphics
@@ -65,11 +57,12 @@ shpc config set container_features:x11:true
 # location for container fake home
 shpc config set container_features:home:\$MYSOFTWARE/.${shpc_name}-home
 
-## SPACK USER
+## SPACK USER (system wide installation)
 shpc config inituser
 # system install location for modulefiles
-shpc config set module_base:/software/setonix/2022.01/containers/modules
+shpc config set module_base:/software/setonix/${date_tag}/containers/${shpc_spackuser_modules_dir}
 # system install location for containers
-shpc config set container_base:/software/setonix/2022.01/containers/sif
+shpc config set container_base:/software/setonix/${date_tag}/containers/sif
 
+# back to root_dir
 cd ..
