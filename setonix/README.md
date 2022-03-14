@@ -43,15 +43,19 @@ In order to minimise edits in users' home directories, we're putting:
   - `benchmarking/`
   - `dependencies/`
 * SHPC
-  - `biocontainers/`  (constrained by container repo name, unless we simlink)
+  - `containers/modules/`
 
 
 ## To-do list (incomplete)
 
 * Automations for updating the date tag `YYYY.MM` for full rebuilds
+* Subset of pakcages to be installed with Zen2
+* Subset of packages to be installed with AOCC/CCE
+* Finalise use of Cray Lmod compiler hierarchies
+* ? Compiler configuration for profiling flags
+* Testing project-wide package installations
 * Automations in case we need to update the set of module categories
 * Automations for software installations
-* ...
 
 
 ## Deployment tips
@@ -71,5 +75,7 @@ In order to minimise edits in users' home directories, we're putting:
 ### Testing Modules
 
 Current `modules.yaml` and the template `modulefile.lua` rely on additional features of spack found in the feature/improved-lmod-modules (https://github.com/PawseySC/spack/tree/feature/improved-lmod-modules).  
-The update provides extra tokens that can be used when creating the module name and also extra keywords to the template.
+The update provides extra tokens that can be used when creating the module name and also extra keywords to the template.  
+These features have now been packaged in a patch, that is applied by `setup_spack.sh`.  
+
 
