@@ -5,7 +5,7 @@ script_dir="$(dirname $0)"
 . ${script_dir}/variables.sh
 
 # load needed python toolkit
-module load $python_module/$python_version
+module load $python_name/$python_version
 module load setuptools/$setuptools_version
 module load pip/$pip_version
 
@@ -65,6 +65,14 @@ shpc config set module_base:${root_dir}/containers/${shpc_spackuser_modules_dir_
 # system install location for containers
 shpc config set container_base:${root_dir}/containers/sif
 
-# copy over SHPC modulefile
+# edit and copy over SHPC modulefile
 mkdir -p ${root_dir}/${pawsey_modules_dir}/${shpc_name}/${shpc_version}
-cp -p pawsey-spack-config/setonix/setup/module_${shpc_name}.lua ${root_dir}/${pawsey_modules_dir}/${shpc_name}/${shpc_version}/module.lua
+sed \
+  -e "s/SHPC_NAME/${shpc_name}/g" \
+  -e "s/SHPC_VERSION/${shpc_version}/g" \
+  -e "s/PYTHON_MODULEFILE/${python_name}\/${python_version}/g" \
+  -e "s/SINGULARITY_VERSION/${singularity_version}/g" \
+  -e "s/DATE_TAG/${date_tag}/g" \
+  -e "s/PYTHON_MAJORMINOR/${python_version_major}.${python_version_minor}/g" \
+ pawsey-spack-config/setonix/setup/module_${shpc_name}.lua \
+ > ${root_dir}/${pawsey_modules_dir}/${shpc_name}/${shpc_version}/module.lua
