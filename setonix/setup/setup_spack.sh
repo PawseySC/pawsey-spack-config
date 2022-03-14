@@ -25,6 +25,8 @@ cd ..
 # copy configs into spack tree
 cp -p pawsey-spack-config/setonix/configs/site_allusers/*.yaml spack/etc/spack/
 cp -p pawsey-spack-config/setonix/configs/spackuser_pawseystaff/*.yaml ~/.spack/
+# edit DATE_TAG in config files
+sed -i "s/DATE_TAG/$date_tag/g" spack/etc/spack/*.yaml ~/.spack/*.yaml
 
 # apply fixes into spack tree
 cp -p pawsey-spack-config/setonix/fixes/microarchitectures.json spack/lib/spack/external/archspec/json/cpu/
@@ -36,4 +38,3 @@ patch spack/lib/spack/spack/cmd/modules/__init__.py pawsey-spack-config/setonix/
 
 # TODO: copy license-protected patches/files in appropriate location, change group ownership of their directory
 
-# TODO: use $date_tag above to update across the spack yamls
