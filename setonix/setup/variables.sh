@@ -16,7 +16,7 @@ setuptools_version="57.4.0"
 pip_version="21.1.2"
 
 # decide this once and for all: singularity-hpc or shpc?
-shpc_name="singularity-hpc"
+shpc_name="shpc"
 # shpc module directory for SPACK USER (system wide installation)
 shpc_spackuser_modules_dir_long="modules_long"
 shpc_spackuser_modules_dir_short="modules"

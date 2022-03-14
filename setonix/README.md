@@ -20,7 +20,7 @@ The system-wide software stack is installed under `/software/setonix/YYYY.MM/` w
 
 A couple of sub-directories also sit here, that are unrelated to Spack:
 * `containers/`: system-wide container and container module deployments (eg bioinformatics through SHPC)
-* `singularity-hpc/`: Singularity-HPC (SHPC) installation
+* `shpc/`: Singularity-HPC (SHPC) installation
 
 
 As regards configuration YAMLs, note that Spack prioritises user configs to site configs (*i.e.* those in the Spack installation directory).  

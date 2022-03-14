@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# list of containers to be installed by singularity-hpc
+# list of containers to be installed by shpc
 container_list="
 quay.io/biocontainers/bamtools:2.5.1--hd03093a_10
 quay.io/biocontainers/bbmap:38.96--h5c4e2a8_0
@@ -35,7 +35,7 @@ script_dir="$(dirname $0)"
 . ${script_dir}/variables.sh
 
 # load shpc module
-module load singularity-hpc/${shpc_version}
+module load shpc/${shpc_version}
 
 # make sure root directory exists, for container modules installation
 cd ${root_dir}

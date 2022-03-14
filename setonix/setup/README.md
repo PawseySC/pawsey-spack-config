@@ -5,7 +5,7 @@
 Key tools:
 * Spack
 * Singularity
-* Singularity-HPC
+* Singularity-HPC (SHPC)
 
 DRAFT: work in progress  
 For questions, ask Marco!  

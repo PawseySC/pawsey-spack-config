@@ -11,7 +11,7 @@ module load $python_module/$python_version
 module load setuptools/$setuptools_version
 module load pip/$pip_version
 
-# clone singularity-hpc repo and enter it
+# clone shpc repo and enter it
 cd ${root_dir}
 git clone https://github.com/singularityhub/singularity-hpc $shpc_name
 cd $shpc_name
@@ -55,7 +55,7 @@ shpc config set wrapper_scripts:enabled:true
 # enable X11 graphics
 shpc config set container_features:x11:true
 # location for container fake home
-shpc config set container_features:home:\$MYSOFTWARE/.${shpc_name}-home
+shpc config set container_features:home:\$MYSOFTWARE/.${shpc_name}_home
 
 ## SPACK USER (system wide installation)
 shpc config inituser
