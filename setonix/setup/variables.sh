@@ -2,23 +2,26 @@
 
 # EDIT at each rebuild of the software stack
 date_tag="2022.01"
+# if you change this, you need to propagate also in other places (mostly Spack config yamls)
 root_dir="/software/setonix/${date_tag}"
 
 # tool versions
-spack_version="v0.17.0"
-singularity_version="3.8.6"
+spack_version="0.17.0" # the prefix "v" is added in setup_spack.sh
+singularity_version="3.8.6" # has to match the version in the Spack env yaml
+shpc_name="shpc" # decide this once and for all
 shpc_version="0.0.46"
 
 # python (and py tools) versions
-python_module="python"
-python_version="3.9.7"
-setuptools_version="57.4.0"
-pip_version="21.1.2"
+python_name="python"
+python_version="3.9.7" # has to match the version in the Spack env yaml
+setuptools_version="57.4.0" # has to match the version in the Spack env yaml
+pip_version="21.1.2" # has to match the version in the Spack env yaml
 
-# decide this once and for all: singularity-hpc or shpc?
-shpc_name="shpc"
+# location for Pawsey modules (eg spack, shpc)
+pawsey_modules_dir="pawsey-modules"
+
 # shpc module directory for SPACK USER (system wide installation)
-shpc_spackuser_modules_dir_long="modules_long"
+shpc_spackuser_modules_dir_long="modules-long"
 shpc_spackuser_modules_dir_short="modules"
 
 # python version info (no editing needed)

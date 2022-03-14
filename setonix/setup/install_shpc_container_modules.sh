@@ -35,7 +35,7 @@ script_dir="$(dirname $0)"
 . ${script_dir}/variables.sh
 
 # load shpc module
-module load shpc/${shpc_version}
+module load ${shpc_name}/${shpc_version}
 
 # make sure root directory exists, for container modules installation
 cd ${root_dir}

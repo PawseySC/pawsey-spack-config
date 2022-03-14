@@ -1,6 +1,5 @@
 #!/bin/bash
 
-## DRAFT - in progress
 # typically does not need any editing
 
 # source setup variables
@@ -19,12 +18,14 @@ cd ${root_dir}
 git clone https://github.com/pawseysc/pawsey-spack-config
 git clone https://github.com/pawseysc/spack
 cd spack/
-git checkout ${spack_version}
+git checkout v${spack_version}
 cd ..
 
 # copy configs into spack tree
 cp -p pawsey-spack-config/setonix/configs/site_allusers/*.yaml spack/etc/spack/
 cp -p pawsey-spack-config/setonix/configs/spackuser_pawseystaff/*.yaml ~/.spack/
+# edit DATE_TAG in config files
+sed -i "s/DATE_TAG/$date_tag/g" spack/etc/spack/*.yaml ~/.spack/*.yaml
 
 # apply fixes into spack tree
 cp -p pawsey-spack-config/setonix/fixes/microarchitectures.json spack/lib/spack/external/archspec/json/cpu/
@@ -36,4 +37,12 @@ patch spack/lib/spack/spack/cmd/modules/__init__.py pawsey-spack-config/setonix/
 
 # TODO: copy license-protected patches/files in appropriate location, change group ownership of their directory
 
-# TODO: use $date_tag above to update across the spack yamls
+
+# edit and copy over Spack modulefile
+mkdir -p ${root_dir}/${pawsey_modules_dir}/spack/${spack_version}
+sed \
+  -e "s/SPACK_VERSION/${spack_version}/g" \
+  -e "s/PYTHON_MODULEFILE/${python_name}\/${python_version}/g" \
+  -e "s/DATE_TAG/${date_tag}/g" \
+  pawsey-spack-config/setonix/setup/module_spack.lua \
+  > ${root_dir}/${pawsey_modules_dir}/spack/${spack_version}/module.lua
