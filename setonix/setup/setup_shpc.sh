@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# TODO: this script could be turned into Spack recipe (not urgent)
-
 # source setup variables
 script_dir="$(dirname $0)"
 . ${script_dir}/variables.sh
@@ -29,6 +27,9 @@ sed -i "s;/.*/python.*$;/bin/sh\n'''exec' & \"\$0\" \"\$@\"\n' ''';g" bin/spytho
 # need to configure shpc for use, to change configs
 export PATH=$(pwd)/bin:$PATH
 export PYTHONPATH=$(pwd)/lib/python${python_version_major}.${python_version_minor}/site-packages:$PYTHONPATH
+
+# back to root_dir
+cd ..
 
 #### ALL SHPC CONFIG COMMANDS HERE
 # in alternative, we could provide edited yamls, just to copy over
@@ -64,5 +65,6 @@ shpc config set module_base:${root_dir}/containers/${shpc_spackuser_modules_dir_
 # system install location for containers
 shpc config set container_base:${root_dir}/containers/sif
 
-# back to root_dir
-cd ..
+# copy over SHPC modulefile
+mkdir -p ${root_dir}/${pawsey_modules_dir}/${shpc_name}/${shpc_version}
+cp -p pawsey-spack-config/setonix/setup/module_${shpc_name}.lua ${root_dir}/${pawsey_modules_dir}/${shpc_name}/${shpc_version}/module.lua

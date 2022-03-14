@@ -44,6 +44,8 @@ In order to minimise edits in users' home directories, we're putting:
   - `dependencies/`
 * SHPC
   - `containers/modules/`
+* Pawsey (Spack and SHPC)
+  - `pawsey-modules/`
 
 
 ## To-do list (incomplete)

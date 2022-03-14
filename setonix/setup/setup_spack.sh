@@ -1,6 +1,5 @@
 #!/bin/bash
 
-## DRAFT - in progress
 # typically does not need any editing
 
 # source setup variables
@@ -19,7 +18,7 @@ cd ${root_dir}
 git clone https://github.com/pawseysc/pawsey-spack-config
 git clone https://github.com/pawseysc/spack
 cd spack/
-git checkout ${spack_version}
+git checkout v${spack_version}
 cd ..
 
 # copy configs into spack tree
@@ -38,3 +37,7 @@ patch spack/lib/spack/spack/cmd/modules/__init__.py pawsey-spack-config/setonix/
 
 # TODO: copy license-protected patches/files in appropriate location, change group ownership of their directory
 
+
+# copy over Spack modulefile
+mkdir -p ${root_dir}/${pawsey_modules_dir}/spack/${spack_version}
+cp -p pawsey-spack-config/setonix/setup/module_spack.lua ${root_dir}/${pawsey_modules_dir}/spack/${spack_version}/module.lua
