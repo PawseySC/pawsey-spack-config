@@ -38,6 +38,11 @@ patch spack/lib/spack/spack/cmd/modules/__init__.py pawsey-spack-config/setonix/
 # TODO: copy license-protected patches/files in appropriate location, change group ownership of their directory
 
 
-# copy over Spack modulefile
+# edit and copy over Spack modulefile
 mkdir -p ${root_dir}/${pawsey_modules_dir}/spack/${spack_version}
-cp -p pawsey-spack-config/setonix/setup/module_spack.lua ${root_dir}/${pawsey_modules_dir}/spack/${spack_version}/module.lua
+sed \
+  -e "s/SPACK_VERSION/${spack_version}/g" \
+  -e "s/PYTHON_MODULEFILE/${python_name}\/${python_version}/g" \
+  -e "s/DATE_TAG/${date_tag}/g" \
+  pawsey-spack-config/setonix/setup/module_spack.lua \
+  > ${root_dir}/${pawsey_modules_dir}/spack/${spack_version}/module.lua

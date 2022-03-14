@@ -50,7 +50,6 @@ In order to minimise edits in users' home directories, we're putting:
 
 ## To-do list (incomplete)
 
-* Automations for updating the date tag `YYYY.MM` for full rebuilds
 * Subset of pakcages to be installed with Zen2
 * Subset of packages to be installed with AOCC/CCE
 * Finalise use of Cray Lmod compiler hierarchies
