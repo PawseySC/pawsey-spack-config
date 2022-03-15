@@ -26,6 +26,5 @@ patch spack/lib/spack/spack/cmd/modules/__init__.py pawsey-spack-config/setonix/
 
 # Joey specific
 # this is the date tag to be replaced in the config yamls, with the current directory
-date_tag="2022.01"
 install_dir="$(pwd)"
-sed -i "s;/software/setonix/$date_tag;$install_dir;g" spack/etc/spack/*.yaml ~/.spack/*.yaml
+sed -i "s;/software/setonix/DATE_TAG;$install_dir;g" spack/etc/spack/*.yaml ~/.spack/*.yaml
