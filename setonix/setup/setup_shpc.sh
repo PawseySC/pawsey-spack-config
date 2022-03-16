@@ -9,15 +9,23 @@ module load $python_name/$python_version
 module load setuptools/$setuptools_version
 module load pip/$pip_version
 
-# clone shpc repo and enter it
+# create and enter install directory
 cd ${root_dir}
-git clone https://github.com/singularityhub/singularity-hpc $shpc_name
+mkdir $shpc_name
 cd $shpc_name
 
-# checkout version, for reproducibility
+# pip install package
+pip install --prefix=$(pwd) singularity-hpc==$shpc_version
+
+# get registry from github repo
+git clone https://github.com/singularityhub/singularity-hpc
+cd singularity-hpc
+# checkout registry, too, for reproducibility
 git checkout $shpc_version
-# install package (dev mode)
-pip install --prefix=$(pwd) -e .[all]
+cd ..
+mv singularity-hpc/registry .
+# do not need rest of github repo
+rm -fr singularity-hpc
 
 # fix long shebang
 sed -i "s;/.*/python.*$;/bin/sh\n'''exec' & \"\$0\" \"\$@\"\n' ''';g" bin/shpc
@@ -39,7 +47,9 @@ cd ..
 shpc config set module_sys:lmod
 # singularity for containers
 shpc config set container_tech:singularity
-# custom Pawsey registry
+# locations for registry (standard and Pawsey custom)
+shpc config remove registry:\$root_dir/registry
+shpc config add registry:${root_dir}/${shpc_name}/registry
 shpc config add registry:${root_dir}/pawsey-spack-config/setonix/registry_setonix
 # user install location for modulefiles
 shpc config set module_base:/software/\$PAWSEY_PROJECT/\$USER/setonix/containers/modules
