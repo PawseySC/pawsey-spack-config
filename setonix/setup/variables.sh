@@ -9,7 +9,7 @@ root_dir="/software/setonix/${date_tag}"
 spack_version="0.17.0" # the prefix "v" is added in setup_spack.sh
 singularity_version="3.8.6" # has to match the version in the Spack env yaml
 shpc_name="shpc" # decide this once and for all
-shpc_version="0.0.46"
+shpc_version="0.0.48"
 
 # python (and py tools) versions
 python_name="python"
