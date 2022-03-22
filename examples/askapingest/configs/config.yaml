@@ -22,7 +22,7 @@ config:
   #concretizer: original
   
   install_tree:
-    root: /pawsey/centos7.6/spack/software/
+    root: /pawsey/askapingest_sles12sp5/spack/software/
 
   template_dirs:
-    - /group/pawsey0001/maali/pawsey-spack-config/examples/topaz/templates
+    - /askapingest/pawsey0001/maali/pawsey-spack-config/examples/topaz/templates

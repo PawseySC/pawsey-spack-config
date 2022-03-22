@@ -1,8 +1,18 @@
 # Zeus test deployment
 
-Spack branch: releases/v0.16
+Spack branch: releases/v0.17
 
-Test environments:
+## Issues:
+
+The are issues using spack on zeus due to the file locks used by spack. Currently as of 23/02/2022 it is not possible to place a lock on `/pawsey/sles12sp3/` where software should be installed to. The inability to lock results in an error when running `spack spec` and `spack install`:
+
+```bash
+OSError: [Errno 37] No locks available
+```
+## Current Setup
+
+### Test environments:
+
 1. Computational Chemistry
 2. Python
 3. Clingo (with view)
@@ -13,22 +23,16 @@ The idea is to re-use a number of tools from the host system (providers are defi
 * Open MPI
 * Intel MKL
 
-Spack configuration:
+#### Spack configuration:
+
 * Redefining some config paths, to ensure the *HOME* directory is never used 
 * For production, `source_cache` should probably be shared in some explicit system path
 * Not sure yet about `misc_cache`
+* Has patches to be applied to spack modules (see `fixes/`)
 
-Experimenting with module files:
-* Using TCL syntax
-* Creating module files for *all* installed packages
-* Hard-coding subdirectories for applications (for classification purposes)
-* Using compiler name/version in module name
-* Black-listing host packages
-* Adding suffix for Open MPI
-* Loading dependency modules for applications needing Python
-* Adding *_HOME* variable
 
-Clingo installation
+### Clingo installation
+
 * Using an environment with view, as per Spack Github issue
 * There is an environment YAML for clingo under `environment3_clingo/`
 * Once installed, start a new shell session, and use clingo with:
@@ -41,6 +45,7 @@ Clingo installation
   ```
   * Note how you need to ensure that the Python used to install Clingo 
     is configured in the shell prior to sourcing the Spack script
-  * This implies that, if a host Python is used rather than a Spack installed one, 
-    this one needs to be in the shell, *e.g.* by means of a `module load` if applicable
+  * This implies that, if a host Python is used rather than a Spack installed 
+    one, this one needs to be in the shell, *e.g.* by means of a 
+    `module load` if applicable
 
