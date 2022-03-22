@@ -28,7 +28,8 @@ cp -p pawsey-spack-config/setonix/configs/spackuser_pawseystaff/*.yaml ~/.spack/
 sed -i "s/DATE_TAG/$date_tag/g" spack/etc/spack/*.yaml ~/.spack/*.yaml
 
 # apply fixes into spack tree
-cp -p pawsey-spack-config/setonix/fixes/microarchitectures.json spack/lib/spack/external/archspec/json/cpu/
+# Pascal,s fix for Zen3 on Joey, not needed on Setonix
+#cp -p pawsey-spack-config/setonix/fixes/microarchitectures.json spack/lib/spack/external/archspec/json/cpu/
 # Marco,s Lmod arch family fix for the module tree
 patch spack/lib/spack/spack/modules/lmod.py pawsey-spack-config/setonix/fixes/lmod_arch_family.patch
 # Pascal,s enhancements to modulefiles
