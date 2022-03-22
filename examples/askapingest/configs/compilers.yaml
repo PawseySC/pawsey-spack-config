@@ -27,7 +27,7 @@ compilers:
     extra_rpaths: []
     flags: {}
 - compiler:
-    spec: gcc@10.2.0
+    spec: gcc@9.2.0
     paths:
       cc: gcc
       cxx: g++
@@ -36,21 +36,7 @@ compilers:
     operating_system: centos7
     target: x86_64
     modules: 
-      - gcc/10.2.0
-    environment: {}
-    extra_rpaths: []
-    flags: {}
-- compiler:
-    spec: gcc@11.1.0
-    paths:
-      cc: gcc
-      cxx: g++
-      f77: gfortran
-      fc: gfortran
-    operating_system: centos7
-    target: x86_64
-    modules: 
-      - gcc/11.1.0
+      - gcc/9.2.0
     environment: {}
     extra_rpaths: []
     flags: {}

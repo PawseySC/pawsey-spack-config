@@ -21,7 +21,7 @@ modules:
     enable::
       - lmod 
     roots:
-      lmod: /pawsey/centos7.6/spack/modulefiles/
+      lmod: /pawsey/askapingest_sles12sp5/spack/modulefiles/
     lmod:
       # set the hierarchy. Typical start point is mpi 
       # however, since there will only be a single 

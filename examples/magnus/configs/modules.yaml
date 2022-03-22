@@ -1,6 +1,26 @@
 modules:
-  enable::
-    - tcl
+  # ensure that environment paths are properly updated 
+  # based on what is installed
+  prefix_inspections:
+    bin:
+      - PATH
+    lib:
+      - LIBRARY_PATH
+      - LD_LIBRARY_PATH
+    lib64:
+      - LIBRARY_PATH
+      - LD_LIBRARY_PATH
+    include:
+      - CPATH
+    '':
+      - CMAKE_PREFIX_PATH
+
+  default:
+    enable::
+      - tcl 
+    roots:
+      tcl: /pawsey/cle60up07/spack/modulefiles/
+
   tcl:
     # remove hashes from module name, can lead to more conflicts 
     hash_length: 0
@@ -12,8 +32,16 @@ modules:
       # that does not require manual updates. Fortunately, not many packages 
       # need this update 
       
-      # example of module format 
       gromacs: 'apps/{name}/{version}-{compiler.name}-{compiler.version}'
+
+      awscli: 'utilities/{name}/{version}'
+      rclone: 'utilities/{name}/{version}'
+      miniocli: 'utilities/{name}/{version}'
+
+      go: 'programming-languages/{name}/{version}'
+
+      all: 'devel/dependencies/.{name}/{version}-{hash:7}'
+
 
     # prevent modules from being generated for any packages 
     # build with this blacklist
@@ -37,6 +65,10 @@ modules:
       environment:
         set:
           '{name}_HOME': '{prefix}'
+        set:
+          'MAALI_{name}_HOME': '{prefix}'
+      autoload: none
+
     # select all packages that depend on python 
     # and set the modules to autoload python
     ^python:

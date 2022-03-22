@@ -18,3 +18,12 @@ config:
   # This can be purged with `spack clean --misc-cache`
   misc_cache: $spack/var/spack/misc-cache
 
+  # clingo does not work on Magnus, might be issue with specific python version
+  concretizer: original
+  
+
+  install_tree:
+    root: /pawsey/cle60up07/spack/software/
+
+  template_dirs:
+    - /group/pawsey0001/maali/pawsey-spack-config/examples/magnus/templates
