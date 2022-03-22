@@ -80,6 +80,7 @@ mkdir -p ${root_dir}/${pawsey_modules_dir}/${shpc_name}/${shpc_version}
 sed \
   -e "s/SHPC_NAME/${shpc_name}/g" \
   -e "s/SHPC_VERSION/${shpc_version}/g" \
+  -e "s/GCC_VERSION/${gcc_version}/g" \
   -e "s/PYTHON_MODULEFILE/${python_name}\/${python_version}/g" \
   -e "s/SINGULARITY_VERSION/${singularity_version}/g" \
   -e "s/DATE_TAG/${date_tag}/g" \
