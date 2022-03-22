@@ -17,6 +17,11 @@ python_version="3.9.7" # has to match the version in the Spack env yaml
 setuptools_version="57.4.0" # has to match the version in the Spack env yaml
 pip_version="21.1.2" # has to match the version in the Spack env yaml
 
+# compiler versions
+gcc_version="10.3.0"
+cce_version="12.0.1"
+aocc_version="3.0.0"
+
 # location for Pawsey modules (eg spack, shpc)
 pawsey_modules_dir="pawsey-modules"
 
