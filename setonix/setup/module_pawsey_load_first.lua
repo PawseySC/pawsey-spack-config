@@ -37,10 +37,10 @@ for _ in pairs(module_categories) do num_categories = num_categories + 1 end
 
 -- Query CPU architecture
 local host_cpu = subprocess("lscpu | grep 'Model name'")
-if string.find(host_cpu, "7742") then
-  local arch = "zen3"
+if ( string.match(host_cpu, "7763") ~= nil ) then
+  arch = "zen3"
 else
-  local arch = "zen2"
+  arch = "zen2"
 end
 
 -- Root directories for Spack modules
