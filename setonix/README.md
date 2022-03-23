@@ -61,8 +61,7 @@ In order to minimise edits in users' home directories, we're putting:
 
 ## Deployment tips
 
-* `env_utils` needs to be installed first, as it builds `cmake`, which is otherwise set to non buildable for other environments
-* `env_num_libs` needs to be installed second, as it builds otherwise non buildable *blas*, *lapack*, *scalapack* and *fftw* providers
+* `env_num_libs` needs to be installed first, as it builds otherwise non buildable packages (only *fftw* at the moment)
 * other environments can be built in parallel
 
 
