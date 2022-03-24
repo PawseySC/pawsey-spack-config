@@ -50,10 +50,8 @@ In order to minimise edits in users' home directories, we're putting:
 
 ## To-do list (incomplete)
 
-* Subset of pakcages to be installed with Zen2
-* Subset of packages to be installed with AOCC/CCE
-* Finalise use of Cray Lmod compiler hierarchies
-* ? Compiler configuration for profiling flags
+* Remember to create `current` symlink: `/software/setonix/YYYY.MM` -> `/software/setonix/current`
+* Compiler configuration for profiling flags
 * Testing project-wide package installations
 * Automations in case we need to update the set of module categories
 * Automations for software installations
