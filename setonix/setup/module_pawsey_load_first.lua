@@ -8,9 +8,9 @@ whatis([[Short description : A set of variable definitions to handle software mo
 helps([[A set of variable definitions to handle software modules on Setonix, including Lmod hierarchies for compilers and CPU architectures. Note that this module needs to be loaded before the compiler module.]])
 
 -- Service variables for this module
--- TODO: these definitions need to be updated to their true values
+local date_tag = "current"
+-- TODO: the definitions below need to be updated to their true values
 -- appropriate values are defined in `variables.sh` in this same directory
-local date_tag = "DATE_TAG"
 local gcc_version  = "GCC_VERSION"
 local cce_version  = "CCE_VERSION"
 local aocc_version = "AOCC_VERSION"
