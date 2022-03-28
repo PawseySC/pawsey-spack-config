@@ -60,17 +60,18 @@ class Plumed(AutotoolsPackage):
     # 
     # Implementation of optional modules in this Spack recipe gives two options:
     # 1. Use a reference set of optional modules via `optional_modules`.
-    #    Allowed values are: all[default], reset, none.
+    #    Allowed values are: `all`[default], `reset`, `none`.
     # 2. Pick any combination of specific optional modules, e.g. `+analysis +colvar`.
-    #    This implies (and requires) `optional_modules=none`.
+    #    Only activations are implemented, not deactivations, i.e. `-analysis` has no effect.
+    #    This constraint is needed to keep version conflicts manageable.
+    #    This also implies that specific modules only work with `optional_modules=` `none` or `reset`.
     # Keeping distinct variant types for these two ways of selecting modules seems
     # the only way to handle conflicts between PLUMED versions and specific modules.
     variant(
         'optional_modules',
         default='all',
         values=('all', 'reset', 'none'),
-        description='''Activate a predefined set of optional modules;
-                    \nalternative to fine tuning using module specific variants'''
+        description='Activates a predefined set of optional modules'
     )
     # List of all optional modules (conflicts with PLUMED versions are further down)
     single_optional_modules = [ 'adjmat', 'analysis', 'annfunc', 'bias', 'cltools', 'colvar', 
@@ -79,7 +80,7 @@ class Plumed(AutotoolsPackage):
         'pamm', 'piv', 'reference', 'secondarystructure', 'setup', 'vatom', 'ves', 'vesselbase' ]
     for mod in single_optional_modules:
         variant(mod, default=False,
-                description='Enable the optional module {0}'.format(mod))
+                description='Enables, if on, the optional module {0}'.format(mod))
 
     variant('shared', default=True, description='Builds shared libraries')
     variant('mpi', default=True, description='Activates MPI support')
@@ -108,10 +109,9 @@ class Plumed(AutotoolsPackage):
     depends_on('m4', type='build')
     depends_on('py-cython', type='build', when='@2.5:')
 
-    # Specific optional modules only added on top of `optional_modules=none`
+    # Specific optional modules only added on top of `optional_modules=` `none` or `reset`
     for mod in single_optional_modules:
-        conflicts('+'+mod, when='optional_modules=all', msg='specific optional modules require optional_modules=none')
-        conflicts('+'+mod, when='optional_modules=reset', msg='specific optional modules require optional_modules=none')
+        conflicts('+'+mod, when='optional_modules=all', msg='specific optional modules require optional_modules=none or reset')
 
     # Conflicts between PLUMED versions and specific optional modules
     conflicts('+imd', when='@2.3:', msg='imd was removed from version 2.3')
@@ -261,7 +261,7 @@ class Plumed(AutotoolsPackage):
         # First consider set of optional_modules from `optional_modules`
         optional_modules = self.spec.variants['optional_modules'].value
         # Then add any specific module (implies `optional_modules=none`)
-        for mod in single_optional_modules:
+        for mod in self.single_optional_modules:
             if '+{0}'.format(mod) in spec:
                 optional_modules += ':+{0}'.format(mod)
         # Add final string for optional modules to configure options
