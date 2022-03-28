@@ -111,6 +111,13 @@ prepend_path("PATH", os.getenv("PYTHONUSERBASE").."/bin")
 {% endif %}
 
 {% block footer %}
+-- Enforce explicit usage of versions by requiring full module name
+if (mode() == "load") then
+  if (myModuleUsrName() ~= myModuleFullName()) then
+    LmodError("You must load this module as <name>/<version>.")
+  end
+end
+
 -- Access is granted only to specific groups
 if not isDir("{{ spec.prefix }}") then
     LmodError (
