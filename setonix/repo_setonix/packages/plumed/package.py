@@ -74,6 +74,8 @@ class Plumed(AutotoolsPackage):
         description='Activates a predefined set of optional modules'
     )
     # List of all optional modules (conflicts with PLUMED versions are further down)
+    # As mentioned above, these can only activated, with '+', but not deactivated, with '-'.
+    # This constraint is needed to keep version conflicts manageable.
     single_optional_modules = [ 'adjmat', 'analysis', 'annfunc', 'bias', 'cltools', 'colvar', 
         'crystallization', 'dimred', 'drr', 'eds', 'fisst', 'function', 'funnel', 'generic', 'imd', 
         'isdb', 'logmfd', 'manyrestraints', 'mapping', 'maze', 'molfile', 'multicolvar', 'opes', 
@@ -260,7 +262,7 @@ class Plumed(AutotoolsPackage):
 
         # First consider set of optional_modules from `optional_modules`
         optional_modules = self.spec.variants['optional_modules'].value
-        # Then add any specific module (implies `optional_modules=none`)
+        # Then add any specific module
         for mod in self.single_optional_modules:
             if '+{0}'.format(mod) in spec:
                 optional_modules += ':+{0}'.format(mod)
