@@ -53,13 +53,54 @@ class Plumed(AutotoolsPackage):
     # Variants. PLUMED by default builds a number of optional modules.
     # The ones listed here are not built by default for various reasons,
     # such as stability, lack of testing, or lack of demand.
-    # FIXME: This needs to be an optional
+    # 
+    # From 'configure --help' @2.3:
+    # all/none/reset or : separated list such as
+    # +crystallization:-bias default: reset
+    # 
+    # Implementation in this Spack recipe does not allow the '-' sign to disable modules.
+    # To get a custom set of modules, use a comma-separated list of the modules 
+    # prefixed with '+'. Spack will replace each comma with a :, and prepend the 
+    # 'none:' string, to make sure only selected modules are installed.
+    with when('@2.2:2.2.99'):
+        optional_modules_values = ('+analysis', '+bias,' '+cltools', '+colvar', '+crystallization',
+           '+function', '+generic', '+imd',
+           '+manyrestraints', '+mapping', '+molfile', '+multicolvar', '+reference',
+           '+secondarystructure', '+setup', '+vatom', '+vesselbase')
+    with when('@2.3:2.3.99'):
+        optional_modules_values = ('+adjmat', '+analysis', '+bias,' '+cltools', '+colvar', '+crystallization',
+           '+function', '+generic', 
+           '+manyrestraints', '+mapping', '+molfile', '+multicolvar',
+           '+secondarystructure', '+setup', '+vatom')
+    with when('@2.4:2.4.99'):
+        optional_modules_values = ('+adjmat', '+analysis', '+bias,' '+cltools', '+colvar', '+crystallization',
+           '+drr', '+eds', '+function', '+generic', '+isdb',
+           '+manyrestraints', '+mapping', '+molfile', '+multicolvar',
+           '+secondarystructure', '+setup', '+vatom', '+ves')
+    with when('@2.5:2.5.99'):
+        optional_modules_values = ('+adjmat', '+analysis', '+bias,' '+cltools', '+colvar', '+crystallization',
+           '+dimred', '+drr', '+eds', '+function', '+generic', '+isdb',
+           '+logmfd', '+manyrestraints', '+mapping', '+molfile', '+multicolvar',
+           '+pamm', '+piv', '+secondarystructure', '+setup', '+vatom', '+ves')
+    with when('@2.6:2.6.99'):
+        optional_modules_values = ('+adjmat', '+analysis', '+annfunc', '+bias,' '+cltools', '+colvar', '+crystallization',
+           '+dimred', '+drr', '+eds', '+function', '+generic', '+isdb',
+           '+logmfd', '+manyrestraints', '+mapping', '+maze', '+molfile', '+multicolvar',
+           '+pamm', '+piv', '+secondarystructure', '+setup', '+vatom', '+ves')
+    with when('@2.7:2.7.99'):
+        optional_modules_values = ('+adjmat', '+analysis', '+annfunc', '+bias,' '+cltools', '+colvar', '+crystallization', 
+           '+dimred', '+drr', '+eds', '+fisst', '+function', '+funnel', '+generic', '+isdb', 
+           '+logmfd', '+manyrestraints', '+mapping', '+maze', '+molfile', '+multicolvar', 
+           '+opes', '+pamm', '+piv', '+secondarystructure', '+setup', '+vatom', '+ves')
+
     variant(
         'optional_modules',
-        default='all',
-        values=lambda x: True,
-        description='String that is used to build optional modules'
+        values=disjoint_sets( ('all',), ('reset',), ('none',), optional_modules_values )
+          .with_error("'all', 'reset' or 'none' cannot be activated along with other modules.")
+          .with_default('all'),
+        description='''Build optional modules;\n"reset" is a predefined subset.'''
     )
+
     variant('shared', default=True, description='Builds shared libraries')
     variant('mpi', default=True, description='Activates MPI support')
     variant('gsl', default=True, description='Activates GSL support')
@@ -216,10 +257,9 @@ class Plumed(AutotoolsPackage):
         # If we have specified any optional modules then add the argument to
         # enable or disable them.
         optional_modules = self.spec.variants['optional_modules'].value
+        if '+' in optional_modules:
+          optional_modules = 'none:' + optional_modules.replace(',', ':')
         if optional_modules:
-            # From 'configure --help' @2.3:
-            # all/none/reset or : separated list such as
-            # +crystallization:-bias default: reset
             configure_opts.append(
                 '--enable-modules={0}'.format(optional_modules)
             )
