@@ -155,6 +155,12 @@ class Lammps(CMakePackage, CudaPackage):
     conflicts(
         '+user-reaction', when='@:20200303',
         msg='+user-reaction only supported for version 20200505 and later')
+    conflicts(
+        '+plugin', when='@:20210310',
+        msg='+plugin only supported for version 20210408 and later')
+    conflicts(
+        '+user-brownian', when='@:20210408',
+        msg='+user-brownian only supported for version 20210514 and later')
     conflicts('+mliap', when='~snap')
     conflicts(
         '+user-adios +mpi', when='^adios2~mpi',
