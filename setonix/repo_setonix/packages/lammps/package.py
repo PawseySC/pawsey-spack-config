@@ -78,6 +78,9 @@ class Lammps(CMakePackage, CudaPackage):
         return "https://github.com/lammps/lammps/archive/patch_{0}{1}.tar.gz".format(
             vdate.strftime("%d%b%Y").lstrip('0'), update)
 
+    # List of supported optional packages
+    # Note: package `openmp` in this recipe is called `openmp-package`, to avoid clash
+    # with the pre-existing `openmp` variant
     supported_packages = ['asphere', 'body', 'class2', 'colloid', 'compress',
                           'coreshell', 'dielectric', 'dipole', 'granular', 'kspace',
                           'kokkos', 'latte', 'manybody', 'mc', 'meam', 'misc',
