@@ -81,7 +81,7 @@ class Lammps(CMakePackage, CudaPackage):
     supported_packages = ['asphere', 'body', 'class2', 'colloid', 'compress',
                           'coreshell', 'dielectric', 'dipole', 'granular', 'kspace',
                           'kokkos', 'latte', 'manybody', 'mc', 'meam', 'misc',
-                          'mliap', 'ml-iap', 'ml-snap', 'molecule', 'molfile', 'mpiio',
+                          'mliap', 'ml-iap', 'ml-snap', 'molecule', 'mpiio',
                           'opt', 'peri', 'plugin', 'poems', 'python', 'qeq', 'replica',
                           'rigid', 'shock', 'snap', 'spin', 'srd', 'voronoi',
                           'user-atc', 'user-adios',
@@ -89,8 +89,8 @@ class Lammps(CMakePackage, CudaPackage):
                           'user-colvars', 'user-diffraction', 'user-dpd',
                           'user-drude', 'user-eff', 'user-fep', 'user-h5md',
                           'user-lb', 'user-manifold', 'user-meamc',
-                          'user-mesodpd', 'user-mesont', 'user-mgpt',
-                          'user-misc', 'user-mofff', 'user-netcdf', 'user-omp',
+                          'user-mesodpd', 'user-mesont', 'user-mgpt', 'user-misc',
+                          'user-mofff', 'user-molfile', 'user-netcdf', 'user-omp',
                           'user-phonon', 'user-plumed', 'user-ptm', 'user-qtb',
                           'user-reaction', 'user-reaxc', 'user-sdpd',
                           'user-smd', 'user-smtbq', 'user-sph', 'user-tally',
@@ -100,9 +100,9 @@ class Lammps(CMakePackage, CudaPackage):
                           'dpd-react', 'dpd-smooth', 'drude', 'eff', 'extra-compute',
                           'extra-dump', 'extra-fix', 'extra-molecule', 'extra-pair',
                           'fep', 'h5md', 'interlayer', 'latboltz', 'machdyn', 'manifold',
-                          'mesont', 'mgpt', 'mofff', 'netcdf', 'openmp-package',
-                          'orient', 'phonon', 'plumed', 'ptm', 'qtb', 'reaction',
-                          'reaxff', 'smtbq', 'sph', 'tally', 'uef', 'yaff']
+                          'mesont', 'mgpt', 'mofff', 'molfile', 'netcdf',
+                          'openmp-package', 'orient', 'phonon', 'plumed', 'ptm', 'qtb',
+                          'reaction', 'reaxff', 'smtbq', 'sph', 'tally', 'uef', 'yaff']
 
     for pkg in supported_packages:
         variant(pkg, default=False,
@@ -346,6 +346,12 @@ class Lammps(CMakePackage, CudaPackage):
     conflicts(
         '+mofff', when='@:20210527',
         msg='+mofff only added @20210702, use +user-mofff instead')
+    conflicts(
+        '+user-molfile', when='@20210702:',
+        msg='+user-molfile was removed after @20210527, use +molfile instead')
+    conflicts(
+        '+molfile', when='@:20210527',
+        msg='+molfile only added @20210702, use +user-molfile instead')
     conflicts(
         '+user-netcdf', when='@20210702:',
         msg='+user-netcdf was removed after @20210527, use +netcdf instead')
