@@ -60,13 +60,13 @@ class Lammps(CMakePackage, CudaPackage):
         return "https://github.com/lammps/lammps/archive/patch_{0}.tar.gz".format(
             vdate.strftime("%d%b%Y").lstrip('0'))
 
-    supported_packages = ['asphere', 'body', 'class2', 'colloid', 'compress',
-                          'coreshell', 'dipole', 'granular', 'kspace',
+    supported_packages = ['asphere', 'body', 'brownian', 'class2', 'colloid',
+                          'compress', 'coreshell', 'dipole', 'granular', 'kspace',
                           'kokkos', 'latte', 'manybody', 'mc', 'meam', 'misc',
-                          'mliap', 'molecule', 'mpiio', 'opt', 'peri', 'poems',
-                          'python', 'qeq', 'replica', 'rigid', 'shock', 'snap',
-                          'spin', 'srd', 'user-atc', 'user-adios',
-                          'user-awpmd', 'user-bocs', 'user-cgsdk',
+                          'mliap', 'molecule', 'molfile', 'mpiio', 'opt', 'peri',
+                          'plugin', 'poems', 'python', 'qeq', 'replica', 'rigid',
+                          'shock', 'snap', 'spin', 'srd', 'user-atc', 'user-adios',
+                          'user-awpmd', 'user-bocs', 'user-brownian', 'user-cgsdk',
                           'user-colvars', 'user-diffraction', 'user-dpd',
                           'user-drude', 'user-eff', 'user-fep', 'user-h5md',
                           'user-lb', 'user-manifold', 'user-meamc',
