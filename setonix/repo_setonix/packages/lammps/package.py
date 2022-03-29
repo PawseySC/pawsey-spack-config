@@ -86,11 +86,12 @@ class Lammps(CMakePackage, CudaPackage):
                           'user-uef', 'user-yaff',
                           'atc', 'adios', 'awpmd', 'bocs', 'brownian', 'cg-sdk',
                           'colvars', 'diffraction', 'dpd-basic', 'dpd-meso',
-                          'dpd-react', 'dpd-smooth', 'drude', 'eff', 'fep',
-                          'h5md', 'latboltz', 'machdyn', 'manifold', 'mesont',
-                          'mgpt', 'mofff', 'netcdf', 'openmp-package', 'phonon', 'plumed',
-                          'ptm', 'qtb', 'reaction', 'reaxff', 'smtbq',
-                          'sph', 'tally', 'uef', 'yaff']
+                          'dpd-react', 'dpd-smooth', 'drude', 'eff', 'extra-compute',
+                          'extra-dump', 'extra-fix', 'extra-molecule', 'extra-pair',
+                          'fep', 'h5md', 'interlayer', 'latboltz', 'machdyn', 'manifold',
+                          'mesont', 'mgpt', 'mofff', 'netcdf', 'openmp-package',
+                          'orient', 'phonon', 'plumed', 'ptm', 'qtb', 'reaction',
+                          'reaxff', 'smtbq', 'sph', 'tally', 'uef', 'yaff']
 
     for pkg in supported_packages:
         variant(pkg, default=False,
@@ -162,11 +163,11 @@ class Lammps(CMakePackage, CudaPackage):
     conflicts('+user-misc', when='~manybody')
     conflicts('+user-phonon', when='~kspace')
     conflicts('+phonon', when='~kspace')
-    conflicts('+user-misc', when='~manybody')
     conflicts('%gcc@9:', when='@:20200303+openmp')
     conflicts('+kokkos', when='@:20200227')
     conflicts('+dielectric', when='~kspace')
     conflicts('+dielectric', when='~user-misc')
+    conflicts('+dielectric', when='~extra-pair')
     conflicts(
         '+meam', when='@20181212:20210527',
         msg='+meam is removed between @20181212 and @20210527, use +user-meamc instead')
@@ -424,6 +425,31 @@ class Lammps(CMakePackage, CudaPackage):
     conflicts(
         '+yaff', when='@:20210527',
         msg='+yaff only added @20210702, use +user-yaff instead')
+    # In the following, package refactoring at 28 July 2021
+    conflicts(
+        '+user-misc', when='@20210728:',
+        msg='+user-misc was removed after @20210702, and split across multiple packages')
+    conflicts(
+        '+extra-compute', when='@:20210702',
+        msg='+extra-compute only added @20210728, use +user-misc instead')
+    conflicts(
+        '+extra-dump', when='@:20210702',
+        msg='+extra-dump only added @20210728, use +user-misc instead')
+    conflicts(
+        '+extra-fix', when='@:20210702',
+        msg='+extra-fix only added @20210728, use +user-misc instead')
+    conflicts(
+        '+extra-molecule', when='@:20210702',
+        msg='+extra-molecule only added @20210728, use +user-misc instead')
+    conflicts(
+        '+extra-pair', when='@:20210702',
+        msg='+extra-pair only added @20210728, use +user-misc instead')
+    conflicts(
+        '+interlayer', when='@:20210702',
+        msg='+interlayer only added @20210728, use +user-misc instead')
+    conflicts(
+        '+orient', when='@:20210702',
+        msg='+orient only added @20210728, use +user-misc instead')
 
     patch("lib.patch", when="@20170901")
     patch("660.patch", when="@20170922")
