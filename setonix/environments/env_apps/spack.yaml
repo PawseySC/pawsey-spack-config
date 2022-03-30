@@ -16,9 +16,10 @@ spack:
       +snap +spin +srd +voronoi +user-adios +user-atc +user-awpmd +user-bocs +user-cgsdk
       +user-colvars +user-diffraction +user-dpd +user-drude +user-eff +user-fep +user-h5md
       +user-lb +user-manifold +user-meamc +user-mesodpd +user-mesont +user-mgpt +user-misc
-      +user-mofff +user-netcdf +user-omp +user-phonon +user-plumed +user-ptm +user-qtb
-      +user-reaction +user-reaxc +user-sdpd +user-smd +user-smtbq +user-sph +user-tally
-      +user-uef +user-yaff ^kokkos@3.4.01+hwloc+memkind+numactl+openmp+tuning ^plumed@2.7.2
+      +user-mofff +user-molfile +user-netcdf +user-omp +user-phonon +user-plumed +user-ptm
+      +user-qtb +user-reaction +user-reaxc +user-sdpd +user-smd +user-smtbq +user-sph
+      +user-tally +user-uef +user-yaff ^kokkos@3.4.01+hwloc+memkind+numactl+openmp+tuning
+      ^plumed@2.7.2
     - namd@2.14 interface=python fftw=3 +plumed ^charmpp@6.10.2 backend=ofi
 
     
