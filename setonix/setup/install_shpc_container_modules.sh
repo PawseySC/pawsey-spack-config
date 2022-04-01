@@ -28,6 +28,8 @@ quay.io/biocontainers/trimmomatic:0.39--hdfd78af_2
 quay.io/biocontainers/trinity:2.13.2--ha140323_0
 quay.io/biocontainers/vcftools:0.1.16--pl5321h9a82719_6
 quay.io/biocontainers/velvet:1.2.10--h7132678_5
+quay.io/pawsey/hpc-python:2022.03
+quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 "
 
 # source setup variables
