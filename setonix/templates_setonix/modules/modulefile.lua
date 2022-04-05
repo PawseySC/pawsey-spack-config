@@ -114,7 +114,10 @@ prepend_path("PATH", os.getenv("PYTHONUSERBASE").."/bin")
 -- Enforce explicit usage of versions by requiring full module name
 if (mode() == "load") then
   if (myModuleUsrName() ~= myModuleFullName()) then
-    LmodError("You must load this module as <name>/<version>.")
+    LmodError(
+        "Default module versions are disabled by your systems administrator.\n\n",
+        "\tPlease load this module as <name>/<version>.\n"
+    )
   end
 end
 
