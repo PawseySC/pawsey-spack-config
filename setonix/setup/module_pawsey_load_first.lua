@@ -58,8 +58,9 @@ local psc_sw_env_cce_root  = psc_sw_env_spack_root .. "/cce/" .. psc_sw_env_cce_
 local psc_sw_env_aocc_root = psc_sw_env_spack_root .. "/aocc/" .. psc_sw_env_aocc_version
 
 -- Add Spack modules to Cray Lmod hierarchy variables
+-- Note: LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX comes from Lumi, on Joey there was no `_8_0`
 for index = 1,num_categories do
-  prepend_path("LMOD_CUSTOM_COMPILER_GNU_PREFIX", psc_sw_env_gcc_root .. "/" .. psc_sw_env_module_categories[index])
+  prepend_path("LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX", psc_sw_env_gcc_root .. "/" .. psc_sw_env_module_categories[index])
   prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_10_0_PREFIX", psc_sw_env_cce_root .. "/" .. psc_sw_env_module_categories[index])
   prepend_path("LMOD_CUSTOM_COMPILER_AOCC_3_0_PREFIX", psc_sw_env_aocc_root .. "/" .. psc_sw_env_module_categories[index])
 end
