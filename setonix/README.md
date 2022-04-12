@@ -7,10 +7,10 @@
 * `configs/spackuser_pawseystaff/`: configuration files for system-wide installs (Pawsey staff), which will sit in ~/.spack/, allowing spack user overrides of config
 * `environments/`: environments for deployment on Setonix
 * `fixes/`: Pawsey fixes to be applied to Spack prior to production use
-* `registry_setonix/`: custom Singularity-HPC (SHPC) recipes for Pawsey (non-Spack related)
-* `repo_setonix/`: custom package recipes for Setonix
+* `registry/`: custom Singularity-HPC (SHPC) recipes for Pawsey (non-Spack related)
+* `repo/`: custom package recipes for Setonix
 * `setup/`: files for system-wide installation (scripts and custom modulefiles)
-* `templates_setonix/`: custom templates (modulefiles, Dockerfiles)
+* `templates/`: custom templates (modulefiles, Dockerfiles)
 
 
 ### Setonix software stack tree
@@ -29,7 +29,7 @@ The software stack tree has the following sub-directories, related to Spack inst
 * `software/`: Spack software installations
 * `modules/`: Spack modulefules
 * `spack/`: Spack installation
-* `pawsey-spack-config/`: this repo, including `setonix/repo_setonix` for customised package recipes
+* `pawsey-spack-config/`: this repo, including `setonix/repo/` for customised package recipes
 
 Other sub-directories also sit here, that are unrelated to Spack:
 * `custom/` (those that need a compiler/arch tree)
