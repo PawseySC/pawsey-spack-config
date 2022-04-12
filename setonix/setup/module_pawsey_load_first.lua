@@ -68,6 +68,10 @@ end
 
 
 -- Add Pawsey custom modules to Cray Lmod hierarchy variables
+local psc_sw_env_custom_modules_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_custom_modules_dir .. "/" .. arch
+prepend_path("LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX", psc_sw_env_custom_modules_root .. "/gcc/" .. psc_sw_env_gcc_version)
+prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_10_0_PREFIX", psc_sw_env_custom_modules_root .. "/cce/" .. psc_sw_env_cce_version)
+prepend_path("LMOD_CUSTOM_COMPILER_AOCC_3_0_PREFIX", psc_sw_env_custom_modules_root .. "/aocc/" .. psc_sw_env_aocc_version)
 
 
 -- Add Pawsey utility modules (including Spack/SHPC modulefiles) to MODULEPATH
