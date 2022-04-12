@@ -17,13 +17,14 @@ local psc_sw_env_date_tag = "current"
 -- This is handy for testing, as it is the only one to tweak
 local psc_sw_env_root_dir = "/software/setonix/" .. psc_sw_env_date_tag -- "ROOT_DIR"
 -- 
-local psc_sw_env_shpc_modules_dir_short = "modules" -- SHPC_SPACKUSER_MODULES_DIR_SHORT"
-local psc_sw_env_pawsey_modules_dir = "pawsey-modules" -- PAWSEY_MODULES_DIR"
+local psc_sw_env_custom_modules_dir = "custom/modules" -- "CUSTOM_MODULES_DIR"
+local psc_sw_env_utilities_modules_dir = "pawsey/modules" -- "UTILITIES_MODULES_DIR"
+local psc_sw_env_shpc_containers_modules_dir = "containers/modules" -- "SHPC_CONTAINERS_MODULES_DIR"
 -- 
 -- These need to be checked at every OS update
 local psc_sw_env_gcc_version  = "10.3.0" -- "GCC_VERSION"
-local psc_sw_env_cce_version  = "12.0.1" -- CCE_VERSION"
-local psc_sw_env_aocc_version = "3.0.0" -- AOCC_VERSION"
+local psc_sw_env_cce_version  = "12.0.1" -- "CCE_VERSION"
+local psc_sw_env_aocc_version = "3.0.0" -- "AOCC_VERSION"
 
 -- List of Spack module categories
 -- update when new categories are added
@@ -65,10 +66,15 @@ for index = 1,num_categories do
   prepend_path("LMOD_CUSTOM_COMPILER_AOCC_3_0_PREFIX", psc_sw_env_aocc_root .. "/" .. psc_sw_env_module_categories[index])
 end
 
--- Add SHPC modules to MODULEPATH
-local psc_sw_env_shpc_root = psc_sw_env_root_dir .. "/containers/" .. psc_sw_env_shpc_modules_dir_short
-prepend_path("MODULEPATH", psc_sw_env_shpc_root)
 
--- Add Spack/SHPC modules to MODULEPATH
-local psc_sw_env_pawsey_modules_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_pawsey_modules_dir
-prepend_path("MODULEPATH", psc_sw_env_pawsey_modules_root)
+-- Add Pawsey custom modules to Cray Lmod hierarchy variables
+
+
+-- Add Pawsey utility modules (including Spack/SHPC modulefiles) to MODULEPATH
+local psc_sw_env_utilities_modules_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_utilities_modules_dir
+prepend_path("MODULEPATH", psc_sw_env_utilities_modules_root)
+
+
+-- Add SHPC modules to MODULEPATH
+local psc_sw_env_shpc_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_shpc_containers_modules_dir
+prepend_path("MODULEPATH", psc_sw_env_shpc_root)

@@ -11,8 +11,8 @@ module load pip/$pip_version
 
 # create and enter install directory
 cd ${root_dir}
-mkdir $shpc_name
-cd $shpc_name
+mkdir -p ${shpc_install_dir}
+cd ${shpc_install_dir}
 
 # pip install package
 pip install --prefix=$(pwd) singularity-hpc==$shpc_version
@@ -37,7 +37,7 @@ export PATH=$(pwd)/bin:$PATH
 export PYTHONPATH=$(pwd)/lib/python${python_version_major}.${python_version_minor}/site-packages:$PYTHONPATH
 
 # back to root_dir
-cd ..
+cd ${root_dir}
 
 #### ALL SHPC CONFIG COMMANDS HERE
 # in alternative, we could provide edited yamls, just to copy over
@@ -49,7 +49,7 @@ shpc config set module_sys:lmod
 shpc config set container_tech:singularity
 # locations for registry (standard and Pawsey custom)
 shpc config remove registry:\$root_dir/registry
-shpc config add registry:${root_dir}/${shpc_name}/registry
+shpc config add registry:${root_dir}/${shpc_install_dir}/registry
 shpc config add registry:${root_dir}/pawsey-spack-config/setonix/registry_setonix
 # user install location for modulefiles
 shpc config set module_base:/software/\$PAWSEY_PROJECT/\$USER/setonix/containers/modules
@@ -71,19 +71,20 @@ shpc config set container_features:home:\$MYSOFTWARE/.${shpc_name}_home
 ## SPACK USER (system wide installation)
 shpc config inituser
 # system install location for modulefiles
-shpc config set module_base:${root_dir}/containers/${shpc_spackuser_modules_dir_long}
+shpc config set module_base:${root_dir}/${containers_root_dir}/${shpc_spackuser_modules_dir_long}
 # system install location for containers
-shpc config set container_base:${root_dir}/containers/sif
+shpc config set container_base:${root_dir}/${shpc_containers_dir}
 
 # edit and copy over SHPC modulefile
-mkdir -p ${root_dir}/${pawsey_modules_dir}/${shpc_name}/${shpc_version}
+mkdir -p ${root_dir}/${shpc_module_dir}/${shpc_version}
 sed \
   -e "s/SHPC_NAME/${shpc_name}/g" \
   -e "s/SHPC_VERSION/${shpc_version}/g" \
+  -e "s/SHPC_INSTALL_DIR/${shpc_install_dir}/g" \
   -e "s/GCC_VERSION/${gcc_version}/g" \
   -e "s/PYTHON_MODULEFILE/${python_name}\/${python_version}/g" \
   -e "s/SINGULARITY_VERSION/${singularity_version}/g" \
   -e "s/DATE_TAG/${date_tag}/g" \
   -e "s/PYTHON_MAJORMINOR/${python_version_major}.${python_version_minor}/g" \
  pawsey-spack-config/setonix/setup/module_${shpc_name}.lua \
- > ${root_dir}/${pawsey_modules_dir}/${shpc_name}/${shpc_version}/module.lua
+ > ${root_dir}/${shpc_module_dir}/${shpc_version}/module.lua

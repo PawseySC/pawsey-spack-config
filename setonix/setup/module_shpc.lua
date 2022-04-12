@@ -15,7 +15,7 @@ conflict("PrgEnv-cray", "PrgEnv-aocc")
 load("PYTHON_MODULEFILE")
 load("singularity/SINGULARITY_VERSION")
 
-setenv("SINGULARITY_HPC_HOME","/software/setonix/DATE_TAG/SHPC_NAME")
+setenv("SINGULARITY_HPC_HOME","/software/setonix/DATE_TAG/SHPC_INSTALL_DIR")
 
-prepend_path("PATH","/software/setonix/DATE_TAG/SHPC_NAME/bin")
-prepend_path("PYTHONPATH","/software/setonix/DATE_TAG/SHPC_NAME/lib/pythonPYTHON_MAJORMINOR/site-packages")
+prepend_path("PATH","/software/setonix/DATE_TAG/SHPC_INSTALL_DIR/bin")
+prepend_path("PYTHONPATH","/software/setonix/DATE_TAG/SHPC_INSTALL_DIR/lib/pythonPYTHON_MAJORMINOR/site-packages")
