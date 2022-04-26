@@ -58,7 +58,7 @@ shpc config set default_version:false
 # user install location for containers
 shpc config set container_base:/software/\$PAWSEY_PROJECT/\$USER/setonix/containers/sif
 # singularity module
-shpc config set singularity_module:singularity/${singularity_version}
+shpc config set singularity_module:${singularity_name}/${singularity_version}
 # enable wrapper scripts
 shpc config set wrapper_scripts:enabled:true
 # GPU support (Phase 2)
@@ -83,7 +83,7 @@ sed \
   -e "s/SHPC_INSTALL_DIR/${shpc_install_dir}/g" \
   -e "s/GCC_VERSION/${gcc_version}/g" \
   -e "s/PYTHON_MODULEFILE/${python_name}\/${python_version}/g" \
-  -e "s/SINGULARITY_VERSION/${singularity_version}/g" \
+  -e "s/SINGULARITY_MODULEFILE/${singularity_name}\/${singularity_version}/g" \
   -e "s/DATE_TAG/${date_tag}/g" \
   -e "s/PYTHON_MAJORMINOR/${python_version_major}.${python_version_minor}/g" \
  pawsey-spack-config/setonix/setup/module_${shpc_name}.lua \

@@ -13,7 +13,7 @@ prereq("PrgEnv-gnu", "gcc/GCC_VERSION")
 conflict("PrgEnv-cray", "PrgEnv-aocc")
 
 load("PYTHON_MODULEFILE")
-load("singularity/SINGULARITY_VERSION")
+load("SINGULARITY_MODULEFILE")
 
 setenv("SINGULARITY_HPC_HOME","/software/setonix/DATE_TAG/SHPC_INSTALL_DIR")
 

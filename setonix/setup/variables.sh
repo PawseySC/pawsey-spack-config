@@ -34,6 +34,9 @@ shpc_spackuser_openfoam_add_prefix="containerised-"
 # name of SHPC module: decide this once and for all
 shpc_name="shpc"
 
+# name of Singularity module (Spack has singularity and singularityce)
+singularity_name="singularity"
+
 # NOTE: these are all relative to root_dir above
 # root location for Pawsey custom builds
 custom_root_dir="custom"
@@ -54,6 +57,9 @@ shpc_containers_dir="${containers_root_dir}/sif"
 shpc_install_dir="${utilities_root_dir}/software/${shpc_name}"
 # location of SHPC utility modulefile
 shpc_module_dir="${utilities_modules_dir}/${shpc_name}"
+
+# location of Singularity modulefile (arch/compiler free symlink)
+singularity_symlink_module_dir="${utilities_modules_dir}/${singularity_name}"
 
 # location for Spack modulefile
 spack_module_dir="${utilities_modules_dir}/spack"
