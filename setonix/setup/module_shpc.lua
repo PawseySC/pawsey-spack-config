@@ -8,10 +8,6 @@ whatis([[Version : SHPC_VERSION]])
 whatis([[Short description : Local filesystem registry for containers (intended for HPC) using Lmod or Environement Modules. Works for users and admins. ]])
 help([[Local filesystem registry for containers (intended for HPC) using Lmod or Environement Modules. Works for users and admins.]])
 
--- requires gcc, because singularity (loaded below) is only built with gcc
-prereq("PrgEnv-gnu", "gcc/GCC_VERSION")
-conflict("PrgEnv-cray", "PrgEnv-aocc")
-
 load("PYTHON_MODULEFILE")
 load("SINGULARITY_MODULEFILE")
 
