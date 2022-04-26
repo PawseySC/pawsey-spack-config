@@ -20,6 +20,8 @@ pip_version="21.1.2" # has to match the version in the Spack env yaml
 gcc_version="10.3.0"
 cce_version="12.0.1"
 aocc_version="3.0.0"
+# architecture of login/compute nodes (needed by Singularity symlink module)
+cpu_arch="zen3"
 
 # python version info (no editing needed)
 python_version_major="$( echo $python_version | cut -d '.' -f 1 )"
