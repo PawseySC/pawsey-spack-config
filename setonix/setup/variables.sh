@@ -20,6 +20,8 @@ pip_version="21.1.2" # has to match the version in the Spack env yaml
 gcc_version="10.3.0"
 cce_version="12.0.1"
 aocc_version="3.0.0"
+# architecture of login/compute nodes (needed by Singularity symlink module)
+cpu_arch="zen3"
 
 # python version info (no editing needed)
 python_version_major="$( echo $python_version | cut -d '.' -f 1 )"
@@ -33,6 +35,9 @@ shpc_spackuser_modules_dir_short="modules"
 shpc_spackuser_openfoam_add_prefix="containerised-"
 # name of SHPC module: decide this once and for all
 shpc_name="shpc"
+
+# name of Singularity module (Spack has singularity and singularityce)
+singularity_name="singularity"
 
 # NOTE: these are all relative to root_dir above
 # root location for Pawsey custom builds
@@ -54,6 +59,9 @@ shpc_containers_dir="${containers_root_dir}/sif"
 shpc_install_dir="${utilities_root_dir}/software/${shpc_name}"
 # location of SHPC utility modulefile
 shpc_module_dir="${utilities_modules_dir}/${shpc_name}"
+
+# location of Singularity modulefile (arch/compiler free symlink)
+singularity_symlink_module_dir="${utilities_modules_dir}/${singularity_name}"
 
 # location for Spack modulefile
 spack_module_dir="${utilities_modules_dir}/spack"
