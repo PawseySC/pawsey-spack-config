@@ -166,6 +166,10 @@ modules:
         py-astropy: 'astro-applications/{name}/{version}'
         py-healpy: 'astro-applications/{name}/{version}'
         py-emcee: 'astro-applications/{name}/{version}'
+        chgcentre: 'astro-applications/{name}/{version}'
+        idg: 'astro-applications/{name}/{version}'
+        wcstools: 'astro-applications/{name}/{version}'
+        wsclean: 'astro-applications/{name}/{version}'
 
         #performance tests 
         "hpl ~openmp": 'benchmarking/{name}/{version}'
