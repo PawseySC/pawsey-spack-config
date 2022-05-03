@@ -3,10 +3,7 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-
-from unittest.mock import patch
 from spack import *
-
 
 class Chgcentre(CMakePackage):
     """
@@ -21,5 +18,5 @@ class Chgcentre(CMakePackage):
 
     depends_on('casacore')
     depends_on('gsl')
+    patch('main.patch')
 
-    patch('main_cpp.patch', when='@1.6:')
