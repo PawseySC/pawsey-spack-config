@@ -50,7 +50,7 @@ shpc config set container_tech:singularity
 # locations for registry (standard and Pawsey custom)
 shpc config remove registry:\$root_dir/registry
 shpc config add registry:${root_dir}/${shpc_install_dir}/registry
-shpc config add registry:${root_dir}/pawsey-spack-config/setonix/registry
+shpc config add registry:${root_dir}/pawsey-spack-config/setonix/shpc_registry
 # user install location for modulefiles
 shpc config set module_base:/software/\$PAWSEY_PROJECT/\$USER/setonix/containers/modules
 # disable default version for modulefiles
