@@ -1,0 +1,567 @@
+packages:
+  all:
+  # note the compiler and providers specifications
+  # only suggest a priority order, they do not exclude other options
+  # suggested priority for compilers.
+    compiler: [ gcc@10.3.0, cce@12.0.1, aocc@3.0.0 ]
+    providers:
+      mpi: [ cray-mpich ]
+      blas: [ openblas, amdblis ] #, cray-libsci ] # commenting out cray-libsci as bug was identified
+      lapack: [ openblas, netlib-lapack, amdlibflame ] #, cray-libsci ]
+      scalapack: [ netlib-scalapack, amdscalapack ] #, cray-libsci ]
+      fftw-api: [ fftw, amdfftw ] #, cray-fftw ] # commenting out cray-fftw for now, similar to cray-libsci
+      pkgconfig: [ pkg-config ]
+    permissions:
+      read: world
+      # this should be user, we do not want pawsey0001 users 
+      # to accidentally edit the system wide installation
+      write: user
+      # using default group
+      # fine, considering world readable and user writable
+      # could not use $PAWSEY_PROJECT, as variables are apparently not evaluated here
+
+# don't build virtuals with an external provider
+  mpi:
+    buildable: false
+# Left buildable, as currently built by Spack, 
+# because cray-libsci and cray-fftw are not in use (see below)
+#  blas:
+#    buildable: false
+#  lapack:
+#    buildable: false
+#  scalapack:
+#    buildable: false
+# FFTW non buildable, to avoid proliferation of variants, 
+# that are ultimately a subset of the system-wide one (env_num_libs)
+  fftw-api:
+    buildable: false
+  pkgconfig:
+    buildable: false
+# don't build compilers neither
+  cce:
+    buildable: false
+  gcc:
+    buildable: false
+  aocc:
+    buildable: false
+  intel:
+    buildable: false
+  pgi:
+    buildable: false
+
+  # GENERAL NOTES:
+  # 1. for each package, only one entry must exist in this yaml
+  # otherwise only the last one is considered, and the previous ones are ingored
+  # 2. when externals are specified, the preferred version is respected only if it is one of the externals
+
+  # preferred versions (for 2022.01) and variants, utils
+  # Note: setting autoconf/automake/cmake as non buildable
+  cmake:
+    version: [3.21.4]
+# Commented out - see GENERAL NOTES above
+#    externals:
+#  # manual addition with the latest version
+#    - spec: cmake@3.21.4
+#      prefix: /lus/joey/home/mdelapierre/Spack-sprints/v0.17.0_new/spack/opt/spack/cray-sles15-zen2/gcc-10.3.0/cmake-3.21.4-dgyicf6mmctyfw2fdzeja2jt5jf5gzl5
+#    - spec: cmake@3.10.2
+#      prefix: /usr
+  ffmpeg:
+    version: [4.4]
+    variants: '+avresample'
+  gnuplot:
+    version: [5.4.2]
+    variants: '+X'
+  # preferred versions (for 2022.01) and variants, python
+  python:
+    version: [3.9.7]
+    variants: '+optimizations'
+  gdbm:
+    version: [1.19]
+  gettext:
+    version: [0.21]
+# Commented out - see GENERAL NOTES above
+#    externals:
+#    - spec: python@3.9.7+optimizations
+#      prefix: /lus/joey/home/mdelapierre/Spack-sprints/v0.17.0_new/spack/opt/spack/cray-sles15-zen2/gcc-10.3.0/python-3.9.7-2nk3ozgzzug2migecarn5ez4ppjov2oe
+#    - spec: python@3.8.5
+#      prefix: /opt/cray/pe/python/3.8.5.1
+#    - spec: python@3.6.12
+#      prefix: /usr
+#    - spec: python@2.7.17
+#      prefix: /usr
+  py-cython:
+    version: [0.29.24]
+  py-dask:
+    version: [2021.6.2]
+  py-h5py:
+    version: [3.4.0]
+  py-ipython:
+    version: [7.28.0]
+  py-matplotlib:
+    version: [3.4.3]
+    variants: '+movies'
+  py-mpi4py:
+    version: [3.1.2]
+  py-numba:
+    version: [0.54.0]
+  py-numpy:
+    version: [1.20.3]
+  py-pandas:
+    version: [1.3.4]
+  py-pip:
+    version: [21.1.2]
+  py-plotly:
+    version: [5.2.2]
+  py-scikit-learn:
+    version: [1.0.1]
+  py-scipy:
+    version: [1.7.1]
+  py-setuptools:
+    version: [57.4.0]
+  # preferred versions (for 2022.01) and variants, compilers
+  go:
+    version: [1.16.12]
+  julia:
+     version: [1.6.1]
+  openjdk:
+    version: [17.0.0_35]
+  r:
+    version: [4.1.0]
+# Commented out - see GENERAL NOTES above
+#    externals:
+#    - spec: r@4.0.5.1
+#      prefix: /opt/cray/pe/R/4.0.5.1
+  perl:
+    version: [5.34.0]
+# Commented out - see GENERAL NOTES above
+#    externals:
+#    - spec: perl@5.26.1~cpanm
+#      prefix: /usr
+  ruby:
+    version: [3.0.1]
+  rust:
+    version: [1.52.1]
+  # preferred versions (for 2022.01) and variants, num_libs
+  boost:
+    version: [1.76.0]
+    variants: '+mpi +numpy +python'
+  eigen:
+    version: [3.4.0]
+  fftw:
+    version: [3.3.9,2.1.5]
+    variants: '+openmp precision=float,double,long_double'
+  gsl:
+    version: [2.6]
+  hpx:
+    version: [1.6.0]
+    variants: '+async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi'
+  kokkos:
+    version: [3.4.01]
+    variants: '+hwloc +memkind +numactl +openmp +tuning'
+  netlib-lapack:
+    version: [3.9.1]
+  openblas:
+    version: [0.3.15]
+    variants: 'threads=openmp'
+  opencv:
+     version: [4.5.2]
+  plasma:
+    version: [20.9.20]
+  petsc:
+    version: [3.15.5]
+    variants: '+fftw' # commenting out trilinos as per environment note # +trilinos'
+  plumed:
+    version: [2.7.2]
+  netlib-scalapack:
+    version: [2.1.0]
+  slate:
+    version: [2021.05.02]
+    variants: '~cuda'
+  trilinos:
+    version: [13.0.1]
+    variants: '+adios2 +openmp +python'
+# preferred versions (for 2022.01) and variants, io_libs
+  hdf5:
+    version: [1.12.1]
+    variants: 'api=v112 +hl +fortran +szip'
+  adios2:
+    version: [2.7.1]
+    variants: '+python +hdf5'
+  netcdf-c:
+    version: [4.8.1]
+    variants: '+hdf4 +parallel-netcdf'
+  netcdf-cxx:
+    version: [4.2]
+  netcdf-cxx4:
+    version: [4.3.1]
+  netcdf-fortran:
+    version: [4.5.3]
+  parallel-netcdf:
+    version: [1.12.2]
+  py-h5netcdf:
+    version: [0.10.0]
+  py-netcdf4:
+    version: [1.5.3]
+
+# packages found automatically by spack external find
+  bison:
+    externals:
+    - spec: bison@3.0.4
+      prefix: /usr
+    buildable: false
+  bzip2:
+    externals:
+    - spec: bzip2@1.0.6
+      prefix: /usr
+    buildable: false
+  cpio:
+    externals:
+    - spec: cpio@2.12
+      prefix: /usr
+    buildable: false
+  diffutils:
+    externals:
+    - spec: diffutils@3.6
+      prefix: /usr
+    buildable: false
+  file:
+    externals:
+    - spec: file@5.32
+      prefix: /usr
+    buildable: false
+  findutils:
+    externals:
+    - spec: findutils@4.6.0
+      prefix: /usr
+    buildable: false
+  flex:
+    externals:
+    - spec: flex@2.6.4+lex
+      prefix: /usr
+    buildable: false
+  gawk:
+    externals:
+    - spec: gawk@4.2.1
+      prefix: /usr
+    buildable: false
+  git:
+    externals:
+    - spec: git@2.26.2~tcltk
+      prefix: /usr
+    buildable: false
+  gmake:
+    externals:
+    - spec: gmake@4.2.1
+      prefix: /usr
+    buildable: false
+  groff:
+    externals:
+    - spec: groff@1.22.3
+      prefix: /usr
+    buildable: false
+  lustre:
+    externals:
+    - spec: lustre@2.12.4.2_cray_18_g0120bae
+      prefix: /usr
+    buildable: false
+  m4:
+    externals:
+    - spec: m4@1.4.18
+      prefix: /usr
+    buildable: false
+  maven:
+    externals:
+    - spec: maven@3.6.0
+      prefix: /usr/local/maven
+    buildable: false
+  openssh:
+    externals:
+    - spec: openssh@7.9p1
+      prefix: /usr
+    buildable: false
+  openssl:
+    externals:
+    - spec: openssl@1.1.0i-fips
+      prefix: /usr
+    buildable: false
+  pkg-config:
+    externals:
+    - spec: pkg-config@0.29.2
+      prefix: /usr
+    buildable: false
+  rsync:
+    externals:
+    - spec: rsync@3.1.3
+      prefix: /usr
+    buildable: false
+  sed:
+    externals:
+    - spec: sed@4.4
+      prefix: /usr
+    buildable: false
+  tar:
+    externals:
+    - spec: tar@1.30
+      prefix: /usr
+    buildable: false
+  texinfo:
+    externals:
+    - spec: texinfo@6.5
+      prefix: /usr
+    buildable: false
+  xz:
+    externals:
+    - spec: xz@5.2.3
+      prefix: /usr
+    buildable: false
+
+# system packages (manually added)
+  autoconf:
+    externals:
+    - spec: autoconf@2.69
+      prefix: /usr
+    buildable: false
+  autogen:
+    externals:
+    - spec: autogen@5.18.12
+      prefix: /usr
+    buildable: false
+  automake:
+    externals:
+    - spec: automake@1.15.1
+      prefix: /usr
+    buildable: false
+  binutils:
+    externals:
+    - spec: binutils@2.35.1
+      prefix: /usr
+    buildable: false
+  hwloc:
+    externals:
+    - spec: hwloc@2.0.0
+      prefix: /usr
+    buildable: false
+  libxml2:
+    externals:
+    - spec: libxml2@2.9.7
+      prefix: /usr
+    buildable: false
+  libpciaccess:
+    externals:
+    - spec: libpciaccess@0.14
+      prefix: /usr
+    buildable: false
+  ncurses:
+    externals:
+    - spec: ncurses@6.1
+      prefix: /usr
+# this one still has no devel
+#    - spec: ncurses@5.9
+#      prefix: /usr
+    buildable: false
+  numactl:
+    externals:
+    - spec: numactl@2.0.11
+      prefix: /usr
+    buildable: false
+  sqlite:
+    externals:
+    - spec: sqlite@3.28.0
+      prefix: /usr
+    buildable: false
+  curl:
+    externals:
+    - spec: curl@7.60.0
+      prefix: /usr
+    buildable: false
+  libfuse:
+    externals:
+    - spec: libfuse@2.9.7
+      prefix: /usr
+    buildable: false
+  lz4:
+    externals:
+    - spec: lz4@1.8.0
+      prefix: /usr
+    buildable: false
+  slurm:
+    externals:
+    - spec: slurm@20-11-5-1
+      prefix: /usr
+    buildable: false
+  wget:
+    externals:
+    - spec: wget@1.20.3
+      prefix: /usr
+    buildable: false
+  zlib:
+    externals:
+    - spec: zlib@1.2.11
+      prefix: /usr
+    buildable: false
+  zstd:
+    externals:
+    - spec: zstd@1.4.4
+      prefix: /usr
+    buildable: false
+  cryptsetup:
+    externals:
+    - spec: cryptsetup@2.0.6
+      prefix: /usr
+    buildable: false
+  libseccomp:
+    externals:
+    - spec: libseccomp@2.4.1
+      prefix: /usr
+    buildable: false
+  libgpg-error:
+    externals:
+    - spec: libgpg-error@1.29
+      prefix: /usr
+    buildable: false
+  popt:
+    externals:
+    - spec: popt@1.16
+      prefix: /usr
+    buildable: false
+  icu4c:
+    externals:
+    - spec: icu4c@60.2
+      prefix: /usr
+    buildable: false 
+  lvm2:
+    externals:
+    - spec: lvm2@2.02
+      prefix: /usr
+    buildable: false
+  blkid:
+    externals:
+    - spec: blkid@2.33
+      prefix: /usr
+    buildable: false
+  squashfs:
+    externals:
+    - spec: squashfs@4.3
+      prefix: /usr
+    buildable: false
+  shadow: 
+    externals:
+    - spec: shadow@4.6
+      prefix: /usr
+    buildable: false
+  util-linux:
+    externals:
+    - spec: util-linux@2.33
+      prefix: /usr
+    buildable: false
+  util-linux-uuid:
+    externals:
+    - spec: util-linux-uuid@2.33
+      prefix: /usr
+    buildable: false
+  time:
+    externals: 
+    - spec: time@1.9
+      prefix: /usr
+    buildable: false
+
+# cray packages (manually added)
+# adding prefixes as in NERSC Perlmutter configs
+  cray-mpich:
+    externals:
+    - spec: cray-mpich@8.1.7%gcc
+      modules:
+      - cray-mpich/8.1.7
+      - craype-network-ofi
+      prefix: /opt/cray/pe/mpich/8.1.7/ofi/gnu/9.1
+    - spec: cray-mpich@8.1.7%cce
+      modules:
+      - cray-mpich/8.1.7
+      - craype-network-ofi
+      prefix: /opt/cray/pe/mpich/8.1.7/ofi/cray/10.0
+    - spec: cray-mpich@8.1.7%aocc
+      modules:
+      - cray-mpich/8.1.7
+      - craype-network-ofi
+      prefix: /opt/cray/pe/mpich/8.1.7/ofi/aocc/3.0
+    buildable: false
+# Cray-LibSci: commenting out, as bug was identified (21 December 2021)
+#  cray-libsci:
+#    externals:
+#    - spec: cray-libsci@21.06.1.1%gcc
+#      modules:
+#      - cray-libsci/21.06.1.1
+#      prefix: /opt/cray/pe/libsci/21.06.1.1/gnu/9.1/x86_64
+#    - spec: cray-libsci@21.06.1.1%cce
+#      modules:
+#      - cray-libsci/21.06.1.1
+#      prefix: /opt/cray/pe/libsci/21.06.1.1/cray/9.0/x86_64
+#    - spec: cray-libsci@21.06.1.1%aocc
+#      modules:
+#      - cray-libsci/21.06.1.1
+#      prefix: /opt/cray/pe/libsci/21.06.1.1/aocc/2.0/x86_64
+#    buildable: false
+# Cray-FFTW: commenting out, as for Cray-Libsci
+#  cray-fftw:
+#    externals:
+#    - spec: cray-fftw@3.3.8.10 target=zen2
+#      modules:
+#      - craype-x86-rome
+#      - cray-fftw/3.3.8.10
+#      prefix: /opt/cray/pe/fftw/3.3.8.10/x86_rome
+#    - spec: cray-fftw@3.3.8.10 target=zen3
+#      modules:
+#      - craype-x86-milan
+#      - cray-fftw/3.3.8.10
+#      prefix: /opt/cray/pe/fftw/3.3.8.10/x86_milan
+#    buildable: false
+  # more cray
+  jemalloc:
+    externals:
+    - spec: jemalloc@5.1.0.4
+      modules:
+      - cray-jemalloc/5.1.0.4
+      prefix: /opt/cray/pe/jemalloc/5.1.0.4
+    buildable: false
+  xpmem:
+    externals:
+    - spec: xpmem@2.2.40
+      modules:
+      - xpmem/2.2.40-7.0.1.0_1.9__g1d7a24d.shasta
+      prefix: /opt/cray/xpmem/2.2.40-7.0.1.0_1.9__g1d7a24d.shasta
+    buildable: false
+  libfabric:
+    externals:
+    - spec: libfabric@1.11.0.3.66
+      modules:
+      - libfabric/1.11.0.3.66
+      prefix: /opt/cray/libfabric/1.11.0.3.66
+    buildable: false
+  ucx:
+    externals:
+    - spec: ucx@2.7.0-1
+      modules:
+      - cray-ucx/2.7.0-1
+      prefix: /opt/cray/pe/cray-ucx/2.7.0-1/ucx
+    buildable: false
+  papi:
+    externals:
+    - spec: papi@6.0.0.7
+      modules:
+      - papi/6.0.0.7
+      prefix: /opt/cray/pe/papi/6.0.0.7
+    buildable: false
+
+# cray hdf5
+# cray parallel-netcdf
+# cray netcdf
+# taken out, as cray is dropping support, and there are missing APIs any way
+# available in examples/joey_sprint/configs/packages.yaml up to commit 5c797eefebf8264cba1930c64c5fba7aa0ac6edd
+
+# python additions, based on loading cray-python and running pip list 
+# we have tried to use them as externals, but Spack does not use them correctly:
+# 1. if specified with ^python@3.9.7, concretisation always fail
+# 2. if specified without ^python@3.9.7, would be used also with the wrong python versions
+# therefore, taken out
+# available in examples/joey_sprint/configs/packages.yaml up to commit bfef602ee1e7f5ae7bdb5c6b5120f116df4bea18
+
