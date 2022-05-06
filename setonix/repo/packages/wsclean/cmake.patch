@@ -1,0 +1,19 @@
+--- CMakeLists.txt	2022-04-01 15:01:21.000000000 +0000
++++ CMakeLists.txt	2022-05-04 04:03:56.604643618 +0000
+@@ -169,6 +169,7 @@
+ endif(MPI_FOUND)
+ 
+ find_package(EveryBeam NO_MODULE QUIET)
++
+ if(${EVERYBEAM_FOUND})
+   if(${EVERYBEAM_VERSION} VERSION_LESS "0.3.0" OR ${EVERYBEAM_VERSION}
+                                                   VERSION_GREATER_EQUAL "0.4.0")
+@@ -193,7 +194,7 @@
+ find_package(IDGAPI NO_MODULE QUIET)
+ 
+ if(IDGAPI_FOUND)
+-  if(${IDGAPI_VERSION} VERSION_LESS "0.8.1" OR ${EVERYBEAM_VERSION}
++  if(${IDGAPI_VERSION} VERSION_LESS "0.8.1" OR ${IDGAPI_VERSION}
+                                                VERSION_GREATER_EQUAL "0.9")
+     message(STATUS "IDG version is incompatible")
+     message(

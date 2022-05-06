@@ -14,9 +14,10 @@ class Idg(CMakePackage):
     """
 
     homepage = "https://www.astron.nl/citt/IDG/"
-    url      = "https://git.astron.nl/RD/idg/-/archive/1.0.0/idg-1.0.0.tar.gz"
+    git      = "https://git.astron.nl/RD/idg.git"
 
-    version('1.0.0', sha256='b5194e42850d25a34bab8d176986b6c312bbded9a39035e23faad1bc72455263')
+    version('1.0.0', commit='3322756fb8b6e3bb1fe5293f3e07e40623ff8486')
+    version('0.8.1', comiit='a09f3c85094c592f9304fff4c31e920c7592c3c3')
 
     depends_on('boost')
     depends_on('fftw-api@3')

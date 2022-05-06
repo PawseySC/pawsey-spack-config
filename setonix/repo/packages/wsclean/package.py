@@ -17,19 +17,31 @@ class Wsclean(CMakePackage):
     """
 
     homepage = "https://wsclean.readthedocs.io/en/latest/"
-    url      = "https://sourceforge.net/projects/wsclean/files/wsclean-2.10/wsclean-2.10.1.tar.bz2"
+    git      = "https://gitlab.com/aroffringa/wsclean.git"
 
-    version('2.10.1', sha256='778edc1e73ce346a62063eef570054c268727a0fab47b999549d678a8b26ee1e')
-    version('2.9', sha256='d3e6d2de3cb923f5fa37638977c58bbe56a9db79ac2523ef0d0dbb3c1afe065d')
+    version('master', branch='master')
+    version('3.1', commit='ea18d0139e35050d58b2758cf5015539f3e2d870') 
+    version('3.0.1', commit='1a4e5928689b23d3034549c2541829427d91fa8e')
+    version('3.0', commit='9ee587c576caad779dc127bb3f83858513679333')
+    version('2.10.1', commit='6567e4891467c23a27391b49273b3fbb94c45831')
+    version('2.10', commit='7b82d8c19ccb09cf2d7872a338d8266d09dd0481')
+
+    variant('idg', default=True, description='To enable Image Domain Gridder (a fast GPU-enabled gridder) for version >=3')
+    variant('everybeam', default=False, description='To apply primary beams for version >=3')
+    variant('mpi', default=False, description='To enable distributed mode')
 
     depends_on('chgcentre', type='build')
     depends_on('casacore')
     depends_on('fftw-api@3')
-    depends_on('idg')
     depends_on('gsl')
     depends_on('cfitsio')
-
-    def url_for_version(self, version):
-        version_numbers = str(version).split('.')
-        return ("https://sourceforge.net/projects/wsclean/files/wsclean-{0}/wsclean-{1}.tar.bz2".format(version_numbers[0]+'.'+version_numbers[1], version))
+    depends_on('idg@0.8.1', when='@3.0 +idg')
+    depends_on('idg@1.0.0', when='@3.1 +idg')
+    depends_on('everybeam@0.2.0', when='@3.0 +everybeam')
+    depends_on('everybeam@0.3.1', when='@3.1 +everybeam')
+    depends_on('mpi', when='+mpi')
+    depends_on('blas', when='@3.0:')
+    depends_on('doxygen', when='@3.0:')
+    depends_on('python', when='@3.0:')
+    patch('cmake.patch', when='@3.0:')
 
