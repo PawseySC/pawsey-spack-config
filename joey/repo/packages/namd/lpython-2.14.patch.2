@@ -1,0 +1,13 @@
+diff --git a/config b/config
+index fb3d5f42..8e455d37 100755
+--- a/config
++++ b/config
+@@ -501,7 +501,7 @@ function error_exists {
+       echo "Using $PYTHON_CONFIG to configure Python."
+       PYTHON_PREFIX=$($PYTHON_CONFIG --prefix)
+       PYTHON_INCFLAGS=$($PYTHON_CONFIG --includes)
+-      PYTHON_LDFLAGS=$($PYTHON_CONFIG --ldflags)
++      PYTHON_LDFLAGS=$($PYTHON_CONFIG --embed --ldflags)
+       if ! echo "$PYTHON_LDFLAGS" | grep -q -- '-L'; then
+         echo "$PYTHON_CONFIG did not return a -L flag: using Anaconda?"
+         if [ -d "$PYTHON_PREFIX/lib" ]; then
