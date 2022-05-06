@@ -168,8 +168,14 @@ modules:
         py-emcee: 'astro-applications/{name}/{version}'
         chgcentre: 'astro-applications/{name}/{version}'
         idg: 'astro-applications/{name}/{version}'
+        everybeam: 'astro-applications/{name}/{version}'
         wcstools: 'astro-applications/{name}/{version}'
-        wsclean: 'astro-applications/{name}/{version}'
+        "wsclean +mpi ~idg ~everybeam": 'astro-applications/{name}/{version}-mpi'
+        "wsclean +mpi +idg ~everybeam": 'astro-applications/{name}/{version}-idg-mpi'
+        "wsclean +mpi +idg +everybeam": 'astro-applications/{name}/{version}-idg-everybeam-mpi'
+        "wsclean ~mpi ~idg ~everybeam": 'astro-applications/{name}/{version}'
+        "wsclean ~mpi +idg ~everybeam": 'astro-applications/{name}/{version}-idg'
+        "wsclean ~mpi +idg +everybeam": 'astro-applications/{name}/{version}-idg-everybeam'
 
         #performance tests 
         "hpl ~openmp": 'benchmarking/{name}/{version}'
