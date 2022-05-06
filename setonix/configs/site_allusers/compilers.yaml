@@ -33,7 +33,7 @@ compilers:
 
 # gnu compilers 
 - compiler:
-    spec: gcc@10.3.0
+    spec: gcc@11.2.0
     paths:
       cc: cc
       cxx: CC
@@ -47,52 +47,18 @@ compilers:
     target: any
     modules:
     - PrgEnv-gnu
-    - gcc/10.3.0
+    - gcc/11.2.0
     - craype
     - craype-x86-rome
     - craype-network-ofi
     environment: {}
     extra_rpaths: []
-# TODO: to be added back, and updated, 
-# when corresponding Lmod modules are available
-# - compiler:
-#     spec: gcc@9.3.0
-#     paths:
-#       cc: cc
-#       cxx: CC
-#       f77: ftn
-#       fc: ftn
-#     flags: {}
-#     operating_system: sles15
-#     target: any
-#     modules:
-#     - PrgEnv-gnu
-#     - gcc/9.3.0
-#     - craype-network-ofi
-#     environment: {}
-#     extra_rpaths: []
-# - compiler:
-#     spec: gcc@8.1.0
-#     paths:
-#       cc: cc
-#       cxx: CC
-#       f77: ftn
-#       fc: ftn
-#     flags: {}
-#     operating_system: sles15
-#     target: any
-#     modules:
-#     - PrgEnv-gnu
-#     - gcc/8.1.0
-#     - craype-network-ofi
-#     environment: {}
-#     extra_rpaths: []
 
 # similar to above but has debugging flags 
 # these must be defined as a different version
 # by convention we add debug to the name
 - compiler:
-    spec: gcc@10.3.0debug
+    spec: gcc@11.2.0debug
     paths:
       cc: cc
       cxx: CC
@@ -106,7 +72,7 @@ compilers:
     target: any
     modules:
     - PrgEnv-gnu
-    - gcc/10.3.0
+    - gcc/11.2.0
     - craype
     - craype-x86-rome
     - craype-network-ofi
@@ -115,7 +81,7 @@ compilers:
 
 # cray compilers 
 - compiler:
-    spec: cce@12.0.1
+    spec: cce@13.0.2
     paths:
       cc: cc
       cxx: CC
@@ -129,7 +95,7 @@ compilers:
     target: any
     modules:
     - PrgEnv-cray
-    - cce/12.0.1
+    - cce/13.0.2
     - craype
     - craype-x86-rome
     - craype-network-ofi
@@ -138,7 +104,7 @@ compilers:
 
 # amd compilers 
 - compiler:
-    spec: aocc@3.0.0
+    spec: aocc@3.2.0
     paths:
       cc: cc
       cxx: CC
@@ -152,7 +118,7 @@ compilers:
     target: any
     modules:
     - PrgEnv-aocc
-    - aocc/3.0.0
+    - aocc/3.2.0
     - craype
     - craype-x86-rome
     - craype-network-ofi
