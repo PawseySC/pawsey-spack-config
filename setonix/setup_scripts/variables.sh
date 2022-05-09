@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # EDIT at each rebuild of the software stack
-date_tag="2022.01"
+date_tag="2022.05"
 # if you change this, you need to propagate also in other places (mostly Spack config yamls)
 root_dir="/software/setonix/${date_tag}"
 
 # tool versions
 spack_version="0.17.0" # the prefix "v" is added in setup_spack.sh
 singularity_version="3.8.6" # has to match the version in the Spack env yaml
-shpc_version="0.0.51"
+shpc_version="0.0.53"
 
 # python (and py tools) versions
 python_name="python"
