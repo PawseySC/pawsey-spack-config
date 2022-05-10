@@ -46,7 +46,7 @@ for _ in pairs(psc_sw_env_module_categories) do num_categories = num_categories 
 
 -- Query CPU architecture
 local psc_sw_env_host_cpu = subprocess("lscpu | grep 'Model name'")
-if ( string.match(psc_sw_env_host_cpu, "7763") ~= nil ) then
+if ( string.match(psc_sw_env_host_cpu, "7..3") ~= nil ) then
   arch = "zen3"
 else
   arch = "zen2"
