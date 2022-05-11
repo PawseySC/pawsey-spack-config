@@ -1,0 +1,40 @@
+compilers:
+- compiler:
+    spec: gcc@9.3.0
+    paths:
+      cc: /opt/gcc/9.3.0/snos/bin/gcc
+      cxx: /opt/gcc/9.3.0/snos/bin/g++
+      f77: /opt/gcc/9.3.0/snos/bin/gfortran
+      fc: /opt/gcc/9.3.0/snos/bin/gfortran
+    flags: 
+      cflags: -O3
+      cppflags: -O3
+      fflags: -O3 -fallow-argument-mismatch
+    operating_system: centos8
+    target: any
+    modules:
+    - gcc/9.3.0
+    environment: {}
+    extra_rpaths: []
+- compiler:
+    spec: gcc@9.3.0prgenv
+    paths:
+      cc: cc
+      cxx: CC
+      f77: ftn
+      fc: ftn
+    flags: 
+      cflags: -O3
+      cppflags: -O3
+      fflags: -O3 -fallow-argument-mismatch
+    operating_system: centos8
+    target: any
+    modules:
+    - PrgEnv-gnu
+    - gcc/9.3.0
+    - craype
+    - craype-x86-rome
+    - craype-accel-amd-gfx908
+    - craype-network-ofi
+    environment: {}
+    extra_rpaths: []

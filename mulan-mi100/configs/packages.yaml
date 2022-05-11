@@ -1,0 +1,32 @@
+packages:
+  all:
+    compiler: [ gcc@9.3.0 ]
+
+# bug: issues when GCC prgenv is used
+#    providers:
+#      mpi: [ cray-mpich ]
+#  mpi:
+#    buildable: false
+
+  cce:
+    buildable: false
+  gcc:
+    buildable: false
+  aocc:
+    buildable: false
+  intel:
+    buildable: false
+  pgi:
+    buildable: false
+
+  cmake:
+    version: [3.21.4]
+
+  cray-mpich:
+    externals:
+    - spec: cray-mpich@8.1.9%gcc
+      modules:
+# bug: cannot be found when GCC prgenv is used
+#      - cray-mpich/8.1.9
+      - craype-network-ofi
+      prefix: /opt/cray/pe/mpich/8.1.9/ofi/gnu/9.1
