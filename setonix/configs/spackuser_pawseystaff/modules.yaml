@@ -178,9 +178,9 @@ modules:
         "wsclean ~mpi +idg +everybeam": 'astro-applications/{name}/{version}-idg-everybeam'
 
         #performance tests 
-        "hpl ~openmp": 'benchmarking/{name}/{version}'
-        "hpl +openmp": 'benchmarking/{name}/{version}+openmp'
-        osu-micro-benchmarks: 'benchmarking/{name}/{version}'
+        "hpl ~openmp": 'utilities/{name}/{version}'
+        "hpl +openmp": 'utilities/{name}/{version}+openmp'
+        osu-micro-benchmarks: 'utilities/{name}/{version}'
 
         # by default all others are hidden
         # PJE: Marco had no hash for dependencies 

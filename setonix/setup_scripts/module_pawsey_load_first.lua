@@ -37,7 +37,6 @@ local psc_sw_env_module_categories = {
   "utilities",
   "visualisation",
   "python-packages",
-  "benchmarking",
   "dependencies"
 }
 -- Count how many categories

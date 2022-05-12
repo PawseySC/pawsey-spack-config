@@ -84,7 +84,6 @@ string_list=("astro-applications/" \
 "utilities/" \
 "visualisation/" \
 "python-packages/" \
-"benchmarking/" \
 "dependencies/")
 
 for s in ${string_list[@]}

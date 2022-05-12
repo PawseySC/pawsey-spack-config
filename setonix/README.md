@@ -63,7 +63,6 @@ In order to minimise edits in users' home directories, we're putting:
   - `utilities/`
   - `visualisation/`
   - `python-packages/`
-  - `benchmarking/`
   - `dependencies/`
 * Pawsey custom builds (with compiler/arch tree)
   - `custom/modules/`
