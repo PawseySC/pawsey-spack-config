@@ -16,7 +16,7 @@ spack:
   - matrix:
     - [cmake@3.21.4]
 # TODO: check on Setonix that CCE and AOCC are actually able to build this
-    - ['%gcc@11.2.0', '%cce@12.0.1', '%aocc@3.0.0']
+    - ['%gcc@11.2.0', '%cce@13.0.2', '%aocc@3.2.0']
     - ['target=zen3']
   - matrix:
     - [$packages]
