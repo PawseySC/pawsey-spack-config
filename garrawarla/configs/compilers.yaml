@@ -1,0 +1,42 @@
+compilers:
+- compiler:
+    spec: gcc@4.8.5
+    paths:
+      cc: /usr/bin/gcc
+      cxx: /usr/bin/g++
+      f77: /usr/bin/gfortran
+      fc: /usr/bin/gfortran
+    operating_system: sles12
+    target: x86_64
+    modules: []
+    environment: {}
+    extra_rpaths: []
+    flags: {}
+- compiler:
+    spec: gcc@8.3.0
+    paths:
+      cc: gcc
+      cxx: g++
+      f77: gfortran
+      fc: gfortran
+    operating_system: sles12
+    target: x86_64
+    modules: 
+      - gcc/8.3.0
+    environment: {}
+    extra_rpaths: []
+    flags: {}
+- compiler:
+    spec: gcc@10.1.0
+    paths:
+      cc: gcc
+      cxx: g++
+      f77: gfortran
+      fc: gfortran
+    operating_system: sles12
+    target: x86_64
+    modules: 
+      - gcc/10.1.0
+    environment: {}
+    extra_rpaths: []
+    flags: {}

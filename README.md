@@ -12,6 +12,12 @@ See `README.md` in there for further information.
 
 ## Other setups
 
+* `joey/`: test deployment for the Setonix test system
+* Current Pawsey systems
+  * `askapingest/`
+  * `garrawarla/`
+  * `magnus/`
+  * `topaz/`
+  * `zeus/`
 * `examples/`: deployment examples and tests
-* `examples/joey_sprint/`: team sprints on Joey
-
+* `deprecated/`: legacy deployments
