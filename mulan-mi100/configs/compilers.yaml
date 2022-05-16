@@ -1,5 +1,24 @@
 compilers:
 - compiler:
+    spec: gcc@10.3.0
+    paths:
+      cc: /opt/gcc/10.3.0/snos/bin/gcc
+      cxx: /opt/gcc/10.3.0/snos/bin/g++
+      f77: /opt/gcc/10.3.0/snos/bin/gfortran
+      fc: /opt/gcc/10.3.0/snos/bin/gfortran
+    flags:
+      cflags: -O3
+      cppflags: -O3
+      fflags: -O3 -fallow-argument-mismatch
+    operating_system: centos8
+    target: any
+    modules:
+    - gcc/10.3.0
+    environment:
+      prepend_path:
+        LIBRARY_PATH: /opt/gcc/10.3.0/snos/lib64
+    extra_rpaths: []
+- compiler:
     spec: gcc@9.3.0
     paths:
       cc: /opt/gcc/9.3.0/snos/bin/gcc
@@ -14,7 +33,9 @@ compilers:
     target: any
     modules:
     - gcc/9.3.0
-    environment: {}
+    environment:
+      prepend_path:
+        LIBRARY_PATH: /opt/gcc/9.3.0/snos/lib64
     extra_rpaths: []
 - compiler:
     spec: gcc@9.3.0prgenv
