@@ -26,6 +26,12 @@ packages:
       prefix: /pawsey/mulan/raw-builds/cmake-3.21.4
     buildable: false
 
+  java:
+    externals:
+    - spec: openjdk@11.0.15_10
+      prefix: /pawsey/mulan/raw-builds/openjdk-11.0.15_10/jdk-11.0.15+10
+    buildable: true
+
   rocm-cmake:
     version: [4.5.0]
 
