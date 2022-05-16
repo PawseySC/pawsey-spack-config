@@ -1,4 +1,5 @@
 compilers:
+
 - compiler:
     spec: gcc@10.3.0
     paths:
@@ -18,6 +19,7 @@ compilers:
       prepend_path:
         LIBRARY_PATH: /opt/gcc/10.3.0/snos/lib64
     extra_rpaths: []
+
 - compiler:
     spec: gcc@9.3.0
     paths:
@@ -37,6 +39,7 @@ compilers:
       prepend_path:
         LIBRARY_PATH: /opt/gcc/9.3.0/snos/lib64
     extra_rpaths: []
+
 - compiler:
     spec: gcc@9.3.0prgenv
     paths:
@@ -58,4 +61,25 @@ compilers:
     - craype-accel-amd-gfx908
     - craype-network-ofi
     environment: {}
+    extra_rpaths: []
+
+- compiler:
+    spec: aocc@3.2.0
+    paths:
+      cc: /pawsey/mulan/raw-builds/CLANG/AOCC-3.2/aocc-compiler-3.2.0/bin/clang
+      cxx: /pawsey/mulan/raw-builds/CLANG/AOCC-3.2/aocc-compiler-3.2.0/bin/clang++
+      f77: /pawsey/mulan/raw-builds/CLANG/AOCC-3.2/aocc-compiler-3.2.0/bin/flang
+      fc: /pawsey/mulan/raw-builds/CLANG/AOCC-3.2/aocc-compiler-3.2.0/bin/flang
+    flags:
+      cflags: -O3
+      cppflags: -O3
+      fflags: -O3 -fallow-argument-mismatch
+    operating_system: centos8
+    target: any
+    modules: []
+    environment:
+      prepend_path:
+        LIBRARY_PATH: /pawsey/mulan/raw-builds/CLANG/AOCC-3.2/aocc-compiler-3.2.0/lib:/pawsey/mulan/raw-builds/CLANG/AOCC-3.2/aocc-compiler-3.2.0/lib32:/pawsey/mulan/raw-builds/GCC/11.1.0/lib64:/usr/lib64:/usr/lib
+        LD_LIBRARY_PATH: /pawsey/mulan/raw-builds/CLANG/AOCC-3.2/aocc-compiler-3.2.0/lib:/pawsey/mulan/raw-builds/CLANG/AOCC-3.2/aocc-compiler-3.2.0/lib32:/pawsey/mulan/raw-builds/GCC/11.1.0/lib64:/usr/lib64:/usr/lib
+        CPATH: /pawsey/mulan/raw-builds/CLANG/AOCC-3.2/aocc-compiler-3.2.0/include
     extra_rpaths: []

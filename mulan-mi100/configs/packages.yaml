@@ -1,10 +1,10 @@
 packages:
   all:
-    compiler: [ gcc@10.3.0 ]
+    compiler: [ gcc@10.3.0, aocc@3.2.0 ]
 
 # bug: issues when GCC prgenv is used
 #    providers:
-#      mpi: [ cray-mpich ]
+#      mpi: [ cray-mpich, mpich ]
 #  mpi:
 #    buildable: false
 
@@ -26,22 +26,22 @@ packages:
       prefix: /pawsey/mulan/raw-builds/cmake-3.21.4
     buildable: false
 
-#  llvm-amdgpu:
-#    externals:
-#    - spec: llvm-amdgpu@4.5.0
-#      prefix: /opt/rocm-4.5.0/llvm
-#    buildable: false
   rocm-cmake:
     version: [4.5.0]
 
   cray-mpich:
     externals:
-    - spec: cray-mpich@8.1.9%gcc
+    - spec: cray-mpich@8.1.9 %gcc
       modules:
 # bug: cannot be found when GCC prgenv is used
 #      - cray-mpich/8.1.9
       - craype-network-ofi
       prefix: /opt/cray/pe/mpich/8.1.9/ofi/gnu/9.1
+
+  mpich:
+    externals:
+    - spec: mpich@3.4.1 %aocc@3.2.0
+      prefix: /pawsey/mulan/raw-builds/CLANG/AOCC-3.2
 
 # rocm packages under /opt/rocm-4.5.0
 # from https://github.com/spack/spack/blob/develop/lib/spack/spack/build_systems/rocm.py
