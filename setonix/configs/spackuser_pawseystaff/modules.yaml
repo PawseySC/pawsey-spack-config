@@ -182,6 +182,10 @@ modules:
         "hpl +openmp": 'benchmarking/{name}/{version}+openmp'
         osu-micro-benchmarks: 'benchmarking/{name}/{version}'
 
+        #developer tools
+        caliper: 'developer-tools/{name}/{version}'
+        hpctoolkit: 'developer-tools/{name}/{version}'
+
         # by default all others are hidden
         # PJE: Marco had no hash for dependencies 
         # but just to be careful to avoid name conflicts
