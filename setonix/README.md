@@ -55,22 +55,23 @@ In order to minimise edits in users' home directories, we're putting:
 ### Module categories in use
 
 * Spack (with compiler/arch tree)
-  - `astro-applications/`
-  - `bio-applications/`
-  - `applications/`
-  - `libraries/`
-  - `programming-languages/`
-  - `utilities/`
-  - `visualisation/`
-  - `python-packages/`
-  - `benchmarking/`
-  - `dependencies/`
+  - `astro-applications`
+  - `bio-applications`
+  - `applications`
+  - `libraries`
+  - `programming-languages`
+  - `utilities`
+  - `visualisation`
+  - `python-packages`
+  - `benchmarking`
+  - `developer-tools`
+  - `dependencies`
 * Pawsey custom builds (with compiler/arch tree)
-  - `custom/modules/`
+  - `custom/modules`
 * Pawsey utilities (without compiler/arch tree: Spack, SHPC, utility scripts)
-  - `pawsey/modules/`
+  - `pawsey/modules`
 * SHPC containers modules (without compiler/arch tree)
-  - `containers/modules/`
+  - `containers/modules`
 
 
 ### To-do list (incomplete)
