@@ -73,7 +73,7 @@ compilers:
     flags:
       cflags: -O3
       cppflags: -O3
-      fflags: -O3 -fallow-argument-mismatch
+      fflags: -O3
     operating_system: centos8
     target: any
     modules: []
