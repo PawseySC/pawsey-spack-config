@@ -185,6 +185,7 @@ modules:
         #developer tools
         caliper: 'developer-tools/{name}/{version}'
         hpctoolkit: 'developer-tools/{name}/{version}'
+        py-hatchet: 'developer-tools/{name}/{version}'
 
         # by default all others are hidden
         # PJE: Marco had no hash for dependencies 
