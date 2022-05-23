@@ -1,0 +1,225 @@
+--- /home/pelahi/tmp/build_stage/spack-stage-amber-20-32owemucowv2n7wep65uirrn6qcuwvcz/spack-src/AmberTools/src/configure2	2022-02-11 16:22:21.000000000 +0800
++++ /home/pelahi/amber20_src/AmberTools/src/configure2	2022-02-11 16:35:52.000000000 +0800
+@@ -191,6 +191,12 @@
+                      have both C and Fortran interfaces.  Required for Cray
+                      compilers.
+ 
++      --with-netcdf-c </path/to/netcdf-c>
++                     Specify an external NetCDF C build to use. 
++
++      --with-netcdf-fortran </path/to/netcdf-fortran>
++                     Specify an external NetCDF Fortran build to use. 
++
+       -netcdfstatic  Force static linking to the external NetCDF specified via
+                      the --with-netcdf option.
+ 
+@@ -510,6 +516,8 @@
+ mpinab=''
+ mpi='no'
+ netcdf_dir=''
++netcdfc_dir=''
++netcdff_dir=''
+ netcdf_flag=''
+ netcdfstatic='no'
+ pmemd_gem='no'
+@@ -608,6 +616,8 @@
+         --skip-python)    skippython='yes' ;;
+         --with-python)    shift; python="$1";;
+         --with-netcdf)    shift; netcdf_dir="$1";;
++        --with-netcdf-c)  shift; netcdfc_dir="$1";;
++        --with-netcdf-fortran)  shift; netcdff_dir="$1";;
+         --with-pnetcdf)   shift; pnetcdf_dir="$1" ;;
+         --python-install) shift; python_install="$1";;
+         --miniconda)      answer='y';;
+@@ -1251,24 +1261,40 @@
+     sm30flags='-gencode arch=compute_30,code=sm_30'
+ 
+     cudaversion=`$nvcc --version | grep 'release' | cut -d' ' -f5 | cut -d',' -f1`
+-    if [ "$cudaversion" = "9.0" -o "$cudaversion" = "9.1" -o "$cudaversion" = "9.2" -o \
+-         "$cudaversion" = "10.0" -o "$cudaversion" = "10.1" -o "$cudaversion" = "10.2" ]; then
++    if [ "$cudaversion" = "11.0" -o "$cudaversion" = "11.1" ]; then
++      # Implement the standard, not warp synchronous, compilation
++      sm80flags='-gencode arch=compute_80,code=sm_80'
++      sm75flags='-gencode arch=compute_75,code=sm_75'
++      sm70flags='-gencode arch=compute_70,code=sm_70'
++      echo "CUDA Version $cudaversion detected"
++      echo "Configuring for SM5.0, SM5.2, SM5.3, SM6.0, SM6.1, SM7.0, SM7.5 and SM8.0"
++      nvccflags="$sm50flags $sm52flags $sm53flags $sm60flags $sm61flags $sm70flags $sm75flags $sm80flags -Wno-deprecated-declarations"
++
++    elif [ "$cudaversion" = "10.0" -o "$cudaversion" = "10.1" -o "$cudaversion" = "10.2" ]; then
++      echo "CUDA Version $cudaversion detected"
++      echo "Configuring for SM3.0, SM3.5, SM3.7, SM5.0, SM5.2, SM5.3, SM6.0, SM6.1, SM7.0 and SM7.5"
++      nvccflags="$sm30flags $sm35flags $sm37flags $sm50flags $sm52flags $sm53flags $sm60flags $sm61flags $sm70flags $sm75flags -Wno-deprecated-declarations"
++
++    elif [ "$cudaversion" = "9.0" -o "$cudaversion" = "9.1" -o "$cudaversion" = "9.2" ]; then
+       echo "CUDA Version $cudaversion detected"
+       echo "Configuring for SM3.0, SM3.5, SM3.7, SM5.0, SM5.2, SM5.3, SM6.0, SM6.1 and SM7.0"
+       nvccflags="$sm30flags $sm35flags $sm37flags $sm50flags $sm52flags $sm53flags $sm60flags $sm61flags $sm70flags -Wno-deprecated-declarations"
++
+     elif [ "$cudaversion" = "8.0" ]; then
+       echo "CUDA Version $cudaversion detected"
+       echo "Configuring for SM3.0, SM3.5, SM3.7, SM5.0, SM5.2, SM5.3, SM6.0 and SM6.1"
+       echo "BE AWARE: CUDA 8.0 does not support V100, GV100, Titan-V or later GPUs."
+       nvccflags="$sm30flags $sm35flags $sm37flags $sm50flags $sm52flags $sm53flags $sm60flags $sm61flags"
++
+     elif [ "$cudaversion" = "7.5" ]; then
+       echo "CUDA Version $cudaversion detected"
+       echo "Configuring for SM3.0, SM3.5, SM3.7, SM5.0, SM5.2 and SM5.3"
+       echo "BE AWARE: CUDA 7.5 does not support GTX-1080, Titan-XP, DGX-1, V100 or other Pascal/Volta based or later GPUs."
+       nvccflags="$sm30flags  $sm35flags $sm37flags $sm50flags $sm52flags $sm53flags"
++
+     else
+       echo "Error: Unsupported CUDA version $cudaversion detected."
+-      echo "       Amber requires CUDA version 7.5, 8.0, 9.0-9.2, or 10.0-10.2"
++      echo "       Amber requires CUDA version 7.5, 8.0, 9.0-9.2, 10.0-10.2 or 11.0-11.1"
+       exit 1
+     fi
+     nvcc="$nvcc $nvccflags"
+@@ -2280,16 +2306,17 @@
+     fi
+ 
+     # The bundled NetCDF will not build with cray compilers. Require external.
+-    if [ "$bintraj" = 'yes' -a -z "$netcdf_dir" ] ; then
++    if [ "$bintraj" = 'yes' -a -z "$netcdfc_dir" -a -z "$netcdff_dir" ] ; then
+       echo "Error: Bundled NetCDF cannot be used with cray compilers."
+-      echo "       Please re-run configure with the '--with-netcdf <DIR>' flag to"
+-      echo "       specify system NetCDF to use. On cray systems you can usually"
+-      echo "       load the system NetCDF with 'module load cray-netcdf' or"
+-      echo "       'module load netcdf'."
++      echo "       Please re-run configure with the '--with-netcdf-c <DIR>' flag to"
++      echo "       specify system NetCDF C to use. "
++      echo "       Please re-run configure with the '--with-netcdf-fortran <DIR>' flag to"
++      echo "       specify system NetCDF Fortran to use. "
+       exit 1
+     fi
+     # For some reason if static linking of NetCDF is not forced you end up
+     # with lots of missing symbols.
++    # looks like netcdfstatic is also used to indicate use external netcdf
+     netcdfstatic='yes'
+ 
+     # Currently xleap on cray will not build due to errors like
+@@ -2902,11 +2929,12 @@
+   cflags="$cflags -DBINTRAJ"
+   pmemd_coptflags="$pmemd_coptflags -DBINTRAJ"
+   fppflags="$fppflags -DBINTRAJ"
+-  if [ "$netcdf_dir" = '' ]; then
++  if [ "$netcdf_dir" = '' -a "$netcdfc_dir" = '' -a "$netcdff_dir" = '' ]; then
+     # Use bundled NetCDF library.
+     if [ "$netcdfstatic" != 'no' ] ; then
+       echo "Error: -netcdfstatic requires an external NetCDF specified via"
+       echo "       the --with-netcdf option."
++      echo "       Or --with-netcdf-c and --with-netcdf-fortran option."
+       exit 1
+     fi
+     # Initially set full paths for use with test_netcdf_compile.
+@@ -3044,38 +3072,75 @@
+     netcdf="\$(INCDIR)/netcdf.mod"
+   else
+     # A NetCDF directory was specified. Check that library exists and compiles
+-    printf "\tUsing external NetCDF in '$netcdf_dir'\n"
+-    netcdfinc="-I"$netcdf_dir"/include"
+-    if [ "${netcdf_dir}" != '/usr' -a "$netcdf_dir" != '/usr/' ]; then
+-        netcdf_flag="-L${netcdf_dir}/lib $netcdf_flag"
+-    fi
+-    netcdf=$netcdf_dir"/include/netcdf.mod"
+-    if [ "$netcdfstatic" = 'no' ] ; then
+-      if [ "${netcdf_dir}" != '/usr' -a "${netcdf_dir}" != '/usr/' ]; then
+-          netcdfflagc="-L${netcdf_dir}/lib -lnetcdf"
+-          netcdfflagf="-L${netcdf_dir}/lib -lnetcdff -lnetcdf"
+-      else
+-          netcdfflagc="-lnetcdf"
+-          netcdfflagf="-lnetcdff -lnetcdf"
+-      fi
+-    else # Force static linking to netcdf
+-      printf "\tForcing static linking to external NetCDF\n"
+-      netcdfflagc=$netcdf_dir"/lib/libnetcdf.a"
+-      if [ ! -e "$netcdfflagc" ]; then
+-        echo "Error: '$netcdfflagc' not found."
+-        exit 1
++    printf "\tUsing external NetCDF in '$netcdf_dir' or '$netcdfc_dir' with '$netcdff_dir' \n"
++
++    # if individual netcdfc and fortran passed 
++    if [ "$netcdf_dir" = '' ]
++      netcdfcinc="-I"$netcdfc_dir"/include"
++      netcdffinc="-I"$netcdff_dir"/include"
++      # netcdf c and fortran directories passed
++      if [ "${netcdfc_dir}" != '/usr' -a "$netcdfc_dir" != '/usr/' ]; then
++          netcdf_flag="-L${netcdfc_dir}/lib $netcdf_flag"
++      fi
++      if [ "${netcdff_dir}" != '/usr' -a "$netcdff_dir" != '/usr/' ]; then
++          netcdf_flag="-L${netcdff_dir}/lib $netcdf_flag"
++      fi
++      netcdf=$netcdff_dir"/include/netcdf.mod"
++      if [ "$netcdfstatic" = 'no' ] ; then
++        if [ "${netcdfc_dir}" != '/usr' -a "${netcdfc_dir}" != '/usr/' ]; then
++            netcdfflagc="-L${netcdfc_dir}/lib -lnetcdf"
++            netcdfflagf="-L${netcdff_dir}/lib -lnetcdff -lnetcdf"
++        else
++            netcdfflagc="-lnetcdf"
++            netcdfflagf="-lnetcdff -lnetcdf"
++        fi
++      else # Force static linking to netcdf
++        printf "\tForcing static linking to external NetCDF\n"
++        netcdfflagc=$netcdfc_dir"/lib/libnetcdf.a"
++        if [ ! -e "$netcdfflagc" ]; then
++          echo "Error: '$netcdfflagc' not found."
++          exit 1
++        fi
++        netcdfflagf=$netcdff_dir"/lib/libnetcdff.a"
++        if [ ! -e "$netcdfflagf" ]; then
++          echo "Error: '$netcdfflagf' not found."
++          exit 1
++        fi
++        netcdfflagf="$netcdfflagf $netcdfflagc"
+       fi
+-      netcdfflagf=$netcdf_dir"/lib/libnetcdff.a"
+-      if [ ! -e "$netcdfflagf" ]; then
+-        echo "Error: '$netcdfflagf' not found."
+-        exit 1
++    else 
++      netcdfinc="-I"$netcdf_dir"/include"
++      if [ "${netcdf_dir}" != '/usr' -a "$netcdf_dir" != '/usr/' ]; then
++          netcdf_flag="-L${netcdf_dir}/lib $netcdf_flag"
++      fi
++      netcdf=$netcdf_dir"/include/netcdf.mod"
++      if [ "$netcdfstatic" = 'no' ] ; then
++        if [ "${netcdf_dir}" != '/usr' -a "${netcdf_dir}" != '/usr/' ]; then
++            netcdfflagc="-L${netcdf_dir}/lib -lnetcdf"
++            netcdfflagf="-L${netcdf_dir}/lib -lnetcdff -lnetcdf"
++        else
++            netcdfflagc="-lnetcdf"
++            netcdfflagf="-lnetcdff -lnetcdf"
++        fi
++      else # Force static linking to netcdf
++        printf "\tForcing static linking to external NetCDF\n"
++        netcdfflagc=$netcdf_dir"/lib/libnetcdf.a"
++        if [ ! -e "$netcdfflagc" ]; then
++          echo "Error: '$netcdfflagc' not found."
++          exit 1
++        fi
++        netcdfflagf=$netcdf_dir"/lib/libnetcdff.a"
++        if [ ! -e "$netcdfflagf" ]; then
++          echo "Error: '$netcdfflagf' not found."
++          exit 1
++        fi
++        netcdfflagf="$netcdfflagf $netcdfflagc"
+       fi
+-      netcdfflagf="$netcdfflagf $netcdfflagc"
+     fi
+     # Test netcdf compilation
+     test_netcdf_compile verbose
+     if [ $? -gt 0 ]; then
+-      echo "Error: Could not compile using NetCDF in '$netcdf_dir'"
++      echo "Error: Could not compile using NetCDF in '$netcdf_dir' or '$netcdfc_dir' and '$netcdff_dir'"
+       exit 1
+     fi
+     echo "OK"
+@@ -3732,6 +3797,8 @@
+ fi
+ if [ ! -z "$netcdf_dir" ] ; then
+   CPPTRAJOPTS="$CPPTRAJOPTS --with-netcdf=$netcdf_dir"
++elif [ ! -z "$netcdfc_dir" ]; then 
++  CPPTRAJOPTS="$CPPTRAJOPTS --with-netcdf-c=$netcdfc_dir --with-netcdf-fortran=$netcdff_dir"
+ else
+   CPPTRAJOPTS="$CPPTRAJOPTS --with-netcdf=$CPPTRAJHOME"
+ fi
