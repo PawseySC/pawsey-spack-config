@@ -17,9 +17,9 @@ setuptools_version="57.4.0" # has to match the version in the Spack env yaml
 pip_version="21.1.2" # has to match the version in the Spack env yaml
 
 # compiler versions (needed for module trees with compiler dependency)
-gcc_version="10.3.0"
-cce_version="12.0.1"
-aocc_version="3.0.0"
+gcc_version="11.2.0"
+cce_version="13.0.2"
+aocc_version="3.2.0"
 # architecture of login/compute nodes (needed by Singularity symlink module)
 cpu_arch="zen3"
 

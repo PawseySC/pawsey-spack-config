@@ -22,9 +22,9 @@ local psc_sw_env_utilities_modules_dir = "pawsey/modules" -- "UTILITIES_MODULES_
 local psc_sw_env_shpc_containers_modules_dir = "containers/modules" -- "SHPC_CONTAINERS_MODULES_DIR"
 -- 
 -- These need to be checked at every OS update
-local psc_sw_env_gcc_version  = "10.3.0" -- "GCC_VERSION"
-local psc_sw_env_cce_version  = "12.0.1" -- "CCE_VERSION"
-local psc_sw_env_aocc_version = "3.0.0" -- "AOCC_VERSION"
+local psc_sw_env_gcc_version  = "11.2.0" -- "GCC_VERSION"
+local psc_sw_env_cce_version  = "13.0.2" -- "CCE_VERSION"
+local psc_sw_env_aocc_version = "3.2.0" -- "AOCC_VERSION"
 
 -- List of Spack module categories
 -- update when new categories are added
