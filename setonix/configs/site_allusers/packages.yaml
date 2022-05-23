@@ -74,7 +74,7 @@ packages:
   # preferred versions (for 2022.05) and variants, python
   python:
     version: [3.9.7]
-    variants: '+optimizations+ssl'
+    variants: '+optimizations'
   gdbm:
     version: [1.19]
   gettext:
