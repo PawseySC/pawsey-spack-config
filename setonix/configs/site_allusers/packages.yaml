@@ -54,7 +54,7 @@ packages:
   # otherwise only the last one is considered, and the previous ones are ingored
   # 2. when externals are specified, the preferred version is respected only if it is one of the externals
 
-  # preferred versions (for 2022.01) and variants, utils
+  # preferred versions (for 2022.05) and variants, utils
   # Note: setting autoconf/automake/cmake as non buildable
   cmake:
     version: [3.21.4]
@@ -71,7 +71,7 @@ packages:
   gnuplot:
     version: [5.4.2]
     variants: '+X'
-  # preferred versions (for 2022.01) and variants, python
+  # preferred versions (for 2022.05) and variants, python
   python:
     version: [3.9.7]
     variants: '+optimizations'
@@ -118,7 +118,7 @@ packages:
     version: [1.7.1]
   py-setuptools:
     version: [57.4.0]
-  # preferred versions (for 2022.01) and variants, compilers
+  # preferred versions (for 2022.05) and variants, compilers
   go:
     version: [1.16.12]
   julia:
@@ -141,7 +141,7 @@ packages:
     version: [3.0.1]
   rust:
     version: [1.52.1]
-  # preferred versions (for 2022.01) and variants, num_libs
+  # preferred versions (for 2022.05) and variants, num_libs
   boost:
     version: [1.76.0]
     variants: '+mpi +numpy +python'
@@ -180,7 +180,7 @@ packages:
   trilinos:
     version: [13.0.1]
     variants: '+adios2 +openmp +python'
-# preferred versions (for 2022.01) and variants, io_libs
+# preferred versions (for 2022.05) and variants, io_libs
   hdf5:
     version: [1.12.1]
     variants: 'api=v112 +hl +fortran +szip'
