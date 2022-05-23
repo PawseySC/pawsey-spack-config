@@ -283,7 +283,7 @@ packages:
     externals:
     - spec: openssl@1.1.1d
       prefix: /usr
-    buildable: false
+#    buildable: false
   pkg-config:
     externals:
     - spec: pkg-config@0.29.2
