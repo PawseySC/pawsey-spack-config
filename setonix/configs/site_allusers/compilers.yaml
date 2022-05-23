@@ -104,6 +104,24 @@ compilers:
     environment: {}
     extra_rpaths: []
 
+- compiler:
+    spec: gcc@11.2.0noflags
+    paths:
+      cc: cc
+      cxx: CC
+      f77: ftn
+      fc: ftn
+    operating_system: sles15
+    target: any
+    modules:
+    - PrgEnv-gnu
+    - gcc/11.2.0
+    - craype
+    - craype-x86-milan
+    - craype-network-ofi
+    environment: {}
+    extra_rpaths: []
+
 # cray compilers 
 - compiler:
     spec: cce@13.0.2
@@ -127,6 +145,24 @@ compilers:
     environment: {}
     extra_rpaths: []
 
+- compiler:
+    spec: cce@13.0.2noflags
+    paths:
+      cc: cc
+      cxx: CC
+      f77: ftn
+      fc: ftn 
+    operating_system: sles15
+    target: any
+    modules:
+    - PrgEnv-cray
+    - cce/13.0.2
+    - craype
+    - craype-x86-milan
+    - craype-network-ofi
+    environment: {}
+    extra_rpaths: []
+
 # amd compilers 
 - compiler:
     spec: aocc@3.2.0
@@ -139,6 +175,24 @@ compilers:
       cflags: -O3
       cppflags: -O3
       fflags: -O3 
+    operating_system: sles15
+    target: any
+    modules:
+    - PrgEnv-aocc
+    - aocc/3.2.0
+    - craype
+    - craype-x86-milan
+    - craype-network-ofi
+    environment: {}
+    extra_rpaths: []
+
+- compiler:
+    spec: aocc@3.2.0noflags
+    paths:
+      cc: cc
+      cxx: CC
+      f77: ftn
+      fc: ftn
     operating_system: sles15
     target: any
     modules:
