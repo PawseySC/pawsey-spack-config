@@ -9,3 +9,5 @@ __pycache__/
 ## Ignores for testing Spack environments
 spack.lock
 .spack-env/
+# VIM tmp files
+.*.swp
