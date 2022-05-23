@@ -186,7 +186,7 @@ packages:
     variants: 'api=v112 +hl +fortran +szip build_type=Release'
   adios2:
     version: [2.7.1]
-    variants: '+python +hdf5'
+    variants: '+python +hdf5 build_type=Release'
   netcdf-c:
     version: [4.8.1]
     variants: '+hdf4 +parallel-netcdf'
