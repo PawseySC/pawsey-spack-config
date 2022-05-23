@@ -74,7 +74,7 @@ packages:
   # preferred versions (for 2022.05) and variants, python
   python:
     version: [3.9.7]
-    variants: '+optimizations'
+    variants: '+optimizations+ssl'
   gdbm:
     version: [1.19]
   gettext:
@@ -183,7 +183,7 @@ packages:
 # preferred versions (for 2022.05) and variants, io_libs
   hdf5:
     version: [1.12.1]
-    variants: 'api=v112 +hl +fortran +szip'
+    variants: 'api=v112 +hl +fortran +szip build_type=Release'
   adios2:
     version: [2.7.1]
     variants: '+python +hdf5'

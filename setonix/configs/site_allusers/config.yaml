@@ -2,7 +2,7 @@ config:
 
   # This is the path to the root of the Spack install tree.
   install_tree:
-    root: /software/$PAWSEY_PROJECT/$USER/setonix/software
+    root: /software/projects/$PAWSEY_PROJECT/$USER/setonix/software
 
   # Locations where templates should be found
   template_dirs:
@@ -37,21 +37,21 @@ config:
   # identifies Spack staging to avoid accidentally wiping out non-Spack work.
   build_stage:
 #    - $tempdir/$user/spack-stage
-    - /software/$PAWSEY_PROJECT/$USER/setonix/software/$USER/build_stage
+    - /software/projects/$PAWSEY_PROJECT/$USER/setonix/software/$USER/build_stage
 
   # Directory in which to run tests and store test results.
   # Tests will be stored in directories named by date/time and package
   # name/hash.
-  test_stage: /software/$PAWSEY_PROJECT/$USER/setonix/software/$USER/test_stage
+  test_stage: /software/projects/$PAWSEY_PROJECT/$USER/setonix/software/$USER/test_stage
 
   # Cache directory for already downloaded source tarballs and archived
   # repositories. This can be purged with `spack clean --downloads`.
-  source_cache: /software/$PAWSEY_PROJECT/$USER/setonix/software/$USER/source_cache
+  source_cache: /software/projects/$PAWSEY_PROJECT/$USER/setonix/software/$USER/source_cache
 
 
   # Cache directory for miscellaneous files, like the package index.
   # This can be purged with `spack clean --misc-cache`
-  misc_cache: /software/$PAWSEY_PROJECT/$USER/setonix/software/$USER/misc_cache
+  misc_cache: /software/projects/$PAWSEY_PROJECT/$USER/setonix/software/$USER/misc_cache
 
   # concretizer: `clingo` or `original` (good for debugging concretisations)
   concretizer: clingo

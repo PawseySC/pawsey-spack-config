@@ -90,9 +90,9 @@ compilers:
       f77: ftn
       fc: ftn
     flags:
-      cflags: -O3 -g
-      cppflags: -O3 -g
-      fflags: -O3 -g -fallow-argument-mismatch
+      cflags: -O3 -g -fopt-info-all
+      cppflags: -O3 -g -fopt-info-all
+      fflags: -O3 -g -fallow-argument-mismatch -fopt-info-all
     operating_system: sles15
     target: any
     modules:
