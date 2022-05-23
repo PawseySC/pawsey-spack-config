@@ -41,6 +41,7 @@ compilers:
       fc: ftn
     flags:
       cflags: -O3
+      cxxflags: -O3
       cppflags: -O3
       fflags: -O3 -fallow-argument-mismatch
     operating_system: sles15
@@ -66,6 +67,7 @@ compilers:
       fc: ftn
     flags:
       cflags: -O0 -g3 -pg -fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-sanitize=null -fno-sanitize=alignment
+      cxxflags: -O0 -g3 -pg -fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-sanitize=null -fno-sanitize=alignment
       cppflags: -O0 -g3 -pg -fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-sanitize=null -fno-sanitize=alignment
       fflags: -O0 -g3 -pg -fsanitize=address -fsanitize=undefined -fno-sanitize-recover=all -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fno-sanitize=null -fno-sanitize=alignment
     operating_system: sles15
@@ -91,6 +93,7 @@ compilers:
       fc: ftn
     flags:
       cflags: -O3 -g -fopt-info-all
+      cxxflags: -O3 -g -fopt-info-all
       cppflags: -O3 -g -fopt-info-all
       fflags: -O3 -g -fallow-argument-mismatch -fopt-info-all
     operating_system: sles15
@@ -132,6 +135,7 @@ compilers:
       fc: ftn
     flags:
       cflags: -O3
+      cxxflags: -O3
       cppflags: -O3
       fflags: -O3
     operating_system: sles15
@@ -173,6 +177,7 @@ compilers:
       fc: ftn
     flags:
       cflags: -O3
+      cxxflags: -O3
       cppflags: -O3
       fflags: -O3 
     operating_system: sles15
