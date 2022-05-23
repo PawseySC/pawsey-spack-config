@@ -504,11 +504,11 @@ packages:
 # Cray-FFTW: commenting out, as for Cray-Libsci
 #  cray-fftw:
 #    externals:
-#    - spec: cray-fftw@3.3.8.12 target=zen3
+#    - spec: cray-fftw@3.3.8.12 target=zen2
 #      modules:
-#      - craype-x86-milan
+#      - craype-x86-rome
 #      - cray-fftw/3.3.8.12
-#      prefix: /opt/cray/pe/fftw/3.3.8.12/x86_milan
+#      prefix: /opt/cray/pe/fftw/3.3.8.12/x86_rome
 #    - spec: cray-fftw@3.3.8.12 target=zen3
 #      modules:
 #      - craype-x86-milan
