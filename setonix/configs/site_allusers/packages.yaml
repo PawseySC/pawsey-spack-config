@@ -158,10 +158,10 @@ packages:
     version: [2.6]
   hpx:
     version: [1.6.0]
-    variants: '+async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi build_type=Release'
+    variants: '+async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi cxxstd=14 build_type=Release'
   kokkos:
     version: [3.4.01]
-    variants: '+hwloc +memkind +numactl +openmp +tuning build_type=Release'
+    variants: '+hwloc +memkind +numactl +openmp +tuning cxxstd=14 build_type=Release'
   netlib-lapack:
     version: [3.9.1]
     variants: 'build_type=Release'
@@ -173,7 +173,7 @@ packages:
      variants: 'build_type=Release'
   plasma:
     version: [20.9.20]
-    variants: 'build_type=Release'
+    variants: '^openblas build_type=Release'
   petsc:
     version: [3.15.5]
     variants: '+fftw' # commenting out trilinos as per environment note # +trilinos'
@@ -183,7 +183,7 @@ packages:
     version: [2.1.0]
   slate:
     version: [2021.05.02]
-    variants: '~cuda build_type=Release'
+    variants: '~cuda ^openblas build_type=Release'
   trilinos:
     version: [13.0.1]
     variants: '+adios2 +openmp +python build_type=Release'
