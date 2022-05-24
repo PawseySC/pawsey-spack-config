@@ -43,5 +43,5 @@ sed \
   -e "s/SPACK_VERSION/${spack_version}/g" \
   -e "s/PYTHON_MODULEFILE/${python_name}\/${python_version}/g" \
   -e "s/DATE_TAG/${date_tag}/g" \
-  pawsey-spack-config/setonix/setup/module_spack.lua \
+  pawsey-spack-config/setonix/setup_scripts/module_spack.lua \
   > ${root_dir}/${spack_module_dir}/${spack_version}/module.lua
