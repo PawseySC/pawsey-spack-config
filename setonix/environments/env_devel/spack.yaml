@@ -6,7 +6,7 @@ spack:
 
   definitions:
   - packages:
-    - caliper@2.7.0 +fortran
+    - caliper@2.7.0 +fortran build_type=Release
     - hpctoolkit@2022.04.15 +mpi
     - py-hatchet@1.3.0
 

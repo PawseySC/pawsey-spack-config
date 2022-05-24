@@ -54,7 +54,7 @@ packages:
   # otherwise only the last one is considered, and the previous ones are ingored
   # 2. when externals are specified, the preferred version is respected only if it is one of the externals
 
-  # preferred versions (for 2022.05) and variants, utils
+  # preferred versions (for 2022.05) and variants, utils/python
   # Note: setting autoconf/automake/cmake as non buildable
   cmake:
     version: [3.21.4]
@@ -142,11 +142,15 @@ packages:
   rust:
     version: [1.52.1]
   # preferred versions (for 2022.05) and variants, num_libs
+  blaspp:
+    version: [2021.04.01]
+    variants: '~cuda ^openblas build_type=Release'
   boost:
     version: [1.76.0]
     variants: '+mpi +numpy +python'
   eigen:
     version: [3.4.0]
+    variants: 'build_type=Release'
   fftw:
     version: [3.3.9,2.1.5]
     variants: '+openmp precision=float,double,long_double'
@@ -154,19 +158,22 @@ packages:
     version: [2.6]
   hpx:
     version: [1.6.0]
-    variants: '+async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi'
+    variants: '+async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi build_type=Release'
   kokkos:
     version: [3.4.01]
-    variants: '+hwloc +memkind +numactl +openmp +tuning'
+    variants: '+hwloc +memkind +numactl +openmp +tuning build_type=Release'
   netlib-lapack:
     version: [3.9.1]
+    variants: 'build_type=Release'
   openblas:
     version: [0.3.15]
     variants: 'threads=openmp'
   opencv:
      version: [4.5.2]
+     variants: 'build_type=Release'
   plasma:
     version: [20.9.20]
+    variants: 'build_type=Release'
   petsc:
     version: [3.15.5]
     variants: '+fftw' # commenting out trilinos as per environment note # +trilinos'
@@ -176,10 +183,10 @@ packages:
     version: [2.1.0]
   slate:
     version: [2021.05.02]
-    variants: '~cuda'
+    variants: '~cuda build_type=Release'
   trilinos:
     version: [13.0.1]
-    variants: '+adios2 +openmp +python'
+    variants: '+adios2 +openmp +python build_type=Release'
 # preferred versions (for 2022.05) and variants, io_libs
   hdf5:
     version: [1.12.1]
@@ -202,6 +209,17 @@ packages:
     version: [0.10.0]
   py-netcdf4:
     version: [1.5.3]
+# for end users apps, prefer cmake variant build_type=Release
+  caliper:
+    variants: 'build_type=Release'
+  gromacs:
+    variants: 'build_type=Release'
+  lammps:
+    variants: 'build_type=Release'
+  nektar:
+    variants: 'build_type=Release'
+  visit:
+    variants: 'build_type=Release'
 
 # packages found automatically by spack external find
   bison:
