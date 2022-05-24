@@ -2,8 +2,10 @@
 
 # EDIT at each rebuild of the software stack
 date_tag="2022.05"
+
 # if you change this, you need to propagate also in other places (mostly Spack config yamls)
-root_dir="/software/setonix/${date_tag}"
+top_root_dir="/software/setonix"
+root_dir="${top_root_dir}/${date_tag}"
 
 # tool versions
 spack_version="0.17.0" # the prefix "v" is added in setup_spack.sh

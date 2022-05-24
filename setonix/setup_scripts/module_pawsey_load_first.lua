@@ -2,10 +2,14 @@
 -- Module file created by Pawsey
 --
 
-whatis([[Name : pawsey_load_first]])
+--[[
 
-whatis([[Short description : A set of variable definitions to handle software modules on Setonix, including Lmod hierarchies for compilers and CPU architectures. Note that this module needs to be loaded before the compiler module.]])
-helps([[A set of variable definitions to handle software modules on Setonix, including Lmod hierarchies for compilers and CPU architectures. Note that this module needs to be loaded before the compiler module.]])
+    A set of variable definitions to handle software 
+    modules on Setonix, including Lmod hierarchies for 
+    compilers and CPU architectures. Note that this 
+    module needs to be loaded before the compiler module.
+
+]]--
 
 -- Service variables for this module
 -- 
@@ -15,16 +19,16 @@ local psc_sw_env_date_tag = "current"
 -- corresponding values found in `variables.sh` in this same directory
 -- 
 -- This is handy for testing, as it is the only one to tweak
-local psc_sw_env_root_dir = "/software/setonix/" .. psc_sw_env_date_tag -- "ROOT_DIR"
+local psc_sw_env_root_dir = "TOP_ROOT_DIR/" .. psc_sw_env_date_tag
 -- 
-local psc_sw_env_custom_modules_dir = "custom/modules" -- "CUSTOM_MODULES_DIR"
-local psc_sw_env_utilities_modules_dir = "pawsey/modules" -- "UTILITIES_MODULES_DIR"
-local psc_sw_env_shpc_containers_modules_dir = "containers/modules" -- "SHPC_CONTAINERS_MODULES_DIR"
+local psc_sw_env_custom_modules_dir = "CUSTOM_MODULES_DIR"
+local psc_sw_env_utilities_modules_dir = "UTILITIES_MODULES_DIR"
+local psc_sw_env_shpc_containers_modules_dir = "SHPC_CONTAINERS_MODULES_DIR"
 -- 
 -- These need to be checked at every OS update
-local psc_sw_env_gcc_version  = "11.2.0" -- "GCC_VERSION"
-local psc_sw_env_cce_version  = "13.0.2" -- "CCE_VERSION"
-local psc_sw_env_aocc_version = "3.2.0" -- "AOCC_VERSION"
+local psc_sw_env_gcc_version  = "GCC_VERSION"
+local psc_sw_env_cce_version  = "CCE_VERSION"
+local psc_sw_env_aocc_version = "AOCC_VERSION"
 
 -- List of Spack module categories
 -- update when new categories are added
