@@ -2,7 +2,8 @@
 
 # source setup variables
 curdir=$(pwd)
-script_dir=${curdir}/$(dirname $0)
+script_dir="$(dirname $0)"
+. ${script_dir}/variables.sh
 
 # use PrgEnv-gnu
 module swap PrgEnv-cray/8.3.2 PrgEnv-gnu
