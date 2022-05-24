@@ -307,7 +307,7 @@ packages:
 # fooling spack is risky; however, as of spack v0.17.0, 
 # these 2 versions are equivalent in recipes for depends/conflicts
 #    - spec: openssl@1.1.1d
-    - spec: openssl@1.1.1
+    - spec: openssl@1.1
       prefix: /usr
     buildable: false
   pkg-config:
