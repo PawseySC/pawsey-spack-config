@@ -86,5 +86,5 @@ sed \
   -e "s/SINGULARITY_MODULEFILE/${singularity_name}\/${singularity_version}/g" \
   -e "s/DATE_TAG/${date_tag}/g" \
   -e "s/PYTHON_MAJORMINOR/${python_version_major}.${python_version_minor}/g" \
- pawsey-spack-config/setonix/setup/module_${shpc_name}.lua \
+ pawsey-spack-config/setonix/setup_scripts/module_${shpc_name}.lua \
  > ${root_dir}/${shpc_module_dir}/${shpc_version}/module.lua

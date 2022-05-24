@@ -1,7 +1,6 @@
 spack:
   definitions:
   - packages:
-   
     # aocc, rocm, gcc, llvm: provided by system installations
     # python: installed in env_python
     - go@1.16.12
