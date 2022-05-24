@@ -6,8 +6,9 @@ script_dir=${curdir}/$(dirname $0)
 
 #list of environments
 envs=(env_utils \
-env_python \ 
-env_langs \ 
+env_python \
+env_langs \
+env_devel \
 env_num_libs \
 env_io_libs \
 env_apps \
@@ -15,7 +16,7 @@ env_benchmarking \
 env_s3_clients \
 env_astro \
 env_bio \
-env_roms \ 
+env_roms \
 env_wrf)
 
 envdir=${script_dir}/../environments/
