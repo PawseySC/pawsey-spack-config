@@ -21,8 +21,10 @@ logdir=${script_dir}/logs/python.${timestamp}/
 mkdir -p ${logdir}
 
 # first thing we need is Python
-# spec
+# spec gcc
 spack spec python@3.9.7 +optimizations %gcc@11.2.0 target=zen3 1> ${logdir}/spack.python.concretize.${env}.log 2> ${logdir}/spack.python.concretize.${env}.err
 
-# install
-sg $PAWSEY_PROJECT -c 'spack install python@3.9.7 +optimizations %gcc@11.2.0 target=zen3' 1> ${logdir}/spack.python.install.${env}.log 2> ${logdir}/spack.python.install.${env}.err
+# install gcc
+sg $PAWSEY_PROJECT -c 'spack install python@3.9.7 +optimizations %gcc@11.2.0 target=zen3' 1> ${logdir}/spack.python.install.log 2> ${logdir}/spack.python.install.err
+# install cce
+sg $PAWSEY_PROJECT -c 'spack install python@3.9.7 +optimizations %cce@13.0.2 target=zen3' 1>> ${logdir}/spack.python.install.log 2>> ${logdir}/spack.python.install.err
