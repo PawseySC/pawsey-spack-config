@@ -74,7 +74,7 @@ packages:
   # preferred versions (for 2022.05) and variants, python
   python:
     version: [3.9.7]
-    variants: '+optimizations+ssl'
+    variants: '+optimizations'
   gdbm:
     version: [1.19]
   gettext:
@@ -294,12 +294,20 @@ packages:
     buildable: false
   openssh:
     externals:
-    - spec: openssh@8.1p1
+# getting rid of letter in version, as clingo/spack has buggy behaviour
+# fooling spack is risky; however, openssh website mentions 
+# these 2 versions are equivalent; also seem equivalent within spack
+#    - spec: openssh@8.1p1
+    - spec: openssh@8.1
       prefix: /usr
     buildable: false
   openssl:
     externals:
-    - spec: openssl@1.1.1d
+# getting rid of letter in version, as clingo/spack has buggy behaviour
+# fooling spack is risky; however, as of spack v0.17.0, 
+# these 2 versions are equivalent in recipes for depends/conflicts
+#    - spec: openssl@1.1.1d
+    - spec: openssl@1.1
       prefix: /usr
     buildable: false
   pkg-config:
