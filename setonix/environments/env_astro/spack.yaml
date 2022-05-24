@@ -3,7 +3,13 @@
 # It describes a set of packages to be installed, along with
 # configuration settings.
 spack:
-# note: preferred versions are set in packages.yaml
+  packages:
+    'blas:':
+      buildable: true
+    'lapack:':
+      buildable: true
+    'fftw-api:':
+      buildable: true
   definitions:
   
   # casacore variants
@@ -33,9 +39,13 @@ spack:
 
   - mwa-util-set:
     - wcstools
-    - wsclean@3.0 +mpi +idg +everybeam
-    - wsclean@3.0 ~mpi +idg +everybeam
-    - wsclean@2.10
+    - chgcentre build_type=Release ^casacore ~python build_type=Release
+    - wsclean@3.0 +mpi +idg +everybeam build_type=Release ^chgcentre build_type=Release
+      ^casacore ~python build_type=Release
+    - wsclean@3.0 ~mpi +idg +everybeam build_type=Release ^chgcentre build_type=Release
+      ^casacore ~python build_type=Release
+    - wsclean@2.10 build_type=Release ^chgcentre build_type=Release ^casacore ~python
+      build_type=Release
     - pgplot
 
   # TODO add versions 
@@ -45,12 +55,6 @@ spack:
     - py-astropy
     - py-healpy
     - py-emcee
-
-
-  # astropy, emcee, healpy, py-bdsf
-  # currently left blank as ideally 
-  # pip install with appropriate modules 
-  # might be a better way to install them 
 
   # add package specs to the `specs` list
   specs:

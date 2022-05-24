@@ -20,7 +20,7 @@ modules:
     enable::
       - lmod 
     roots:
-      lmod: /software/$PAWSEY_PROJECT/$USER/setonix/modules
+      lmod: /software/projects/$PAWSEY_PROJECT/$USER/setonix/modules
     lmod:
       # set the hierarchy. Typical start point is mpi 
       # however, since there will only be a single 
