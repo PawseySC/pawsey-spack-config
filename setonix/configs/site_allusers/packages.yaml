@@ -276,12 +276,12 @@ packages:
     buildable: false
   openssh:
     externals:
-    - spec: openssh@8.1p1
+    - spec: openssh@8.1 #actual version is 8.1p1 but letters in version numbers cause issues with clingo so removing it.
       prefix: /usr
     buildable: false
   openssl:
     externals:
-    - spec: openssl@1.1.1d
+    - spec: openssl@1.1 # actual version is 1.1.1d but letters in version numbers cause issues with clingo so removing it.
       prefix: /usr
     buildable: false
   pkg-config:

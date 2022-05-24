@@ -13,6 +13,7 @@ script_dir=${curdir}/$(dirname $0)
 envs=(env_utils \
 env_python \ 
 env_langs \ 
+env_devel \
 env_num_libs \
 env_io_libs \
 env_apps \
