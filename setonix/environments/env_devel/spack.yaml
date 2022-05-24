@@ -1,9 +1,8 @@
 spack:
   packages:
 # HPCtoolkit has an explicit conflict with Setonix version of binutils, 2.35.1
-     'binutils:':
-       buildable: true
-
+    'binutils:':
+      buildable: true
   definitions:
   - packages:
     - caliper@2.7.0 +fortran build_type=Release
@@ -14,5 +13,5 @@ spack:
   - matrix:
     - [$packages]
     - ['%gcc@11.2.0']
-    - ['target=zen3']
+    - [target=zen3]
   view: false
