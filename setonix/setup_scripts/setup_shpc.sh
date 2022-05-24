@@ -76,7 +76,7 @@ shpc config set module_base:${root_dir}/${containers_root_dir}/${shpc_spackuser_
 shpc config set container_base:${root_dir}/${shpc_containers_dir}
 
 # edit and copy over SHPC modulefile
-mkdir -p ${root_dir}/${shpc_module_dir}/${shpc_version}
+mkdir -p ${root_dir}/${shpc_module_dir}
 sed \
   -e "s/SHPC_NAME/${shpc_name}/g" \
   -e "s/SHPC_VERSION/${shpc_version}/g" \
@@ -87,4 +87,4 @@ sed \
   -e "s/DATE_TAG/${date_tag}/g" \
   -e "s/PYTHON_MAJORMINOR/${python_version_major}.${python_version_minor}/g" \
  pawsey-spack-config/setonix/setup_scripts/module_${shpc_name}.lua \
- > ${root_dir}/${shpc_module_dir}/${shpc_version}/module.lua
+ > ${root_dir}/${shpc_module_dir}/${shpc_version}.lua

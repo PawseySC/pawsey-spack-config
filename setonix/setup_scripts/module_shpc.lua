@@ -15,3 +15,13 @@ setenv("SINGULARITY_HPC_HOME","/software/setonix/DATE_TAG/SHPC_INSTALL_DIR")
 
 prepend_path("PATH","/software/setonix/DATE_TAG/SHPC_INSTALL_DIR/bin")
 prepend_path("PYTHONPATH","/software/setonix/DATE_TAG/SHPC_INSTALL_DIR/lib/pythonPYTHON_MAJORMINOR/site-packages")
+
+-- Enforce explicit usage of versions by requiring full module name
+if (mode() == "load") then
+    if (myModuleUsrName() ~= myModuleFullName()) then
+      LmodError(
+          "Default module versions are disabled by your systems administrator.\n\n",
+          "\tPlease load this module as <name>/<version>.\n"
+      )
+    end
+end

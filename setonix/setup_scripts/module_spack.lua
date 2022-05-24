@@ -18,3 +18,13 @@ setenv("SPACK_HOME","/software/setonix/DATE_TAG/spack")
 
 -- The following is NOT unloadable
 execute{cmd=". /software/setonix/DATE_TAG/spack/share/spack/setup-env.sh", modeA={"load"}}
+
+-- Enforce explicit usage of versions by requiring full module name
+if (mode() == "load") then
+    if (myModuleUsrName() ~= myModuleFullName()) then
+      LmodError(
+          "Default module versions are disabled by your systems administrator.\n\n",
+          "\tPlease load this module as <name>/<version>.\n"
+      )
+    end
+end
