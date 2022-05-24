@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # only editing typically needed: spack version
-spack_version="v0.17.0"
+spack_version="0.17.0"
 
 # TODO: needed?
 # ensure starting from a new .spack
@@ -21,8 +21,6 @@ cd ..
 cp -p pawsey-spack-config/setonix/personal_setup/*.yaml spack/etc/spack/
 
 # apply fixes into spack tree
-# Pascal,s fix for Zen3 on Joey, not needed on Setonix
-#cp -p pawsey-spack-config/setonix/fixes/microarchitectures.json spack/lib/spack/external/archspec/json/cpu/
 # Marco,s Lmod arch family fix for the module tree
 patch spack/lib/spack/spack/modules/lmod.py pawsey-spack-config/setonix/fixes/lmod_arch_family.patch
 # Pascal,s enhancements to modulefiles
