@@ -3,7 +3,8 @@
 # typically does not need any editing
 
 # source setup variables
-script_dir="$(dirname $0)"
+# if copy/pasting these commands, need to run from this directory
+script_dir="$(dirname $0 2>/dev/null || pwd)"
 . ${script_dir}/variables.sh
 
 # TODO: needed?

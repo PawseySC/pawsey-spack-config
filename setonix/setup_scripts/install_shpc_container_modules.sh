@@ -33,7 +33,8 @@ quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 "
 
 # source setup variables
-script_dir="$(dirname $0)"
+# if copy/pasting these commands, need to run from this directory
+script_dir="$(dirname $0 2>/dev/null || pwd)"
 . ${script_dir}/variables.sh
 
 # load shpc module

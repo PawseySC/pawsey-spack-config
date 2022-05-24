@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # source setup variables
-script_dir="$(dirname $0)"
+# if copy/pasting these commands, need to run from this directory
+script_dir="$(dirname $0 2>/dev/null || pwd)"
 . ${script_dir}/variables.sh
 
 # load needed python toolkit
