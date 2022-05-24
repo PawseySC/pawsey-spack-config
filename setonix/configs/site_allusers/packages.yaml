@@ -144,7 +144,7 @@ packages:
   # preferred versions (for 2022.05) and variants, num_libs
   blaspp:
     version: [2021.04.01]
-    variants: '~cuda ^openblas build_type=Release'
+    variants: '~cuda build_type=Release'
   boost:
     version: [1.76.0]
     variants: '+mpi +numpy +python'
@@ -173,7 +173,7 @@ packages:
      variants: 'build_type=Release'
   plasma:
     version: [20.9.20]
-    variants: '^openblas build_type=Release'
+    variants: 'build_type=Release'
   petsc:
     version: [3.15.5]
     variants: '+fftw' # commenting out trilinos as per environment note # +trilinos'
@@ -183,7 +183,7 @@ packages:
     version: [2.1.0]
   slate:
     version: [2021.05.02]
-    variants: '~cuda ^openblas build_type=Release'
+    variants: '~cuda build_type=Release'
   trilinos:
     version: [13.0.1]
     variants: '+adios2 +openmp +python build_type=Release'

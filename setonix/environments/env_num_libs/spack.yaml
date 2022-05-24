@@ -21,7 +21,7 @@ spack:
     - openblas@0.3.15 threads=openmp
     - netlib-lapack@3.9.1 build_type=Release
     - netlib-scalapack@2.1.0
-    - blaspp@2021.04.01 ~cuda ^openblas build_type=Release
+    - blaspp@2021.04.01 ~cuda build_type=Release ^openblas
     - eigen@3.4.0 build_type=Release # charris: build ok on Joey 2021-12-16
     - fftw@2.1.5 +openmp precision=float,double # fftw 2 does not support long doubles
     - fftw@3.3.9 +openmp precision=float,double,long_double
@@ -32,11 +32,11 @@ spack:
     # for plasma@ setting blas and lapack buildable to true in spack.yaml file
     # issue with building with blas and lapack using cray-libsci. 
     # Moving to openblas as default address this issue 
-    - plasma@20.9.20 ^openblas build_type=Release
+    - plasma@20.9.20 build_type=Release ^openblas
     # slate: unable to patch source commits
     # however, patch only required for cray-libsci builds
     # builds OK with openblas
-    - slate@2021.05.02 ^openblas build_type=Release
+    - slate@2021.05.02 build_type=Release ^openblas
     - plumed@2.7.2
     # some heavier numerical library builds 
     - opencv@4.5.2 build_type=Release
