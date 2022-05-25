@@ -6,10 +6,11 @@
 # - install an environment, saving output ot a log
 # etc.
 
+
 function get_timestamp() 
 {
-    local timestamp=$(date +"%Y-%m-%d_%Hh%M")
-    local  __resultvar=$1
+    local timestamp="$(date +"%Y-%m-%d_%Hh%M")"
+    local  __resultvar="$1"
     if [[ "$__resultvar" ]]; then
         eval $__resultvar="'$timestamp'"
     else
@@ -20,37 +21,39 @@ function get_timestamp()
 
 function spack_check_duplicate()
 {
-    file=$1
+    local file="$1"
 }
+
 
 function spack_env_concretize() 
 {
-    env = $1
-    local timestamp=$(get_timestamp)
-    local logdir=$(pwd) 
-    logfile = spack.concretize.${timestamp}.${env}
-    spack env activate .
+    # default to environment being the current dir
+    local env="${1:-"."}"
+    local timestamp="$(get_timestamp)"
+    local logdir="$(pwd)"
+    local logfile="spack.concretize.${timestamp}.${env}"
+    spack env activate ${env}
     spack concretize -f 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
     # also check if concretization has duplicates. still needs fleshing out
-    local duplicate_list=$(spack_check_duplicate ${logdir}/${logfile}.log)
+    local duplicate_list="$(spack_check_duplicate ${logdir}/${logfile}.log)"
     spack env deactivate
 }
 
+
 function spack_env_install()
 {
-    local env=$1
-    local nprocs=16
-    if [ ! -z $2 ]; then
-        nprocs = $2
-    fi
-    local timestamp=$(get_timestamp)
-    local logdir=$(pwd)
-    logfile = spack.install.${timestamp}.${env}
-    spack env activate .
+    # default to environment being the current dir
+    local env="${1:-"."}"
+    local nprocs="${2:-"16"}"
+    local timestamp="$(get_timestamp)"
+    local logdir="$(pwd)"
+    local logfile="spack.install.${timestamp}.${env}"
+    spack env activate ${env}
     spack concretize -f 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
-    spack install -j${nprocs} 1>> ${logdir}/${logfile}.log 2>> ${logdir}/${logfile}.err
+    sg $PAWSEY_PROJECT -c "spack install -j${nprocs} 1>> ${logdir}/${logfile}.log 2>> ${logdir}/${logfile}.err"
     spack env deactivate
 }
+
 
 function spack_env_with_git_install()
 {
@@ -59,3 +62,8 @@ function spack_env_with_git_install()
 }
 
 
+export -f get_timestamp() 
+export -f spack_check_duplicate()
+export -f spack_env_concretize() 
+export -f spack_env_install()
+export -f spack_env_with_git_install()
