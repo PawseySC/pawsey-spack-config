@@ -28,11 +28,13 @@ function spack_check_duplicate()
 function spack_env_concretize() 
 {
     # default to environment being the current dir
-    local env="${1:-"."}"
+    local envdir="${1:-"."}"
+    # use just the innest dir in the path as env name
+    local env="${envdir##*/}"
     local timestamp="$(get_timestamp)"
     local logdir="$(pwd)"
     local logfile="spack.concretize.env.${timestamp}.${env}"
-    spack env activate ${env}
+    spack env activate ${envdir}
     spack concretize -f 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
     # also check if concretization has duplicates. still needs fleshing out
     local duplicate_list="$(spack_check_duplicate ${logdir}/${logfile}.log)"
@@ -43,12 +45,14 @@ function spack_env_concretize()
 function spack_env_install()
 {
     # default to environment being the current dir
-    local env="${1:-"."}"
+    local envdir="${1:-"."}"
+    # use just the innest dir in the path as env name
+    local env="${envdir##*/}"
     local nprocs="${2:-"16"}"
     local timestamp="$(get_timestamp)"
     local logdir="$(pwd)"
     local logfile="spack.install.env.${timestamp}.${env}"
-    spack env activate ${env}
+    spack env activate ${envdir}
     spack concretize -f 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
     sg $PAWSEY_PROJECT -c "spack install -j${nprocs} 1>> ${logdir}/${logfile}.log 2>> ${logdir}/${logfile}.err"
     spack env deactivate
@@ -64,22 +68,24 @@ function spack_env_with_git_install()
 
 function spack_spec()
 {
-    local tool="${@%%@*}"
+    local args="$@"
+    local tool="${args%%@*}"
     local timestamp="$(get_timestamp)"
     local logdir="$(pwd)"
     local logfile="spack.spec.${timestamp}.${tool}"
-    spack spec "$@" 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
+    spack spec "$args" 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
 }
 
 
 function spack_install()
 {
-    local tool="${@%%@*}"
+    local args="$@"
+    local tool="${args%%@*}"
     local timestamp="$(get_timestamp)"
     local logdir="$(pwd)"
     local logfile="spack.install.${timestamp}.${tool}"
-    spack spec "$@" 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
-    sg $PAWSEY_PROJECT -c "spack install $@ 1>> ${logdir}/${logfile}.log 2>> ${logdir}/${logfile}.err"
+    spack spec "$args" 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
+    sg $PAWSEY_PROJECT -c "spack install "$args" 1>> ${logdir}/${logfile}.log 2>> ${logdir}/${logfile}.err"
 }
 
 
