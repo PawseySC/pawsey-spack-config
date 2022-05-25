@@ -38,6 +38,13 @@ patch spack/lib/spack/spack/cmd/modules/__init__.py pawsey-spack-config/setonix/
 # TODO: copy license-protected patches/files in appropriate location, change group ownership of their directory
 
 
+# create backbone for Pawsey custom builds and Pawsey utilities
+cd ${root_dir}
+mkdir -p ${custom_modules_dir}
+mkdir -p ${custom_software_dir}
+mkdir -p ${utilities_modules_dir}
+mkdir -p ${utilities_software_dir}
+
 # edit and copy over Spack modulefile
 mkdir -p ${root_dir}/${spack_module_dir}
 sed \

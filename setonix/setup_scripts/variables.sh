@@ -42,7 +42,7 @@ shpc_name="shpc"
 # name of Singularity module (Spack has singularity and singularityce)
 singularity_name="singularity"
 
-# NOTE: these are all relative to root_dir above
+# NOTE: the following are ALL RELATIVE to root_dir above
 # root location for Pawsey custom builds
 custom_root_dir="custom"
 # root location for Pawsey utilities (spack, shpc, scripts)
@@ -51,15 +51,19 @@ utilities_root_dir="pawsey"
 containers_root_dir="containers"
 # location for Pawsey custom build modules
 custom_modules_dir="${custom_root_dir}/modules"
+# location for Pawsey custom build software
+custom_software_dir="${custom_root_dir}/software"
 # location for Pawsey utility modules
 utilities_modules_dir="${utilities_root_dir}/modules"
+# location for Pawsey utility software
+utilities_software_dir="${utilities_root_dir}/software"
 # location for SHPC container modules
 shpc_containers_modules_dir="${containers_root_dir}/${shpc_spackuser_modules_dir_short}"
 # location for SHPC containers
 shpc_containers_dir="${containers_root_dir}/sif"
 
 # location of SHPC utility installation
-shpc_install_dir="${utilities_root_dir}/software/${shpc_name}"
+shpc_install_dir="${utilities_software_dir}/${shpc_name}"
 # location of SHPC utility modulefile
 shpc_module_dir="${utilities_modules_dir}/${shpc_name}"
 
