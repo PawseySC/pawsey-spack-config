@@ -70,6 +70,7 @@ function spack_spec()
 {
     local args="$@"
     local tool="${args%%@*}"
+    local tool="${tool##* }"
     local timestamp="$(get_timestamp)"
     local logdir="$(pwd)"
     local logfile="spack.spec.${timestamp}.${tool}"
@@ -81,11 +82,24 @@ function spack_install()
 {
     local args="$@"
     local tool="${args%%@*}"
+    local tool="${tool##* }"
     local timestamp="$(get_timestamp)"
     local logdir="$(pwd)"
     local logfile="spack.install.${timestamp}.${tool}"
 #    spack spec -I "$args" 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
     sg $PAWSEY_PROJECT -c "spack install "$args" 1>> ${logdir}/${logfile}.log 2>> ${logdir}/${logfile}.err"
+}
+
+
+function spack_uninstall()
+{
+    local args="$@"
+    local tool="${args%%@*}"
+    local tool="${tool##* }"
+    local timestamp="$(get_timestamp)"
+    local logdir="$(pwd)"
+    local logfile="spack.uninstall.${timestamp}.${tool}"
+    sg $PAWSEY_PROJECT -c "spack uninstall "$args" 1>> ${logdir}/${logfile}.log 2>> ${logdir}/${logfile}.err"
 }
 
 
@@ -96,3 +110,4 @@ export -f spack_env_install()
 export -f spack_env_with_git_install()
 export -f spack_spec()
 export -f spack_install()
+export -f spack_uninstall()
