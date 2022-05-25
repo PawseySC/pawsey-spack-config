@@ -4,20 +4,24 @@ source ${script_dir}/.spack_check_env.sh
 
 # This bash wrapper concretizes an environment
 env=$( basename $( pwd ))
-logdir=${baselogdir}/concretize.${timestamp}/
+logdir=${baselogdir}/install.${timestamp}/
 logfile=spack.${env}
+nprocs=16
+if [ ! -z $1 ]; then
+    nprocs=$1
+fi
 
 # now concretize and save results 
-echo "Concretizing ${env} and saving results to ${logdir}"
+echo "Installing ${env} and saving results to ${logdir} using ${nprocs} processes on $(hostname)"
 mkdir -p ${logdir}
 spack env activate .
 spack concretize -f 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
+spack install -j${nprocs} 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
 # also check if concretization has duplicates. still needs fleshing out
-#local duplicate_list=$(spack_check_duplicate ${logdir}/${logfile}.log)
 spack env deactivate
 errors=$(wc -l ${logdir}/${logfile}.err | awk '{print $1}')
 if [ "${errors}" -ne "0" ]; then
-    echo "There were errors in concretizing. \n Please check ${logdir}/${logfile}.log for more details."
+    echo "There were errors in installing. \n Please check ${logdir}/${logfile}.log for more details."
 else 
     echo "Done ${env}"
 fi 
