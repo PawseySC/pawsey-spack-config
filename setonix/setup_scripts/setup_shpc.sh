@@ -53,11 +53,11 @@ shpc config remove registry:\$root_dir/registry
 shpc config add registry:${root_dir}/${shpc_install_dir}/registry
 shpc config add registry:${root_dir}/pawsey-spack-config/setonix/shpc_registry
 # user install location for modulefiles
-shpc config set module_base:/software/\$PAWSEY_PROJECT/\$USER/setonix/containers/modules
+shpc config set module_base:/software/projects/\$PAWSEY_PROJECT/\$USER/setonix/containers/modules
 # disable default version for modulefiles
 shpc config set default_version:false
 # user install location for containers
-shpc config set container_base:/software/\$PAWSEY_PROJECT/\$USER/setonix/containers/sif
+shpc config set container_base:/software/projects/\$PAWSEY_PROJECT/\$USER/setonix/containers/sif
 # singularity module
 shpc config set singularity_module:${singularity_name}/${singularity_version}
 # enable wrapper scripts
@@ -87,5 +87,5 @@ sed \
   -e "s/SINGULARITY_MODULEFILE/${singularity_name}\/${singularity_version}/g" \
   -e "s/DATE_TAG/${date_tag}/g" \
   -e "s/PYTHON_MAJORMINOR/${python_version_major}.${python_version_minor}/g" \
- pawsey-spack-config/setonix/setup_scripts/module_${shpc_name}.lua \
+ ${script_dir}/setup_templates/module_${shpc_name}.lua \
  > ${root_dir}/${shpc_module_dir}/${shpc_version}.lua

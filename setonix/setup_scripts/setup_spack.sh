@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# typically does not need any editing
-
 # source setup variables
 # if copy/pasting these commands, need to run from this directory
 script_dir="$(dirname $0 2>/dev/null || pwd)"
@@ -38,11 +36,33 @@ patch spack/lib/spack/spack/cmd/modules/__init__.py pawsey-spack-config/setonix/
 # TODO: copy license-protected patches/files in appropriate location, change group ownership of their directory
 
 
+# create backbone for Pawsey custom builds and Pawsey utilities
+cd ${root_dir}
+mkdir -p ${custom_modules_dir}
+mkdir -p ${custom_software_dir}
+mkdir -p ${utilities_modules_dir}
+mkdir -p ${utilities_software_dir}
+
 # edit and copy over Spack modulefile
 mkdir -p ${root_dir}/${spack_module_dir}
 sed \
   -e "s/SPACK_VERSION/${spack_version}/g" \
   -e "s/PYTHON_MODULEFILE/${python_name}\/${python_version}/g" \
   -e "s/DATE_TAG/${date_tag}/g" \
-  pawsey-spack-config/setonix/setup_scripts/module_spack.lua \
+  ${script_dir}/setup_templates/module_spack.lua \
   > ${root_dir}/${spack_module_dir}/${spack_version}.lua
+
+# create a template for the pawsey module, inside ${root_dir},
+# containing the software stack related snippet,
+# to be handed over to the Platforms team
+cd ${root_dir}
+sed \
+  -e "s;TOP_ROOT_DIR;${top_root_dir};g" \
+  -e "s;CUSTOM_MODULES_DIR;${custom_modules_dir};g" \
+  -e "s;UTILITIES_MODULES_DIR;${utilities_modules_dir};g" \
+  -e "s;SHPC_CONTAINERS_MODULES_DIR;${shpc_containers_modules_dir};g" \
+  -e "s;GCC_VERSION;${gcc_version};g" \
+  -e "s;CCE_VERSION;${cce_version};g" \
+  -e "s;AOCC_VERSION;${aocc_version};g" \
+  ${script_dir}/setup_templates/module_pawsey_load_first.lua \
+  > ${root_dir}/pawsey_load_first.lua
