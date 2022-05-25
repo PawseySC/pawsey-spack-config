@@ -21,6 +21,7 @@ class Idg(CMakePackage):
 
     depends_on('boost')
     depends_on('fftw-api@3')
+    depends_on('blas')
 
     def url_for_version(self, version):
         return ("https://git.astron.nl/RD/idg/-/archive/{0}/idg-{0}.tar.gz".format(version))

@@ -35,6 +35,8 @@ class Wsclean(CMakePackage):
     depends_on('fftw-api@3')
     depends_on('gsl')
     depends_on('cfitsio')
+    depends_on('hdf5 +cxx ~mpi api=v110', when='@2.10.1')
+    depends_on('boost')
     depends_on('idg@0.8.1', when='@3.0 +idg')
     depends_on('idg@1.0.0', when='@3.1 +idg')
     depends_on('everybeam@0.2.0', when='@3.0 +everybeam')
