@@ -22,7 +22,7 @@ if [ ! -d $modpath ]; then
     exit
 fi 
 
-modfilebase=${script_dir}/base-meta-module-dependencies.lua
+modfilebase=${script_dir}/setup_templates/base-meta-module-dependencies.lua
 
 echo "Setting up $package"
 isspack=$(which spack)

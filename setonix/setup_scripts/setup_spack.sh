@@ -44,7 +44,7 @@ sed \
   -e "s/SPACK_VERSION/${spack_version}/g" \
   -e "s/PYTHON_MODULEFILE/${python_name}\/${python_version}/g" \
   -e "s/DATE_TAG/${date_tag}/g" \
-  pawsey-spack-config/setonix/setup_scripts/module_spack.lua \
+  pawsey-spack-config/setonix/setup_scripts/setup_templates/module_spack.lua \
   > ${root_dir}/${spack_module_dir}/${spack_version}.lua
 
 # create a template for the pawsey module, inside ${root_dir},
@@ -59,5 +59,5 @@ sed \
   -e "s;GCC_VERSION;${gcc_version};g" \
   -e "s;CCE_VERSION;${cce_version};g" \
   -e "s;AOCC_VERSION;${aocc_version};g" \
-  pawsey-spack-config/setonix/setup_scripts/module_pawsey_load_first.lua \
+  pawsey-spack-config/setonix/setup_scripts/setup_templates/module_pawsey_load_first.lua \
   > ${root_dir}/pawsey_load_first.lua
