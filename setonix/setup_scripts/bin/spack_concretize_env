@@ -1,0 +1,38 @@
+#!/bin/bash 
+
+or_not_found() {
+  if type "$1" >/dev/null 2>&1; then # if given a valid command
+    "$@"                             # run that command with original arguments
+  else
+    echo "Not found"  # write to stdout so it's captured by the command substitution
+  fi
+}
+
+# This bash wrapper concretizes an environment
+# source setup variables
+isspack=$(which spack 1> /tmp/found-spack 2>/dev/null; more /tmp/found-spack )
+if [ -z ${isspack} ]; then 
+    echo "spack not found, please update paths to include spack"
+    exit
+fi
+
+timestamp=$( date +"%Y-%m-%d_%Hh%M")
+env=$( basename $( pwd ))
+script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
+logdir=/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs/concretization.${timestamp}/
+logfile=spack.install.${timestamp}.${env}
+
+isspackyaml=$(ls spack.yaml 1> /tmp/found-yaml 2>/dev/null; more /tmp/found-yaml)
+if [ -z ${isspackyaml} ]; then 
+    echo "${env} does not contain a spack.yaml, please check this is valid environment"
+    exit
+fi
+# now concretize and save results 
+echo "Concretizing ${env} and saving results to ${logdir}"
+mkdir -p ${logdir}
+spack env activate .
+spack concretize -f 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
+# also check if concretization has duplicates. still needs fleshing out
+#local duplicate_list=$(spack_check_duplicate ${logdir}/${logfile}.log)
+spack env deactivate
+echo "Done ${env}"
