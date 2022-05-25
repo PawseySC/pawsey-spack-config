@@ -54,6 +54,15 @@ packages:
   # otherwise only the last one is considered, and the previous ones are ingored
   # 2. when externals are specified, the preferred version is respected only if it is one of the externals
 
+  #TODO for next stack builds: consider adding more +pic as default variant
+
+  # preferred versions (for 2022.05) and variants, dependencies
+  # required by env_devel/hpctoolkit, but good to have for everything
+  libunwind:
+    variants: '+pic'
+  mbedtls:
+    variants: '+pic'
+
   # preferred versions (for 2022.05) and variants, utils/python
   # Note: setting autoconf/automake/cmake as non buildable
   cmake:
@@ -337,7 +346,7 @@ packages:
     buildable: false
   xz:
     externals:
-    - spec: xz@5.2.3
+    - spec: xz@5.2.3+pic
       prefix: /usr
     buildable: false
 
