@@ -5,9 +5,7 @@ if [ ! -z $1 ]; then
   nprocs=$1
 fi
 
-# source setup variables
-curdir=$(pwd)
-script_dir=${curdir}/$(dirname $0)
+script_dir="$(dirname $0 2>/dev/null || pwd)"
 
 #list of environments
 envs=(env_utils \
