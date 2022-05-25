@@ -1,0 +1,23 @@
+#!/bin/bash 
+script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
+source ${script_dir}/.spack_check_env.sh
+
+# This bash wrapper concretizes an environment
+env=$( basename $( pwd ))
+logdir=${baselogdir}/concretize.${timestamp}/
+logfile=spack.${env}
+
+# now concretize and save results 
+echo "Concretizing ${env} and saving results to ${logdir}"
+mkdir -p ${logdir}
+spack env activate .
+spack concretize -f 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
+# also check if concretization has duplicates. still needs fleshing out
+#local duplicate_list=$(spack_check_duplicate ${logdir}/${logfile}.log)
+spack env deactivate
+errors=$(wc -l ${logdir}/${logfile}.err | awk '{print $1}')
+if [ "${errors}" -ne "0" ]; then
+    echo "There were errors in concretizing. \n Please check ${logdir}/${logfile}.log for more details."
+else 
+    echo "Done ${env}"
+fi 
