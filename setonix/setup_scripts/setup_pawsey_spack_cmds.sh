@@ -73,7 +73,7 @@ function spack_spec()
     local timestamp="$(get_timestamp)"
     local logdir="$(pwd)"
     local logfile="spack.spec.${timestamp}.${tool}"
-    spack spec "$args" 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
+    spack spec -I "$args" 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
 }
 
 
@@ -84,7 +84,7 @@ function spack_install()
     local timestamp="$(get_timestamp)"
     local logdir="$(pwd)"
     local logfile="spack.install.${timestamp}.${tool}"
-    spack spec "$args" 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
+#    spack spec -I "$args" 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
     sg $PAWSEY_PROJECT -c "spack install "$args" 1>> ${logdir}/${logfile}.log 2>> ${logdir}/${logfile}.err"
 }
 
