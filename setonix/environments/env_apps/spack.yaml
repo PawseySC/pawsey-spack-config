@@ -33,9 +33,9 @@ spack:
 # Custom Pawsey recipe, that builds all dependencies internally - OK
     - nektar@5.0.2 build_type=Release
     - nwchem@7.0.2
-# Failing:    - openfoam@v2012 +paraview +vtk #paraview is failing to be installed, then breaking this spec.
+# Failing:    - openfoam@2012 +paraview +vtk #paraview is failing to be installed, then breaking this spec.
 # Current alternative:
-    - openfoam@v2012
+    - openfoam@2012
 # Failing:    - openfoam-org@8 #Alexis still working on it
     - quantum-espresso@6.8 +epw +openmp hdf5=parallel
     - vasp@5.4.4 +scalapack +vaspsol

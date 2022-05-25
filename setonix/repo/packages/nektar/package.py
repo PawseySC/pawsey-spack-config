@@ -14,6 +14,7 @@ class Nektar(CMakePackage):
 
     version('5.1.0', sha256='f5fdb729909e4dcd42cb071f06569634fa87fe90384ba0f2f857a9e0e56b6ac5')
     version('5.0.3', sha256='1ef6f8f94f850ae78675bca3f752aa6c9f75401d1d6da4ec25df7fa795b860e9')
+    version('5.0.2', sha256='24af60a48dbdf0455149540b35a6a59acd636c47b3150b261899a1a1ca886c0b')
     version('5.0.0', sha256='5c594453fbfaa433f732a55405da9bba27d4a00c32d7b9d7515767925fb4a818')
     version('4.4.1', sha256='71cfd93d848a751ae9ae5e5ba336cee4b4827d4abcd56f6b8dc5c460ed6b738c')
 
