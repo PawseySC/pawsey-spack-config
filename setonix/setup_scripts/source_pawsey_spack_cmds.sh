@@ -35,9 +35,9 @@ function spack_env_concretize()
     local timestamp="$(get_timestamp)"
     if [ "$USER" == "spack" ] ; then
         local date_tag="2022.05" # Marco: I have ideas on how to improve this
-        local logdir="/software/setonix/${date_tag}/software/${USER}/logs"
+        local logdir=${SPACK_LOGS_BASEDIR:-"/software/setonix/${date_tag}/software/${USER}/logs"}
     else
-        local logdir="/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"
+        local logdir=${SPACK_LOGS_BASEDIR:-"/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"}
     fi
     mkdir -p $logdir
     local logfile="spack.concretize.env.${timestamp}.${env}"
@@ -60,9 +60,9 @@ function spack_env_install()
     local timestamp="$(get_timestamp)"
     if [ "$USER" == "spack" ] ; then
         local date_tag="2022.05" # Marco: I have ideas on how to improve this
-        local logdir="/software/setonix/${date_tag}/software/${USER}/logs"
+        local logdir=${SPACK_LOGS_BASEDIR:-"/software/setonix/${date_tag}/software/${USER}/logs"}
     else
-        local logdir="/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"
+        local logdir=${SPACK_LOGS_BASEDIR:-"/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"}
     fi
     mkdir -p $logdir
     local logfile="spack.install.env.${timestamp}.${env}"
@@ -88,9 +88,9 @@ function spack_spec()
     local timestamp="$(get_timestamp)"
     if [ "$USER" == "spack" ] ; then
         local date_tag="2022.05" # Marco: I have ideas on how to improve this
-        local logdir="/software/setonix/${date_tag}/software/${USER}/logs"
+        local logdir=${SPACK_LOGS_BASEDIR:-"/software/setonix/${date_tag}/software/${USER}/logs"}
     else
-        local logdir="/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"
+        local logdir=${SPACK_LOGS_BASEDIR:-"/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"}
     fi
     mkdir -p $logdir
     local logfile="spack.spec.${timestamp}.${tool}"
@@ -106,9 +106,9 @@ function spack_install()
     local timestamp="$(get_timestamp)"
     if [ "$USER" == "spack" ] ; then
         local date_tag="2022.05" # Marco: I have ideas on how to improve this
-        local logdir="/software/setonix/${date_tag}/software/${USER}/logs"
+        local logdir=${SPACK_LOGS_BASEDIR:-"/software/setonix/${date_tag}/software/${USER}/logs"}
     else
-        local logdir="/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"
+        local logdir=${SPACK_LOGS_BASEDIR:-"/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"}
     fi
     mkdir -p $logdir
     local logfile="spack.install.${timestamp}.${tool}"
@@ -125,9 +125,9 @@ function spack_uninstall()
     local timestamp="$(get_timestamp)"
     if [ "$USER" == "spack" ] ; then
         local date_tag="2022.05" # Marco: I have ideas on how to improve this
-        local logdir="/software/setonix/${date_tag}/software/${USER}/logs"
+        local logdir=${SPACK_LOGS_BASEDIR:-"/software/setonix/${date_tag}/software/${USER}/logs"}
     else
-        local logdir="/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"
+        local logdir=${SPACK_LOGS_BASEDIR:-"/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"}
     fi
     mkdir -p $logdir
     local logfile="spack.uninstall.${timestamp}.${tool}"
