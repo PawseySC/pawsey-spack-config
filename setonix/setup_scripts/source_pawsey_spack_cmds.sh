@@ -27,12 +27,19 @@ function spack_check_duplicate()
 
 function spack_env_concretize() 
 {
-    # default to environment being the current dir
-    local envdir="${1:-"."}"
+    # environment dir is always the current dir
+    local envdir="."
     # use just the innest dir in the path as env name
-    local env="${envdir##*/}"
+    local env="$(pwd)"
+    local env="${env##*/}"
     local timestamp="$(get_timestamp)"
-    local logdir="$(pwd)"
+    if [ "$USER" == "spack" ] ; then
+        local date_tag="2022.05" # Marco: I have ideas on how to improve this
+        local logdir="/software/setonix/${date_tag}/software/${USER}/logs"
+    else
+        local logdir="/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"
+    fi
+    mkdir -p $logdir
     local logfile="spack.concretize.env.${timestamp}.${env}"
     spack env activate ${envdir}
     spack concretize -f 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
@@ -44,17 +51,24 @@ function spack_env_concretize()
 
 function spack_env_install()
 {
-    # default to environment being the current dir
-    local envdir="${1:-"."}"
+    local args="$@"
+    # environment dir is always the current dir
+    local envdir="."
     # use just the innest dir in the path as env name
-    local env="${envdir##*/}"
-    local nprocs="${2:-"16"}"
+    local env="$(pwd)"
+    local env="${env##*/}"
     local timestamp="$(get_timestamp)"
-    local logdir="$(pwd)"
+    if [ "$USER" == "spack" ] ; then
+        local date_tag="2022.05" # Marco: I have ideas on how to improve this
+        local logdir="/software/setonix/${date_tag}/software/${USER}/logs"
+    else
+        local logdir="/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"
+    fi
+    mkdir -p $logdir
     local logfile="spack.install.env.${timestamp}.${env}"
     spack env activate ${envdir}
     spack concretize -f 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
-    sg $PAWSEY_PROJECT -c "spack install -j${nprocs} 1>> ${logdir}/${logfile}.log 2>> ${logdir}/${logfile}.err"
+    sg $PAWSEY_PROJECT -c "spack install ${args} 1>> ${logdir}/${logfile}.log 2>> ${logdir}/${logfile}.err"
     spack env deactivate
 }
 
@@ -72,7 +86,13 @@ function spack_spec()
     local tool="${args%%@*}"
     local tool="${tool##* }"
     local timestamp="$(get_timestamp)"
-    local logdir="$(pwd)"
+    if [ "$USER" == "spack" ] ; then
+        local date_tag="2022.05" # Marco: I have ideas on how to improve this
+        local logdir="/software/setonix/${date_tag}/software/${USER}/logs"
+    else
+        local logdir="/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"
+    fi
+    mkdir -p $logdir
     local logfile="spack.spec.${timestamp}.${tool}"
     spack spec -I "$args" 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
 }
@@ -84,7 +104,13 @@ function spack_install()
     local tool="${args%%@*}"
     local tool="${tool##* }"
     local timestamp="$(get_timestamp)"
-    local logdir="$(pwd)"
+    if [ "$USER" == "spack" ] ; then
+        local date_tag="2022.05" # Marco: I have ideas on how to improve this
+        local logdir="/software/setonix/${date_tag}/software/${USER}/logs"
+    else
+        local logdir="/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"
+    fi
+    mkdir -p $logdir
     local logfile="spack.install.${timestamp}.${tool}"
 #    spack spec -I "$args" 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
     sg $PAWSEY_PROJECT -c "spack install "$args" 1>> ${logdir}/${logfile}.log 2>> ${logdir}/${logfile}.err"
@@ -97,7 +123,13 @@ function spack_uninstall()
     local tool="${args%%@*}"
     local tool="${tool##* }"
     local timestamp="$(get_timestamp)"
-    local logdir="$(pwd)"
+    if [ "$USER" == "spack" ] ; then
+        local date_tag="2022.05" # Marco: I have ideas on how to improve this
+        local logdir="/software/setonix/${date_tag}/software/${USER}/logs"
+    else
+        local logdir="/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"
+    fi
+    mkdir -p $logdir
     local logfile="spack.uninstall.${timestamp}.${tool}"
     sg $PAWSEY_PROJECT -c "spack uninstall "$args" 1>> ${logdir}/${logfile}.log 2>> ${logdir}/${logfile}.err"
 }
