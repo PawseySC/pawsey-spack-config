@@ -60,7 +60,6 @@ function spack_examine_install_err()
 function spack_env_concretize() 
 {
     # environment dir is always the current dir
-    local envdir="."
     # use just the innest dir in the path as env name
     local env="$(pwd)"
     local env="${env##*/}"
@@ -73,9 +72,11 @@ function spack_env_concretize()
     fi
     mkdir -p $logdir
     local logfile="spack.concretize.env.${timestamp}.${env}"
-    spack env activate ${envdir}
-    spack concretize -f 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
-    spack_examine_concretize_err $1
+    # environment dir is always the current dir
+    spack env activate .
+    echo "ENV_DIR: $(pwd)" > ${logdir}/${logfile}.log
+    spack concretize -f 1>> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
+    spack_examine_concretize_err ${logdir}/${logfile}.err
     # also check if concretization has duplicates. still needs fleshing out
     local duplicate_list="$(spack_check_duplicate ${logdir}/${logfile}.log)"
     spack env deactivate
@@ -86,7 +87,6 @@ function spack_env_install()
 {
     local args="$@"
     # environment dir is always the current dir
-    local envdir="."
     # use just the innest dir in the path as env name
     local env="$(pwd)"
     local env="${env##*/}"
@@ -99,11 +99,13 @@ function spack_env_install()
     fi
     mkdir -p $logdir
     local logfile="spack.install.env.${timestamp}.${env}"
-    spack env activate ${envdir}
-    spack concretize -f 1> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
+    # environment dir is always the current dir
+    spack env activate .
+    echo "ENV_DIR: $(pwd)" > ${logdir}/${logfile}.log
+    spack concretize -f 1>> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
+    spack_examine_concretize_err ${logdir}/${logfile}.err
     sg $PAWSEY_PROJECT -c "spack install ${args} 1>> ${logdir}/${logfile}.log 2>> ${logdir}/${logfile}.err"
-    spack_examine_concretize_err $1
-    spack_examine_install_err $1
+    spack_examine_install_err ${logdir}/${logfile}.err
     spack env deactivate
 }
 
@@ -131,7 +133,7 @@ function spack_spec()
     local logfile="spack.spec.${timestamp}"
     spack spec -I "$args" 1> /tmp/${logfile}.log 2> /tmp/${logfile}.err
     spack_examine_concretize_err /tmp/${logfile}.err
-    echo "${args}" >> ${logdir}/${logfile}.log
+    echo "ARGS: ${args}" >> ${logdir}/${logfile}.log
     cat /tmp/${logfile}.log >> ${logdir}/${logfile}.log
     cat /tmp/${logfile}.err >> ${logdir}/${logfile}.err
 }
@@ -153,10 +155,9 @@ function spack_install()
     local logfile="spack.install.${timestamp}"
     sg $PAWSEY_PROJECT -c "spack install "$args" 1> /tmp/${logfile}.log 2> /tmp/${logfile}.err"
     spack_examine_install_err /tmp/${logfile}.err
-    echo "${args}" >> ${logdir}/${logfile}.log
+    echo "ARGS: ${args}" >> ${logdir}/${logfile}.log
     cat /tmp/${logfile}.log >> ${logdir}/${logfile}.log
     cat /tmp/${logfile}.err >> ${logdir}/${logfile}.err
-
 }
 
 
@@ -175,7 +176,7 @@ function spack_uninstall()
     mkdir -p $logdir
     local logfile="spack.uninstall.${timestamp}.${tool}"
     sg $PAWSEY_PROJECT -c "spack uninstall "$args" 1> /tmp/${logfile}.log 2> /tmp/${logfile}.err"
-    echo "${args}" >> ${logdir}/${logfile}.log
+    echo "ARGS: ${args}" >> ${logdir}/${logfile}.log
     cat /tmp/${logfile}.log >> ${logdir}/${logfile}.log
     cat /tmp/${logfile}.err >> ${logdir}/${logfile}.err
 }
