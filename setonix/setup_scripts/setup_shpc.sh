@@ -15,9 +15,9 @@ if [ "${is_python}" != "0" ] ; then
   langs_modulepath="${root_dir}/modules/zen3/gcc/${gcc_version}/programming-languages"
   export MODULEPATH="${langs_modulepath}:${MODULEPATH}"
 fi
-module is-avail setuptools/$setuptools_version
+module is-avail py-setuptools/$setuptools_version
 is_setuptools="$?"
-module is-avail pip/$pip_version
+module is-avail py-pip/$pip_version
 is_pip="$?"
 if [ "${is_setuptools}" != "0" ] || [ "${is_pip}" != "0" ] ; then
   utils_modulepath="${root_dir}/modules/zen3/gcc/${gcc_version}/utilities"
@@ -25,8 +25,8 @@ if [ "${is_setuptools}" != "0" ] || [ "${is_pip}" != "0" ] ; then
 fi
 # load needed python toolkit
 module load $python_name/$python_version
-module load setuptools/$setuptools_version
-module load pip/$pip_version
+module load py-setuptools/$setuptools_version
+module load py-pip/$pip_version
 
 # create and enter install directory
 cd ${root_dir}
