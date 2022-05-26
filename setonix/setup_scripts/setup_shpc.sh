@@ -5,6 +5,24 @@
 script_dir="$(readlink -f $(dirname $0) 2>/dev/null || pwd)"
 . ${script_dir}/variables.sh
 
+# use PrgEnv-gnu and gcc version used to build python
+module swap PrgEnv-cray PrgEnv-gnu
+module swap gcc gcc/${gcc_version}
+# for provisional setup (no spack modulepaths yet)
+module is-avail $python_name/$python_version
+is_python="$?"
+if [ "${is_python}" != "0" ] ; then
+  langs_modulepath="${root_dir}/modules/zen3/gcc/${gcc_version}/programming-languages"
+  export MODULEPATH="${langs_modulepath}:${MODULEPATH}"
+fi
+module is-avail setuptools/$setuptools_version
+is_setuptools="$?"
+module is-avail pip/$pip_version
+is_pip="$?"
+if [ "${is_setuptools}" != "0" ] || [ "${is_pip}" != "0" ] ; then
+  utils_modulepath="${root_dir}/modules/zen3/gcc/${gcc_version}/utilities"
+  export MODULEPATH="${utils_modulepath}:${MODULEPATH}"
+fi
 # load needed python toolkit
 module load $python_name/$python_version
 module load setuptools/$setuptools_version
@@ -16,7 +34,7 @@ mkdir -p ${shpc_install_dir}
 cd ${shpc_install_dir}
 
 # pip install package
-pip install --prefix=$(pwd) singularity-hpc==$shpc_version
+sg $PAWSEY_PROJECT -c "pip install --prefix=$(pwd) singularity-hpc==$shpc_version"
 
 # get registry from github repo
 git clone https://github.com/singularityhub/singularity-hpc
