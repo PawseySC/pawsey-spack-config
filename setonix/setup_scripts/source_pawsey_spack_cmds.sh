@@ -23,7 +23,7 @@ function spack_check_duplicate()
 function spack_examine_concretize_err() 
 {
     local log=$1
-    local numerr=$(grep -c "unsatisfiable" ${log})
+    local numerr=$(grep -c -a "unsatisfiable" ${log})
     echo "Concretize Error log has ${numerr} errors"
     grep "unsatisfiable" ${log}
 }
@@ -31,27 +31,53 @@ function spack_examine_concretize_err()
 function spack_examine_install_err() 
 {
     local log=$1
-    local numerr=$(grep -c "==> Error:" ${log})
-    echo "Error log has ${numerr} errors"
+    local numerr=$(grep -c -a "==> Error:" ${log})
+    if [ "$numerr" = "0" ]
+    then 
+        return
+    fi
     errtypes=("FetchError:" "ProcessError:")
     for et in ${errtypes[@]}
     do
-        numerr=$(grep -c "${et}" ${log})
+        numerr=$(grep -c -a ${et} ${log})
         if [ "$numerr" > "0" ]
         then
-            echo "Error log contains ${numerr} ${et}"
+            #echo "Error log contains ${numerr} ${et}"
             if [ ${et} = "FetchError:" ]
             then
-                grep ${et} ${log}
+                local num=$(($(grep -c -a "${et} Manual download" ${log})/2))
+                grep -a "${et} Manual download" ${log} | tail -n ${num} > /tmp/messages.txt
+                for ((i=1;i<=${num};i++))
+                do
+                    m=$(head -n ${i} /tmp/messages.txt | tail -1)
+                    local spackbuild=$(echo ${m} | awk '{print $3}' | sed 's:-: :g')
+                    read -a arr <<< "${spackbuild}"
+                    echo "Manual download required for ${arr[0]}@${arr[1]} : ${arr[2]}"
+                done
+                rm /tmp/messages.txt
+                local num=$(($(grep -c -a "${et} Will not fetch" ${log})/2))
+                grep -a "${et} Will not fetch" ${log} | tail -n ${num} > /tmp/messages.txt
+                for ((i=1;i<=${num};i++))
+                do
+                    m=$(head -n ${i} /tmp/messages.txt | tail -1)
+                    local spackbuild=$(echo ${m} | awk '{print $3}' | sed 's:-: :g')
+                    read -a arr <<< "${spackbuild}"
+                    echo "Unable to fetch ${arr[0]}@${arr[1]} : ${arr[2]}"
+                done
+                rm /tmp/messages.txt
             fi
             if [ ${et} = "ProcessError:" ]
             then
-                messages=$(grep "spack-build.out" ${log})
-                for m in ${messages[@]}
-                do 
-                    package=$(echo ${m} | sed 's:build_stage/: :g' | sed 's:/spack-build.out: :g' | awk '{print $2}')
-                    echo "Error building ${package}"
+                local num=$(grep -c -a "spack-build-out.txt" ${log})
+                grep -a "spack-build-out.txt" ${log} > /tmp/messages.txt
+                for ((i=1;i<=${num};i++))
+                do
+                    m=$(head -n ${i} /tmp/messages.txt | tail -1)
+                    local spackbuild=$(echo ${m} | sed 's:build_stage/: :g' | sed 's:/spack-build: :g' | sed 's:spack-stage-::'g| awk '{print $2}' | sed 's:-: :g')
+                    read -a arr <<< "${spackbuild}"
+                    echo "Error building ${arr[0]}@${arr[1]} : ${arr[2]}"
                 done
+                rm /tmp/messages.txt
             fi
         fi
     done
