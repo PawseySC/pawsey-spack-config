@@ -3,19 +3,21 @@
 script_dir="$(dirname $0 2>/dev/null || pwd)"
 
 #list of environments
-envs=(env_utils \
-env_python \
-env_langs \
-env_devel \
+envs=( \
+env_utils \
 env_num_libs \
+env_python \
 env_io_libs \
+env_langs \
 env_apps \
+env_devel \
 env_benchmarking \
 env_s3_clients \
 env_astro \
 env_bio \
 env_roms \
-env_wrf)
+env_wrf \
+)
 
 envdir=${script_dir}/../environments/
 
