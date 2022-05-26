@@ -99,7 +99,7 @@ mkdir -p ${root_dir}/${shpc_module_dir}
 sed \
   -e "s/SHPC_NAME/${shpc_name}/g" \
   -e "s/SHPC_VERSION/${shpc_version}/g" \
-  -e "s/SHPC_INSTALL_DIR/${shpc_install_dir}/g" \
+  -e "s;SHPC_INSTALL_DIR;${shpc_install_dir};g" \
   -e "s/GCC_VERSION/${gcc_version}/g" \
   -e "s/PYTHON_MODULEFILE/${python_name}\/${python_version}/g" \
   -e "s/SINGULARITY_MODULEFILE/${singularity_name}\/${singularity_version}/g" \
