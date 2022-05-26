@@ -96,7 +96,7 @@ unsetenv("{{ cmd.name }}")
 {% if spec.name == 'singularity' %}setenv("SINGULARITY_CACHEDIR", os.getenv("MYSOFTWARE").."/.singularity")
 -- MPI + Singularity configuration
 -- TODO: review on Setonix Phase 1
-setenv("SINGULARITYENV_LD_LIBRARY_PATH","/opt/cray/pe/mpich/default/ofi/gnu/9.1/lib-abi-mpich:/opt/cray/xpmem/default/lib64:/opt/cray/pe/pmi/default/lib:/opt/cray/libfabric/1.11.0.3.66/lib64:/opt/cray/pe/gcc-libs:/usr/lib64:/usr/lib64/libibverbs:\$LD_LIBRARY_PATH")
+setenv("SINGULARITYENV_LD_LIBRARY_PATH","/opt/cray/pe/mpich/default/ofi/gnu/9.1/lib-abi-mpich:/opt/cray/xpmem/default/lib64:/opt/cray/pe/pmi/default/lib:/opt/cray/libfabric/1.11.0.3.66/lib64:/opt/cray/pe/gcc-libs:/usr/lib64:/usr/lib64/libibverbs:$LD_LIBRARY_PATH")
 setenv("SINGULARITY_BINDPATH","/askapbuffer,/astro,/scratch,/software,/var/opt/cray/pe,/etc/opt/cray/pe,/opt/cray,/etc/alternatives/cray-dvs,/etc/alternatives/cray-xpmem,/opt/cray/pe/lib64/libpmi2.so.0,/opt/cray/pe/lib64/libpmi.so.0,/usr/lib64/librdmacm.so.1,/usr/lib64/libibverbs.so.1,/usr/lib64/libpals.so.0,/usr/lib64/libnl-3.so.200,/usr/lib64/libnl-route-3.so.200,/var/spool/slurmd,/etc/libibverbs.d,/usr/lib64/libibverbs,/usr/lib64/libmlx5.so.1.14.30.0")
 -- LD_PRELOAD edited to fix missing library dependency of Cray libmpi on libxpmem
 prepend_path("SINGULARITYENV_LD_PRELOAD","/opt/cray/xpmem/default/lib64/libxpmem.so.0")
