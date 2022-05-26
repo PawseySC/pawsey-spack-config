@@ -10,7 +10,7 @@ fi
 package=$1
 envpath=$2
 modpath=$3
-script_dir="$(dirname $0 2>/dev/null || pwd)"
+script_dir="$(readlink -f $(dirname $0) 2>/dev/null || pwd)"
 
 if [ ! -d $envpath ]; then
     echo "Environment path ${envpath} does not exist. Exiting"

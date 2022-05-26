@@ -1,6 +1,6 @@
 #!/bin/bash
 
-script_dir="$(dirname $0 2>/dev/null || pwd)"
+script_dir="$(readlink -f $(dirname $0) 2>/dev/null || pwd)"
 
 #list of environments
 envs=( \
@@ -19,10 +19,10 @@ env_roms \
 env_wrf \
 )
 
-envdir=${script_dir}/../environments/
+envdir="${script_dir}/../environments"
 
-timestamp=$(date +"%Y-%m-%d_%Hh%M")
-logdir=${script_dir}/logs/concretization.${timestamp}/
+timestamp="$(date +"%Y-%m-%d_%Hh%M")"
+logdir="${script_dir}/logs/concretization.${timestamp}"
 mkdir -p ${logdir}
 for env in ${envs[@]}
 do 
