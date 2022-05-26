@@ -46,7 +46,7 @@ do
   cd ${envdir}/${env}
   spack env activate .
   spack concretize -f 1> ${logdir}/spack.concretize.${env}.log 2> ${logdir}/spack.concretize.${env}.err
-  sg $PAWSEY_PROJECT -c "spack install --no-checksum -j${nprocs} --only dependecies 1> ${logdir}/spack.install.${env}.log 2> ${logdir}/spack.install.${env}.err"
+  sg $PAWSEY_PROJECT -c "spack install --no-checksum -j${nprocs} --only dependencies 1> ${logdir}/spack.install.${env}.log 2> ${logdir}/spack.install.${env}.err"
   spack env deactivate
   cd ${script_dir}
 done
