@@ -72,3 +72,6 @@ singularity_symlink_module_dir="${utilities_modules_dir}/${singularity_name}"
 
 # location for Spack modulefile
 spack_module_dir="${utilities_modules_dir}/spack"
+
+# location for pawsey_temp module (pawsey staff use)
+pawsey_temp="pawsey_temp"

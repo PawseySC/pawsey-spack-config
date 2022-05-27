@@ -5,24 +5,16 @@
 script_dir="$(readlink -f $(dirname $0) 2>/dev/null || pwd)"
 . ${script_dir}/variables.sh
 
+# for provisional setup (no spack modulepaths yet)
+is_avail_spack="$( module is-avail spack/${spack_version} ; echo "$?" )"
+if [ "${is_avail_spack}" != "0" ] ; then
+  module use ${root_dir}/${pawsey_temp}
+  module load ${pawsey_temp}
+fi
 # use PrgEnv-gnu and gcc version used to build python
 module swap PrgEnv-cray PrgEnv-gnu
 module swap gcc gcc/${gcc_version}
-# for provisional setup (no spack modulepaths yet)
-module is-avail $python_name/$python_version
-is_python="$?"
-if [ "${is_python}" != "0" ] ; then
-  langs_modulepath="${root_dir}/modules/zen3/gcc/${gcc_version}/programming-languages"
-  export MODULEPATH="${langs_modulepath}:${MODULEPATH}"
-fi
-module is-avail py-setuptools/$setuptools_version
-is_setuptools="$?"
-module is-avail py-pip/$pip_version
-is_pip="$?"
-if [ "${is_setuptools}" != "0" ] || [ "${is_pip}" != "0" ] ; then
-  utils_modulepath="${root_dir}/modules/zen3/gcc/${gcc_version}/utilities"
-  export MODULEPATH="${utils_modulepath}:${MODULEPATH}"
-fi
+
 # load needed python toolkit
 module load $python_name/$python_version
 module load py-setuptools/$setuptools_version

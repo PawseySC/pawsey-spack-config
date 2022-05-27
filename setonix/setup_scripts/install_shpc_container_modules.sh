@@ -38,23 +38,14 @@ script_dir="$(readlink -f $(dirname $0) 2>/dev/null || pwd)"
 . ${script_dir}/variables.sh
 
 # for provisional setup (no spack modulepaths yet)
-module is-avail $python_name/$python_version
-is_python="$?"
-if [ "${is_python}" != "0" ] ; then
-  # use PrgEnv-gnu and gcc version used to build python
+is_avail_spack="$( module is-avail spack/${spack_version} ; echo "$?" )"
+if [ "${is_avail_spack}" != "0" ] ; then
+  module use ${root_dir}/${pawsey_temp}
+  module load ${pawsey_temp}
   module swap PrgEnv-cray PrgEnv-gnu
   module swap gcc gcc/${gcc_version}
-  langs_modulepath="${root_dir}/modules/zen3/gcc/${gcc_version}/programming-languages"
-  export MODULEPATH="${langs_modulepath}:${MODULEPATH}"
 fi
-module is-avail ${singularity_name}/${singularity_version}
-is_singularity="$?"
-module is-avail ${shpc_name}/${shpc_version}
-is_shpc="$?"
-if [ "${is_singularity}" != "0" ] || [ "${is_shpc}" != "0" ] ; then
-  pawsey_modulepath="${root_dir}/${utilities_modules_dir}"
-  export MODULEPATH="${pawsey_modulepath}:${MODULEPATH}"
-fi
+
 # load shpc module
 module load ${shpc_name}/${shpc_version}
 
