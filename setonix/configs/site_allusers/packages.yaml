@@ -230,6 +230,16 @@ packages:
   visit:
     variants: 'build_type=Release'
 
+  #for astro packages prefer release 
+  everybeam:
+    variants: 'build_type=Release'
+  wsclean:
+    variants: 'build_type=Release'
+  idg:
+    variants: 'build_type=Release'
+  cghcentre:
+    variants: 'build_type=Release'
+
 # packages found automatically by spack external find
   bison:
     externals:
@@ -497,6 +507,11 @@ packages:
   time:
     externals: 
     - spec: time@1.9
+      prefix: /usr
+    buildable: false
+  subversion:
+    externals:
+    - spec: subversion@1.10.6
       prefix: /usr
     buildable: false
 
