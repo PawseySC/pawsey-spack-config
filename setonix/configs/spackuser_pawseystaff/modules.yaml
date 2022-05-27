@@ -39,6 +39,13 @@ modules:
         #wrf: 'applications/{name}/{version}'
 
         # numerical or parallelisation libraries 
+        "amdblis +suphandling": 'libraries/{name}/{version}'
+        "amdblis ~suphandling": 'libraries/{name}/{version}-nosup'
+        amdlibflame: 'libraries/{name}/{version}'
+        amdscalapack: 'libraries/{name}/{version}'
+        aocl-sparse: 'libraries/{name}/{version}'
+        amdfftw: 'libraries/{name}/{version}'
+        amdlibm: 'libraries/{name}/{version}'
         "boost +python cxxstd=14 visibility=hidden": 'libraries/{name}/{version}-c++14-python'
         "boost +python cxxstd=11 visibility=hidden": 'libraries/{name}/{version}-c++11-python'
         "boost +python cxxstd=98 visibility=hidden": 'libraries/{name}/{version}-c++98-python'

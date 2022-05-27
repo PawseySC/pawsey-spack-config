@@ -153,8 +153,10 @@ packages:
   # preferred versions (for 2022.05) and variants, num_libs
   amdblis:
     version: [3.0]
+    variants: 'threads=openmp'
   amdlibflame:
     version: [3.0]
+    variants: 'threads=openmp'
   amdscalapack:
     version: [3.0]
     variants: 'build_type=Release'
@@ -163,6 +165,7 @@ packages:
     variants: 'build_type=Release'
   amdfftw:
     version: [3.0]
+    variants: 'precision=float,double,long_double'
   amdlibm:
     version: [3.0]
   blaspp:
