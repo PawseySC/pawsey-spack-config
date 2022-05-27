@@ -1,6 +1,6 @@
 #!/bin/bash
 
-script_dir="$(readlink -f $(dirname $0) &>/dev/null || pwd)"
+script_dir="$(readlink -f $(dirname $0) 2>/dev/null || pwd)"
 
 #list of environments
 envs=( \
