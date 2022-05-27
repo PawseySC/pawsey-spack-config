@@ -46,8 +46,8 @@ spack:
     # AMD AOCL
     - amdblis@3.0
     - amdlibflame@3.0
-    - amdscalapack@3.0
-    - aocl-sparse@3.0
+    - amdscalapack@3.0 build_type=Release
+    - aocl-sparse@3.0 build_type=Release
     - amdfftw@3.0
     - amdlibm@3.0
 

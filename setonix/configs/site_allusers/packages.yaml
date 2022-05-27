@@ -151,6 +151,20 @@ packages:
   rust:
     version: [1.52.1]
   # preferred versions (for 2022.05) and variants, num_libs
+  amdblis:
+    version: [3.0]
+  amdlibflame:
+    version: [3.0]
+  amdscalapack:
+    version: [3.0]
+    variants: 'build_type=Release'
+  aocl-sparse:
+    version: [3.0]
+    variants: 'build_type=Release'
+  amdfftw:
+    version: [3.0]
+  amdlibm:
+    version: [3.0]
   blaspp:
     version: [2021.04.01]
     variants: '~cuda build_type=Release'
