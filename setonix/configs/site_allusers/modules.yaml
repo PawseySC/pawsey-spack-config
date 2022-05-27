@@ -90,6 +90,18 @@ modules:
         autoload: direct
 
       # numerical libraries
+      amdblis:
+        autoload: direct
+      amdlibflame:
+        autoload: direct
+      amdscalapack:
+        autoload: direct
+      aocl-sparse:
+        autoload: direct
+      amdfftw:
+        autoload: direct
+      amdlibm:
+        autoload: direct
       openblas:
         autoload: direct
       netlib-lapack:
