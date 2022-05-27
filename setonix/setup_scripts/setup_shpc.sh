@@ -51,6 +51,9 @@ sed -i "s;/.*/python.*$;/bin/sh\n'''exec' & \"\$0\" \"\$@\"\n' ''';g" bin/shpc
 # the one below only because all dep packages are in same path
 sed -i "s;/.*/python.*$;/bin/sh\n'''exec' & \"\$0\" \"\$@\"\n' ''';g" bin/spython
 
+# apply patch to add SINGULARITY_SIF in lua modulefiles
+patch lib/python${python_version_major}.${python_version_minor}/site-packages/shpc/main/modules/templates/singularity.lua ${root_dir}/pawsey-spack-config/setonix/fixes/shpc_sif_shell_variable.patch
+
 # need to configure shpc for use, to change configs
 export PATH=$(pwd)/bin:$PATH
 export PYTHONPATH=$(pwd)/lib/python${python_version_major}.${python_version_minor}/site-packages:$PYTHONPATH
