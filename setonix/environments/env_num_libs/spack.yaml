@@ -45,6 +45,7 @@ spack:
     - plumed@2.7.2
     # AMD AOCL
     - amdblis@3.0
+    - amdlibflame@3.0
     - amdscalapack@3.0
     - aocl-sparse@3.0
     - amdfftw@3.0
