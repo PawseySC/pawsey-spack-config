@@ -57,6 +57,7 @@ sed \
 # to be handed over to the Platforms team
 cd ${root_dir}
 sed \
+  -e "s;DATE_TAG;current;g" \
   -e "s;TOP_ROOT_DIR;${top_root_dir};g" \
   -e "s;CUSTOM_MODULES_DIR;${custom_modules_dir};g" \
   -e "s;UTILITIES_MODULES_DIR;${utilities_modules_dir};g" \
@@ -66,3 +67,17 @@ sed \
   -e "s;AOCC_VERSION;${aocc_version};g" \
   ${script_dir}/setup_templates/module_pawsey_load_first.lua \
   > ${root_dir}/pawsey_load_first.lua
+
+# also create a temporary pawsey module for internal Pawsey use
+mkdir -p ${root_dir}/pawsey_temp
+sed \
+  -e "s;DATE_TAG;${date_tag};g" \
+  -e "s;TOP_ROOT_DIR;${top_root_dir};g" \
+  -e "s;CUSTOM_MODULES_DIR;${custom_modules_dir};g" \
+  -e "s;UTILITIES_MODULES_DIR;${utilities_modules_dir};g" \
+  -e "s;SHPC_CONTAINERS_MODULES_DIR;${shpc_containers_modules_dir};g" \
+  -e "s;GCC_VERSION;${gcc_version};g" \
+  -e "s;CCE_VERSION;${cce_version};g" \
+  -e "s;AOCC_VERSION;${aocc_version};g" \
+  ${script_dir}/setup_templates/module_pawsey_load_first.lua \
+  > ${root_dir}/pawsey_temp/pawsey_temp.lua

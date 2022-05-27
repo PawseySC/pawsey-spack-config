@@ -13,7 +13,7 @@
 
 -- Service variables for this module
 -- 
-local psc_sw_env_date_tag = "current"
+local psc_sw_env_date_tag = "DATE_TAG"
 -- 
 -- NOTE: all definitions below need to be kept in sync with the
 -- corresponding values found in `variables.sh` in this same directory
