@@ -5,7 +5,7 @@ if [ ! -z $1 ]; then
   nprocs="$1"
 fi
 
-script_dir="$(readlink -f $(dirname $0) 2>/dev/null || pwd)"
+script_dir="$(readlink -f "$(dirname $0 2>/dev/null)" || pwd)"
 
 #list of environments
 envs=( \
