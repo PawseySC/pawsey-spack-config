@@ -2,13 +2,31 @@
 
 # source setup variables
 # if copy/pasting these commands, need to run from this directory
-script_dir="$(dirname $0 2>/dev/null || pwd)"
+script_dir="$(readlink -f $(dirname $0) 2>/dev/null || pwd)"
 . ${script_dir}/variables.sh
 
+# use PrgEnv-gnu and gcc version used to build python
+module swap PrgEnv-cray PrgEnv-gnu
+module swap gcc gcc/${gcc_version}
+# for provisional setup (no spack modulepaths yet)
+module is-avail $python_name/$python_version
+is_python="$?"
+if [ "${is_python}" != "0" ] ; then
+  langs_modulepath="${root_dir}/modules/zen3/gcc/${gcc_version}/programming-languages"
+  export MODULEPATH="${langs_modulepath}:${MODULEPATH}"
+fi
+module is-avail py-setuptools/$setuptools_version
+is_setuptools="$?"
+module is-avail py-pip/$pip_version
+is_pip="$?"
+if [ "${is_setuptools}" != "0" ] || [ "${is_pip}" != "0" ] ; then
+  utils_modulepath="${root_dir}/modules/zen3/gcc/${gcc_version}/utilities"
+  export MODULEPATH="${utils_modulepath}:${MODULEPATH}"
+fi
 # load needed python toolkit
 module load $python_name/$python_version
-module load setuptools/$setuptools_version
-module load pip/$pip_version
+module load py-setuptools/$setuptools_version
+module load py-pip/$pip_version
 
 # create and enter install directory
 cd ${root_dir}
@@ -16,7 +34,7 @@ mkdir -p ${shpc_install_dir}
 cd ${shpc_install_dir}
 
 # pip install package
-pip install --prefix=$(pwd) singularity-hpc==$shpc_version
+sg $PAWSEY_PROJECT -c "pip install --prefix=$(pwd) singularity-hpc==$shpc_version"
 
 # get registry from github repo
 git clone https://github.com/singularityhub/singularity-hpc
@@ -53,11 +71,11 @@ shpc config remove registry:\$root_dir/registry
 shpc config add registry:${root_dir}/${shpc_install_dir}/registry
 shpc config add registry:${root_dir}/pawsey-spack-config/setonix/shpc_registry
 # user install location for modulefiles
-shpc config set module_base:/software/\$PAWSEY_PROJECT/\$USER/setonix/containers/modules
+shpc config set module_base:/software/projects/\$PAWSEY_PROJECT/\$USER/setonix/containers/modules
 # disable default version for modulefiles
 shpc config set default_version:false
 # user install location for containers
-shpc config set container_base:/software/\$PAWSEY_PROJECT/\$USER/setonix/containers/sif
+shpc config set container_base:/software/projects/\$PAWSEY_PROJECT/\$USER/setonix/containers/sif
 # singularity module
 shpc config set singularity_module:${singularity_name}/${singularity_version}
 # enable wrapper scripts
@@ -81,11 +99,11 @@ mkdir -p ${root_dir}/${shpc_module_dir}
 sed \
   -e "s/SHPC_NAME/${shpc_name}/g" \
   -e "s/SHPC_VERSION/${shpc_version}/g" \
-  -e "s/SHPC_INSTALL_DIR/${shpc_install_dir}/g" \
+  -e "s;SHPC_INSTALL_DIR;${shpc_install_dir};g" \
   -e "s/GCC_VERSION/${gcc_version}/g" \
   -e "s/PYTHON_MODULEFILE/${python_name}\/${python_version}/g" \
   -e "s/SINGULARITY_MODULEFILE/${singularity_name}\/${singularity_version}/g" \
   -e "s/DATE_TAG/${date_tag}/g" \
   -e "s/PYTHON_MAJORMINOR/${python_version_major}.${python_version_minor}/g" \
- pawsey-spack-config/setonix/setup_scripts/module_${shpc_name}.lua \
+ ${script_dir}/setup_templates/module_${shpc_name}.lua \
  > ${root_dir}/${shpc_module_dir}/${shpc_version}.lua

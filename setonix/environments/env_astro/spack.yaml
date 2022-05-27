@@ -10,6 +10,14 @@ spack:
       buildable: true
     'fftw-api:':
       buildable: true
+    everybeam:
+      variants: build_type=Release
+    wsclean:
+      variants: build_type=Release
+    idg:
+      variants: build_type=Release
+    cghcentre:
+      variants: build_type=Release
   definitions:
   
   # casacore variants

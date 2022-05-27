@@ -11,3 +11,6 @@ spack.lock
 .spack-env/
 # VIM tmp files
 .*.swp
+# our build logs
+spack-logs/
+logs/
