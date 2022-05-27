@@ -157,7 +157,7 @@ function spack_spec()
     fi
     mkdir -p $logdir
     local logfile="spack.spec.${timestamp}"
-    spack spec -I "$args" 1> /tmp/${logfile}.log 2> /tmp/${logfile}.err
+    spack spec -Il "$args" 1> /tmp/${logfile}.log 2> /tmp/${logfile}.err
     spack_examine_concretize_err /tmp/${logfile}.err
     echo "ARGS: ${args}" >> ${logdir}/${logfile}.log
     cat /tmp/${logfile}.log >> ${logdir}/${logfile}.log
