@@ -31,6 +31,7 @@ function get_logdir()
     else
         local logdir=${SPACK_LOGS_BASEDIR:-"/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"}
     fi
+    echo "$logdir"
 }
 
 
