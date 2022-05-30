@@ -138,6 +138,9 @@ class Plumed(AutotoolsPackage):
     conflicts('+funnel', when='@:2.6.99', msg='funnel was added from version 2.7')
     conflicts('+opes', when='@:2.6.99', msg='opes was added from version 2.7')
 
+    # Fixes
+    patch('plumed-2.6.1-include-limits.patch', when='@2.6.1')
+
     force_autoreconf = True
 
     parallel = False
