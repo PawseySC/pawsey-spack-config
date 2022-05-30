@@ -17,8 +17,8 @@ spack spec nano
 
 # define log directory
 timestamp=$(date +"%Y-%m-%d_%Hh%M")
-SPACK_LOGS_BASEDIR="${SPACK_LOGS_BASEDIR:-"${script_dir}/logs"}"
-logdir="${SPACK_LOGS_BASEDIR}/python.${timestamp}"
+top_logdir="${SPACK_LOGS_BASEDIR:-"${script_dir}/logs"}"
+logdir="${top_logdir}/python.${timestamp}"
 mkdir -p ${logdir}
 
 # first thing we need is Python

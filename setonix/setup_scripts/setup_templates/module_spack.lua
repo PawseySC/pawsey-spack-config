@@ -12,6 +12,14 @@ load("PYTHON_MODULEFILE")
 
 setenv("SPACK_HOME","/software/setonix/DATE_TAG/spack")
 
+-- Define logs directory
+local user = os.getenv("USER")
+if ( user == "spack" ) then
+  setenv("SPACK_LOGS_BASEDIR", "/software/setonix/DATE_TAG/software/" .. user .. "/logs")
+else
+  setenv("SPACK_LOGS_BASEDIR", "/software/projects/" .. os.getenv("PAWSEY_PROJECT") .. "/" .. user .. "/spack-logs")
+end
+
 -- Lmod 8.6+ has a function to source shell files in an unloadable way
 -- see https://lmod.readthedocs.io/en/latest/050_lua_modulefiles.html
 -- Joey has 8.3, so this is not usable

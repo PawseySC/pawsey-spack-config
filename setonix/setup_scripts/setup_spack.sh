@@ -27,7 +27,7 @@ cp -p pawsey-spack-config/setonix/configs/spackuser_pawseystaff/*.yaml ~/.spack/
 sed -i "s/DATE_TAG/$date_tag/g" spack/etc/spack/*.yaml ~/.spack/*.yaml
 
 # edit DATE_TAG in sourceable script with spack functions
-sed -i "s;date_tag=.*;date_tag=${date_tag} # DATE_TAG;g" ${script_dir}/source_pawsey_spack_cmds.sh
+sed -i "s;date_tag=.*;date_tag=${date_tag} # DATE_TAG;g" pawsey-spack-config/setonix/setup_scripts/source_pawsey_spack_cmds.sh
 
 # apply fixes into spack tree
 # Marco,s Lmod arch family fix for the module tree
