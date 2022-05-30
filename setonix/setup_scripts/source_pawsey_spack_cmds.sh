@@ -15,10 +15,31 @@ function get_timestamp()
 }
 
 
+function get_daystamp()
+{
+    local format="${1:-"%Y-%m-%d"}"
+    local daystamp="$(date +${format})"
+    echo "$daystamp"
+}
+
+
+function get_logdir()
+{
+    if [ "$USER" == "spack" ] ; then
+        local date_tag="2022.05" # DATE_TAG
+        local logdir=${SPACK_LOGS_BASEDIR:-"/software/setonix/${date_tag}/software/${USER}/logs"}
+    else
+        local logdir=${SPACK_LOGS_BASEDIR:-"/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"}
+    fi
+}
+
+
 function spack_check_duplicate()
 {
+    #TODO: work in progress
     local file="$1"
 }
+
 
 function spack_examine_concretize_err() 
 {
@@ -28,6 +49,7 @@ function spack_examine_concretize_err()
     grep "unsatisfiable" ${log}
 }
 
+
 function spack_examine_install_err() 
 {
     local log=$1
@@ -36,10 +58,11 @@ function spack_examine_install_err()
     then 
         return
     fi
-    errtypes=("FetchError:" "ProcessError:")
+    local errtypes=("FetchError:" "ProcessError:")
+    local et
     for et in ${errtypes[@]}
     do
-        numerr=$(grep -c -a ${et} ${log})
+        local numerr=$(grep -c -a ${et} ${log})
         if [ "$numerr" > "0" ]
         then
             #echo "Error log contains ${numerr} ${et}"
@@ -47,9 +70,10 @@ function spack_examine_install_err()
             then
                 local num=$(($(grep -c -a "${et} Manual download" ${log})/2))
                 grep -a "${et} Manual download" ${log} | tail -n ${num} > /tmp/messages.txt
+                local i
                 for ((i=1;i<=${num};i++))
                 do
-                    m=$(head -n ${i} /tmp/messages.txt | tail -1)
+                    local m=$(head -n ${i} /tmp/messages.txt | tail -1)
                     local spackbuild=$(echo ${m} | awk '{print $3}' | sed 's:-: :g')
                     read -a arr <<< "${spackbuild}"
                     echo "Manual download required for ${arr[0]}@${arr[1]} : ${arr[2]}"
@@ -57,9 +81,10 @@ function spack_examine_install_err()
                 rm /tmp/messages.txt
                 local num=$(($(grep -c -a "${et} Will not fetch" ${log})/2))
                 grep -a "${et} Will not fetch" ${log} | tail -n ${num} > /tmp/messages.txt
+                local i
                 for ((i=1;i<=${num};i++))
                 do
-                    m=$(head -n ${i} /tmp/messages.txt | tail -1)
+                    local m=$(head -n ${i} /tmp/messages.txt | tail -1)
                     local spackbuild=$(echo ${m} | awk '{print $3}' | sed 's:-: :g')
                     read -a arr <<< "${spackbuild}"
                     echo "Unable to fetch ${arr[0]}@${arr[1]} : ${arr[2]}"
@@ -70,9 +95,10 @@ function spack_examine_install_err()
             then
                 local num=$(grep -c -a "spack-build-out.txt" ${log})
                 grep -a "spack-build-out.txt" ${log} > /tmp/messages.txt
+                local i
                 for ((i=1;i<=${num};i++))
                 do
-                    m=$(head -n ${i} /tmp/messages.txt | tail -1)
+                    local m=$(head -n ${i} /tmp/messages.txt | tail -1)
                     local spackbuild=$(echo ${m} | sed 's:build_stage/: :g' | sed 's:/spack-build: :g' | sed 's:spack-stage-::'g| awk '{print $2}' | sed 's:-: :g')
                     read -a arr <<< "${spackbuild}"
                     echo "Error building ${arr[0]}@${arr[1]} : ${arr[2]}"
@@ -83,6 +109,7 @@ function spack_examine_install_err()
     done
 }
 
+
 function spack_env_concretize() 
 {
     # environment dir is always the current dir
@@ -90,12 +117,7 @@ function spack_env_concretize()
     local env="$(pwd)"
     local env="${env##*/}"
     local timestamp="$(get_timestamp)"
-    if [ "$USER" == "spack" ] ; then
-        local date_tag="2022.05" # Marco: I have ideas on how to improve this
-        local logdir=${SPACK_LOGS_BASEDIR:-"/software/setonix/${date_tag}/software/${USER}/logs"}
-    else
-        local logdir=${SPACK_LOGS_BASEDIR:-"/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"}
-    fi
+    local logdir="$(get_logdir)"
     mkdir -p $logdir
     local logfile="spack.concretize.env.${timestamp}.${env}"
     # environment dir is always the current dir
@@ -117,12 +139,7 @@ function spack_env_install()
     local env="$(pwd)"
     local env="${env##*/}"
     local timestamp="$(get_timestamp)"
-    if [ "$USER" == "spack" ] ; then
-        local date_tag="2022.05" # Marco: I have ideas on how to improve this
-        local logdir=${SPACK_LOGS_BASEDIR:-"/software/setonix/${date_tag}/software/${USER}/logs"}
-    else
-        local logdir=${SPACK_LOGS_BASEDIR:-"/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"}
-    fi
+    local logdir="$(get_logdir)"
     mkdir -p $logdir
     local logfile="spack.install.env.${timestamp}.${env}"
     # environment dir is always the current dir
@@ -148,18 +165,14 @@ function spack_spec()
     local args="$@"
     local tool="${args%%@*}"
     local tool="${tool##* }"
-    local timestamp="$(date +"%Y-%m-%d")"
-    if [ "$USER" == "spack" ] ; then
-        local date_tag="2022.05" # Marco: I have ideas on how to improve this
-        local logdir=${SPACK_LOGS_BASEDIR:-"/software/setonix/${date_tag}/software/${USER}/logs"}
-    else
-        local logdir=${SPACK_LOGS_BASEDIR:-"/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"}
-    fi
+    local timestamp="$(get_daystamp)"
+    local logdir="$(get_logdir)"
     mkdir -p $logdir
     local logfile="spack.spec.${timestamp}"
     spack spec -Il "$args" 1> /tmp/${logfile}.log 2> /tmp/${logfile}.err
     spack_examine_concretize_err /tmp/${logfile}.err
     echo "ARGS: ${args}" >> ${logdir}/${logfile}.log
+    echo "TIME: $(date)" >> ${logdir}/${logfile}.log
     cat /tmp/${logfile}.log >> ${logdir}/${logfile}.log
     cat /tmp/${logfile}.err >> ${logdir}/${logfile}.err
 }
@@ -170,18 +183,14 @@ function spack_install()
     local args="$@"
     local tool="${args%%@*}"
     local tool="${tool##* }"
-    local timestamp="$(date +"%Y-%m-%d")"
-    if [ "$USER" == "spack" ] ; then
-        local date_tag="2022.05" # Marco: I have ideas on how to improve this
-        local logdir=${SPACK_LOGS_BASEDIR:-"/software/setonix/${date_tag}/software/${USER}/logs"}
-    else
-        local logdir=${SPACK_LOGS_BASEDIR:-"/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"}
-    fi
+    local timestamp="$(get_daystamp)"
+    local logdir="$(get_logdir)"
     mkdir -p $logdir
     local logfile="spack.install.${timestamp}"
     sg $PAWSEY_PROJECT -c "spack install "$args" 1> /tmp/${logfile}.log 2> /tmp/${logfile}.err"
     spack_examine_install_err /tmp/${logfile}.err
     echo "ARGS: ${args}" >> ${logdir}/${logfile}.log
+    echo "TIME: $(date)" >> ${logdir}/${logfile}.log
     cat /tmp/${logfile}.log >> ${logdir}/${logfile}.log
     cat /tmp/${logfile}.err >> ${logdir}/${logfile}.err
 }
@@ -192,17 +201,28 @@ function spack_uninstall()
     local args="$@"
     local tool="${args%%@*}"
     local tool="${tool##* }"
-    local timestamp="$(date +"%Y-%m-%d")"
-    if [ "$USER" == "spack" ] ; then
-        local date_tag="2022.05" # Marco: I have ideas on how to improve this
-        local logdir=${SPACK_LOGS_BASEDIR:-"/software/setonix/${date_tag}/software/${USER}/logs"}
-    else
-        local logdir=${SPACK_LOGS_BASEDIR:-"/software/projects/${PAWSEY_PROJECT}/${USER}/spack-logs"}
-    fi
+    local timestamp="$(get_daystamp)"
+    local logdir="$(get_logdir)"
     mkdir -p $logdir
-    local logfile="spack.uninstall.${timestamp}.${tool}"
+    local logfile="spack.uninstall.${timestamp}"
     sg $PAWSEY_PROJECT -c "spack uninstall "$args" 1> /tmp/${logfile}.log 2> /tmp/${logfile}.err"
     echo "ARGS: ${args}" >> ${logdir}/${logfile}.log
+    echo "TIME: $(date)" >> ${logdir}/${logfile}.log
+    cat /tmp/${logfile}.log >> ${logdir}/${logfile}.log
+    cat /tmp/${logfile}.err >> ${logdir}/${logfile}.err
+}
+
+
+function spack_module_refresh()
+{
+    args="$@"
+    local timestamp="$(get_daystamp)"
+    local logdir="$(get_logdir)"
+    mkdir -p $logdir
+    local logfile="spack.module.${timestamp}"
+    sg $PAWSEY_PROJECT -c "spack module lmod refresh -y "${args}" 1> /tmp/${logfile}.log 2> /tmp/${logfile}.err"
+    echo "ARGS: ${args}" >> ${logdir}/${logfile}.log
+    echo "TIME: $(date)" >> ${logdir}/${logfile}.log
     cat /tmp/${logfile}.log >> ${logdir}/${logfile}.log
     cat /tmp/${logfile}.err >> ${logdir}/${logfile}.err
 }
@@ -218,3 +238,4 @@ export -f spack_env_with_git_install
 export -f spack_spec
 export -f spack_install
 export -f spack_uninstall
+export -f spack_module_refresh
