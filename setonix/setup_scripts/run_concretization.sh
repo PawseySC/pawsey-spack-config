@@ -22,7 +22,8 @@ env_wrf \
 envdir="${script_dir}/../environments"
 
 timestamp="$(date +"%Y-%m-%d_%Hh%M")"
-logdir="${script_dir}/logs/concretization.${timestamp}"
+SPACK_LOGS_BASEDIR="${SPACK_LOGS_BASEDIR:-"${script_dir}/logs"}"
+logdir="${SPACK_LOGS_BASEDIR}/concretization.${timestamp}"
 mkdir -p ${logdir}
 for env in ${envs[@]}
 do 
