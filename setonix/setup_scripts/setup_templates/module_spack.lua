@@ -17,7 +17,7 @@ local user = os.getenv("USER")
 if ( user == "spack" ) then
   setenv("SPACK_LOGS_BASEDIR", "/software/setonix/DATE_TAG/software/" .. user .. "/logs")
 else
-  setenv("SPACK_LOGS_BASEDIR", "/software/projects/" .. os.getenv("PAWSEY_PROJECT") .. "/" .. user .. "/spack-logs")
+  setenv("SPACK_LOGS_BASEDIR", "/software/projects/" .. os.getenv("PAWSEY_PROJECT") .. "/" .. user .. "/setonix/software/" .. user .. "/logs")
 end
 
 -- Lmod 8.6+ has a function to source shell files in an unloadable way
