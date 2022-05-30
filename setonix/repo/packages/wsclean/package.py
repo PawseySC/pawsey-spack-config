@@ -46,4 +46,14 @@ class Wsclean(CMakePackage):
     depends_on('doxygen', when='@3.0:')
     depends_on('python', when='@3.0:')
     patch('cmake.patch', when='@3.0:')
+    patch('mpi1.patch', when='@3.0:')
+    patch('mpi2.patch', when='@3.0:')
+    patch('cmake.for.v2.0.patch', when='@2.10.1')
+
+    def cmake_args(self):
+        args = []
+        spec = self.spec
+        args.append(self.define_from_variant('USE_MPI', 'mpi'))
+
+        return args
 

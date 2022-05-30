@@ -230,7 +230,9 @@ packages:
   visit:
     variants: 'build_type=Release'
 
-  #for astro packages prefer release 
+  #for astro packages prefer release
+  casacore:
+    variants: 'build_type=Release'
   everybeam:
     variants: 'build_type=Release'
   wsclean:
