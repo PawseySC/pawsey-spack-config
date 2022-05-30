@@ -34,6 +34,9 @@ quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 
 function create_shpc_symlink_modules()
 {
+  # NOTE: this function requires the variable "container_list", defined above.
+  # It also assumes the caller has sourced variables from "variables.sh".
+  #
   # create compact, symlinked module tree
   mkdir -p ${root_dir}/${shpc_containers_modules_dir}
   cd ${root_dir}/${shpc_containers_modules_dir}
