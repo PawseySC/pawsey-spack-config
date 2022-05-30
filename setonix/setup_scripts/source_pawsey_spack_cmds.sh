@@ -70,41 +70,41 @@ function spack_examine_install_err()
             if [ ${et} = "FetchError:" ]
             then
                 local num=$(($(grep -c -a "${et} Manual download" ${log})/2))
-                grep -a "${et} Manual download" ${log} | tail -n ${num} > /tmp/messages.txt
+                grep -a "${et} Manual download" ${log} | tail -n ${num} > /tmp/messages.${USER}.txt
                 local i
                 for ((i=1;i<=${num};i++))
                 do
-                    local m=$(head -n ${i} /tmp/messages.txt | tail -1)
+                    local m=$(head -n ${i} /tmp/messages.${USER}.txt | tail -1)
                     local spackbuild=$(echo ${m} | awk '{print $3}' | sed 's:-: :g')
                     read -a arr <<< "${spackbuild}"
                     echo "Manual download required for ${arr[0]}@${arr[1]} : ${arr[2]}"
                 done
-                rm /tmp/messages.txt
+                rm /tmp/messages.${USER}.txt
                 local num=$(($(grep -c -a "${et} Will not fetch" ${log})/2))
-                grep -a "${et} Will not fetch" ${log} | tail -n ${num} > /tmp/messages.txt
+                grep -a "${et} Will not fetch" ${log} | tail -n ${num} > /tmp/messages.${USER}.txt
                 local i
                 for ((i=1;i<=${num};i++))
                 do
-                    local m=$(head -n ${i} /tmp/messages.txt | tail -1)
+                    local m=$(head -n ${i} /tmp/messages.${USER}.txt | tail -1)
                     local spackbuild=$(echo ${m} | awk '{print $3}' | sed 's:-: :g')
                     read -a arr <<< "${spackbuild}"
                     echo "Unable to fetch ${arr[0]}@${arr[1]} : ${arr[2]}"
                 done
-                rm /tmp/messages.txt
+                rm /tmp/messages.${USER}.txt
             fi
             if [ ${et} = "ProcessError:" ]
             then
                 local num=$(grep -c -a "spack-build-out.txt" ${log})
-                grep -a "spack-build-out.txt" ${log} > /tmp/messages.txt
+                grep -a "spack-build-out.txt" ${log} > /tmp/messages.${USER}.txt
                 local i
                 for ((i=1;i<=${num};i++))
                 do
-                    local m=$(head -n ${i} /tmp/messages.txt | tail -1)
+                    local m=$(head -n ${i} /tmp/messages.${USER}.txt | tail -1)
                     local spackbuild=$(echo ${m} | sed 's:build_stage/: :g' | sed 's:/spack-build: :g' | sed 's:spack-stage-::'g| awk '{print $2}' | sed 's:-: :g')
                     read -a arr <<< "${spackbuild}"
                     echo "Error building ${arr[0]}@${arr[1]} : ${arr[2]}"
                 done
-                rm /tmp/messages.txt
+                rm /tmp/messages.${USER}.txt
             fi
         fi
     done
@@ -164,53 +164,53 @@ function spack_env_with_git_install()
 function spack_spec()
 {
     local args="$@"
-    local tool="${args%%@*}"
-    local tool="${tool##* }"
     local timestamp="$(get_daystamp)"
     local logdir="$(get_logdir)"
     mkdir -p $logdir
     local logfile="spack.spec.${timestamp}"
-    spack spec -Il "$args" 1> /tmp/${logfile}.log 2> /tmp/${logfile}.err
-    spack_examine_concretize_err /tmp/${logfile}.err
+    spack spec -Il "$args" 1> /tmp/${logfile}.${USER}.log 2> /tmp/${logfile}.${USER}.err
+    spack_examine_concretize_err /tmp/${logfile}.${USER}.err
     echo "ARGS: ${args}" >> ${logdir}/${logfile}.log
     echo "TIME: $(date)" >> ${logdir}/${logfile}.log
-    cat /tmp/${logfile}.log >> ${logdir}/${logfile}.log
-    cat /tmp/${logfile}.err >> ${logdir}/${logfile}.err
+    cat /tmp/${logfile}.${USER}.log >> ${logdir}/${logfile}.log
+    cat /tmp/${logfile}.${USER}.err >> ${logdir}/${logfile}.err
+
+    rm /tmp/${logfile}.${USER}.log /tmp/${logfile}.${USER}.err
 }
 
 
 function spack_install()
 {
     local args="$@"
-    local tool="${args%%@*}"
-    local tool="${tool##* }"
     local timestamp="$(get_daystamp)"
     local logdir="$(get_logdir)"
     mkdir -p $logdir
     local logfile="spack.install.${timestamp}"
-    sg $PAWSEY_PROJECT -c "spack install "$args" 1> /tmp/${logfile}.log 2> /tmp/${logfile}.err"
-    spack_examine_install_err /tmp/${logfile}.err
+    sg $PAWSEY_PROJECT -c "spack install "$args" 1> /tmp/${logfile}.${USER}.log 2> /tmp/${logfile}.${USER}.err"
+    spack_examine_install_err /tmp/${logfile}.${USER}.err
     echo "ARGS: ${args}" >> ${logdir}/${logfile}.log
     echo "TIME: $(date)" >> ${logdir}/${logfile}.log
-    cat /tmp/${logfile}.log >> ${logdir}/${logfile}.log
-    cat /tmp/${logfile}.err >> ${logdir}/${logfile}.err
+    cat /tmp/${logfile}.${USER}.log >> ${logdir}/${logfile}.log
+    cat /tmp/${logfile}.${USER}.err >> ${logdir}/${logfile}.err
+
+    rm /tmp/${logfile}.${USER}.log /tmp/${logfile}.${USER}.err
 }
 
 
 function spack_uninstall()
 {
     local args="$@"
-    local tool="${args%%@*}"
-    local tool="${tool##* }"
     local timestamp="$(get_daystamp)"
     local logdir="$(get_logdir)"
     mkdir -p $logdir
     local logfile="spack.uninstall.${timestamp}"
-    sg $PAWSEY_PROJECT -c "spack uninstall "$args" 1> /tmp/${logfile}.log 2> /tmp/${logfile}.err"
+    sg $PAWSEY_PROJECT -c "spack uninstall "$args" 1> /tmp/${logfile}.${USER}.log 2> /tmp/${logfile}.${USER}.err"
     echo "ARGS: ${args}" >> ${logdir}/${logfile}.log
     echo "TIME: $(date)" >> ${logdir}/${logfile}.log
-    cat /tmp/${logfile}.log >> ${logdir}/${logfile}.log
-    cat /tmp/${logfile}.err >> ${logdir}/${logfile}.err
+    cat /tmp/${logfile}.${USER}.log >> ${logdir}/${logfile}.log
+    cat /tmp/${logfile}.${USER}.err >> ${logdir}/${logfile}.err
+
+    rm /tmp/${logfile}.${USER}.log /tmp/${logfile}.${USER}.err
 }
 
 
@@ -221,11 +221,13 @@ function spack_module_refresh()
     local logdir="$(get_logdir)"
     mkdir -p $logdir
     local logfile="spack.module.${timestamp}"
-    sg $PAWSEY_PROJECT -c "spack module lmod refresh -y "${args}" 1> /tmp/${logfile}.log 2> /tmp/${logfile}.err"
+    sg $PAWSEY_PROJECT -c "spack module lmod refresh -y "${args}" 1> /tmp/${logfile}.${USER}.log 2> /tmp/${logfile}.${USER}.err"
     echo "ARGS: ${args}" >> ${logdir}/${logfile}.log
     echo "TIME: $(date)" >> ${logdir}/${logfile}.log
-    cat /tmp/${logfile}.log >> ${logdir}/${logfile}.log
-    cat /tmp/${logfile}.err >> ${logdir}/${logfile}.err
+    cat /tmp/${logfile}.${USER}.log >> ${logdir}/${logfile}.log
+    cat /tmp/${logfile}.${USER}.err >> ${logdir}/${logfile}.err
+
+    rm /tmp/${logfile}.${USER}.log /tmp/${logfile}.${USER}.err
 }
 
 
