@@ -168,7 +168,7 @@ function spack_spec()
     local logdir="$(get_logdir)"
     mkdir -p $logdir
     local logfile="spack.spec.${timestamp}"
-    spack spec -Il "$args" 1> /tmp/${logfile}.${USER}.log 2> /tmp/${logfile}.${USER}.err
+    spack spec -Il $args 1> /tmp/${logfile}.${USER}.log 2> /tmp/${logfile}.${USER}.err
     spack_examine_concretize_err /tmp/${logfile}.${USER}.err
     echo "ARGS: ${args}" >> ${logdir}/${logfile}.log
     echo "TIME: $(date)" >> ${logdir}/${logfile}.log
@@ -186,7 +186,7 @@ function spack_install()
     local logdir="$(get_logdir)"
     mkdir -p $logdir
     local logfile="spack.install.${timestamp}"
-    sg $PAWSEY_PROJECT -c "spack install "$args" 1> /tmp/${logfile}.${USER}.log 2> /tmp/${logfile}.${USER}.err"
+    sg $PAWSEY_PROJECT -c "spack install $args 1> /tmp/${logfile}.${USER}.log 2> /tmp/${logfile}.${USER}.err"
     spack_examine_install_err /tmp/${logfile}.${USER}.err
     echo "ARGS: ${args}" >> ${logdir}/${logfile}.log
     echo "TIME: $(date)" >> ${logdir}/${logfile}.log
@@ -204,7 +204,7 @@ function spack_uninstall()
     local logdir="$(get_logdir)"
     mkdir -p $logdir
     local logfile="spack.uninstall.${timestamp}"
-    sg $PAWSEY_PROJECT -c "spack uninstall "$args" 1> /tmp/${logfile}.${USER}.log 2> /tmp/${logfile}.${USER}.err"
+    sg $PAWSEY_PROJECT -c "spack uninstall $args 1> /tmp/${logfile}.${USER}.log 2> /tmp/${logfile}.${USER}.err"
     echo "ARGS: ${args}" >> ${logdir}/${logfile}.log
     echo "TIME: $(date)" >> ${logdir}/${logfile}.log
     cat /tmp/${logfile}.${USER}.log >> ${logdir}/${logfile}.log
@@ -221,7 +221,7 @@ function spack_module_refresh()
     local logdir="$(get_logdir)"
     mkdir -p $logdir
     local logfile="spack.module.${timestamp}"
-    sg $PAWSEY_PROJECT -c "spack module lmod refresh -y "${args}" 1> /tmp/${logfile}.${USER}.log 2> /tmp/${logfile}.${USER}.err"
+    spack module lmod refresh -y ${args} 1> /tmp/${logfile}.${USER}.log 2> /tmp/${logfile}.${USER}.err
     echo "ARGS: ${args}" >> ${logdir}/${logfile}.log
     echo "TIME: $(date)" >> ${logdir}/${logfile}.log
     cat /tmp/${logfile}.${USER}.log >> ${logdir}/${logfile}.log
