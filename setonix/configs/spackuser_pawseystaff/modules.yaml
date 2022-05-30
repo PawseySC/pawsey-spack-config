@@ -29,6 +29,7 @@ modules:
         openfoam: 'applications/{name}/{version}'
         openfoam-org: 'applications/{name}/{version}'
         quantum-espresso: 'applications/{name}/{version}'
+        "vasp@6": 'applications/{name}6/{version}'
         vasp: 'applications/{name}/{version}'
         # since wrf and roms are currently not installed 
         # no need to add an explicity module
