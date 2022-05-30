@@ -1,0 +1,12 @@
+*** a/src/lepton/Operation.h	Wed Jul  8 14:41:26 2020
+--- b/src/lepton/Operation.h	Mon May 30 17:19:20 2022
+***************
+*** 68,73 ****
+--- 68,74 ----
+  #include "CustomFunction.h"
+  #include "Exception.h"
+  #include <cmath>
++ #include <limits>
+  #include <map>
+  #include <string>
+  #include <vector>
