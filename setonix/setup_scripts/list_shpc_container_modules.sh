@@ -38,15 +38,17 @@ function create_shpc_symlink_modules()
   mkdir -p ${root_dir}/${shpc_containers_modules_dir}
   cd ${root_dir}/${shpc_containers_modules_dir}
   # avoid repetitions in symlinking
-  container_tool_list=""
+  local container_tool_list=""
+  local container
   for container in $container_list ; do
-    container_tool=${container%:*}
-    container_tool_list+="$container_tool "
+    local container_tool=${container%:*}
+    local container_tool_list+="$container_tool "
   done
-  unique_container_tool_list="$(echo $container_tool_list | xargs -n 1 | sort | uniq | xargs)"
+  local unique_container_tool_list="$(echo $container_tool_list | xargs -n 1 | sort | uniq | xargs)"
   # populate symlinked module tree
+  local container_tool
   for container_tool in $unique_container_tool_list ; do
-    container_tool_short=${container_tool##*/}
+    local container_tool_short=${container_tool##*/}
     ln -s ${root_dir}/${containers_root_dir}/${shpc_spackuser_modules_dir_long}/${container_tool} ${container_tool_short}
     if [ "$container_tool_short" == "openfoam" ] || [ "$container_tool_short" == "openfoam-org" ] ; then
       mv ${container_tool_short} ${shpc_spackuser_openfoam_add_prefix}${container_tool_short}

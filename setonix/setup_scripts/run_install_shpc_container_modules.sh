@@ -18,7 +18,7 @@ fi
 module load ${shpc_name}/${shpc_version}
 
 # source list of containers to be installed by shpc, and useful function
-. shpc_list_container_modules.sh
+. list_shpc_container_modules.sh
 
 # make sure root directory exists, for container modules installation
 cd ${root_dir}
@@ -32,7 +32,7 @@ for container in $container_list ; do
 done
 
 # create compact, symlinked module tree
-# using function from shpc_list_container_modules.sh
+# using function from list_shpc_container_modules.sh
 create_shpc_symlink_modules
 # it's the symlinked module tree that needs to go in MODULEPATH:
 # `module use ${root_dir}/containers/${shpc_spackuser_modules_dir_short}`
