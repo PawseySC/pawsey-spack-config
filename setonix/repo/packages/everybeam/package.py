@@ -28,12 +28,15 @@ class Everybeam(CMakePackage):
     depends_on('blas')
     depends_on('lapack')
     depends_on('cfitsio')
-    depends_on('hdf5~mpi+cxx')
+    depends_on('hdf5~mpi+cxx+hl api=v110')
     depends_on('doxygen')
     depends_on('py-sphinx')
     depends_on('git')
     depends_on('python', when='+python')
-    
+    patch('cmake.patch')
+    patch('cmake.lobes.patch', when='@0.2.0')
+    patch('cmake.hamaker.patch', when='@0.2.0')
+    patch('cmake.oskar.patch', when='@0.2.0')
 
     def cmake_args(self):
         args = []
