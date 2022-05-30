@@ -204,7 +204,7 @@ function spack_uninstall()
     local logdir="$(get_logdir)"
     mkdir -p $logdir
     local logfile="spack.uninstall.${timestamp}"
-    sg $PAWSEY_PROJECT -c "spack uninstall $args 1> /tmp/${logfile}.${USER}.log 2> /tmp/${logfile}.${USER}.err"
+    sg $PAWSEY_PROJECT -c "spack uninstall -y $args 1> /tmp/${logfile}.${USER}.log 2> /tmp/${logfile}.${USER}.err"
     echo "ARGS: ${args}" >> ${logdir}/${logfile}.log
     echo "TIME: $(date)" >> ${logdir}/${logfile}.log
     cat /tmp/${logfile}.${USER}.log >> ${logdir}/${logfile}.log
