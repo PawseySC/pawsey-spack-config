@@ -20,31 +20,35 @@ class Nektar(CMakePackage):
 
     variant('mpi', default=True, description='Builds with mpi support')
     variant('avx2', default=True, description='Builds with simd avx2 support')
-    # variant('fftw', default=True, description='Builds with fftw support')
-    # variant('arpack', default=True, description='Builds with arpack support')
-    # variant('hdf5', default=True, description='Builds with hdf5 support')
+    variant('fftw', default=True, description='Builds with fftw support')
+    variant('arpack', default=True, description='Builds with arpack support')
+    variant('hdf5', default=True, description='Builds with hdf5 support')
     variant('scotch', default=False,
             description='Builds with scotch partitioning support')
+    variant('unit-tests', default=False, description='Builds unit tests')
+    variant('regression-tests', default=False, description='Builds regression tests')
+    variant('benchmarking-tests', default=False, description='Builds benchmark timing codes')
+    variant('python', default=False, description='Builds python bindings')
 
     # depends_on('cmake@2.8.8:', type='build', when="~hdf5")
     # depends_on('cmake@3.2:', type='build', when="+hdf5")
 
-    # depends_on('blas')
-    # depends_on('lapack')
-    # depends_on('boost@1.56.0: +iostreams')
     depends_on('tinyxml', when='platform=darwin')
-
     depends_on('mpi', when='+mpi')
-    # depends_on('fftw@3.0: +mpi', when="+mpi+fftw")
-    # depends_on('fftw@3.0: ~mpi', when="~mpi+fftw")
-    # depends_on('arpack-ng +mpi', when="+arpack+mpi")
-    # depends_on('arpack-ng ~mpi', when="+arpack~mpi")
-    # depends_on('hdf5 +mpi +hl', when="+mpi+hdf5")
+    depends_on('blas')
+    depends_on('lapack')
+    # depends_on('boost@1.57.0 ~atomic ~chrono ~exception +filesystem ~graph +iostreams ~locale ~log ~math ~mpi +multithreaded ~numpy +pic ~program_options ~python ~random +regex ~serialization ~signals +system ~test +thread ~timer ~wave')
+
+    depends_on('fftw@3.0: +mpi', when="+mpi+fftw")
+    depends_on('fftw@3.0: ~mpi', when="~mpi+fftw")
+    depends_on('arpack-ng +mpi', when="+arpack+mpi")
+    depends_on('arpack-ng ~mpi', when="+arpack~mpi")
+    depends_on('hdf5 +mpi +hl', when="+mpi+hdf5")
     depends_on('scotch ~mpi ~metis', when="~mpi+scotch")
     depends_on('scotch +mpi ~metis', when="+mpi+scotch")
 
-    # conflicts("+hdf5", when="~mpi",
-    #           msg="Nektar's hdf5 output is for parallel builds only")
+    conflicts('+hdf5', when='~mpi',
+              msg='Nektar hdf5 output is for parallel builds only')
 
     def cmake_args(self):
         args = []
@@ -63,4 +67,9 @@ class Nektar(CMakePackage):
         args.append('-DNEKTAR_USE_SCOTCH=%s' % hasfeature('+scotch'))
         args.append('-DNEKTAR_ENABLE_SIMD_AVX2=%s' % hasfeature('+avx2'))
         args.append('-DNEKTAR_USE_PETSC=OFF')
+        args.append('-DNEKTAR_BUILD_UNIT_TESTS=%s' % hasfeature('+unit-tests'))
+        args.append('-DNEKTAR_BUILD_TESTS=%s' % hasfeature('+regression-tests'))
+        args.append('-DNEKTAR_BUILD_TIMINGS=%s' % hasfeature('+benchmarking-tests'))
+        args.append('-DNEKTAR_BUILD_PYTHON=%s' % hasfeature('+python'))
+
         return args
