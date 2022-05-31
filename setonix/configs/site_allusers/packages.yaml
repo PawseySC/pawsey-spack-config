@@ -217,6 +217,8 @@ packages:
   hdf5:
     version: [1.12.1]
     variants: 'api=v112 +hl +fortran +szip build_type=Release'
+  hdf:
+    variants: '~external-xdr'
   adios2:
     version: [2.7.1]
     variants: '+python +hdf5 build_type=Release'
