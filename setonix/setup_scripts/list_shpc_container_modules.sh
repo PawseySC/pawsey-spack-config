@@ -18,7 +18,7 @@ quay.io/biocontainers/diamond:2.0.14--hdcc8f71_0
 quay.io/biocontainers/fastqc:0.11.9--0
 quay.io/biocontainers/gatk4:4.2.5.0--hdfd78af_0
 quay.io/biocontainers/maker:3.01.03--pl526hb8757ab_0
-quay.io/biocontainers/mrbayes:3.2.7--h5465cc4_4
+quay.io/biocontainers/mrbayes:3.2.7--h19cf415_2
 quay.io/biocontainers/mummer:3.23--pl5321h1b792b2_13
 quay.io/biocontainers/sambamba:0.8.1--h41abebc_0
 quay.io/biocontainers/samtools:1.15--h3843a85_0
