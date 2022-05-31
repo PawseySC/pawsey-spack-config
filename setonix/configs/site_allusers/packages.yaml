@@ -80,6 +80,8 @@ packages:
   gnuplot:
     version: [5.4.2]
     variants: '+X'
+  llvm:
+    variants: '~omp_as_runtime ~clang ~compiler-rt ~polly ~gold'
   # preferred versions (for 2022.05) and variants, python
   python:
     version: [3.9.7]
