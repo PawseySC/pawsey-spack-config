@@ -26,8 +26,10 @@ modules:
         namd: 'applications/{name}/{version}'
         nektar: 'applications/{name}/{version}'
         nwchem: 'applications/{name}/{version}'
-        openfoam: 'applications/{name}/{version}'
-        openfoam-org: 'applications/{name}/{version}'
+        # Openfoam hidden for now as per chat with Alexis
+        # we're supporting Openfoam mainly through containers
+        openfoam: 'dependencies/.{name}/{version}'
+        openfoam-org: 'dependencies/.{name}/{version}'
         quantum-espresso: 'applications/{name}/{version}'
         "vasp@6": 'applications/{name}6/{version}'
         vasp: 'applications/{name}/{version}'
