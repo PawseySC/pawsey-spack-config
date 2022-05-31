@@ -23,6 +23,12 @@ class Exabayes(AutotoolsPackage):
     conflicts('%gcc@:4.5.4, 7.1.0:', when='@:1.5.0')
     conflicts('%clang@:3.1')
 
+    # gcc 11.x has -std=gnu++17 by default, does not work to build exabayes, at least up to 1.5.1
+    def flag_handler(self, name, flags):
+        if self.spec.satisfies('%gcc@11:') and name == 'cxxflags':
+            flags.append('-std=gnu++14')
+        return (flags, None, None)
+
     # configure updated to better determine if MPI compiler available
     patch('configure_mpi.patch', level=0, when='@1.5.1: +mpi', )
 
