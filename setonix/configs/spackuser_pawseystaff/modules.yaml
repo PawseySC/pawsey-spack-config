@@ -205,6 +205,7 @@ modules:
         "hpl ~openmp": 'benchmarking/{name}/{version}'
         "hpl +openmp": 'benchmarking/{name}/{version}+openmp'
         osu-micro-benchmarks: 'benchmarking/{name}/{version}'
+        ior: 'benchmarking/{name}/{version}'
 
         #developer tools
         caliper: 'developer-tools/{name}/{version}'
