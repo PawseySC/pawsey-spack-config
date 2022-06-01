@@ -68,6 +68,14 @@ modules:
       ^java:
         autoload: direct
 
+      # overwrite for packages that don't need python at runtime
+      cp2k:
+        autoload: none
+      gnuplot:
+        autoload: none
+      hpctoolkit:
+        autoload: none
+
       # for libraries make sure to load direct dependencies
       # this is useful for developer workflows
 
