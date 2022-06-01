@@ -128,13 +128,15 @@ class Amber(Package, CudaPackage):
             default=False)
     variant('update', description='Update the sources prior compilation',
             default=False)
+    variant('rism', default=False, description='Build with RISM')
+    variant('fftw', default=True, description='Build with FFTW')
 
     depends_on('zlib')
     depends_on('bzip2')
     depends_on('flex', type='build')
     depends_on('bison', type='build')
     depends_on('netcdf-fortran')
-    depends_on('fftw-api@3')
+    depends_on('fftw-api@3', when='+fftw')
     # Potential issues with openmpi 4
     # (http://archive.ambermd.org/201908/0105.html)
     depends_on('mpi', when='+mpi')
@@ -217,10 +219,13 @@ class Amber(Package, CudaPackage):
         base_args = ['--skip-python',
                      '--with-netcdf-c', self.spec['netcdf-c'].prefix, 
                      '--with-netcdf-fortran', self.spec['netcdf-fortran'].prefix, 
-                    #  '-nofftw3', 
                      ]
+        if self.spec.satisfies('~fftw'):
+            base_args += ['-nofftw3']
         if self.spec.satisfies('~x11'):
             base_args += ['-noX11']
+        if self.spec.satisfies('~rism'):
+            base_args += ['-norism']
 
         # Update the sources: Apply all upstream patches
         if self.spec.satisfies('+update'):
@@ -232,10 +237,6 @@ class Amber(Package, CudaPackage):
         # Non-x86 architecture
         if self.spec.target.family != 'x86_64':
             base_args += ['-nosse']
-
-        # Single core
-        conf(*(base_args + [compiler]))
-        make('install')
 
         # CUDA
         if self.spec.satisfies('+cuda'):
@@ -262,6 +263,12 @@ class Amber(Package, CudaPackage):
         if self.spec.satisfies('+cuda') and self.spec.satisfies('+mpi'):
             make('clean')
             conf(*(base_args + ['-cuda', '-mpi', compiler]))
+            make('install')
+
+        # if not MPI and not openmp
+        # Single core
+        if self.spec.satisfies('~mpi') and self.spec.satisfies('~openmp'):
+            conf(*(base_args + [compiler]))
             make('install')
 
         # just install everything that was built

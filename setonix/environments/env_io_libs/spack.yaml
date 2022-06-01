@@ -3,6 +3,9 @@
 # It describes a set of packages to be installed, along with
 # configuration settings.
 spack:
+  packages:
+    hdf:
+      variants: ~external-xdr
   definitions:
   - hdf5-set:
     - hdf5@1.12.1

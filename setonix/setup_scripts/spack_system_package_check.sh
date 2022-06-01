@@ -107,7 +107,7 @@ function NodeCheck()
     check_login=1
     check_compute=0
     loginnode=$(hostname)
-    nodelist=(001008 001009 001010 001011 001020 001021 001022 001023 001028 001029 001030 001031)
+    nodelist=(001008 001009)
     while getopts l:n: flag
     do
         case "${flag}" in
