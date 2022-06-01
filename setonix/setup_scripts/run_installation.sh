@@ -16,7 +16,7 @@ env_io_libs \
 env_langs \
 env_apps \
 env_devel \
-env_benchmarking \
+env_bench \
 env_s3_clients \
 env_astro \
 env_bio \
