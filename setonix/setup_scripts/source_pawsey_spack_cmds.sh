@@ -157,7 +157,7 @@ function spack_env_install()
 function spack_env_with_git_install()
 {
     spack clean -dspm
-    spack_env_install $1 $2
+    spack_env_install "$@"
 }
 
 
