@@ -31,9 +31,7 @@ for version in $( ls ${src_dir} ) ; do
     ${dst_dir}/${version/\.lua/-astro.lua} \
     >${dst_dir}/${version}
   #2. hide Spack module
-  rm -f ${src_dir}/.modulerc.lua
-  echo "hide_modulefile(\"${src_dir}/${version}\")" >>${src_dir}/.modulerc.lua
-  echo "hide_modulefile(\"${src_dir/${date_tag}/current}/${version}\")" >>${src_dir}/.modulerc.lua
+  mv ${src_dir}/${version} ${src_dir}/.${version}
 done
 
 
