@@ -23,6 +23,7 @@ mkdir -p ${dst_dir}
 # remove old pawsey singularity modules
 rm -f ${dst_dir}/*.lua
 
+pwd=$(pwd)
 cd ${src_dir}
 for version in $( ls *.lua .*.lua 2>/dev/null ) ; do
   #2. hide Spack module
@@ -38,5 +39,5 @@ for version in $( ls *.lua .*.lua 2>/dev/null ) ; do
     ${dst_dir}/${version/\.lua/-astro.lua} \
     >${dst_dir}/${version}
 done
-cd -
+cd $pwd
 
