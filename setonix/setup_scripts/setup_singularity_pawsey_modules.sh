@@ -26,6 +26,7 @@ rm -f ${dst_dir}/*.lua
 pwd=$(pwd)
 cd ${src_dir}
 for version in $( ls *.lua .*.lua 2>/dev/null ) ; do
+  version="${version#.}"
   #2. hide Spack module
   if [ -e ${version} ] ; then
     mv ${version} .${version}
