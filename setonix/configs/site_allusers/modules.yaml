@@ -58,7 +58,13 @@ modules:
         # autoload none by default: limits unnecessary module loading
         # good for majority of end users 
         autoload: none
-    
+
+      # don't define SINGULARITY_HOME as above for Singularity,
+      # it has its internal use
+      singularity:
+        filter:
+          environment_blacklist: ['SINGULARITY_HOME']
+
       # select all packages that depend on python, or r, or java,
       # and set these modules to autoload their dependencies
       ^python:
