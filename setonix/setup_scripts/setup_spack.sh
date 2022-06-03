@@ -43,6 +43,17 @@ mkdir -p ${custom_software_dir}
 mkdir -p ${utilities_modules_dir}
 mkdir -p ${utilities_software_dir}
 
+# copy over script to generate user/project moduletrees
+sed \
+  -e "s;GCC_VERSION;${gcc_version};g" \
+  -e "s;AOCC_VERSION;${aocc_version};g" \
+  -e "s;CCE_VERSION;${cce_version};g" \
+  -e "s;PROJECT_MODULES_SUFFIX;${project_modules_suffix};g" \
+  -e "s;USER_MODULES_SUFFIX;${user_modules_suffix};g" \
+  ${script_dir}/setup_templates/spack_generate_user_project_moduletree.sh \
+  >${root_dir}/spack/bin/
+  chmod a+rx ${root_dir}/spack/bin/spack_generate_user_project_moduletree.sh
+
 # edit and copy over Spack modulefile
 mkdir -p ${root_dir}/${spack_module_dir}
 sed \
