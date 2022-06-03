@@ -2,6 +2,9 @@ repos:
 # this list is interpreted as a priority list, 
 # in that items higher up in the list are inspected first
 # and take precedence
+#
+# This one is for user recipes
+- /software/projects/$PAWSEY_PROJECT/$USER/setonix/spack_repo
 # 
 # Spack user (Pawsey staff) populates this one with fixed recipes for Setonix
 # that are not (yet) in the Spack public repo
