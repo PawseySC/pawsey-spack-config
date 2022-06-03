@@ -90,6 +90,7 @@ unsetenv("{{ cmd.name }}")
 {% endfor %}
 {% endblock %}
 {% if spec.name == 'nextflow' %}setenv("NXF_HOME", os.getenv("MYSOFTWARE").."/.nextflow")
+setenv("NXF_SINGULARITY_CACHEDIR", os.getenv("MYSOFTWARE").."/.nextflow_singularity")
 {% endif %}
 {% if spec.name == 'openjdk' %}setenv("GRADLE_USER_HOME", os.getenv("MYSOFTWARE").."/.gradle")
 {% endif %}
