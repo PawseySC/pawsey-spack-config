@@ -21,6 +21,7 @@
 # ----------------------------------------------------------------------------
 import os
 import shutil
+import stat
 
 import platform
 import re
@@ -51,9 +52,20 @@ class AnsysFluids(Package):
         # maali code has 
         # make ./INSTALL in src directory executable and then run 
 	# run the executable that does it all 
+        # mkdirp('{0}/{1}'.format(self.stage.source_path, 'ansysfluids_tmpdir'))
+        # run_install = Executable("./INSTALL -silent -install_dir {0} -usetempdir {1}/{2}".format(self.prefix, self.stage.source_path, 'ansysfluids_tmpdir'))
+        # due to installer requiring an installation path with < 100 characters, to temporary install 
+        tmp_install_path = '/scratch/pawsey0001/ansys-install/'
         mkdirp('{0}/{1}'.format(self.stage.source_path, 'ansysfluids_tmpdir'))
-        run_install = Executable("./INSTALL -silent -install_dir {0} -usetempdir {1}/{2}".format(self.prefix, self.stage.source_path, 'ansysfluids_tmpdir'))
+        mkdirp('{0}/{1}'.format(tmp_install_path, 'ansysfluids'))
+        run_install = Executable("./INSTALL -silent -install_dir {0}/{1} -usetempdir {2}/{3}".format(tmp_install_path, 'ansysfluids', self.stage.source_path, 'ansysfluids_tmpdir'))
         run_install()
+        # for some strange reason, ansys creates a read only file in the temp directory.
+        # fix this by changing the permissions so that the temp directory can be deleted. 
+        os.system('chmod -R +w {0}/{1}'.format(self.stage.source_path, 'ansysfluids_tmpdir'))
+        os.system('chmod -R +w {0}/{1}'.format(tmp_install_path, 'ansysfluids'))
+        shutil.move("{0}/{1}".format(tmp_install_path, 'ansysfluids'), self.prefix)  
+
         # do not set group permission for ansys here, do it in a follow up script
 
     def setup_run_environment(self, env):
