@@ -71,7 +71,7 @@ archs="zen3 zen2"
 compilers="gcc/${gcc_version} aocc/${aocc_version} cce/${cce_version}"
 for arch in $archs; do
   for compiler in $compilers; do
-    mkdir -p ${root_dir}/${custom_modules_dir}/${arch}/${compiler}
+    mkdir -p ${root_dir}/${custom_modules_dir}/${arch}/${compiler}/${custom_modules_suffix}
     for category in $module_categories; do
       mkdir -p ${root_dir}/modules/${arch}/${compiler}/${category}
     done

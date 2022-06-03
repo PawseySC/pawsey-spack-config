@@ -3,6 +3,13 @@
 # EDIT at each rebuild of the software stack
 date_tag="2022.05"
 
+# compiler versions (needed for module trees with compiler dependency)
+gcc_version="11.2.0"
+cce_version="13.0.2"
+aocc_version="3.2.0"
+# architecture of login/compute nodes (needed by Singularity symlink module)
+cpu_arch="zen3"
+
 # tool versions
 spack_version="0.17.0" # the prefix "v" is added in setup_spack.sh
 singularity_version="3.8.6" # has to match the version in the Spack env yaml
@@ -13,13 +20,6 @@ python_name="python"
 python_version="3.9.7" # has to match the version in the Spack env yaml
 setuptools_version="57.4.0" # has to match the version in the Spack env yaml
 pip_version="21.1.2" # has to match the version in the Spack env yaml
-
-# compiler versions (needed for module trees with compiler dependency)
-gcc_version="11.2.0"
-cce_version="13.0.2"
-aocc_version="3.2.0"
-# architecture of login/compute nodes (needed by Singularity symlink module)
-cpu_arch="zen3"
 
 ### TYPICALLY NO EDIT NEEDED PAST THIS POIINT
 
@@ -61,6 +61,13 @@ utilities_software_dir="${utilities_root_dir}/software"
 shpc_containers_modules_dir="${containers_root_dir}/${shpc_spackuser_modules_dir_short}"
 # location for SHPC containers
 shpc_containers_dir="${containers_root_dir}/sif"
+
+# suffix for Pawsey custom build modules
+custom_modules_suffix="custom"
+# suffix for Project modules
+project_modules_suffix="project-apps"
+# suffix for User modules
+user_modules_suffix="user-apps"
 
 # location of SHPC utility installation
 shpc_install_dir="${utilities_software_dir}/${shpc_name}"

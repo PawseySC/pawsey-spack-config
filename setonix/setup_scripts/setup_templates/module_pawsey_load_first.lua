@@ -14,6 +14,11 @@
 -- Service variables for this module
 -- 
 local psc_sw_env_date_tag = "DATE_TAG"
+--
+local fh = assert(io.open(os.getenv("HOME") .. "/.pawsey_project", "r"))
+local psc_sw_env_project = fh:read("l")
+fh:close()
+local psc_sw_env_user = os.getenv("USER")
 -- 
 -- NOTE: all definitions below need to be kept in sync with the
 -- corresponding values found in `variables.sh` in this same directory
@@ -24,6 +29,10 @@ local psc_sw_env_root_dir = "TOP_ROOT_DIR/" .. psc_sw_env_date_tag
 local psc_sw_env_custom_modules_dir = "CUSTOM_MODULES_DIR"
 local psc_sw_env_utilities_modules_dir = "UTILITIES_MODULES_DIR"
 local psc_sw_env_shpc_containers_modules_dir = "SHPC_CONTAINERS_MODULES_DIR"
+--
+local psc_sw_env_custom_modules_suffix = "CUSTOM_MODULES_SUFFIX"
+local psc_sw_env_project_modules_suffix = "PROJECT_MODULES_SUFFIX"
+local psc_sw_env_user_modules_suffix = "USER_MODULES_SUFFIX"
 -- 
 -- These need to be checked at every OS update
 local psc_sw_env_gcc_version  = "GCC_VERSION"
@@ -74,9 +83,23 @@ end
 
 -- Add Pawsey custom modules to Cray Lmod hierarchy variables
 local psc_sw_env_custom_modules_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_custom_modules_dir .. "/" .. arch
-prepend_path("LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX", psc_sw_env_custom_modules_root .. "/gcc/" .. psc_sw_env_gcc_version)
-prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_10_0_PREFIX", psc_sw_env_custom_modules_root .. "/cce/" .. psc_sw_env_cce_version)
-prepend_path("LMOD_CUSTOM_COMPILER_AOCC_3_0_PREFIX", psc_sw_env_custom_modules_root .. "/aocc/" .. psc_sw_env_aocc_version)
+prepend_path("LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX", psc_sw_env_custom_modules_root .. "/gcc/" .. psc_sw_env_gcc_version .. "/" .. psc_sw_env_custom_modules_suffix)
+prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_10_0_PREFIX", psc_sw_env_custom_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_custom_modules_suffix)
+prepend_path("LMOD_CUSTOM_COMPILER_AOCC_3_0_PREFIX", psc_sw_env_custom_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_custom_modules_suffix)
+
+
+-- Add Project modules to Cray Lmod hierarchy variables
+local psc_sw_env_project_modules_root = "/software/projects/" .. psc_sw_env_project .. "/setonix/modules/" .. arch
+prepend_path("LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX", psc_sw_env_project_modules_root .. "/gcc/" .. psc_sw_env_gcc_version .. "/" .. psc_sw_env_project_modules_suffix)
+prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_10_0_PREFIX", psc_sw_env_project_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_project_modules_suffix)
+prepend_path("LMOD_CUSTOM_COMPILER_AOCC_3_0_PREFIX", psc_sw_env_project_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_project_modules_suffix)
+
+
+-- Add User modules to Cray Lmod hierarchy variables
+local psc_sw_env_user_modules_root = "/software/projects/" .. psc_sw_env_project .. "/" .. psc_sw_env_user .. "/setonix/modules/" .. arch
+prepend_path("LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX", psc_sw_env_user_modules_root .. "/gcc/" .. psc_sw_env_gcc_version .. "/" .. psc_sw_env_user_modules_suffix)
+prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_10_0_PREFIX", psc_sw_env_user_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_user_modules_suffix)
+prepend_path("LMOD_CUSTOM_COMPILER_AOCC_3_0_PREFIX", psc_sw_env_user_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_user_modules_suffix)
 
 
 -- Add Pawsey utility modules (including Spack/SHPC modulefiles) to MODULEPATH

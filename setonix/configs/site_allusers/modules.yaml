@@ -166,4 +166,4 @@ modules:
         # keeping these simple for user-specific installations
         # name, version, hash to avoid conflicts, no categories
         # explicit usage of versions now enforced in lua template
-        all: '{name}/{version}-{hash:7}'
+        all: 'user-apps/{name}/{version}-{hash:7}'

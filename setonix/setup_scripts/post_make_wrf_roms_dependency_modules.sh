@@ -21,7 +21,7 @@ fi
 
 
 # create destination directory
-custom_full_modules_dir_zen3_gcc="${root_dir}/${custom_modules_dir}/zen3/gcc/${gcc_version}"
+custom_full_modules_dir_zen3_gcc="${root_dir}/${custom_modules_dir}/zen3/gcc/${gcc_version}/${custom_modules_suffix}"
 mkdir -p ${custom_full_modules_dir_zen3_gcc}
 
 # wrf dependency module

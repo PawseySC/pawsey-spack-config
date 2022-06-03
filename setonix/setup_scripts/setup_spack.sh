@@ -62,6 +62,9 @@ sed \
   -e "s;CUSTOM_MODULES_DIR;${custom_modules_dir};g" \
   -e "s;UTILITIES_MODULES_DIR;${utilities_modules_dir};g" \
   -e "s;SHPC_CONTAINERS_MODULES_DIR;${shpc_containers_modules_dir};g" \
+  -e "s;CUSTOM_MODULES_SUFFIX;${custom_modules_suffix};g" \
+  -e "s;PROJECT_MODULES_SUFFIX;${project_modules_suffix};g" \
+  -e "s;USER_MODULES_SUFFIX;${user_modules_suffix};g" \
   -e "s;GCC_VERSION;${gcc_version};g" \
   -e "s;CCE_VERSION;${cce_version};g" \
   -e "s;AOCC_VERSION;${aocc_version};g" \
@@ -76,6 +79,9 @@ sed \
   -e "s;CUSTOM_MODULES_DIR;${custom_modules_dir};g" \
   -e "s;UTILITIES_MODULES_DIR;${utilities_modules_dir};g" \
   -e "s;SHPC_CONTAINERS_MODULES_DIR;${shpc_containers_modules_dir};g" \
+  -e "s;CUSTOM_MODULES_SUFFIX;${custom_modules_suffix};g" \
+  -e "s;PROJECT_MODULES_SUFFIX;${project_modules_suffix};g" \
+  -e "s;USER_MODULES_SUFFIX;${user_modules_suffix};g" \
   -e "s;GCC_VERSION;${gcc_version};g" \
   -e "s;CCE_VERSION;${cce_version};g" \
   -e "s;AOCC_VERSION;${aocc_version};g" \
