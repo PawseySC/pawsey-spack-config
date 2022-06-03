@@ -114,3 +114,4 @@ prepend_path("LMOD_CUSTOM_COMPILER_AOCC_3_0_PREFIX", psc_sw_env_user_modules_roo
 
 -- Add User SHPC modules to MODULEPATH
 local psc_sw_env_shpc_user_root = "/software/projects/" .. psc_sw_env_project .. "/" .. psc_sw_env_user .. "/setonix/" .. psc_sw_env_shpc_containers_modules_dir
+prepend_path("MODULEPATH", psc_sw_env_shpc_user_root)
