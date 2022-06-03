@@ -35,8 +35,8 @@ for version in $( ls *.lua .*.lua 2>/dev/null ) ; do
   cp -p .${version} ${dst_dir}/${version/\.lua/-astro.lua}
   # 1.A singularity does not bind mount /askapbuffer and /astro
   sed \
-    -e '/SINGULARITY_BINDPATH/ s;/askapbuffer;;g' \
-    -e '/SINGULARITY_BINDPATH/ s;/astro;;g' \
+    -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
+    -e '/singularity_bindpath *=/ s;/astro;;g' \
     ${dst_dir}/${version/\.lua/-astro.lua} \
     >${dst_dir}/${version}
 done

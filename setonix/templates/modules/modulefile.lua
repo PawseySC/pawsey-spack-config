@@ -97,7 +97,12 @@ setenv("NXF_SINGULARITY_CACHEDIR", os.getenv("MYSOFTWARE").."/.nextflow_singular
 {% if spec.name == 'singularity' %}setenv("SINGULARITY_CACHEDIR", os.getenv("MYSOFTWARE").."/.singularity")
 -- MPI + Singularity configuration
 setenv("SINGULARITYENV_LD_LIBRARY_PATH","/opt/cray/pe/mpich/default/ofi/gnu/9.1/lib-abi-mpich:/opt/cray/pe/mpich/default/gtl/lib:/opt/cray/xpmem/default/lib64:/opt/cray/pe/pmi/default/lib:/opt/cray/pe/pals/default/lib:/opt/cray/libfabric/1.11.0.4.75/lib64:/opt/cray/pe/gcc-libs:/usr/lib64:/usr/lib64/libibverbs:$LD_LIBRARY_PATH")
-setenv("SINGULARITY_BINDPATH","/askapbuffer,/astro,/scratch,/software,/var/opt/cray/pe,/etc/opt/cray/pe,/opt/cray,/etc/alternatives/cray-dvs,/etc/alternatives/cray-xpmem,/usr/lib64/librdmacm.so.1,/usr/lib64/libibverbs.so.1,/usr/lib64/libpals.so.0,/usr/lib64/libnl-3.so.200,/usr/lib64/libnl-route-3.so.200,/usr/lib64/libmlx5.so.1.14.30.0,/etc/libibverbs.d,/usr/lib64/libibverbs,/var/spool")
+local singularity_bindpath = "/askapbuffer,/astro,/scratch,/software,/var/opt/cray/pe,/etc/opt/cray/pe,/opt/cray,/etc/alternatives/cray-dvs,/etc/alternatives/cray-xpmem,/usr/lib64/librdmacm.so.1,/usr/lib64/libibverbs.so.1,/usr/lib64/libpals.so.0,/usr/lib64/libnl-3.so.200,/usr/lib64/libnl-route-3.so.200,/usr/lib64/libmlx5.so.1.14.30.0,/etc/libibverbs.d,/usr/lib64/libibverbs"
+-- this has to be conditional, path exists only in compute nodes
+if isDir("/var/spool/slurmd") then
+  singularity_bindpath = singularity_bindpath .. ",/var/spool/slurmd"
+end
+setenv("SINGULARITY_BINDPATH",singularity_bindpath)
 -- LD_PRELOAD edited to fix missing library dependency of Cray libmpi on libxpmem
 prepend_path("SINGULARITYENV_LD_PRELOAD","/opt/cray/xpmem/default/lib64/libxpmem.so.0")
 {% endif %}
