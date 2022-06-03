@@ -15,7 +15,7 @@ quay.io/biocontainers/canu:2.2--ha47f30e_0
 quay.io/biocontainers/clustalo:1.2.4--h87f3376_5
 quay.io/biocontainers/cutadapt:3.7--py38hbff2b2d_0
 quay.io/biocontainers/diamond:2.0.14--hdcc8f71_0
-quay.io/biocontainers/fastqc:0.11.9--0
+quay.io/biocontainers/fastqc:0.11.9--hdfd78af_1
 quay.io/biocontainers/gatk4:4.2.5.0--hdfd78af_0
 quay.io/biocontainers/maker:3.01.03--pl526hb8757ab_0
 quay.io/biocontainers/mrbayes:3.2.7--h19cf415_2
