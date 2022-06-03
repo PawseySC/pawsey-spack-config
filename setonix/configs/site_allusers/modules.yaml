@@ -163,7 +163,215 @@ modules:
 
 
       projections:
-        # keeping these simple for user-specific installations
+        # we wanted to keep these simple for user-specific installations
         # name, version, hash to avoid conflicts, no categories
         # explicit usage of versions now enforced in lua template
+        #all: 'user-apps/{name}/{version}-{hash:7}'
+
+        # however, we must instead mirror the same naming convention 
+        # as the system wide spack (apart from prefix, taken care of). 
+        # otherwise user generated modules will clash, and error when
+        # trying to load system modules.
+
+        # hpc applications
+        amber: 'user-apps/{name}/{version}'
+        cpmd: 'user-apps/{name}/{version}'
+        cp2k: 'user-apps/{name}/{version}'
+        gromacs: 'user-apps/{name}/{version}'
+        lammps: 'user-apps/{name}/{version}'
+        namd: 'user-apps/{name}/{version}'
+        nektar: 'user-apps/{name}/{version}'
+        nwchem: 'user-apps/{name}/{version}'
+        # Openfoam not generated for now as per chat with Alexis
+        # we're supporting Openfoam mainly through containers
+        #openfoam: 'user-apps/{name}/{version}'
+        #openfoam-org: 'user-apps/{name}/{version}'
+        quantum-espresso: 'user-apps/{name}/{version}'
+        "vasp@6": 'user-apps/{name}6/{version}'
+        vasp: 'user-apps/{name}/{version}'
+        # since wrf and roms are currently not installed 
+        # no need to add an explicity module
+        # However, it may be useful to add our own module 
+        # that provides all the dependencies needed by 
+        # these packages
+        #roms: 'user-apps/{name}/{version}'
+        #wrf: 'user-apps/{name}/{version}'
+
+        # numerical or parallelisation libraries 
+        "amdblis +suphandling": 'user-apps/{name}/{version}'
+        "amdblis ~suphandling": 'user-apps/{name}/{version}-nosup'
+        amdlibflame: 'user-apps/{name}/{version}'
+        amdscalapack: 'user-apps/{name}/{version}'
+        aocl-sparse: 'user-apps/{name}/{version}'
+        amdfftw: 'user-apps/{name}/{version}'
+        amdlibm: 'user-apps/{name}/{version}'
+        "boost +python cxxstd=14 visibility=hidden": 'user-apps/{name}/{version}-c++14-python'
+        "boost +python cxxstd=11 visibility=hidden": 'user-apps/{name}/{version}-c++11-python'
+        "boost +python cxxstd=98 visibility=hidden": 'user-apps/{name}/{version}-c++98-python'
+        "boost ~python cxxstd=14 visibility=hidden": 'user-apps/{name}/{version}-c++14'
+        "boost ~python cxxstd=11 visibility=hidden": 'user-apps/{name}/{version}-c++11'
+        "boost ~python cxxstd=98 visibility=hidden": 'user-apps/{name}/{version}-c++98'
+        # some packages require boost to have global visibility rather than standard hidden visibility
+        "boost +python cxxstd=14 visibility=global": 'user-apps/{name}/{version}-c++14-python-globalvis'
+        "boost +python cxxstd=11 visibility=global": 'user-apps/{name}/{version}-c++11-python-globalvis'
+        "boost +python cxxstd=98 visibility=global": 'user-apps/{name}/{version}-c++98-python-globalvis'
+        "boost ~python cxxstd=14 visibility=global": 'user-apps/{name}/{version}-c++14-globalvis'
+        "boost ~python cxxstd=11 visibility=global": 'user-apps/{name}/{version}-c++11-globalvis'
+        "boost ~python cxxstd=98 visibility=global": 'user-apps/{name}/{version}-c++98-globalvis'
+        eigen: 'user-apps/{name}/{version}'
+        fftw: 'user-apps/{name}/{version}'
+        gsl: 'user-apps/{name}/{version}'
+        hpx: 'user-apps/{name}/{version}'
+        "kokkos +hpx": 'user-apps/{name}/{version}-hpx'
+        "kokkos +openmp": 'user-apps/{name}/{version}-openmp'
+        kokkos: 'user-apps/{name}/{version}'
+        netlib-lapack: 'user-apps/{name}/{version}'
+        openblas: 'user-apps/{name}/{version}'
+        blaspp: 'user-apps/{name}/{version}'
+        opencv: 'user-apps/{name}/{version}'
+        plasma: 'user-apps/{name}/{version}'
+        petsc: 'user-apps/{name}/{version}'
+        plumed: 'user-apps/{name}/{version}'
+        netlib-scalapack: 'user-apps/{name}/{version}'
+        slate: 'user-apps/{name}/{version}'
+        trilinos: 'user-apps/{name}/{version}'
+
+
+        # IO libraries 
+        # to account for all the hdf5 variants 
+        # serial
+        "hdf5 +cxx~mpi api=v112": 'user-apps/{name}/{version}-api-v112'
+        "hdf5 +cxx~mpi api=v110": 'user-apps/{name}/{version}-api-v110'
+        "hdf5 +cxx~mpi api=v18": 'user-apps/{name}/{version}-api-v18'
+        #parallel 
+        "hdf5 ~cxx+mpi api=v112": 'user-apps/{name}/{version}-parallel-api-v112'
+        "hdf5 ~cxx+mpi api=v110": 'user-apps/{name}/{version}-parallel-api-v110'
+        "hdf5 ~cxx+mpi api=v18": 'user-apps/{name}/{version}-parallel-api-v18'
+        # and when api is default assume it is a dependency 
+        "hdf5 api=default +cxx~mpi": 'user-apps/{name}/{version}'
+        "hdf5 api=default ~cxx+mpi": 'user-apps/{name}/{version}-parallel'
+        # adios also has similar variants 
+        "adios2 +hdf5 +python": 'user-apps/{name}/{version}-hdf5'
+        "adios2 ~hdf5 +python": 'user-apps/{name}/{version}'
+        netcdf-c: 'user-apps/{name}/{version}'
+        netcdf-cxx: 'user-apps/{name}/{version}'
+        netcdf-cxx4: 'user-apps/{name}/{version}'
+        netcdf-fortran: 'user-apps/{name}/{version}'
+        parallel-netcdf: 'user-apps/{name}/{version}'
+
+        # programing languages 
+        go: 'user-apps/{name}/{version}'
+        julia: 'user-apps/{name}/{version}'
+        openjdk: 'user-apps/{name}/{version}'
+        python: 'user-apps/{name}/{version}'
+        r: 'user-apps/{name}/{version}'
+        perl: 'user-apps/{name}/{version}'
+        ruby: 'user-apps/{name}/{version}'
+        rust: 'user-apps/{name}/{version}'
+
+        # utilities 
+        autoconf: 'user-apps/{name}/{version}'
+        automake: 'user-apps/{name}/{version}'
+        cmake: 'user-apps/{name}/{version}'
+        emacs: 'user-apps/{name}/{version}'
+        ffmpeg: 'user-apps/{name}/{version}'
+        gnuplot: 'user-apps/{name}/{version}'
+        matlab: 'user-apps/{name}/{version}'
+        nano: 'user-apps/{name}/{version}'
+        nextflow: 'user-apps/{name}/{version}'
+        parallel: 'user-apps/{name}/{version}'
+        py-pip: 'user-apps/{name}/{version}'
+        py-setuptools: 'user-apps/{name}/{version}'
+        reframe: 'user-apps/{name}/{version}'
+        singularity: 'user-apps/{name}/{version}'
+
+        # S3 clients 
+        awscli: 'user-apps/{name}/{version}'
+        py-boto3: 'user-apps/{name}/{version}'
+        rclone: 'user-apps/{name}/{version}'
+        miniocli: 'user-apps/{name}/{version}'
+
+        # visualisation
+        igv: 'user-apps/{name}/{version}'
+        paraview: 'user-apps/{name}/{version}'
+        visit: 'user-apps/{name}/{version}'
+        vmd: 'user-apps/{name}/{version}'
+        
+        # python
+        py-cython: 'user-apps/{name}/{version}'
+        py-dask: 'user-apps/{name}/{version}'
+        py-h5netcdf: 'user-apps/{name}/{version}'
+        py-h5py: 'user-apps/{name}/{version}'
+        py-ipython: 'user-apps/{name}/{version}'
+        py-matplotlib: 'user-apps/{name}/{version}'
+        py-mpi4py: 'user-apps/{name}/{version}'
+        py-netcdf4: 'user-apps/{name}/{version}'
+        py-numba: 'user-apps/{name}/{version}'
+        py-numpy: 'user-apps/{name}/{version}'
+        py-pandas: 'user-apps/{name}/{version}'
+        py-plotly: 'user-apps/{name}/{version}'
+        py-scikit-learn: 'user-apps/{name}/{version}'
+        py-scipy: 'user-apps/{name}/{version}'
+
+        #bio 
+        exabayes: 'user-apps/{name}/{version}'
+        examl: 'user-apps/{name}/{version}'
+
+        #astro 
+        "casacore +adios2 +openmp +python": 'user-apps/{name}/{version}-adios2-openmp'
+        "casacore +adios2 ~openmp +python": 'user-apps/{name}/{version}-adios2'
+        "casacore ~adios2 +openmp +python": 'user-apps/{name}/{version}-openmp'
+        "casacore ~adios2 ~openmp +python": 'user-apps/{name}/{version}'
+        # some packages need casacore built without python so keep them but have them hidden
+        "casacore +adios2 +openmp ~python": 'user-apps/{name}/{version}-adios2-openmp-nopython'
+        "casacore +adios2 ~openmp ~python": 'user-apps/{name}/{version}-adios2-nopython'
+        "casacore ~adios2 +openmp ~python": 'user-apps/{name}/{version}-openmp-nopython'
+        "casacore ~adios2 ~openmp ~python": 'user-apps/{name}/{version}-nopython'
+        cfitsio: 'user-apps/{name}/{version}'
+        "wcslib +cfitsio": 'user-apps/{name}/{version}'
+        "wcslib ~cfitsio": 'user-apps/{name}/{version}-nocfitsio'
+        cppzmq: 'user-apps/{name}/{version}'
+        libzmq: 'user-apps/{name}/{version}'
+        apr: 'user-apps/{name}/{version}'
+        apr-util: 'user-apps/{name}/{version}'
+        cppunit: 'user-apps/{name}/{version}'
+        log4cxx: 'user-apps/{name}/{version}'
+        mcpp: 'user-apps/{name}/{version}'
+        "xerces-c transcoder=gnuiconv": 'user-apps/{name}/{version}-transcoder-gnuiconv'
+        "xerces-c transcoder=iconv": 'user-apps/{name}/{version}-transcoder-iconv'
+        subversion: 'user-apps/{name}/{version}'
+        pgplot: 'user-apps/{name}/{version}'
+        py-funcsigs: 'user-apps/{name}/{version}'
+        py-pyfits: 'user-apps/{name}/{version}'
+        py-astropy: 'user-apps/{name}/{version}'
+        py-healpy: 'user-apps/{name}/{version}'
+        py-emcee: 'user-apps/{name}/{version}'
+        chgcentre: 'user-apps/{name}/{version}'
+        idg: 'user-apps/{name}/{version}'
+        everybeam: 'user-apps/{name}/{version}'
+        wcstools: 'user-apps/{name}/{version}'
+        "wsclean +mpi ~idg ~everybeam": 'user-apps/{name}/{version}-mpi'
+        "wsclean +mpi +idg ~everybeam": 'user-apps/{name}/{version}-idg-mpi'
+        "wsclean +mpi +idg +everybeam": 'user-apps/{name}/{version}-idg-everybeam-mpi'
+        "wsclean ~mpi ~idg ~everybeam": 'user-apps/{name}/{version}'
+        "wsclean ~mpi +idg ~everybeam": 'user-apps/{name}/{version}-idg'
+        "wsclean ~mpi +idg +everybeam": 'user-apps/{name}/{version}-idg-everybeam'
+
+        #performance tests 
+        "hpl ~openmp": 'user-apps/{name}/{version}'
+        "hpl +openmp": 'user-apps/{name}/{version}+openmp'
+        osu-micro-benchmarks: 'user-apps/{name}/{version}'
+        ior: 'user-apps/{name}/{version}'
+
+        #developer tools
+        caliper: 'user-apps/{name}/{version}'
+        hpctoolkit: 'user-apps/{name}/{version}'
+        hpcviewer: 'user-apps/{name}/{version}'
+        py-hatchet: 'user-apps/{name}/{version}'
+
+        # by default all others are hidden
+        # PJE: Marco had no hash for dependencies 
+        # but just to be careful to avoid name conflicts
+        # added hash
         all: 'user-apps/{name}/{version}-{hash:7}'
+
