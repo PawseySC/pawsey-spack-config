@@ -51,7 +51,7 @@ sed \
   -e "s;PROJECT_MODULES_SUFFIX;${project_modules_suffix};g" \
   -e "s;USER_MODULES_SUFFIX;${user_modules_suffix};g" \
   ${script_dir}/setup_templates/spack_generate_user_project_moduletree.sh \
-  >${root_dir}/spack/bin/
+  >${root_dir}/spack/bin/spack_generate_user_project_moduletree.sh
   chmod a+rx ${root_dir}/spack/bin/spack_generate_user_project_moduletree.sh
 
 # edit and copy over Spack modulefile
