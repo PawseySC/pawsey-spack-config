@@ -52,11 +52,17 @@ class Vasp(MakefilePackage):
     depends_on('cuda', when='+cuda')
     depends_on('qd', when='%nvhpc')
 
-    print('WOOP WOOP WOOP')
-
     conflicts('%gcc@:8', msg='GFortran before 9.x does not support all features needed to build VASP')
     conflicts('+vaspsol', when='+cuda', msg='+vaspsol only available for CPU')
     conflicts('~scalapack', when='@6.3.0:', msg='scalapack is mandatory for vasp 6.3.0 and later')
+
+    # Patch is adapted from patch provided in master branch of vaspsol:
+    # https://github.com/henniggroup/VASPsol/raw/master/src/patches/pbz_patch_610
+    # This may have to be further modified for later vasp versions.
+    #
+    # Note that this patch edits the solvation.F source under the VASPsol directory,
+    # which in turn will be copied into the vasp source in the edit stage below.
+    patch('vaspsol-6.2.1.patch.1', when='@6.0:+vaspsol')
 
     parallel = False
 
@@ -168,7 +174,7 @@ class Vasp(MakefilePackage):
 
         if '+vaspsol' in spec:
             copy('VASPsol/src/solvation.F', 'src/')
-
+         
     def setup_build_environment(self, spack_env):
         spec = self.spec
 
