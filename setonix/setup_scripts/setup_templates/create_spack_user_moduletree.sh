@@ -20,7 +20,7 @@ for arch in $archs; do
     mkdir -p "${user_root_dir}/modules/${arch}/${compiler}/${user_modules_suffix}"
   done
 done
-chmod -R g+rwX "${project_root_dir}/modules"
+chmod --silent -R g+rwX "${project_root_dir}/modules"
 
 # create shpc container modules base dir
 mkdir -p "${user_root_dir}/${shpc_containers_modules_dir}"
