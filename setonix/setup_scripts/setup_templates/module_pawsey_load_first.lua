@@ -66,44 +66,6 @@ else
   arch = "zen2"
 end
 
--- Root directories for Spack modules
-local psc_sw_env_spack_root = psc_sw_env_root_dir .. "/modules/" .. arch
-local psc_sw_env_gcc_root  = psc_sw_env_spack_root .. "/gcc/" .. psc_sw_env_gcc_version
-local psc_sw_env_cce_root  = psc_sw_env_spack_root .. "/cce/" .. psc_sw_env_cce_version
-local psc_sw_env_aocc_root = psc_sw_env_spack_root .. "/aocc/" .. psc_sw_env_aocc_version
-
--- Add Spack modules to Cray Lmod hierarchy variables
--- Note: LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX comes from Lumi, on Joey there was no `_8_0`
-for index = 1,num_categories do
-  prepend_path("LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX", psc_sw_env_gcc_root .. "/" .. psc_sw_env_module_categories[index])
-  prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_10_0_PREFIX", psc_sw_env_cce_root .. "/" .. psc_sw_env_module_categories[index])
-  prepend_path("LMOD_CUSTOM_COMPILER_AOCC_3_0_PREFIX", psc_sw_env_aocc_root .. "/" .. psc_sw_env_module_categories[index])
-end
-
-
--- Add Pawsey custom modules to Cray Lmod hierarchy variables
-local psc_sw_env_custom_modules_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_custom_modules_dir .. "/" .. arch
-prepend_path("LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX", psc_sw_env_custom_modules_root .. "/gcc/" .. psc_sw_env_gcc_version .. "/" .. psc_sw_env_custom_modules_suffix)
-prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_10_0_PREFIX", psc_sw_env_custom_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_custom_modules_suffix)
-prepend_path("LMOD_CUSTOM_COMPILER_AOCC_3_0_PREFIX", psc_sw_env_custom_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_custom_modules_suffix)
-
-
--- Add Pawsey utility modules (including Spack/SHPC modulefiles) to MODULEPATH
-local psc_sw_env_utilities_modules_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_utilities_modules_dir
-prepend_path("MODULEPATH", psc_sw_env_utilities_modules_root)
-
-
--- Add SHPC modules to MODULEPATH
-local psc_sw_env_shpc_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_shpc_containers_modules_dir
-prepend_path("MODULEPATH", psc_sw_env_shpc_root)
-
-
--- Add Project modules to Cray Lmod hierarchy variables
-local psc_sw_env_project_modules_root = "/software/projects/" .. psc_sw_env_project .. "/setonix/modules/" .. arch
-prepend_path("LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX", psc_sw_env_project_modules_root .. "/gcc/" .. psc_sw_env_gcc_version .. "/" .. psc_sw_env_project_modules_suffix)
-prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_10_0_PREFIX", psc_sw_env_project_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_project_modules_suffix)
-prepend_path("LMOD_CUSTOM_COMPILER_AOCC_3_0_PREFIX", psc_sw_env_project_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_project_modules_suffix)
-
 
 -- Add User modules to Cray Lmod hierarchy variables
 local psc_sw_env_user_modules_root = "/software/projects/" .. psc_sw_env_project .. "/" .. psc_sw_env_user .. "/setonix/modules/" .. arch
@@ -115,3 +77,41 @@ prepend_path("LMOD_CUSTOM_COMPILER_AOCC_3_0_PREFIX", psc_sw_env_user_modules_roo
 -- Add User SHPC modules to MODULEPATH
 local psc_sw_env_shpc_user_root = "/software/projects/" .. psc_sw_env_project .. "/" .. psc_sw_env_user .. "/setonix/" .. psc_sw_env_shpc_containers_modules_dir
 prepend_path("MODULEPATH", psc_sw_env_shpc_user_root)
+
+
+-- Add Project modules to Cray Lmod hierarchy variables
+local psc_sw_env_project_modules_root = "/software/projects/" .. psc_sw_env_project .. "/setonix/modules/" .. arch
+prepend_path("LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX", psc_sw_env_project_modules_root .. "/gcc/" .. psc_sw_env_gcc_version .. "/" .. psc_sw_env_project_modules_suffix)
+prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_10_0_PREFIX", psc_sw_env_project_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_project_modules_suffix)
+prepend_path("LMOD_CUSTOM_COMPILER_AOCC_3_0_PREFIX", psc_sw_env_project_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_project_modules_suffix)
+
+
+-- Add Pawsey utility modules (including Spack/SHPC modulefiles) to MODULEPATH
+local psc_sw_env_utilities_modules_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_utilities_modules_dir
+prepend_path("MODULEPATH", psc_sw_env_utilities_modules_root)
+
+
+-- Root directories for Spack modules
+local psc_sw_env_spack_root = psc_sw_env_root_dir .. "/modules/" .. arch
+local psc_sw_env_gcc_root  = psc_sw_env_spack_root .. "/gcc/" .. psc_sw_env_gcc_version
+local psc_sw_env_cce_root  = psc_sw_env_spack_root .. "/cce/" .. psc_sw_env_cce_version
+local psc_sw_env_aocc_root = psc_sw_env_spack_root .. "/aocc/" .. psc_sw_env_aocc_version
+-- Add Spack modules to Cray Lmod hierarchy variables
+-- Note: LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX comes from Lumi, on Joey there was no `_8_0`
+for index = 1,num_categories do
+  prepend_path("LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX", psc_sw_env_gcc_root .. "/" .. psc_sw_env_module_categories[index])
+  prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_10_0_PREFIX", psc_sw_env_cce_root .. "/" .. psc_sw_env_module_categories[index])
+  prepend_path("LMOD_CUSTOM_COMPILER_AOCC_3_0_PREFIX", psc_sw_env_aocc_root .. "/" .. psc_sw_env_module_categories[index])
+end
+
+
+-- Add SHPC modules to MODULEPATH
+local psc_sw_env_shpc_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_shpc_containers_modules_dir
+prepend_path("MODULEPATH", psc_sw_env_shpc_root)
+
+
+-- Add Pawsey custom modules to Cray Lmod hierarchy variables
+local psc_sw_env_custom_modules_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_custom_modules_dir .. "/" .. arch
+prepend_path("LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX", psc_sw_env_custom_modules_root .. "/gcc/" .. psc_sw_env_gcc_version .. "/" .. psc_sw_env_custom_modules_suffix)
+prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_10_0_PREFIX", psc_sw_env_custom_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_custom_modules_suffix)
+prepend_path("LMOD_CUSTOM_COMPILER_AOCC_3_0_PREFIX", psc_sw_env_custom_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_custom_modules_suffix)
