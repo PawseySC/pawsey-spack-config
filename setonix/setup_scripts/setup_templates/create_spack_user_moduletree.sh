@@ -18,5 +18,10 @@ for arch in $archs; do
     mkdir -p "${user_root_dir}/modules/${arch}/${compiler}/${user_modules_suffix}"
   done
 done
+mkdir -p "${project_root_dir}/software"
+mkdir -p "${user_root_dir}/software"
 
-mkdir -p ${user_root_dir}/${shpc_containers_modules_dir}
+chmod -R g+rwX "${project_root_dir}/modules"
+chmod -R g+rwX "${project_root_dir}/software"
+
+mkdir -p "${user_root_dir}/${shpc_containers_modules_dir}"
