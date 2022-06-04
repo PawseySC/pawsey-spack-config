@@ -28,7 +28,6 @@ fi
 
 
 # step 1. refresh spack modules
-echo "Refreshing Spack modules.."
 echo "Do you want to refresh the Spack modules? (yes/no)"
 read spack_answer
 if [ ${spack_answer,,} == "yes" ] ; then
@@ -69,12 +68,12 @@ mkdir -p ${root_dir}/${utilities_modules_dir}
 
 
 # step 3. update singularity modules
-echo "Updating Singularity modules"
+echo "Updating Singularity modules.."
 bash "${script_dir}/setup_singularity_pawsey_modules.sh"
 
 
 # step 4. generate modulerc to hide dependency modules
-echo "Generating modulerc.lua to hide dependency modules"
+echo "Generating modulerc.lua to hide dependency modules.."
 archs="zen3 zen2"
 compilers="gcc/${gcc_version} aocc/${aocc_version} cce/${cce_version}"
 for arch in $archs; do
