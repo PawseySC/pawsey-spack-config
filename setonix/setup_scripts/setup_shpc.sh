@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# protecting from accidental installations
+echo "Do you want to install SHPC on this system? (yes/no)"
+read install_answer
+if [ ${install_answer,,} != "yes" ] ; then
+  echo "Exiting."
+  exit
+else
+
+
 # source setup variables
 # if copy/pasting these commands, need to run from this directory
 script_dir="$(readlink -f "$(dirname $0 2>/dev/null)" || pwd)"
@@ -103,3 +112,7 @@ sed \
   -e "s/PYTHON_MAJORMINOR/${python_version_major}.${python_version_minor}/g" \
  ${script_dir}/setup_templates/module_${shpc_name}.lua \
  > ${root_dir}/${shpc_module_dir}/${shpc_version}.lua
+
+
+# protecting from accidental installations
+fi

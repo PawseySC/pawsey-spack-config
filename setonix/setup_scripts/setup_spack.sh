@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# protecting from accidental installations
+echo "Do you want to install Spack on this system? (yes/no)"
+read install_answer
+if [ ${install_answer,,} != "yes" ] ; then
+  echo "Exiting."
+  exit
+else
+
+
 # source setup variables
 # if copy/pasting these commands, need to run from this directory
 script_dir="$(readlink -f "$(dirname $0 2>/dev/null)" || pwd)"
@@ -98,3 +107,7 @@ sed \
   -e "s;AOCC_VERSION;${aocc_version};g" \
   ${script_dir}/setup_templates/module_pawsey_load_first.lua \
   > ${root_dir}/${pawsey_temp}/${pawsey_temp}.lua
+
+
+# protecting from accidental installations
+fi
