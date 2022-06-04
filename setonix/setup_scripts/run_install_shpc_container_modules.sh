@@ -18,7 +18,7 @@ fi
 module load ${shpc_name}/${shpc_version}
 
 # source list of containers to be installed by shpc, and useful function
-. list_shpc_container_modules.sh
+. ${script_dir}/list_shpc_container_modules.sh
 
 # make sure root directory exists, for container modules installation
 cd ${root_dir}

@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# this script goes through 4 steps
+# this script goes through 5 steps
 # 1. refresh spack modules
-# 2. generate modulerc to hide dependency modules
-# 3. refresh shpc symlink modules
-# 4. creates all missing module directories
+# 2. update singularity modules
+# 3. generate modulerc to hide dependency modules
+# 4. refresh shpc symlink modules
+# 5. creates all missing module directories
 
 # source setup variables
 # if copy/pasting these commands, need to run from this directory
@@ -38,7 +39,12 @@ else
 fi
 
 
-# step 2. generate modulerc to hide dependency modules
+# step 2. update singularity modules
+echo "Updating Singularity modules"
+bash "${script_dir}/setup_singularity_pawsey_modules.sh"
+
+
+# step 3. generate modulerc to hide dependency modules
 echo "Generating modulerc.lua to hide dependency modules"
 archs="zen3 zen2"
 compilers="gcc/${gcc_version} aocc/${aocc_version} cce/${cce_version}"
@@ -57,7 +63,7 @@ for arch in $archs; do
 done
 
 
-# step 3. refresh shpc symlink modules
+# step 4. refresh shpc symlink modules
 shpc_full_containers_modules_dir="${root_dir}/${shpc_containers_modules_dir}"
 echo "You are about to delete this directory and its content: ${shpc_full_containers_modules_dir}"
 echo "Does this directory contain the symlink tree of SHPC container modules? Do you want to delete it? (yes/no)"
@@ -66,14 +72,14 @@ if [ ${shpc_answer,,} == "yes" ] ; then
   echo "Deleting and re-creating SHPC symlink modules.."
   rm -r ${shpc_full_containers_modules_dir}
   # source list of containers to be installed by shpc, and useful function
-  . list_shpc_container_modules.sh
+  . ${script_dir}/list_shpc_container_modules.sh
   create_shpc_symlink_modules
 else
   echo "Skipping deletion and re-creation of SHPC symlink modules."
 fi
 
 
-# step 4. creates all missing module directories
+# step 5. creates all missing module directories
 echo "Creating all missing module directories.."
 module_categories="
 astro-applications/
