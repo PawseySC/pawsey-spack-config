@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# protecting from accidental installations
+echo "Do you want to install a personal copy of Spack in this directory? (yes/no)"
+read install_answer
+if [ ${install_answer,,} != "yes" ] ; then
+  echo "Exiting."
+  exit
+else
+
+
 # only editing typically needed: spack version
 spack_version="0.17.0"
 
@@ -29,3 +38,7 @@ patch spack/lib/spack/spack/modules/lmod.py pawsey-spack-config/setonix/fixes/lm
 # Pascal,s enhancements to modulefiles
 patch spack/lib/spack/spack/modules/common.py pawsey-spack-config/setonix/fixes/modulenames_plus_common.patch
 patch spack/lib/spack/spack/cmd/modules/__init__.py pawsey-spack-config/setonix/fixes/modulenames_plus_init.patch
+
+
+# protecting from accidental installations
+fi
