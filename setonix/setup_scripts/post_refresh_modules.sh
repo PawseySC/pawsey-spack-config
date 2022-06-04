@@ -46,13 +46,13 @@ for arch in $archs; do
   for compiler in $compilers; do
     target_dir="${root_dir}/modules/$arch/$compiler/dependencies"
     modulerc_file="${target_dir}/.modulerc.lua"
-    echo "-- Hiding dependency modules" >${modulerc_file}
+    echo "-- Hiding dependency modules" >"${modulerc_file}"
     find ${target_dir} -name '*.lua' |grep -v modulerc |while read m ; do 
       m1=$(readlink -f $m)
       m2="${m1/2022.05/current}"
       echo "hide_modulefile(\"$m1\")"
       echo "hide_modulefile(\"$m2\")"
-      done >>${modulerc_file}
+      done >>"${modulerc_file}"
   done
 done
 
