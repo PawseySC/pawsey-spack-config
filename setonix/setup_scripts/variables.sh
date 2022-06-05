@@ -65,9 +65,9 @@ shpc_containers_dir="${containers_root_dir}/sif"
 # suffix for Pawsey custom build modules
 custom_modules_suffix="custom"
 # suffix for Project modules
-project_modules_suffix="project-apps"
+project_modules_suffix=""   # "project-apps" # let us keep it standard vs spack
 # suffix for User modules
-user_modules_suffix="user-apps"
+user_modules_suffix=""   # "user-apps" # let us keep it standard vs spack
 
 # location of SHPC utility installation
 shpc_install_dir="${utilities_software_dir}/${shpc_name}"
