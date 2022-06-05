@@ -35,7 +35,7 @@ python_version_bugfix="$( echo $python_version | cut -d '.' -f 3 )"
 # shpc module directory for SPACK USER (system wide installation)
 shpc_spackuser_modules_dir_long="modules-long"
 shpc_spackuser_modules_dir_short="modules"
-shpc_spackuser_openfoam_add_prefix="containerised-"
+shpc_spackuser_container_tag="-container"
 # name of SHPC module: decide this once and for all
 shpc_name="shpc"
 

@@ -56,7 +56,7 @@ function create_shpc_symlink_modules()
     local container_tool_short=${container_tool##*/}
     ln -s ${root_dir}/${containers_root_dir}/${shpc_spackuser_modules_dir_long}/${container_tool} ${container_tool_short}
     if [ "$container_tool_short" == "openfoam" ] || [ "$container_tool_short" == "openfoam-org" ] ; then
-      mv ${container_tool_short} ${shpc_spackuser_openfoam_add_prefix}${container_tool_short}
+      mv ${container_tool_short} ${container_tool_short}${shpc_spackuser_container_tag}
     fi
   done
   cd -
