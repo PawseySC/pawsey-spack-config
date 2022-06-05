@@ -4,7 +4,8 @@
 # 1. refresh spack modules
 # 2. creates all missing module directories
 # 3. update singularity modules
-# 4. refresh shpc symlink modules
+# 4. refresh wrf/roms dependency modules
+# 5. refresh shpc symlink modules
 
 # source setup variables
 # if copy/pasting these commands, need to run from this directory
@@ -28,10 +29,10 @@ fi
 
 
 # step 1. refresh spack modules
-echo "Do you want to refresh the Spack modules? (yes/no)"
+echo "Do you want to delete and re-create the Spack modules? (yes/no)"
 read spack_answer
 if [ ${spack_answer,,} == "yes" ] ; then
-  echo "Refreshing Spack modules.."
+  echo "Deleting and re-creating Spack modules.."
   spack module lmod refresh -y --delete-tree
 else
   echo "Skipping refresh of Spack modules."
@@ -72,7 +73,18 @@ echo "Updating Singularity modules.."
 bash "${script_dir}/setup_singularity_pawsey_modules.sh"
 
 
-# step 4. refresh shpc symlink modules
+# step 4. refresh wrf/roms dependency modules
+echo "Do you want to refresh the wrf/roms dependency modules? (yes/no)"
+read dependency_answer
+if [ ${dependency_answer,,} == "yes" ] ; then
+  echo "Refreshing wrf/roms dependency modules.."
+  bash "${script_dir}/post_make_wrf_roms_dependency_modules.sh"
+else
+  echo "Skipping refresh of wrf/roms dependency modules."
+fi
+
+
+# step 5. refresh shpc symlink modules
 shpc_full_containers_modules_dir="${root_dir}/${shpc_containers_modules_dir}"
 echo "You are about to delete this directory and its content: ${shpc_full_containers_modules_dir}"
 echo "Does this directory contain the symlink tree of SHPC container modules? Do you want to delete it? (yes/no)"
