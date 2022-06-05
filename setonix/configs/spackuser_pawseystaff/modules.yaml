@@ -6,6 +6,103 @@ modules:
 
     lmod:
 
+      # select all packages that depend on python, or r, or java,
+      # and set these modules to autoload their dependencies
+      ^python:
+        autoload: direct
+      ^r:
+        autoload: direct
+      ^java:
+        autoload: direct
+
+      # overwrite for packages that don't need python at runtime
+      cp2k:
+        autoload: none
+      gnuplot:
+        autoload: none
+      hpctoolkit:
+        autoload: none
+
+      # for libraries make sure to load direct dependencies
+      # this is useful for developer workflows
+
+      # library APIs
+      blas:
+        autoload: direct
+      lapack:
+        autoload: direct
+      scalapack:
+        autoload: direct
+      fftw-api:
+        autoload: direct
+
+      # parallel libraries
+      boost:
+        autoload: direct
+      hpx:
+        autoload: direct
+      kokkos:
+        autoload: direct
+
+      # numerical libraries
+      amdblis:
+        autoload: direct
+      amdlibflame:
+        autoload: direct
+      amdscalapack:
+        autoload: direct
+      aocl-sparse:
+        autoload: direct
+      amdfftw:
+        autoload: direct
+      amdlibm:
+        autoload: direct
+      openblas:
+        autoload: direct
+      netlib-lapack:
+        autoload: direct
+      netlib-scalapack:
+        autoload: direct
+      eigen:
+        autoload: direct
+      fftw:
+        autoload: direct
+      gsl:
+        autoload: direct
+      blaspp:
+        autoload: direct
+      magma:
+        autoload: direct
+      plasma:
+        autoload: direct
+      slate:
+        autoload: direct
+      plumed:
+        autoload: direct
+      opencv:
+        autoload: direct
+      trilinos:
+        autoload: direct
+      petsc:
+        autoload: direct
+
+      # i/o libraries
+      hdf5:
+        autoload: direct
+      adios2:
+        autoload: direct
+      netcdf-c:
+        autoload: direct
+      netcdf-cxx:
+        autoload: direct
+      netcdf-cxx4:
+        autoload: direct
+      netcdf-fortran:
+        autoload: direct
+      parallel-netcdf:
+        autoload: direct
+
+
       projections:
         # modules on magnus have one of [apps, tools, python, devel] as start of module name 
         # an then {name}/{version}'
@@ -79,7 +176,6 @@ modules:
         netlib-scalapack: 'libraries/{name}/{version}'
         slate: 'libraries/{name}/{version}'
         trilinos: 'libraries/{name}/{version}'
-
 
         # IO libraries 
         # to account for all the hdf5 variants 

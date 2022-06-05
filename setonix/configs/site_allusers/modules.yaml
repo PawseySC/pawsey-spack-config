@@ -57,6 +57,8 @@ modules:
           #  'MAALI_{name}_HOME': '{prefix}'
         # autoload none by default: limits unnecessary module loading
         # good for majority of end users 
+        # autoload+upstream currently does not work, 
+        # so better to turn off autoload completely for user installations
         autoload: none
 
       # don't define SINGULARITY_HOME as above for Singularity,
@@ -64,103 +66,6 @@ modules:
       singularity:
         filter:
           environment_blacklist: ['SINGULARITY_HOME']
-
-      # select all packages that depend on python, or r, or java,
-      # and set these modules to autoload their dependencies
-      ^python:
-        autoload: direct
-      ^r:
-        autoload: direct
-      ^java:
-        autoload: direct
-
-      # overwrite for packages that don't need python at runtime
-      cp2k:
-        autoload: none
-      gnuplot:
-        autoload: none
-      hpctoolkit:
-        autoload: none
-
-      # for libraries make sure to load direct dependencies
-      # this is useful for developer workflows
-
-      # library APIs
-      blas:
-        autoload: direct
-      lapack:
-        autoload: direct
-      scalapack:
-        autoload: direct
-      fftw-api:
-        autoload: direct
-
-      # parallel libraries
-      boost:
-        autoload: direct
-      hpx:
-        autoload: direct
-      kokkos:
-        autoload: direct
-
-      # numerical libraries
-      amdblis:
-        autoload: direct
-      amdlibflame:
-        autoload: direct
-      amdscalapack:
-        autoload: direct
-      aocl-sparse:
-        autoload: direct
-      amdfftw:
-        autoload: direct
-      amdlibm:
-        autoload: direct
-      openblas:
-        autoload: direct
-      netlib-lapack:
-        autoload: direct
-      netlib-scalapack:
-        autoload: direct
-      eigen:
-        autoload: direct
-      fftw:
-        autoload: direct
-      gsl:
-        autoload: direct
-      blaspp:
-        autoload: direct
-      magma:
-        autoload: direct
-      plasma:
-        autoload: direct
-      slate:
-        autoload: direct
-      plumed:
-        autoload: direct
-      opencv:
-        autoload: direct
-      trilinos:
-        autoload: direct
-      petsc:
-        autoload: direct
-
-      # i/o libraries
-      hdf5:
-        autoload: direct
-      adios2:
-        autoload: direct
-      netcdf-c:
-        autoload: direct
-      netcdf-cxx:
-        autoload: direct
-      netcdf-cxx4:
-        autoload: direct
-      netcdf-fortran:
-        autoload: direct
-      parallel-netcdf:
-        autoload: direct
-
 
       projections:
         # we want to keep these simple for user-specific installations

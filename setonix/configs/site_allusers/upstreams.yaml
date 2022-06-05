@@ -3,5 +3,7 @@ upstreams:
 # it acts as an upstream installation for user-specific installations
   system_wide:
     install_tree: /software/setonix/DATE_TAG/software
-    modules:
-      lmod: /software/setonix/DATE_TAG/modules
+# autoload+upstream currently does not work, 
+# so better not to expose upstreams modules to user installations
+#    modules:
+#      lmod: /software/setonix/DATE_TAG/modules
