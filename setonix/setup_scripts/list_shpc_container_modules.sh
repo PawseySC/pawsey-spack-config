@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# source setup variables
-# if copy/pasting these commands, need to run from this directory
-script_dir="$(readlink -f "$(dirname $0 2>/dev/null)" || pwd)"
-. ${script_dir}/variables.sh
-
 # list of containers to be installed by shpc
 container_list="
 quay.io/biocontainers/bamtools:2.5.1--hd03093a_10
@@ -36,28 +31,3 @@ quay.io/biocontainers/velvet:1.2.10--h7132678_5
 quay.io/pawsey/hpc-python:2022.03
 quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 "
-
-function create_shpc_symlink_modules()
-{
-  # create compact, symlinked module tree
-  mkdir -p ${root_dir}/${shpc_containers_modules_dir}
-  cd ${root_dir}/${shpc_containers_modules_dir}
-  # avoid repetitions in symlinking
-  local container_tool_list=""
-  local container
-  for container in $container_list ; do
-    local container_tool=${container%:*}
-    local container_tool_list+="$container_tool "
-  done
-  local unique_container_tool_list="$(echo $container_tool_list | xargs -n 1 | sort | uniq | xargs)"
-  # populate symlinked module tree
-  local container_tool
-  for container_tool in $unique_container_tool_list ; do
-    local container_tool_short=${container_tool##*/}
-    ln -s ${root_dir}/${containers_root_dir}/${shpc_spackuser_modules_dir_long}/${container_tool} ${container_tool_short}
-    if [ "$container_tool_short" == "openfoam" ] || [ "$container_tool_short" == "openfoam-org" ] ; then
-      mv ${container_tool_short} ${container_tool_short}${shpc_spackuser_container_tag}
-    fi
-  done
-  cd -
-}

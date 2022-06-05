@@ -13,6 +13,7 @@ target_dir="${root_dir}/${shpc_containers_modules_dir}"
 mkdir -p ${target_dir}
 
 # create symlinks
+# NOTE: assumes all container module paths finish with: <tool>/<ver>/module.lua
 find ${source_dir} -name 'module.lua' | while read m ; do 
   mbase=${m%/module.lua}
   mver=${mbase##*/}

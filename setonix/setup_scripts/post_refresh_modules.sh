@@ -68,9 +68,7 @@ read shpc_answer
 if [ ${shpc_answer,,} == "yes" ] ; then
   echo "Deleting and re-creating SHPC symlink modules.."
   rm -r ${shpc_full_containers_modules_dir}
-  # source list of containers to be installed by shpc, and useful function
-  . ${script_dir}/list_shpc_container_modules.sh
-  create_shpc_symlink_modules
+  bash ${script_dir}/post_create_shpc_symlink_modules.sh
 else
   echo "Skipping deletion and re-creation of SHPC symlink modules."
 fi
