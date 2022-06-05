@@ -52,7 +52,7 @@ mkdir -p ${custom_software_dir}
 mkdir -p ${utilities_modules_dir}
 mkdir -p ${utilities_software_dir}
 
-# copy over script to generate user/project moduletrees
+# copy over utility scripts
 sed \
   -e "s;GCC_VERSION;${gcc_version};g" \
   -e "s;AOCC_VERSION;${aocc_version};g" \
@@ -62,6 +62,11 @@ sed \
   ${script_dir}/setup_templates/spack_create_user_moduletree.sh \
   >${root_dir}/spack/bin/spack_create_user_moduletree.sh
 chmod a+rx ${root_dir}/spack/bin/spack_create_user_moduletree.sh
+#
+cp -p \
+  ${script_dir}/setup_templates/spack_refresh_modules.sh \
+  ${script_dir}/setup_templates/spack_rm_modules.sh \
+  ${root_dir}/spack/bin/
 
 # edit and copy over Spack modulefile
 mkdir -p ${root_dir}/${spack_module_dir}
