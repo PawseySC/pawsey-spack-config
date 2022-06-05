@@ -220,8 +220,8 @@ modules:
         nano: 'utilities/{name}/{version}'
         nextflow: 'utilities/{name}/{version}'
         parallel: 'utilities/{name}/{version}'
-        py-pip: 'utilities/{name}/{version}'
-        py-setuptools: 'utilities/{name}/{version}'
+        py-pip: 'utilities/{name}/{version}-py{^python.version}'
+        py-setuptools: 'utilities/{name}/{version}-py{^python.version}'
         reframe: 'utilities/{name}/{version}'
         singularity: 'utilities/{name}/{version}'
 
