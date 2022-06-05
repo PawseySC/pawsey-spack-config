@@ -21,6 +21,7 @@ if [ "${is_avail_spack}" != "0" ] ; then
   module load ${pawsey_temp}
 fi
 # use PrgEnv-gnu and gcc version used to build python
+module swap PrgEnv-gnu PrgEnv-cray
 module swap PrgEnv-cray PrgEnv-gnu
 module swap gcc gcc/${gcc_version}
 

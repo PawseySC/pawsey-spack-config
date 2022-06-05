@@ -16,6 +16,7 @@ is_avail_spack="$( module is-avail spack/${spack_version} ; echo "$?" )"
 if [ "${is_avail_spack}" != "0" ] ; then
   module use ${root_dir}/${pawsey_temp}
   module load ${pawsey_temp}
+  module swap PrgEnv-gnu PrgEnv-cray
   module swap PrgEnv-cray PrgEnv-gnu
   module swap gcc gcc/${gcc_version}
 fi

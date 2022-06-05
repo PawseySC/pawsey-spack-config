@@ -4,7 +4,7 @@
 spack_dir="<BLA>"
 
 # use PrgEnv-gnu
-module swap PrgEnv-cray/8.3.2 PrgEnv-gnu
+module swap PrgEnv-cray PrgEnv-gnu
 # for first run, use cray-python, because there is no Spack python yet
 module load cray-python
 # initialise spack 
