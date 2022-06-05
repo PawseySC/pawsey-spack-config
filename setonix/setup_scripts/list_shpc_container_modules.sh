@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# source setup variables
+# if copy/pasting these commands, need to run from this directory
+script_dir="$(readlink -f "$(dirname $0 2>/dev/null)" || pwd)"
+. ${script_dir}/variables.sh
+
 # list of containers to be installed by shpc
 container_list="
 quay.io/biocontainers/bamtools:2.5.1--hd03093a_10
@@ -34,9 +39,6 @@ quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 
 function create_shpc_symlink_modules()
 {
-  # NOTE: this function requires the variable "container_list", defined above.
-  # It also assumes the caller has sourced variables from "variables.sh".
-  #
   # create compact, symlinked module tree
   mkdir -p ${root_dir}/${shpc_containers_modules_dir}
   cd ${root_dir}/${shpc_containers_modules_dir}
