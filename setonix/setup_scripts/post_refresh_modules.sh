@@ -4,8 +4,7 @@
 # 1. refresh spack modules
 # 2. creates all missing module directories
 # 3. update singularity modules
-# 4. generate modulerc to hide dependency modules
-# 5. refresh shpc symlink modules
+# 4. refresh shpc symlink modules
 
 # source setup variables
 # if copy/pasting these commands, need to run from this directory
@@ -72,26 +71,7 @@ echo "Updating Singularity modules.."
 bash "${script_dir}/setup_singularity_pawsey_modules.sh"
 
 
-# step 4. generate modulerc to hide dependency modules
-echo "Generating modulerc.lua to hide dependency modules.."
-archs="zen3 zen2"
-compilers="gcc/${gcc_version} aocc/${aocc_version} cce/${cce_version}"
-for arch in $archs; do
-  for compiler in $compilers; do
-    target_dir="${root_dir}/modules/$arch/$compiler/dependencies"
-    modulerc_file="${target_dir}/.modulerc.lua"
-    echo "-- Hiding dependency modules" >"${modulerc_file}"
-    find ${target_dir} -name '*.lua' |grep -v modulerc |while read m ; do 
-      m1=$(readlink -f $m)
-      m2="${m1/2022.05/current}"
-      echo "hide_modulefile(\"$m1\")"
-      echo "hide_modulefile(\"$m2\")"
-      done >>"${modulerc_file}"
-  done
-done
-
-
-# step 5. refresh shpc symlink modules
+# step 4. refresh shpc symlink modules
 shpc_full_containers_modules_dir="${root_dir}/${shpc_containers_modules_dir}"
 echo "You are about to delete this directory and its content: ${shpc_full_containers_modules_dir}"
 echo "Does this directory contain the symlink tree of SHPC container modules? Do you want to delete it? (yes/no)"

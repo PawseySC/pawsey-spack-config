@@ -28,8 +28,8 @@ modules:
         nwchem: 'applications/{name}/{version}'
         # Openfoam not generated for now as per chat with Alexis
         # we're supporting Openfoam mainly through containers
-        #openfoam: 'dependencies/{name}/{version}'
-        #openfoam-org: 'dependencies/{name}/{version}'
+        #openfoam: 'dependencies/.{name}/{version}'
+        #openfoam-org: 'dependencies/.{name}/{version}'
         quantum-espresso: 'applications/{name}/{version}'
         "vasp@6": 'applications/{name}6/{version}'
         vasp: 'applications/{name}/{version}'
@@ -56,12 +56,12 @@ modules:
         "boost ~python cxxstd=11 visibility=hidden": 'libraries/{name}/{version}-c++11'
         "boost ~python cxxstd=98 visibility=hidden": 'libraries/{name}/{version}-c++98'
         # some packages require boost to have global visibility rather than standard hidden visibility
-        "boost +python cxxstd=14 visibility=global": 'dependencies/{name}/{version}-c++14-python-globalvis'
-        "boost +python cxxstd=11 visibility=global": 'dependencies/{name}/{version}-c++11-python-globalvis'
-        "boost +python cxxstd=98 visibility=global": 'dependencies/{name}/{version}-c++98-python-globalvis'
-        "boost ~python cxxstd=14 visibility=global": 'dependencies/{name}/{version}-c++14-globalvis'
-        "boost ~python cxxstd=11 visibility=global": 'dependencies/{name}/{version}-c++11-globalvis'
-        "boost ~python cxxstd=98 visibility=global": 'dependencies/{name}/{version}-c++98-globalvis'
+        "boost +python cxxstd=14 visibility=global": 'dependencies/.{name}/{version}-c++14-python-globalvis'
+        "boost +python cxxstd=11 visibility=global": 'dependencies/.{name}/{version}-c++11-python-globalvis'
+        "boost +python cxxstd=98 visibility=global": 'dependencies/.{name}/{version}-c++98-python-globalvis'
+        "boost ~python cxxstd=14 visibility=global": 'dependencies/.{name}/{version}-c++14-globalvis'
+        "boost ~python cxxstd=11 visibility=global": 'dependencies/.{name}/{version}-c++11-globalvis'
+        "boost ~python cxxstd=98 visibility=global": 'dependencies/.{name}/{version}-c++98-globalvis'
         eigen: 'libraries/{name}/{version}'
         fftw: 'libraries/{name}/{version}'
         gsl: 'libraries/{name}/{version}'
@@ -92,8 +92,8 @@ modules:
         "hdf5 ~cxx+mpi api=v110": 'libraries/{name}/{version}-parallel-api-v110'
         "hdf5 ~cxx+mpi api=v18": 'libraries/{name}/{version}-parallel-api-v18'
         # and when api is default assume it is a dependency 
-        "hdf5 api=default +cxx~mpi": 'dependencies/{name}/{version}'
-        "hdf5 api=default ~cxx+mpi": 'dependencies/{name}/{version}-parallel'
+        "hdf5 api=default +cxx~mpi": 'dependencies/.{name}/{version}'
+        "hdf5 api=default ~cxx+mpi": 'dependencies/.{name}/{version}-parallel'
         # adios also has similar variants 
         "adios2 +hdf5 +python": 'libraries/{name}/{version}-hdf5'
         "adios2 ~hdf5 +python": 'libraries/{name}/{version}'
@@ -167,10 +167,10 @@ modules:
         "casacore ~adios2 +openmp +python": 'astro-applications/{name}/{version}-openmp'
         "casacore ~adios2 ~openmp +python": 'astro-applications/{name}/{version}'
         # some packages need casacore built without python so keep them but have them hidden
-        "casacore +adios2 +openmp ~python": 'dependencies/{name}/{version}-adios2-openmp-nopython'
-        "casacore +adios2 ~openmp ~python": 'dependencies/{name}/{version}-adios2-nopython'
-        "casacore ~adios2 +openmp ~python": 'dependencies/{name}/{version}-openmp-nopython'
-        "casacore ~adios2 ~openmp ~python": 'dependencies/{name}/{version}-nopython'
+        "casacore +adios2 +openmp ~python": 'dependencies/.{name}/{version}-adios2-openmp-nopython'
+        "casacore +adios2 ~openmp ~python": 'dependencies/.{name}/{version}-adios2-nopython'
+        "casacore ~adios2 +openmp ~python": 'dependencies/.{name}/{version}-openmp-nopython'
+        "casacore ~adios2 ~openmp ~python": 'dependencies/.{name}/{version}-nopython'
         cfitsio: 'astro-applications/{name}/{version}'
         "wcslib +cfitsio": 'astro-applications/{name}/{version}'
         "wcslib ~cfitsio": 'astro-applications/{name}/{version}-nocfitsio'
@@ -217,5 +217,5 @@ modules:
         # PJE: Marco had no hash for dependencies 
         # but just to be careful to avoid name conflicts
         # added hash
-        all: 'dependencies/{name}/{version}-{hash:7}'
+        all: 'dependencies/.{name}/{version}-{hash:7}'
 
