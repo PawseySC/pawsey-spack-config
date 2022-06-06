@@ -21,7 +21,7 @@ spack:
     - [target=zen3]
   - matrix:
     - [$py-utilities]
-    - ['^python@3.9.7 +optimizations', '^python@3.10.4 +optimizations']
+    - [^python@3.9.7 +optimizations, ^python@3.10.4 +optimizations]
     - ['%gcc@11.2.0', '%cce@13.0.2', '%aocc@3.2.0']
     - [target=zen3]
   - matrix:
