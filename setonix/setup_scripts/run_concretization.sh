@@ -1,23 +1,11 @@
 #!/bin/bash
 
+# source setup variables
+# if copy/pasting these commands, need to run from this directory
 script_dir="$(readlink -f "$(dirname $0 2>/dev/null)" || pwd)"
+. ${script_dir}/variables.sh
 
-#list of environments
-envs=( \
-env_utils \
-env_num_libs \
-env_python \
-env_io_libs \
-env_langs \
-env_apps \
-env_devel \
-env_bench \
-env_s3_clients \
-env_astro \
-env_bio \
-env_roms \
-env_wrf \
-)
+# list of environments included in variables.sh (sourced above)
 
 envdir="${script_dir}/../environments"
 
@@ -25,8 +13,7 @@ timestamp="$(date +"%Y-%m-%d_%Hh%M")"
 top_logdir="${SPACK_LOGS_BASEDIR:-"${script_dir}/logs"}"
 logdir="${top_logdir}/concretization.${timestamp}"
 mkdir -p ${logdir}
-for env in ${envs[@]}
-do 
+for env in ${env_list} ; do
   cd ${envdir}/${env}
   spack env activate . 
   spack concretize -f 1> ${logdir}/spack.concretize.${env}.log 2> ${logdir}/spack.concretize.${env}.err

@@ -21,6 +21,23 @@ python_version="3.9.7" # has to match the version in the Spack env yaml
 setuptools_version="57.4.0" # has to match the version in the Spack env yaml
 pip_version="21.1.2" # has to match the version in the Spack env yaml
 
+# list of spack build environments
+env_list="
+env_utils
+env_num_libs
+env_python
+env_io_libs
+env_langs
+env_apps
+env_devel
+env_bench
+env_s3_clients
+env_astro
+env_bio
+env_roms
+env_wrf
+"
+
 ### TYPICALLY NO EDIT NEEDED PAST THIS POIINT
 
 # if you change this, you need to propagate also in other places (mostly Spack config yamls)
