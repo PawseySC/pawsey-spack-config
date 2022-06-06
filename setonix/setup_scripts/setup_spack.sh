@@ -45,12 +45,15 @@ patch spack/lib/spack/spack/modules/lmod.py pawsey-spack-config/setonix/fixes/lm
 patch spack/lib/spack/spack/modules/common.py pawsey-spack-config/setonix/fixes/modulenames_plus_common.patch
 patch spack/lib/spack/spack/cmd/modules/__init__.py pawsey-spack-config/setonix/fixes/modulenames_plus_init.patch
 
-# create backbone for Pawsey custom builds and Pawsey utilities
+# create base directories for Pawsey custom builds and Pawsey utilities
 cd ${root_dir}
 mkdir -p ${custom_modules_dir}
 mkdir -p ${custom_software_dir}
 mkdir -p ${utilities_modules_dir}
 mkdir -p ${utilities_software_dir}
+
+# create backbone of module directories
+bash "${script_dir}/setup_create_system_moduletree.sh"
 
 # copy over utility scripts
 sed \
