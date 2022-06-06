@@ -77,14 +77,13 @@ In order to minimise edits in users' home directories, we're putting:
 ### To-do list (incomplete)
 
 * Remember to create `current` symlink: `/software/setonix/YYYY.MM` -> `/software/setonix/current`
-* Compiler configuration for profiling flags
 * Testing project-wide package installations
 * Automations in case we need to update the set of module categories
-* Automations for software installations
 
 
 ### Deployment tips
 
+* install `python` first, so you can use it as the Python interpreter for Spack itself
 * `env_num_libs` needs to be installed first, as it builds otherwise non buildable packages (only *fftw* at the moment)
 * other environments can be built in parallel
 
