@@ -8,6 +8,8 @@ whatis([[Version : VIEW_VERSION ]])
 whatis([[Short description : A curated collection of Python packages for HPC. ]])
 help([[A curated collection of Python packages for HPC.]])
 
+whatis([[Curated packages : VIEW_ROOT_PACKAGES ]])
+
 -- Enforce explicit usage of versions by requiring full module name
 if (mode() == "load") then
     if (myModuleUsrName() ~= myModuleFullName()) then
@@ -18,8 +20,8 @@ if (mode() == "load") then
     end
 end
 
-view_root = "VIEW_ROOT"
-view_python_version_major_minor = "VIEW_PYTHON_VERSION_MAJOR_MINOR"
+local view_root = "VIEW_ROOT"
+local view_python_version_major_minor = "VIEW_PYTHON_VERSION_MAJOR_MINOR"
 
 prepend_path("PATH", view_root .. "/bin", ":")
 prepend_path("LIBRARY_PATH", view_root .. "/lib", ":")

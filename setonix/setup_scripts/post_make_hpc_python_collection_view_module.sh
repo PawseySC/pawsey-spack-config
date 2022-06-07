@@ -67,18 +67,23 @@ sed "s;  view: .*[fF]alse;  view: ${view_software_dir};g" \
   >${view_env_dir}/spack.yaml
 spack env activate -V ${view_env_dir}
 spack concretize -f
-
+# get info for the modulefile
+view_root_packages=
+view_python_version=
 spack env deactivate
 
 # create modulefile for view
+view_version="${date_tag}-py${view_python_version}"
+view_python_version_major="$( echo $view_python_version | cut -d '.' -f 1 )"
+view_python_version_minor="$( echo $view_python_version | cut -d '.' -f 2 )"
+view_python_version_major_minor="${view_python_version_major}.${view_python_version_minor}"
 sed \
   -e "s;VIEW_VERSION;${view_version};g" \
+  -e "s;VIEW_ROOT_PACKAGES;${view_root_packages};g" \
   -e "s;VIEW_ROOT;${view_software_dir};g" \
   -e "s;VIEW_PYTHON_VERSION_MAJOR_MINOR;${view_python_version_major_minor};g" \
   ${view_module_template} \
   >${view_module_dir}/${view_version}.lua
-# add collection content to modulefile
-<blabla>
 
 
 else
