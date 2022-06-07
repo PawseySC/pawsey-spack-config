@@ -20,16 +20,16 @@ module load ${shpc_name}/${shpc_version}
 
 # list of openfoam containers to be installed by shpc
 container_list="
-quay.io/pawsey/openfoam/v2012
-quay.io/pawsey/openfoam/v2006
-quay.io/pawsey/openfoam/v1912
-quay.io/pawsey/openfoam/v1812
-quay.io/pawsey/openfoam/v1712
-quay.io/pawsey/openfoam-org/8
-quay.io/pawsey/openfoam-org/7
-quay.io/pawsey/openfoam-org/5.x
-quay.io/pawsey/openfoam-org/2.4.x
-quay.io/pawsey/openfoam-org/2.2.0
+quay.io/pawsey/openfoam:v2012
+quay.io/pawsey/openfoam:v2006
+quay.io/pawsey/openfoam:v1912
+quay.io/pawsey/openfoam:v1812
+quay.io/pawsey/openfoam:v1712
+quay.io/pawsey/openfoam-org:8
+quay.io/pawsey/openfoam-org:7
+quay.io/pawsey/openfoam-org:5.x
+quay.io/pawsey/openfoam-org:2.4.x
+quay.io/pawsey/openfoam-org:2.2.0
 "
 
 # make sure root directory exists, for container modules installation
