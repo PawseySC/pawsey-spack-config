@@ -53,7 +53,7 @@ echo "Do these directories correspond to the view environment ${view_name} ?"
 echo "Do you want to delete them? (yes/no)"
 read view_answer
 if [ ${view_answer,,} == "yes" ] ; then
-  rm -rf ${view_env_dir}/spack.* ${view_env_dir}/.spack.*
+  rm -rf ${view_env_dir}/spack.* ${view_env_dir}/.spack*
   rm -rf ${view_software_dir} ${view_software_root_dir}/._${view_name}
   rm -f ${view_module_dir}/*.lua
 else
