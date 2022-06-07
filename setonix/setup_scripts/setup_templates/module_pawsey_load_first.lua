@@ -42,17 +42,7 @@ local psc_sw_env_aocc_version = "AOCC_VERSION"
 -- List of Spack module categories
 -- update when new categories are added
 local psc_sw_env_module_categories = {
-  "astro-applications",
-  "bio-applications",
-  "applications",
-  "libraries",
-  "programming-languages",
-  "utilities",
-  "visualisation",
-  "python-packages",
-  "benchmarking",
-  "developer-tools",
-  "dependencies"
+  MODULE_LUA_CAT_LIST
 }
 -- Count how many categories
 num_categories = 0
