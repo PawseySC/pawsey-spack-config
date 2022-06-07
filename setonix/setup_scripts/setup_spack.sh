@@ -14,7 +14,6 @@ else
 script_dir="$(readlink -f "$(dirname $0 2>/dev/null)" || pwd)"
 . ${script_dir}/variables.sh
 
-# TODO: needed?
 # ensure starting from a new .spack
 if [ -e ~/.spack ] ; then
   mv ~/.spack ~/.spack.old.$( date -Iminutes | sed 's/+.*//' | tr ':' '.' )

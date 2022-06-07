@@ -12,7 +12,6 @@ else
 # only editing typically needed: spack version
 spack_version="0.17.0"
 
-# TODO: needed?
 # ensure starting from a new .spack
 if [ -e ~/.spack ] ; then
   mv ~/.spack ~/.spack.old.$( date -Iminutes | sed 's/+.*//' | tr ':' '.' )
