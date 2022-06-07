@@ -68,11 +68,12 @@ sed "s;  view: .*[fF]alse;  view: ${view_software_dir};g" \
 spack env activate -V ${view_env_dir}
 spack concretize -f
 # get info for the modulefile
-view_root_packages=
-view_python_version=
+# the grep syntax works as of spack v0.17.0
+view_root_packages=$(spack find | sed -n '/Root specs/,/^$/p' | grep -v -e '^==>' -e '^--' -e '^$')
 spack env deactivate
 
 # create modulefile for view
+view_python_version=$( echo $view_root_packages | xargs -n 1 | grep ^python@ | cut -d '%' -f 1 | cut -d '@' -f 2 )
 view_version="${date_tag}-py${view_python_version}"
 view_python_version_major="$( echo $view_python_version | cut -d '.' -f 1 )"
 view_python_version_minor="$( echo $view_python_version | cut -d '.' -f 2 )"
