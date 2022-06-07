@@ -80,7 +80,7 @@ view_python_version_minor="$( echo $view_python_version | cut -d '.' -f 2 )"
 view_python_version_major_minor="${view_python_version_major}.${view_python_version_minor}"
 sed \
   -e "s;VIEW_VERSION;${view_version};g" \
-  -e "s;VIEW_ROOT_PACKAGES;${view_root_packages};g" \
+  -e "s;VIEW_ROOT_PACKAGES;$( echo ${view_root_packages} );g" \
   -e "s;VIEW_ROOT;${view_software_dir};g" \
   -e "s;VIEW_PYTHON_VERSION_MAJOR_MINOR;${view_python_version_major_minor};g" \
   ${view_module_template} \
