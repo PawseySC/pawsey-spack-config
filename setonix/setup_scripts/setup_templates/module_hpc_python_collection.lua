@@ -2,7 +2,7 @@
 -- Module file created by Pawsey
 --
 
-whatis([[Name : hpc-python-collection]])
+whatis([[Name : hpc-python-collection ]])
 whatis([[Version : VIEW_VERSION ]])
 
 whatis([[Short description : A curated collection of Python packages for HPC. ]])
