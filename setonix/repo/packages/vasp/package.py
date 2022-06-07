@@ -151,13 +151,14 @@ class Vasp(MakefilePackage):
                     'FFLAGS ?= ',
                     'makefile.include')
 
-        filter_file('^LIBDIR[ ]{0,}=.*$', '', 'makefile.include')
-        filter_file('^BLAS[ ]{0,}=.*$', 'BLAS ?=', 'makefile.include')
-        filter_file('^LAPACK[ ]{0,}=.*$', 'LAPACK ?=', 'makefile.include')
-        filter_file('^FFTW[ ]{0,}?=.*$', 'FFTW ?=', 'makefile.include')
-        filter_file('^MPI_INC[ ]{0,}=.*$', 'MPI_INC ?=', 'makefile.include')
+        filter_file('^LIBDIR *=.*$', '', 'makefile.include')
+        filter_file('^BLAS *=.*$', 'BLAS ?=', 'makefile.include')
+        filter_file('^LAPACK *=.*$', 'LAPACK ?=', 'makefile.include')
+        filter_file('^FFTW *\?=.*$', 'FFTW ?=', 'makefile.include')
+        filter_file('^MPI_INC *=.*$', 'MPI_INC ?=', 'makefile.include')
         filter_file('-DscaLAPACK.*$\n', '', 'makefile.include')
         filter_file('^SCALAPACK.*$', '', 'makefile.include')
+        filter_file('^OBJECTS_LIB *= *', 'OBJECTS_LIB = getshmem.o ', 'makefile.include')
 
         if '+cuda' in spec:
             filter_file('^OBJECTS_GPU[ ]{0,}=.*$',
@@ -174,7 +175,7 @@ class Vasp(MakefilePackage):
 
         if '+vaspsol' in spec:
             copy('VASPsol/src/solvation.F', 'src/')
-         
+
     def setup_build_environment(self, spack_env):
         spec = self.spec
 
@@ -200,6 +201,7 @@ class Vasp(MakefilePackage):
         spack_env.set('BLAS', spec['blas'].libs.ld_flags)
         spack_env.set('LAPACK', spec['lapack'].libs.ld_flags)
         spack_env.set('FFTW', spec['fftw'].prefix)
+        spack_env.set('FFTW_ROOT', spec['fftw'].prefix)
         spack_env.set('MPI_INC', spec['mpi'].prefix.include)
 
         if '%nvhpc' in spec:
