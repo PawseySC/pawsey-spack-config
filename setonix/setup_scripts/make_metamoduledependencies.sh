@@ -10,7 +10,11 @@ fi
 package=$1
 envpath=$2
 modpath=$3
+
+# source setup variables
+# if copy/pasting these commands, need to run from this directory
 script_dir="$(readlink -f "$(dirname $0 2>/dev/null)" || pwd)"
+. ${script_dir}/variables.sh
 
 if [ ! -d $envpath ]; then
     echo "Environment path ${envpath} does not exist. Exiting"
@@ -76,20 +80,11 @@ done
 rm ${package}.concretize
 
 # now strip key strings from the modules that are loaded. 
-string_list=("astro-applications/" \
-"bio-applications/" \
-"applications/" \
-"libraries/" \
-"programming-languages/" \
-"utilities/" \
-"visualisation/" \
-"python-packages/" \
-"benchmarking/" \
-"developer-tools/" \
-"dependencies/")
+# list of module categories included in variables.sh (sourced above)
 
-for s in ${string_list[@]}
+for mod_cat in ${module_cat_list}
 do
+    s="${mod_cat}/"
     sed -i 's:load("'"${s}"':load(":g' ${modfile}
 done
 

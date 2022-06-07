@@ -21,6 +21,21 @@ python_version="3.9.7" # has to match the version in the Spack env yaml
 setuptools_version="57.4.0" # has to match the version in the Spack env yaml
 pip_version="21.1.2" # has to match the version in the Spack env yaml
 
+# list of module categories
+module_cat_list="
+astro-applications
+bio-applications
+applications
+libraries
+programming-languages
+utilities
+visualisation
+python-packages
+benchmarking
+developer-tools
+dependencies
+"
+
 # list of spack build environments
 env_list="
 env_utils
