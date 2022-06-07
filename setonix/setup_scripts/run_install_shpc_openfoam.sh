@@ -40,13 +40,17 @@ mkdir -p ${containers_root_dir}
 # will take a while (container downloads)
 # if a container module has already been installed, its installation will complete quickly
 for container in $container_list ; do
+# TODO: add version specific aliases
   shpc install $container
 done
 
 # create compact, symlinked module tree
+# TODO: uncomment
 ###bash ${script_dir}/post_create_shpc_symlink_modules.sh
 # it's the symlinked module tree that needs to go in MODULEPATH:
 # `module use ${root_dir}/containers/${shpc_spackuser_modules_dir_short}`
+
+# TODO: add symlinks to SIFs
 
 # back to root_dir
 cd ${root_dir}
