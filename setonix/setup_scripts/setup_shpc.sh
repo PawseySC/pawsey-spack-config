@@ -27,8 +27,8 @@ module swap gcc gcc/${gcc_version}
 
 # load needed python toolkit
 module load $python_name/$python_version
-module load py-setuptools/$setuptools_version
-module load py-pip/$pip_version
+module load py-setuptools/${setuptools_version}-py${python_version}
+module load py-pip/${pip_version}-py${python_version}
 
 # create and enter install directory
 cd ${root_dir}
