@@ -55,6 +55,7 @@ In order to minimise edits in users' home directories, we're putting:
 ### Module categories in use
 
 * Spack (with compiler/arch tree)
+  - **NOTE**: if updating list, still need to manually update `templates/modules/modulefile.lua`
   - `astro-applications`
   - `bio-applications`
   - `applications`
@@ -76,9 +77,7 @@ In order to minimise edits in users' home directories, we're putting:
 
 ### To-do list (incomplete)
 
-* Remember to create `current` symlink: `/software/setonix/YYYY.MM` -> `/software/setonix/current`
 * Testing project-wide package installations
-* Automations in case we need to update the set of module categories
 
 
 ### Deployment tips
