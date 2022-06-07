@@ -5,7 +5,8 @@
 # 2. creates all missing module directories
 # 3. update singularity modules
 # 4. refresh wrf/roms dependency modules
-# 5. refresh shpc symlink modules
+# 5. create hpc-python view and module
+# 6. refresh shpc symlink modules
 
 # source setup variables
 # if copy/pasting these commands, need to run from this directory
@@ -60,7 +61,18 @@ else
 fi
 
 
-# step 5. refresh shpc symlink modules
+# step # 5. create hpc-python view and module
+echo "Do you want to create the hpc-python view and module? (yes/no)"
+read hpc_python_answer
+if [ ${hpc_python_answer,,} == "yes" ] ; then
+  echo "Creating hpc-python view and module.."
+  bash "${script_dir}/post_make_hpc_python_collection_view_module.sh"
+else
+  echo "Skipping creation of hpc-python view and module."
+fi
+
+
+# step 6. refresh shpc symlink modules
 shpc_full_containers_modules_dir="${root_dir}/${shpc_containers_modules_dir}"
 echo "You are about to delete this directory and its content: ${shpc_full_containers_modules_dir}"
 echo "Does this directory contain the symlink tree of SHPC container modules? Do you want to delete it? (yes/no)"
