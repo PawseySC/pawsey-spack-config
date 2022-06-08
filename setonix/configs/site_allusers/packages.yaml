@@ -56,14 +56,14 @@ packages:
 
   #TODO for next stack builds: consider adding more +pic as default variant
 
-  # preferred versions (for 2022.05) and variants, dependencies
+  # preferred versions and variants, dependencies
   # required by env_devel/hpctoolkit, but good to have for everything
   libunwind:
     variants: '+pic'
   mbedtls:
     variants: '+pic'
 
-  # preferred versions (for 2022.05) and variants, utils/python
+  # preferred versions and variants, utils/python
   # Note: setting autoconf/automake/cmake as non buildable
   cmake:
     version: [3.21.4]
@@ -82,7 +82,7 @@ packages:
     variants: '+X'
   llvm:
     variants: '~omp_as_runtime ~clang ~compiler-rt ~polly ~gold'
-  # preferred versions (for 2022.05) and variants, python
+  # preferred versions and variants, python
   python:
     version: [3.9.7]
     variants: '+optimizations'
@@ -129,7 +129,7 @@ packages:
     version: [1.7.1]
   py-setuptools:
     version: [57.4.0]
-  # preferred versions (for 2022.05) and variants, compilers
+  # preferred versions and variants, compilers
   go:
     version: [1.16.12]
   julia:
@@ -152,7 +152,7 @@ packages:
     version: [3.0.1]
   rust:
     version: [1.52.1]
-  # preferred versions (for 2022.05) and variants, num_libs
+  # preferred versions and variants, num_libs
   amdblis:
     version: [3.0]
     variants: 'threads=openmp'
@@ -215,7 +215,7 @@ packages:
   trilinos:
     version: [13.0.1]
     variants: '+adios2 +openmp +python build_type=Release'
-# preferred versions (for 2022.05) and variants, io_libs
+# preferred versions and variants, io_libs
   hdf5:
     version: [1.12.1]
     variants: 'api=v112 +hl +fortran +szip build_type=Release'
