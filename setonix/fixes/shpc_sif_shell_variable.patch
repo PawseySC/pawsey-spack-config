@@ -1,5 +1,5 @@
---- singularity.lua	2022-05-27 14:52:40.000000000 +0800
-+++ new.singularity.lua	2022-05-27 14:52:36.000000000 +0800
+--- singularity.lua	2022-06-08 09:27:55.000000000 +0800
++++ singularity_sif_symlink.lua	2022-06-08 09:35:33.000000000 +0800
 @@ -9,7 +9,7 @@
  This module is a singularity container wrapper for {{ name }} v{{ version }}
  {% if description %}{{ description }}{% endif %}
@@ -9,7 +9,27 @@
  
   - {{ container_sif }}
  
-@@ -48,8 +48,11 @@
+@@ -25,6 +25,8 @@
+        singularity inspect -r <container>
+  - {|module_name|}-inspect-deffile:
+        singularity inspect -d <container>
++ - {|module_name|}-container:
++       echo "$SINGULARITY_CONTAINER"
+ 
+ {% if aliases %}{% for alias in aliases %} - {{ alias.name }}:
+        singularity exec {% if features.gpu %}{{ features.gpu }} {% endif %}{% if features.home %}-B {{ features.home }} --home {{ features.home }} {% endif %}{% if features.x11 %}-B {{ features.x11 }} {% endif %}{% if settings.environment_file %}-B <moduleDir>/{{ settings.environment_file }}:/.singularity.d/env/{{ settings.environment_file }}{% endif %} {% if settings.bindpaths %}-B {{ settings.bindpaths }} {% endif %}{% if alias.singularity_options %}{{ alias.singularity_options }} {% endif %}<container> {{ alias.command }} "$@"
+@@ -38,8 +40,8 @@
+ 
+ {% if settings.singularity_module %}load("{{ settings.singularity_module }}"){% endif %}
+ 
+--- directory containing this modulefile (dynamically defined)
+-local moduleDir = myFileName():match("(.*[/])") or "."
++-- directory containing this modulefile, once symlinks resolved (dynamically defined)
++local moduleDir = subprocess("realpath " .. myFileName()):match("(.*[/])") or "."
+ 
+ -- singularity environment variable to set shell
+ setenv("SINGULARITY_SHELL", "{{ settings.singularity_shell }}")
+@@ -48,8 +50,12 @@
  if not os.getenv("SINGULARITY_OPTS") then setenv ("SINGULARITY_OPTS", "") end
  if not os.getenv("SINGULARITY_COMMAND_OPTS") then setenv ("SINGULARITY_COMMAND_OPTS", "") end
  
@@ -17,6 +37,7 @@
  local containerPath = '{{ container_sif }}'
 +-- service environment variable to access full SIF image path
 +setenv("SINGULARITY_CONTAINER", containerPath)
++set_shell_function("{|module_name|}-container", "echo " .. containerPath)
 +
 +-- interactive shell to any container, plus exec for aliases
  local shellCmd = "singularity ${SINGULARITY_OPTS} shell ${SINGULARITY_COMMAND_OPTS} -s {{ settings.singularity_shell }} {% if features.gpu %}{{ features.gpu }} {% endif %}{% if features.home %}-B {{ features.home }} --home {{ features.home }} {% endif %}{% if features.x11 %}-B {{ features.x11 }} {% endif %}{% if settings.environment_file %}-B " .. moduleDir .. "/{{ settings.environment_file }}:/.singularity.d/env/{{ settings.environment_file }}{% endif %} {% if settings.bindpaths %}-B {{ settings.bindpaths }}{% endif %} " .. containerPath
