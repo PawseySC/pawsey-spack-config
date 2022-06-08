@@ -40,6 +40,7 @@ spack:
     - quantum-espresso@6.8 +epw +openmp hdf5=parallel
     - vasp@5.4.4 +scalapack +vaspsol
     - vasp@6.2.1 +scalapack +vaspsol
+    - vasp@6.3.0 +scalapack +vaspsol
   specs:
   - matrix:
     - [$packages]
