@@ -312,6 +312,9 @@ modules:
         hpcviewer: 'developer-tools/{name}/{version}'
         py-hatchet: 'developer-tools/{name}/{version}'
 
+        # git needs special name, because `.git` is ignored by Lmod
+        git: 'dependencies/.git-module/{version}-{hash:7}'
+
         # by default all others are hidden
         # PJE: Marco had no hash for dependencies 
         # but just to be careful to avoid name conflicts
