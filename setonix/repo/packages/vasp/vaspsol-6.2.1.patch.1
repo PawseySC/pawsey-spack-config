@@ -1,0 +1,92 @@
+diff -c -r vasp.6.2.1/src/mpi.F spack-src/src/mpi.F
+*** vasp.6.2.1/src/mpi.F	Fri Apr 30 02:13:18 2021
+--- spack-src/src/mpi.F	Fri Jun  3 16:35:47 2022
+***************
+*** 2038,2043 ****
+--- 2038,2067 ----
+  !
+  !======================================================================
+  
++ ! Subroutine for VASPsol - Added by D. Gaissmaier
++ !----------------------------------------------------------------------
++ !
++ ! Global sum function - required for VASPsol
++ !
++ !----------------------------------------------------------------------
++ 
++       SUBROUTINE M_sum_1(COMM, v1)
++       USE mpimy
++       IMPLICIT NONE
++ 
++       TYPE(communic) COMM
++       REAL(q) vec(1),v1
++ 
++       vec(1)=v1
++ 
++       CALL M_sumb_d(COMM, vec, 1)
++ 
++       v1=vec(1)
++ 
++       RETURN
++       END SUBROUTINE
++ ! End of VASPsol subroutine
++ 
+  !----------------------------------------------------------------------
+  !
+  ! M_bcast_i: copy n integers from root to all nodes
+diff -c -r vasp.6.2.1/src/pot.F spack-src/src/pot.F
+*** vasp.6.2.1/src/pot.F	Fri Apr 30 02:13:19 2021
+--- spack-src/src/pot.F	Fri Jun  3 16:35:47 2022
+***************
+*** 406,411 ****
+--- 406,418 ----
+        IF (LBEXTERNAL()) CALL BEXT_ADDV(CVTOT,GRIDC,SIZE(CVTOT,2))
+  ! bexternal__
+        CALL POT_FLIP(CVTOT, GRIDC,WDES%NCDIJ )
++ 
++ ! solvation__
++ ! vaclevel
++       IF (LSOL) CALL GET_FERMISHIFT(LATT_CUR, T_INFO, GRIDC, WDES, CWORK, CHTOT)
++ ! vaclevel
++ ! solvation__
++ 
+  !=======================================================================
+  ! if overlap is used :
+  ! copy CVTOT to SV and set contribution of unbalanced lattice-vectors
+diff -c -r vasp.6.2.1/VASPsol/src/solvation.F spack-src/VASPsol/src/solvation.F
+*** vasp.6.2.1/VASPsol/src/solvation.F	Fri Jun  3 16:46:41 2022
+--- spack-src/VASPsol/src/solvation.F	Fri Jun  3 16:35:47 2022
+***************
+*** 2203,2209 ****
+  !test
+     CALL MY_D_PROD(Ecorr3, SP_CHTOT(1,1), Vcorr, SP_GRIDC)
+  !   CALLMPI( M_sum_d(SP_GRIDC%COMM,Ecorr3,1))
+!    CALLMPI( M_sum_s(SP_GRIDC%COMM,1,Ecorr3,0,0,0))
+  
+  !-------------------------------------------------------------
+  !Ecorr4 = Vdiel*n, 
+--- 2203,2209 ----
+  !test
+     CALL MY_D_PROD(Ecorr3, SP_CHTOT(1,1), Vcorr, SP_GRIDC)
+  !   CALLMPI( M_sum_d(SP_GRIDC%COMM,Ecorr3,1))
+!    CALLMPI( M_sum_1(SP_GRIDC%COMM,Ecorr3))
+  
+  !-------------------------------------------------------------
+  !Ecorr4 = Vdiel*n, 
+***************
+*** 2214,2220 ****
+  !test
+     CALL MY_D_PROD(Ecorr4, SP_CHTOT(1,1), Vdiel, SP_GRIDC)
+  !   CALLMPI( M_sum_d(SP_GRIDC%COMM,Ecorr4,1))
+!    CALLMPI( M_sum_s(SP_GRIDC%COMM,1,Ecorr4,0,0,0))
+  
+  !-------------------------------------------------------------
+  !calculate force correction,flag=5(not used)
+--- 2214,2220 ----
+  !test
+     CALL MY_D_PROD(Ecorr4, SP_CHTOT(1,1), Vdiel, SP_GRIDC)
+  !   CALLMPI( M_sum_d(SP_GRIDC%COMM,Ecorr4,1))
+!    CALLMPI( M_sum_1(SP_GRIDC%COMM,Ecorr4))
+  
+  !-------------------------------------------------------------
+  !calculate force correction,flag=5(not used)
