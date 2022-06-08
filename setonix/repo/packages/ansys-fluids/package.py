@@ -55,7 +55,7 @@ class AnsysFluids(Package):
         # mkdirp('{0}/{1}'.format(self.stage.source_path, 'ansysfluids_tmpdir'))
         # run_install = Executable("./INSTALL -silent -install_dir {0} -usetempdir {1}/{2}".format(self.prefix, self.stage.source_path, 'fluids_tmpdir'))
         # due to installer requiring an installation path with < 100 characters, to temporary install 
-        tmp_install_path = '/scratch/pawsey0001/spack/tmp/'
+        tmp_install_path = os.environ['MYSCRATCH']+'/tmp/'
         mkdirp('{0}/{1}'.format(self.stage.source_path, 'fluids_tmpdir'))
         mkdirp('{0}/{1}'.format(tmp_install_path, 'fluids'))
         run_install = Executable("./INSTALL -silent -install_dir {0}/{1} -usetempdir {2}/{3}".format(tmp_install_path, 'fluids', self.stage.source_path, 'fluids_tmpdir'))
