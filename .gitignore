@@ -14,3 +14,4 @@ spack.lock
 # our build logs
 spack-logs/
 logs/
+*.tgz
