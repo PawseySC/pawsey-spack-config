@@ -40,8 +40,7 @@ archs="zen3 zen2"
 compilers="gcc/${gcc_version} aocc/${aocc_version} cce/${cce_version}"
 
 # Spack installations
-# TODO: add ANSYS packages
-for package in amber cpmd namd vasp@5 vasp@6 ; do
+for package in amber ansys-fluids ansys-structures ansys-fluidstructures cpmd namd vasp@5 vasp@6 ; do
   software_dirs=$( spack find -p $package |grep ^${package} |tr -s ' ' |cut -d ' ' -f 2 )
   module_dirs=""
   if [ "${package}" == "vasp@6" ] ; then
@@ -49,7 +48,11 @@ for package in amber cpmd namd vasp@5 vasp@6 ; do
   else
     tool_module=${package%@*}
   fi
-  linux_group="${tool_module}"
+  if [[ "${package}" =~ "ansys" ]] ; then
+    linux_group="ANSYS"
+  else
+    linux_group="${tool_module}"
+  fi
   for arch in $archs; do
     for compiler in $compilers; do
       add_module_dir="${root_dir}/modules/${arch}/${compiler}/applications/${tool_module}"

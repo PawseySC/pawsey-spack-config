@@ -116,6 +116,9 @@ modules:
 
         # hpc applications
         amber: 'applications/{name}/{version}'
+        ansys-fluids: 'applications/{name}/{version}'
+        ansys-structures: 'applications/{name}/{version}'
+        ansys-fluidstructures: 'applications/{name}/{version}'
         cpmd: 'applications/{name}/{version}'
         cp2k: 'applications/{name}/{version}'
         gromacs: 'applications/{name}/{version}'
