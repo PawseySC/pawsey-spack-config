@@ -35,6 +35,16 @@ function get_logdir()
 }
 
 
+function get_install_group()
+{
+    if [ "$USER" == "spack" ] ; then
+      echo "spack"
+    else
+      echo "$PAWSEY_PROJECT"
+    fi
+}
+
+
 function spack_check_duplicate()
 {
     #TODO: work in progress
@@ -148,7 +158,7 @@ function spack_env_install()
     echo "ENV_DIR: $(pwd)" > ${logdir}/${logfile}.log
     spack concretize -f 1>> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
     spack_examine_concretize_err ${logdir}/${logfile}.err
-    sg $PAWSEY_PROJECT -c "spack install ${args} 1>> ${logdir}/${logfile}.log 2>> ${logdir}/${logfile}.err"
+    sg $(get_install_group) -c "spack install ${args} 1>> ${logdir}/${logfile}.log 2>> ${logdir}/${logfile}.err"
     spack_examine_install_err ${logdir}/${logfile}.err
     spack env deactivate
 }
@@ -186,7 +196,7 @@ function spack_install()
     local logdir="$(get_logdir)"
     mkdir -p $logdir
     local logfile="spack.install.${timestamp}"
-    sg $PAWSEY_PROJECT -c "spack install $args 1> /tmp/${logfile}.${USER}.log 2> /tmp/${logfile}.${USER}.err"
+    sg $(get_install_group) -c "spack install $args 1> /tmp/${logfile}.${USER}.log 2> /tmp/${logfile}.${USER}.err"
     spack_examine_install_err /tmp/${logfile}.${USER}.err
     echo "ARGS: ${args}" >> ${logdir}/${logfile}.log
     echo "TIME: $(date)" >> ${logdir}/${logfile}.log
@@ -204,7 +214,7 @@ function spack_uninstall()
     local logdir="$(get_logdir)"
     mkdir -p $logdir
     local logfile="spack.uninstall.${timestamp}"
-    sg $PAWSEY_PROJECT -c "spack uninstall -y $args 1> /tmp/${logfile}.${USER}.log 2> /tmp/${logfile}.${USER}.err"
+    sg $(get_install_group) -c "spack uninstall -y $args 1> /tmp/${logfile}.${USER}.log 2> /tmp/${logfile}.${USER}.err"
     echo "ARGS: ${args}" >> ${logdir}/${logfile}.log
     echo "TIME: $(date)" >> ${logdir}/${logfile}.log
     cat /tmp/${logfile}.${USER}.log >> ${logdir}/${logfile}.log

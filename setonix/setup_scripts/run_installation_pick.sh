@@ -28,9 +28,9 @@ for env in ${env_list} ; do
   spack env activate . 
   spack concretize -f 1> ${logdir}/spack.concretize.${env}.log 2> ${logdir}/spack.concretize.${env}.err
   if [ "${env}" == "env_roms" ] || [ "${env}" == "env_wrf" ] ; then
-    sg $PAWSEY_PROJECT -c "spack install --no-checksum -j${nprocs} --only dependencies 1> ${logdir}/spack.install.${env}.log 2> ${logdir}/spack.install.${env}.err"
+    sg spack -c "spack install --no-checksum -j${nprocs} --only dependencies 1> ${logdir}/spack.install.${env}.log 2> ${logdir}/spack.install.${env}.err"
   else
-    sg $PAWSEY_PROJECT -c "spack install --no-checksum -j${nprocs} 1> ${logdir}/spack.install.${env}.log 2> ${logdir}/spack.install.${env}.err"
+    sg spack -c "spack install --no-checksum -j${nprocs} 1> ${logdir}/spack.install.${env}.log 2> ${logdir}/spack.install.${env}.err"
   fi
   spack env deactivate
   cd ${script_dir}

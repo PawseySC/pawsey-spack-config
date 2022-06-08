@@ -26,8 +26,8 @@ mkdir -p ${logdir}
 spack spec python@3.9.7 +optimizations %gcc@11.2.0 target=zen3 1> ${logdir}/spack.python.concretize.log 2> ${logdir}/spack.python.concretize.err
 
 # install gcc
-sg $PAWSEY_PROJECT -c 'spack install python@3.9.7 +optimizations %gcc@11.2.0 target=zen3' 1> ${logdir}/spack.python.install.log 2> ${logdir}/spack.python.install.err
+sg spack -c 'spack install python@3.9.7 +optimizations %gcc@11.2.0 target=zen3' 1> ${logdir}/spack.python.install.log 2> ${logdir}/spack.python.install.err
 # install cce
-sg $PAWSEY_PROJECT -c 'spack install python@3.9.7 +optimizations %cce@13.0.2 target=zen3' 1>> ${logdir}/spack.python.install.log 2>> ${logdir}/spack.python.install.err
+sg spack -c 'spack install python@3.9.7 +optimizations %cce@13.0.2 target=zen3' 1>> ${logdir}/spack.python.install.log 2>> ${logdir}/spack.python.install.err
 # install aocc
-sg $PAWSEY_PROJECT -c 'spack install python@3.9.7 +optimizations %aocc@3.2.0 target=zen3' 1>> ${logdir}/spack.python.install.log 2>> ${logdir}/spack.python.install.err
+sg spack -c 'spack install python@3.9.7 +optimizations %aocc@3.2.0 target=zen3' 1>> ${logdir}/spack.python.install.log 2>> ${logdir}/spack.python.install.err

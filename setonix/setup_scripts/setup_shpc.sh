@@ -36,7 +36,7 @@ mkdir -p ${shpc_install_dir}
 cd ${shpc_install_dir}
 
 # pip install package
-sg $PAWSEY_PROJECT -c "pip install --prefix=$(pwd) singularity-hpc==$shpc_version"
+sg spack -c "pip install --prefix=$(pwd) singularity-hpc==$shpc_version"
 
 # get registry from github repo
 git clone https://github.com/singularityhub/singularity-hpc
