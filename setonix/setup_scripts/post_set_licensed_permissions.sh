@@ -54,7 +54,7 @@ group["vasp@6"]="vasp6"
 
 
 # Spack installations
-# TODO: check that all of these are actually installed with Spack
+# TODO: where are ANSYS going to be?
 for package in amber cpmd namd vasp@5 vasp@6 ; do
   software_dirs=$( get_spack_install_paths $package )
   if [ "${package}" == "vasp@6" ] ; then
@@ -69,8 +69,9 @@ done
 
 
 # Non-Spack installations
-# TODO: check package list for completeness and correctness
-for package in cfx fluent ; do
+# TODO: where are ANSYS going to be?
+#for package in cfx fluent ; do
+for package in "" ; do
   dirs="
   ${root_dir}/${custom_software_dir}/zen3/gcc/${gcc_version}/${package}
   ${root_dir}/${custom_modules_dir}/zen3/gcc/${gcc_version}/${custom_modules_suffix}/${package}
