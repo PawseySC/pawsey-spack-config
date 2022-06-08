@@ -29,10 +29,14 @@ function apply_permissions()
 {
   local group="$1"
   local dirs="$2"
-  for dir in ${dirs} ; do
-    chgrp -R ${group} $dir
-    chmod -R o-rwx $dir
-  done
+  if [ ! -z "$dirs" ] ; then
+    for dir in ${dirs} ; do
+      if [ -e "$dir" ] ; then
+        chgrp -R ${group} $dir
+        chmod -R o-rwx $dir
+      fi
+    done
+  fi
 }
 
 # list of archs/compilers to find all modulefiles
