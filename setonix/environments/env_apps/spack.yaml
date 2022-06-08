@@ -9,7 +9,10 @@ spack:
   definitions:
   - packages:
     
-# ansys cfx, ansys fluent, comsol: no recipe, manual install?
+#comsol: no recipe, manual install?
+    - ansys-fluids@2022R1
+    - ansys-structures@2022R1
+    - ansys-fluidstructures@2022R1
 # charris: roms recipe in 0.17, user installs, see roms.yaml
 # charris: wrf recipe, user installs, see wrf.yaml
     - amber@20 +openmp ^hdf@4.2.15 ~external-xdr
