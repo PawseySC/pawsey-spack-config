@@ -65,7 +65,7 @@ for container in $container_list ; do
   rm ${container_recipe_dir}/container.yaml 
 
 # fix conflict line in modulefile, it is too long
-  modulefile="${root_dir}/${shpc_containers_dir}/${shpc_spackuser_modules_dir_long}/${tool_dir}/module.lua"
+  modulefile="${root_dir}/${containers_root_dir}/${shpc_spackuser_modules_dir_long}/${tool_dir}/module.lua"
   new_conflict="conflict(\"${tool}\",\"${tool_repo}\")"
   sed -i '/conflict(/c '"${new_conflict}"'' ${modulefile}
 
