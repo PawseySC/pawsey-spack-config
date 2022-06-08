@@ -73,14 +73,11 @@ fi
 
 
 # step 6. refresh shpc symlink modules
-shpc_full_containers_modules_dir="${root_dir}/${shpc_containers_modules_dir}"
-echo "You are about to delete this directory and its content: ${shpc_full_containers_modules_dir}"
-echo "Does this directory contain the symlink tree of SHPC container modules? Do you want to delete it? (yes/no)"
+echo "Do you want to refresh the shpc symlink modules? (yes/no)"
 read shpc_answer
 if [ ${shpc_answer,,} == "yes" ] ; then
-  echo "Deleting and re-creating SHPC symlink modules.."
-  rm -r ${shpc_full_containers_modules_dir}
+  echo "Refreshing shpc symlink modules.."
   bash ${script_dir}/post_create_shpc_symlink_modules.sh
 else
-  echo "Skipping deletion and re-creation of SHPC symlink modules."
+  echo "Skipping deletion and re-creation of shpc symlink modules."
 fi

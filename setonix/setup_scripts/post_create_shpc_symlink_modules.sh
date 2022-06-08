@@ -9,6 +9,18 @@ script_dir="$(readlink -f "$(dirname $0 2>/dev/null)" || pwd)"
 source_dir="${root_dir}/${containers_root_dir}/${shpc_spackuser_modules_dir_long}"
 target_dir="${root_dir}/${shpc_containers_modules_dir}"
 
+# delete previous symlink tree
+echo "You are about to delete the following item:"
+echo "  ${target_dir}"
+echo "Does this directory correspond to the shpc symlink moduletree?"
+echo "Do you want to delete it? (yes/no)"
+read shpc_answer
+if [ ${shpc_answer,,} == "yes" ] ; then
+  rm -r ${target_dir}
+else
+  echo "Skipping deletion of shpc symlink moduletree. Stopping process to create new shpc symlink moduletree."
+  exit 1
+fi
 # create base directory for symlinked module tree
 mkdir -p ${target_dir}
 
