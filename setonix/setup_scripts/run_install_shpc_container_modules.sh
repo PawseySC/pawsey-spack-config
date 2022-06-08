@@ -36,6 +36,3 @@ done
 bash ${script_dir}/post_create_shpc_symlink_modules.sh
 # it's the symlinked module tree that needs to go in MODULEPATH:
 # `module use ${root_dir}/containers/${shpc_spackuser_modules_dir_short}`
-
-# back to root_dir
-cd ${root_dir}

@@ -32,25 +32,46 @@ quay.io/pawsey/openfoam-org:2.4.x
 quay.io/pawsey/openfoam-org:2.2.0
 "
 
+# directory with pawsey edited shpc recipes
+recipes_dir="${script_dir}/../shpc_registry"
+# target directory for SIF symlinks
+sif_symlink_dir="${root_dir}/containers/openfoam-sif"
+
 # make sure root directory exists, for container modules installation
 cd ${root_dir}
 mkdir -p ${containers_root_dir}
+# and for SIF symlinks
+mkdir -p ${sif_symlink_dir}
 
 # install container modules
 # will take a while (container downloads)
 # if a container module has already been installed, its installation will complete quickly
 for container in $container_list ; do
-# TODO: add version specific aliases
+  tool_repo="${container%:*}"
+  tool="${tool_repo##*/}"
+  version="${container#*:}"
+# add version specific command aliases to recipe
+# might not be needed in future shpc versions
+  container_recipe_dir="${recipes_dir}/${tool_repo}"
+  cp ${container_recipe_dir}/template_container.yaml ${container_recipe_dir}/container.yaml 
+  cat ${container_recipe_dir}/aliases/${version}.yaml >>${container_recipe_dir}/container.yaml 
+
   shpc install $container
+
+# remove edited recipe that has command aliases
+  rm ${container_recipe_dir}/container.yaml 
+
+# add symlink to SIF image
+  tool_sif_dir="${container/:/\/}"
+  tool_file_prefix="${container//\//-}"
+  tool_file_prefix="${tool_file_prefix/:/-}"
+  src_sif="${root_dir}/${shpc_containers_dir}/${tool_sif_dir}/${tool_file_prefix}-sha256*.sif"
+  dst_sif="${sif_symlink_dir}/${tool}_${version}.sif"
+  rm -f ${dst_sif}
+  ln -s ${src_sif} ${dst_sif}
 done
 
 # create compact, symlinked module tree
-# TODO: uncomment
-###bash ${script_dir}/post_create_shpc_symlink_modules.sh
+bash ${script_dir}/post_create_shpc_symlink_modules.sh
 # it's the symlinked module tree that needs to go in MODULEPATH:
 # `module use ${root_dir}/containers/${shpc_spackuser_modules_dir_short}`
-
-# TODO: add symlinks to SIFs
-
-# back to root_dir
-cd ${root_dir}
