@@ -36,6 +36,7 @@ function apply_permissions()
   local dirs="$2"
   for dir in ${dirs} ; do
     chgrp -R ${group} $dir
+    chmod -R o-rwx $dir
   done
 }
 
