@@ -47,6 +47,15 @@ compilers="gcc/${gcc_version} aocc/${aocc_version} cce/${cce_version}"
 lic_tar_dir="${top_root_dir}/licensed_src"
 apply_permissions spack ${lic_tar_dir}
 
+# do or skip software directories (takes about 1-2 minutes)
+if [ "$1" == "only-modules" ] ; then
+  only_modules="0"
+  echo "Setting licensing permissions: modules only, skipping software."
+else
+  only_modules="1"
+  echo "Setting licensing permissions: modules and software."
+fi
+
 # Spack installations
 for package in amber ansys-fluids ansys-structures ansys-fluidstructures cpmd namd vasp@5 vasp@6 ; do
   software_dirs=$( spack find -p $package |grep ^${package} |tr -s ' ' |cut -d ' ' -f 2 )
@@ -71,8 +80,12 @@ for package in amber ansys-fluids ansys-structures ansys-fluidstructures cpmd na
   done
   echo "PACKAGE: ${package}"
   echo "${linux_group}"
-  echo "${software_dirs}"
   echo "${module_dirs}"
+  if [ "${only_modules}" != "0" ] ; then
+    echo "${software_dirs}"
+    apply_permissions "${linux_group}" "${software_dirs} ${module_dirs}"
+  else
+    apply_permissions "${linux_group}" "${module_dirs}"
+  fi
   echo ""
-  apply_permissions "${linux_group}" "${software_dirs} ${module_dirs}"
 done

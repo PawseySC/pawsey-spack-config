@@ -6,7 +6,8 @@
 # 3. update singularity modules
 # 4. refresh wrf/roms dependency modules
 # 5. create hpc-python view and module
-# 6. refresh shpc symlink modules
+# 6. apply licensing permissions
+# 7. refresh shpc symlink modules
 
 # source setup variables
 # if copy/pasting these commands, need to run from this directory
@@ -72,7 +73,18 @@ else
 fi
 
 
-# step 6. refresh shpc symlink modules
+# step 6. apply licensing permissions
+echo "In addition to module directories, do you want to apply "
+echo "licensing permissions to software directories, too? (yes/no)"
+read license_answer
+if [ ${license_answer,,} == "yes" ] ; then
+  bash ${script_dir}/post_set_licensing_permissions.sh
+else
+  bash ${script_dir}/post_set_licensing_permissions.sh only-modules
+fi
+
+
+# step 7. refresh shpc symlink modules
 echo "Do you want to refresh the shpc symlink modules? (yes/no)"
 read shpc_answer
 if [ ${shpc_answer,,} == "yes" ] ; then
