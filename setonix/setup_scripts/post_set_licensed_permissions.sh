@@ -71,10 +71,9 @@ done
 # Non-Spack installations
 # TODO: where are ANSYS going to be?
 #for package in cfx fluent ; do
-for package in "" ; do
-  dirs="
-  ${root_dir}/${custom_software_dir}/zen3/gcc/${gcc_version}/${package}
-  ${root_dir}/${custom_modules_dir}/zen3/gcc/${gcc_version}/${custom_modules_suffix}/${package}
-  "
-  apply_permissions "${group["$package"]}" "${dirs}"
-done
+#  dirs="
+#  ${root_dir}/${custom_software_dir}/zen3/gcc/${gcc_version}/${package}
+#  ${root_dir}/${custom_modules_dir}/zen3/gcc/${gcc_version}/${custom_modules_suffix}/${package}
+#  "
+#  apply_permissions "${group["$package"]}" "${dirs}"
+#done
