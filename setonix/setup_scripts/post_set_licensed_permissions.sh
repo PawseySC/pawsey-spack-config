@@ -40,7 +40,7 @@ archs="zen3 zen2"
 compilers="gcc/${gcc_version} aocc/${aocc_version} cce/${cce_version}"
 
 # Spack installations
-# TODO: where are ANSYS going to be?
+# TODO: add ANSYS packages
 for package in amber cpmd namd vasp@5 vasp@6 ; do
   software_dirs=$( spack find -p $package |grep ^${package} |tr -s ' ' |cut -d ' ' -f 2 )
   module_dirs=""
@@ -49,6 +49,7 @@ for package in amber cpmd namd vasp@5 vasp@6 ; do
   else
     tool_module=${package%@*}
   fi
+  linux_group="${tool_module}"
   for arch in $archs; do
     for compiler in $compilers; do
       add_module_dir="${root_dir}/modules/${arch}/${compiler}/applications/${tool_module}"
@@ -57,22 +58,10 @@ for package in amber cpmd namd vasp@5 vasp@6 ; do
       fi
     done
   done
-  group="${tool_module}"
   echo ${package^^}
-  echo "${group}"
+  echo "${linux_group}"
   echo "${software_dirs}"
   echo "${module_dirs}"
   echo ""
-  apply_permissions "${group}" "${software_dirs} ${module_dirs}"
+  apply_permissions "${linux_group}" "${software_dirs} ${module_dirs}"
 done
-
-
-# Non-Spack installations
-# TODO: where are ANSYS going to be?
-#for package in cfx fluent ; do
-#  dirs="
-#  ${root_dir}/${custom_software_dir}/zen3/gcc/${gcc_version}/${package}
-#  ${root_dir}/${custom_modules_dir}/zen3/gcc/${gcc_version}/${custom_modules_suffix}/${package}
-#  "
-#  apply_permissions "${group["$package"]}" "${dirs}"
-#done
