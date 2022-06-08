@@ -50,6 +50,9 @@ for container in $container_list ; do
   tool_repo="${container%:*}"
   tool="${tool_repo##*/}"
   version="${container#*:}"
+  tool_dir="${container/:/\/}"
+  tool_file_prefix="${container//\//-}"
+  tool_file_prefix="${tool_file_prefix/:/-}"
 # add version specific command aliases to recipe
 # might not be needed in future shpc versions
   container_recipe_dir="${recipes_dir}/${tool_repo}"
@@ -61,11 +64,13 @@ for container in $container_list ; do
 # remove edited recipe that has command aliases
   rm ${container_recipe_dir}/container.yaml 
 
+# fix conflict line in modulefile, it is too long
+  modulefile="${root_dir}/${shpc_containers_dir}/${shpc_spackuser_modules_dir_long}/${tool_dir}/module.lua"
+  new_conflict="conflict(\"${tool}\",\"${tool_repo}\")"
+  sed -i '/conflict(/c '"${new_conflict}"'' ${modulefile}
+
 # add symlink to SIF image
-  tool_sif_dir="${container/:/\/}"
-  tool_file_prefix="${container//\//-}"
-  tool_file_prefix="${tool_file_prefix/:/-}"
-  src_sif="${root_dir}/${shpc_containers_dir}/${tool_sif_dir}/${tool_file_prefix}-sha256*.sif"
+  src_sif="${root_dir}/${shpc_containers_dir}/${tool_dir}/${tool_file_prefix}-sha256*.sif"
   dst_sif="${sif_symlink_dir}/${tool}_${version}.sif"
   rm -f ${dst_sif}
   ln -s ${src_sif} ${dst_sif}
