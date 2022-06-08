@@ -257,6 +257,8 @@ modules:
         py-scipy: 'python-packages/{name}/{version}'
 
         #bio 
+        beast1: 'bio-applications/{name}/{version}'
+        beast2: 'bio-applications/{name}/{version}'
         exabayes: 'bio-applications/{name}/{version}'
         examl: 'bio-applications/{name}/{version}'
 

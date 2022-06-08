@@ -5,7 +5,6 @@ container_list="
 quay.io/biocontainers/bamtools:2.5.1--hd03093a_10
 quay.io/biocontainers/bbmap:38.96--h5c4e2a8_0
 quay.io/biocontainers/bcftools:1.15--haf5b3da_0
-quay.io/biocontainers/beast2:2.6.3--hf1b8bbb_0
 quay.io/biocontainers/bedtools:2.30.0--h468198e_3
 quay.io/biocontainers/blast:2.12.0--pl5262h3289130_0
 quay.io/biocontainers/bowtie2:2.4.5--py36hd4290be_0
