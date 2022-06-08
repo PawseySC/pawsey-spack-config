@@ -57,13 +57,13 @@ for package in amber cpmd namd vasp@5 vasp@6 ; do
   software_dirs=$( spack find -p $package |grep ^${package} |tr -s ' ' |cut -d ' ' -f 2 )
   module_dirs=""
   if [ "${package}" == "vasp@6" ] ; then
-    package="vasp6"
+    tool_module="vasp6"
   else
-    package=${package%@*}
+    tool_module=${package%@*}
   fi
   for arch in $archs; do
     for compiler in $compilers; do
-      add_module_dir="${root_dir}/modules/${arch}/${compiler}/applications/${package}"
+      add_module_dir="${root_dir}/modules/${arch}/${compiler}/applications/${tool_module}"
       if [ -d "${add_module_dir}" ] ; then
         module_dirs+="${add_module_dir}"
       fi
