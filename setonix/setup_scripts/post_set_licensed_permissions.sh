@@ -35,18 +35,6 @@ function apply_permissions()
   done
 }
 
-# dictionary for licensed packages and corresponding ldap groups
-declare -A group
-group["amber"]="amber"
-# TODO: check that ANSYS package names are correct
-group["cfx"]="ANSYS"
-# TODO: check that ANSYS package names are correct
-group["fluent"]="ANSYS"
-group["cpmd"]="cpmd"
-group["namd"]="namd"
-group["vasp@5"]="vasp"
-group["vasp@6"]="vasp6"
-
 # list of archs/compilers to find all modulefiles
 archs="zen3 zen2"
 compilers="gcc/${gcc_version} aocc/${aocc_version} cce/${cce_version}"
@@ -69,12 +57,13 @@ for package in amber cpmd namd vasp@5 vasp@6 ; do
       fi
     done
   done
+  group="${tool_module}"
   echo ${package^^}
-  echo "${group["$package"]}"
+  echo "${group}"
   echo "${software_dirs}"
   echo "${module_dirs}"
   echo ""
-  apply_permissions "${group["$package"]}" "${software_dirs} ${module_dirs}"
+  apply_permissions "${group}" "${software_dirs} ${module_dirs}"
 done
 
 
