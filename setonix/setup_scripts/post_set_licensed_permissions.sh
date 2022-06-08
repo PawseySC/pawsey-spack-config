@@ -39,6 +39,10 @@ function apply_permissions()
 archs="zen3 zen2"
 compilers="gcc/${gcc_version} aocc/${aocc_version} cce/${cce_version}"
 
+# source tarballs
+lic_tar_dir="${top_root_dir}/licensed_src"
+apply_permissions spack ${lic_tar_dir}
+
 # Spack installations
 for package in amber ansys-fluids ansys-structures ansys-fluidstructures cpmd namd vasp@5 vasp@6 ; do
   software_dirs=$( spack find -p $package |grep ^${package} |tr -s ' ' |cut -d ' ' -f 2 )
@@ -61,7 +65,7 @@ for package in amber ansys-fluids ansys-structures ansys-fluidstructures cpmd na
       fi
     done
   done
-  echo ${package^^}
+  echo "PACKAGE: ${package}"
   echo "${linux_group}"
   echo "${software_dirs}"
   echo "${module_dirs}"
