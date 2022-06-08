@@ -53,25 +53,32 @@ class AnsysFluids(Package):
         # make ./INSTALL in src directory executable and then run 
 	# run the executable that does it all 
         # mkdirp('{0}/{1}'.format(self.stage.source_path, 'ansysfluids_tmpdir'))
-        # run_install = Executable("./INSTALL -silent -install_dir {0} -usetempdir {1}/{2}".format(self.prefix, self.stage.source_path, 'ansysfluids_tmpdir'))
+        # run_install = Executable("./INSTALL -silent -install_dir {0} -usetempdir {1}/{2}".format(self.prefix, self.stage.source_path, 'fluids_tmpdir'))
         # due to installer requiring an installation path with < 100 characters, to temporary install 
-        tmp_install_path = '/scratch/pawsey0001/ansys-install/'
-        mkdirp('{0}/{1}'.format(self.stage.source_path, 'ansysfluids_tmpdir'))
-        mkdirp('{0}/{1}'.format(tmp_install_path, 'ansysfluids'))
-        run_install = Executable("./INSTALL -silent -install_dir {0}/{1} -usetempdir {2}/{3}".format(tmp_install_path, 'ansysfluids', self.stage.source_path, 'ansysfluids_tmpdir'))
+        tmp_install_path = '/scratch/pawsey0001/spack/tmp/'
+        mkdirp('{0}/{1}'.format(self.stage.source_path, 'fluids_tmpdir'))
+        mkdirp('{0}/{1}'.format(tmp_install_path, 'fluids'))
+        run_install = Executable("./INSTALL -silent -install_dir {0}/{1} -usetempdir {2}/{3}".format(tmp_install_path, 'fluids', self.stage.source_path, 'fluids_tmpdir'))
         run_install()
-        # for some strange reason, ansys creates a read only file in the temp directory.
+        # change internal wrapper for launching fluent from mpirun to srun and also alter the platform using sed
+        sed=which('sed')
+        # find comments before start job and insert the new my_cdmline 
+        sed('/# start job/ i my_cmdline=\"srun --export=ALL -n \$FS_NPROC \$FS_CMD\"', "{0}/{1}/v221/fluent/fluent22.1.0/multiport/mpi_wrapper/bin/mpirun.fl".format(tmp_install_path, 'fluids'))
+        # change the default platform
+        sed("s/platform = None/platform = \'linx64\'/g", "{0}/{1}/v221/commonfiles/CPython/3_7/linx64/Release/Ansys/Util/Platform.py".format(tmp_install_path, 'fluids'))
+        
+        #for some strange reason, ansys creates a read only file in the temp directory.
         # fix this by changing the permissions so that the temp directory can be deleted. 
-        os.system('chmod -R +w {0}/{1}'.format(self.stage.source_path, 'ansysfluids_tmpdir'))
-        os.system('chmod -R +w {0}/{1}'.format(tmp_install_path, 'ansysfluids'))
-        shutil.move("{0}/{1}".format(tmp_install_path, 'ansysfluids'), self.prefix)  
+        os.system('chmod -R +w {0}/{1}'.format(self.stage.source_path, 'fluids_tmpdir'))
+        os.system('chmod -R +w {0}/{1}'.format(tmp_install_path, 'fluids'))
+        shutil.move("{0}/{1}".format(tmp_install_path, 'fluids'), self.prefix)  
 
         # do not set group permission for ansys here, do it in a follow up script
 
     def setup_run_environment(self, env):
         #env.set('ANSYS_VERSION', versiontoansysversion[self.version])
-        env.prepend_path('PATH', "{0}/v221/Framework/bin/Linux64/".format(self.prefix))
-        env.prepend_path('PATH', "{0}/v221/fluent/bin/".format(self.prefix))
+        env.prepend_path('PATH', "{0}/fluids/v221/Framework/bin/Linux64/".format(self.prefix))
+        env.prepend_path('PATH', "{0}/fluids/v221/fluent/bin/".format(self.prefix))
         ldpathlist=[
             "/fluent/lib/lnamd64/",
             "/tp/hdf5/1_10_5/linx64/lib/",
@@ -81,10 +88,11 @@ class AnsysFluids(Package):
             "/tp/IntelMKL/2021.3.0/linx64/lib/intel64/",
             "/dcs/",
             "/tp/IntelCompiler/2019.3.199/linx64/lib/intel64/",
+	    "/tp/qt/5.9.6/lin64/lib/",
             "/fluent/fluent22.1.0/utility/viewfac/multiport/mpi/lnamd64/intel/lib/",
         ]
         for l in ldpathlist:
-            env.prepend_path('LD_LIBRARY_PATH', "{0}/v221/{1}".format(self.prefix,l))
+            env.prepend_path('LD_LIBRARY_PATH', "{0}/fluids/v221/{1}".format(self.prefix,l))
 
 
 
