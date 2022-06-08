@@ -23,13 +23,8 @@ if [ "${is_loaded_spack}" != "0" ] ; then
   module load spack/${spack_version}
 fi
 
-# utility functions
-function get_spack_install_paths()
-{
-  local package="$1"
-  spack find -p $package |grep ^${package} |tr -s ' ' |cut -d ' ' -f 2
-}
 
+# utility function
 function apply_permissions()
 {
   local group="$1"
@@ -39,7 +34,6 @@ function apply_permissions()
     chmod -R o-rwx $dir
   done
 }
-
 
 # dictionary for licensed packages and corresponding ldap groups
 declare -A group
@@ -53,19 +47,34 @@ group["namd"]="namd"
 group["vasp@5"]="vasp"
 group["vasp@6"]="vasp6"
 
+# list of archs/compilers to find all modulefiles
+archs="zen3 zen2"
+compilers="gcc/${gcc_version} aocc/${aocc_version} cce/${cce_version}"
 
 # Spack installations
 # TODO: where are ANSYS going to be?
 for package in amber cpmd namd vasp@5 vasp@6 ; do
-  software_dirs=$( get_spack_install_paths $package )
+  software_dirs=$( spack find -p $package |grep ^${package} |tr -s ' ' |cut -d ' ' -f 2 )
+  module_dirs=""
   if [ "${package}" == "vasp@6" ] ; then
-    module_dir="${root_dir}/modules/zen3/gcc/${gcc_version}/applications/vasp6"
-  elif [ "${package}" == "vasp@5" ] ; then
-    module_dir="${root_dir}/modules/zen3/gcc/${gcc_version}/applications/vasp"
+    package="vasp6"
   else
-    module_dir="${root_dir}/modules/zen3/gcc/${gcc_version}/applications/${package}"
+    package=${package%@*}
   fi
-  apply_permissions "${group["$package"]}" "${software_dirs} ${module_dir}"
+  for arch in $archs; do
+    for compiler in $compilers; do
+      add_module_dir="${root_dir}/modules/${arch}/${compiler}/applications/${package}"
+      if [ -d "${add_module_dir}" ] ; then
+        module_dirs+="${add_module_dir}"
+      fi
+    done
+  done
+  echo ${package^^}
+  echo "${group["$package"]}"
+  echo "${software_dirs}"
+  echo "${module_dirs}"
+  echo ""
+  apply_permissions "${group["$package"]}" "${software_dirs} ${module_dirs}"
 done
 
 
