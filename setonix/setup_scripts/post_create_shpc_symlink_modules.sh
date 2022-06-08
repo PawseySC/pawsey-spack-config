@@ -32,10 +32,10 @@ find ${source_dir} -name 'module.lua' | while read m ; do
   mtmp=${mbase%/*}
   mtool=${mtmp##*/}
 
-  if [ "${mtool}" == "openfoam" ] || [ "${mtool}" == "openfoam-org" ] || [ "${mtool}" == "hpc-python" ] ; then
+  if [[ "${mtool}" =~ "openfoam" ]] || [[ "${mtool}" =~ "hpc-python" ]] ; then
     mtool=${mtool}${shpc_spackuser_container_tag}
   fi
 
   mkdir -p ${target_dir}/${mtool}
-  ln -s ${mbase} ${target_dir}/${mtool}/
+  ln -s ${m} ${target_dir}/${mtool}/${mver}.lua
 done
