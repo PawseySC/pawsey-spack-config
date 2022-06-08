@@ -1,5 +1,5 @@
---- singularity.lua	2022-06-08 09:27:55.000000000 +0800
-+++ singularity_sif_symlink.lua	2022-06-08 09:35:33.000000000 +0800
+--- orig.singularity.lua	2022-06-08 10:22:12.000000000 +0800
++++ singularity.lua	2022-06-08 10:24:49.000000000 +0800
 @@ -9,7 +9,7 @@
  This module is a singularity container wrapper for {{ name }} v{{ version }}
  {% if description %}{{ description }}{% endif %}
@@ -18,8 +18,20 @@
  
  {% if aliases %}{% for alias in aliases %} - {{ alias.name }}:
         singularity exec {% if features.gpu %}{{ features.gpu }} {% endif %}{% if features.home %}-B {{ features.home }} --home {{ features.home }} {% endif %}{% if features.x11 %}-B {{ features.x11 }} {% endif %}{% if settings.environment_file %}-B <moduleDir>/{{ settings.environment_file }}:/.singularity.d/env/{{ settings.environment_file }}{% endif %} {% if settings.bindpaths %}-B {{ settings.bindpaths }} {% endif %}{% if alias.singularity_options %}{{ alias.singularity_options }} {% endif %}<container> {{ alias.command }} "$@"
-@@ -38,8 +40,8 @@
+@@ -36,10 +38,20 @@
+  - SINGULARITY_COMMAND_OPTS: to define custom options for the command (e.g., -b)
+ ]]) 
  
++-- Enforce explicit usage of versions by requiring full module name
++if (mode() == "load") then
++  if (myModuleUsrName() ~= myModuleFullName()) then
++    LmodError(
++        "Default module versions are disabled by your systems administrator.\n\n",
++        "\tPlease load this module as <name>/<version>.\n"
++    )
++  end
++end
++
  {% if settings.singularity_module %}load("{{ settings.singularity_module }}"){% endif %}
  
 --- directory containing this modulefile (dynamically defined)
@@ -29,7 +41,7 @@
  
  -- singularity environment variable to set shell
  setenv("SINGULARITY_SHELL", "{{ settings.singularity_shell }}")
-@@ -48,8 +50,12 @@
+@@ -48,8 +60,12 @@
  if not os.getenv("SINGULARITY_OPTS") then setenv ("SINGULARITY_OPTS", "") end
  if not os.getenv("SINGULARITY_COMMAND_OPTS") then setenv ("SINGULARITY_COMMAND_OPTS", "") end
  
