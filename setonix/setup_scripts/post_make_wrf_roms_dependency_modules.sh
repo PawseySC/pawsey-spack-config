@@ -30,3 +30,9 @@ mkdir -p ${custom_full_modules_dir_zen3_gcc}
 
 # roms dependency module
 ./make_metamoduledependencies.sh roms ${script_dir}/../environments/env_roms ${custom_full_modules_dir_zen3_gcc}
+
+# hiding wrf/roms dependency modules for now
+mv ${custom_full_modules_dir_zen3_gcc}/wrf-dependency-set.lua \
+  ${custom_full_modules_dir_zen3_gcc}/.wrf-dependency-set.lua
+mv ${custom_full_modules_dir_zen3_gcc}/roms-dependency-set.lua \
+  ${custom_full_modules_dir_zen3_gcc}/.roms-dependency-set.lua
