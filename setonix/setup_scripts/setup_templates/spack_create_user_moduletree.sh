@@ -42,3 +42,6 @@ mkdir -p "${user_root_dir}/python"
 
 # create base dir for R user installations (R_LIBS_USER)
 mkdir -p "${user_root_dir}/r/${r_version_majorminor}"
+
+# create empty control file
+touch ${user_root_dir}/.created_moduletree_bases
