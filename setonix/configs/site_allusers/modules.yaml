@@ -40,16 +40,19 @@ modules:
 
       # for all packages
       all:
-        # to be consistent with current module setup, 
-        # add to environment a {name}_HOME which stores the prefix 
-        # to the package
+        # to be consistent with module setup on Magnus, 
+        # add to environment a PAWSEY_{name}_HOME 
+        # which stores the prefix to the package
+        # NOTE: we trialled {name}_HOME, but ditched it, 
+        # because it conflicts with some packages, 
+        # eg Singularity and R
+        # We may find that some specific packages benefit 
+        # from also having {home}_HOME 
+        # (eg libraries to compile against)
+        # we can add it for these specific cases
         environment:
-          # question: shall we prepend `SPACK_` ?
-          # PJE: Typically it is more useful to have 
-          # {name}_HOME since configures and cmake 
-          # often will make use of {name}_ROOT or {name}_HOME
           set:
-            '{name}_HOME': '{prefix}'
+            'PAWSEY_{name}_HOME': '{prefix}'
           # for backwards compatibility we could implement
           # the following environment variable 
           # this may be required for installs on Topaz
@@ -60,12 +63,6 @@ modules:
         # autoload+upstream currently does not work, 
         # so better to turn off autoload completely for user installations
         autoload: none
-
-      # don't define SINGULARITY_HOME as above for Singularity,
-      # it has its internal use
-      singularity:
-        filter:
-          environment_blacklist: ['SINGULARITY_HOME']
 
       projections:
         # we want to keep these simple for user-specific installations

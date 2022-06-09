@@ -10,7 +10,7 @@ help([[A package management tool designed to support multiple versions and confi
 
 load("PYTHON_MODULEFILE")
 
-setenv("SPACK_HOME","/software/setonix/DATE_TAG/spack")
+setenv("PAWSEY_SPACK_HOME","/software/setonix/DATE_TAG/spack")
 
 -- Define logs directory
 local user = os.getenv("USER")

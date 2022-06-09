@@ -11,7 +11,7 @@ help([[Local filesystem registry for containers (intended for HPC) using Lmod or
 load("PYTHON_MODULEFILE")
 load("SINGULARITY_MODULEFILE")
 
-setenv("SINGULARITY_HPC_HOME","/software/setonix/DATE_TAG/SHPC_INSTALL_DIR")
+setenv("PAWSEY_SHPC_HOME","/software/setonix/DATE_TAG/SHPC_INSTALL_DIR")
 
 prepend_path("PATH","/software/setonix/DATE_TAG/SHPC_INSTALL_DIR/bin")
 prepend_path("PYTHONPATH","/software/setonix/DATE_TAG/SHPC_INSTALL_DIR/lib/pythonPYTHON_MAJORMINOR/site-packages")
