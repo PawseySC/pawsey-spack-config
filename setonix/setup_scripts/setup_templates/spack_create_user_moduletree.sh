@@ -7,6 +7,8 @@ cce_version="CCE_VERSION"
 # typically these do not change
 project_modules_suffix="PROJECT_MODULES_SUFFIX"
 user_modules_suffix="USER_MODULES_SUFFIX"
+shpc_containers_modules_dir="SHPC_CONTAINERS_MODULES_DIR"
+r_version_majorminor="R_VERSION_MAJORMINOR"
 project_root_dir="/software/projects/${PAWSEY_PROJECT}/setonix"
 user_root_dir="/software/projects/${PAWSEY_PROJECT}/${USER}/setonix"
 
@@ -34,3 +36,9 @@ EOF
 
 # create base dir for user SHPC registry of recipes
 mkdir -p "${user_root_dir}/shpc_registry"
+
+# create base dir for Python pip user installations (PYTHONUSERBASE)
+mkdir -p "${user_root_dir}/python"
+
+# create base dir for R user installations (R_LIBS_USER)
+mkdir -p "${user_root_dir}/r/${r_version_majorminor}"

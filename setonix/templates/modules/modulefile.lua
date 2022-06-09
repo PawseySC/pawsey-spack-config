@@ -106,9 +106,9 @@ setenv("SINGULARITY_BINDPATH",singularity_bindpath)
 -- LD_PRELOAD edited to fix missing library dependency of Cray libmpi on libxpmem
 prepend_path("SINGULARITYENV_LD_PRELOAD","/opt/cray/xpmem/default/lib64/libxpmem.so.0")
 {% endif %}
-{% if spec.name == 'r' %}setenv("R_LIBS_USER", os.getenv("MYSOFTWARE").."/r/%v")
+{% if spec.name == 'r' %}setenv("R_LIBS_USER", os.getenv("MYSOFTWARE").."/setonix/r/%v")
 {% endif %}
-{% if spec.name == 'python' %}setenv("PYTHONUSERBASE", os.getenv("MYSOFTWARE").."/python")
+{% if spec.name == 'python' %}setenv("PYTHONUSERBASE", os.getenv("MYSOFTWARE").."/setonix/python")
 prepend_path("PATH", os.getenv("PYTHONUSERBASE").."/bin")
 {% endif %}
 

@@ -20,6 +20,8 @@ python_name="python"
 python_version="3.9.7" # has to match the version in the Spack env yaml
 setuptools_version="57.4.0" # has to match the version in the Spack env yaml
 pip_version="21.1.2" # has to match the version in the Spack env yaml
+# r major minor version
+r_version_majorminor="4.1"
 
 # list of module categories
 module_cat_list="

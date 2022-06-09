@@ -70,6 +70,8 @@ sed \
   -e "s;CCE_VERSION;${cce_version};g" \
   -e "s;PROJECT_MODULES_SUFFIX;${project_modules_suffix};g" \
   -e "s;USER_MODULES_SUFFIX;${user_modules_suffix};g" \
+  -e "s;SHPC_CONTAINERS_MODULES_DIR;${shpc_containers_modules_dir};g" \
+  -e "s;R_VERSION_MAJORMINOR;${r_version_majorminor};g" \
   ${script_dir}/setup_templates/spack_create_user_moduletree.sh \
   >${root_dir}/spack/bin/spack_create_user_moduletree.sh
 chmod a+rx ${root_dir}/spack/bin/spack_create_user_moduletree.sh
