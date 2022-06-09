@@ -21,35 +21,44 @@ fi
 mkdir ~/.spack
 
 # get spack and its config from github
-cd ${root_dir}
-git clone https://github.com/pawseysc/pawsey-spack-config
-git clone https://github.com/pawseysc/spack
-cd spack/
+git clone https://github.com/pawseysc/pawsey-spack-config \
+  ${root_dir}/pawsey-spack-config
+git clone https://github.com/pawseysc/spack \
+  ${root_dir}/spack
+cd ${root_dir}/spack
 git checkout v${spack_version}
-cd ..
+cd -
 
 # copy configs into spack tree
-cp -p pawsey-spack-config/setonix/configs/site_allusers/*.yaml spack/etc/spack/
-cp -p pawsey-spack-config/setonix/configs/spackuser_pawseystaff/*.yaml ~/.spack/
+cp -p \
+  ${root_dir}/pawsey-spack-config/setonix/configs/site_allusers/*.yaml \
+  ${root_dir}/spack/etc/spack/
+cp -p \
+  ${root_dir}/pawsey-spack-config/setonix/configs/spackuser_pawseystaff/*.yaml \
+  ~/.spack/
 # edit DATE_TAG in config files
-sed -i "s/DATE_TAG/$date_tag/g" spack/etc/spack/*.yaml ~/.spack/*.yaml
+sed -i "s/DATE_TAG/$date_tag/g" \
+  ${root_dir}/spack/etc/spack/*.yaml ~/.spack/*.yaml
 
 # edit DATE_TAG in sourceable script with spack functions
-sed -i "s;date_tag=.*;date_tag=${date_tag} # DATE_TAG;g" pawsey-spack-config/setonix/setup_scripts/source_pawsey_spack_cmds.sh
+sed -i "s;date_tag=.*;date_tag=${date_tag} # DATE_TAG;g" \
+  ${script_dir}/source_pawsey_spack_cmds.sh
 
 # apply fixes into spack tree
 # Marco,s Lmod arch family fix for the module tree
-patch spack/lib/spack/spack/modules/lmod.py pawsey-spack-config/setonix/fixes/lmod_arch_family.patch
+patch ${root_dir}/spack/lib/spack/spack/modules/lmod.py \
+  ${root_dir}/pawsey-spack-config/setonix/fixes/lmod_arch_family.patch
 # Pascal,s enhancements to modulefiles
-patch spack/lib/spack/spack/modules/common.py pawsey-spack-config/setonix/fixes/modulenames_plus_common.patch
-patch spack/lib/spack/spack/cmd/modules/__init__.py pawsey-spack-config/setonix/fixes/modulenames_plus_init.patch
+patch ${root_dir}/spack/lib/spack/spack/modules/common.py \
+  ${root_dir}/pawsey-spack-config/setonix/fixes/modulenames_plus_common.patch
+patch ${root_dir}/spack/lib/spack/spack/cmd/modules/__init__.py \
+  ${root_dir}/pawsey-spack-config/setonix/fixes/modulenames_plus_init.patch
 
 # create base directories for Pawsey custom builds and Pawsey utilities
-cd ${root_dir}
-mkdir -p ${custom_modules_dir}
-mkdir -p ${custom_software_dir}
-mkdir -p ${utilities_modules_dir}
-mkdir -p ${utilities_software_dir}
+mkdir -p ${root_dir}/${custom_modules_dir}
+mkdir -p ${root_dir}/${custom_software_dir}
+mkdir -p ${root_dir}/${utilities_modules_dir}
+mkdir -p ${root_dir}/${utilities_software_dir}
 
 # create backbone of module directories
 bash "${script_dir}/setup_create_system_moduletree.sh"
@@ -69,6 +78,9 @@ cp -p \
   ${script_dir}/setup_templates/spack_refresh_modules.sh \
   ${script_dir}/setup_templates/spack_rm_modules.sh \
   ${root_dir}/spack/bin/
+chmod a+rx \
+  ${root_dir}/spack/bin/spack_refresh_modules.sh \
+  ${root_dir}/spack/bin/spack_rm_modules.sh
 
 # edit and copy over Spack modulefile
 mkdir -p ${root_dir}/${spack_module_dir}
@@ -86,7 +98,6 @@ module_lua_cat_list=""
 for mod_cat in $module_cat_list ; do
   module_lua_cat_list+="\"$mod_cat\", "
 done
-cd ${root_dir}
 sed \
   -e "s;DATE_TAG;current;g" \
   -e "s;TOP_ROOT_DIR;${top_root_dir};g" \
