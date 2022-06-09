@@ -38,5 +38,5 @@ prepend_path("PKG_CONFIG_PATH", view_root .. "/lib64/pkgconfig", ":")
 
 prepend_path("PYTHONPATH", view_root .. "/lib/python" .. view_python_version_major_minor .. "/site-packages", ":")
 
-setenv("PYTHONUSERBASE", os.getenv("MYSOFTWARE").."/python")
+setenv("PYTHONUSERBASE", os.getenv("MYSOFTWARE").."/setonix/python")
 prepend_path("PATH", os.getenv("PYTHONUSERBASE").."/bin")
