@@ -24,8 +24,7 @@ logdir="${top_logdir}/install.${timestamp}"
 mkdir -p ${logdir}
 
 for env in ${env_list} ; do
-  cd ${envdir}/${env}
-  spack env activate . 
+  spack env activate ${envdir}/${env} 
   spack concretize -f 1> ${logdir}/spack.concretize.${env}.log 2> ${logdir}/spack.concretize.${env}.err
   if [ "${env}" == "env_roms" ] || [ "${env}" == "env_wrf" ] ; then
     sg spack -c "spack install --no-checksum -j${nprocs} --only dependencies 1> ${logdir}/spack.install.${env}.log 2> ${logdir}/spack.install.${env}.err"
@@ -33,5 +32,4 @@ for env in ${env_list} ; do
     sg spack -c "spack install --no-checksum -j${nprocs} 1> ${logdir}/spack.install.${env}.log 2> ${logdir}/spack.install.${env}.err"
   fi
   spack env deactivate
-  cd ${script_dir}
 done

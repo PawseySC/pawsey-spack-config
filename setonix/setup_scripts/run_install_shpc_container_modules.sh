@@ -22,8 +22,7 @@ module load ${shpc_name}/${shpc_version}
 . ${script_dir}/list_shpc_container_modules.sh
 
 # make sure root directory exists, for container modules installation
-cd ${root_dir}
-mkdir -p ${containers_root_dir}
+mkdir -p ${root_dir}/${containers_root_dir}
 
 # install container modules
 # will take a while (container downloads)

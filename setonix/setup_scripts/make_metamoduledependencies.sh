@@ -8,8 +8,8 @@ if [ "$#" -ne 3 ];  then
 fi
 
 package=$1
-envpath=$2
-modpath=$3
+envpath=$(readlink -f $2)
+modpath=$(readlink -f $3)
 
 # source setup variables
 # if copy/pasting these commands, need to run from this directory
@@ -39,22 +39,22 @@ echo "Using ${isspack}"
 spack debug report
 
 echo "Entering ${envpath} ... "
-cd ${envpath}
+output_concretize="${envpath}/${package}.concretize"
 # get concretization 
-spack env activate . 
-spack concretize -f > ${package}.concretize 
+spack env activate ${envpath} 
+spack concretize -f > ${output_concretize} 
 spack env deactivate 
 
 # header has three lines, remove them 
-numlines=$(wc -l ${package}.concretize | awk '{print $1}')
+numlines=$(wc -l ${output_concretize} | awk '{print $1}')
 numlines=$(($numlines-3))
-tail -n ${numlines} ${package}.concretize > tmp.txt
-mv tmp.txt ${package}.concretize
+tail -n ${numlines} ${output_concretize} > ${envpath}/tmp.txt
+mv ${envpath}/tmp.txt ${output_concretize}
 
 # now for the first line, get the hash and the spec of the main package 
-package_hash=$(head -1 ${package}.concretize | awk '{print $2}')
-package_spec=$(head -1 ${package}.concretize | awk '{$1="";$2="";print}')
-package_version=$(head -1 ${package}.concretize | sed 's/@/ /'g | sed 's/%/ /g' | awk '{$1="";$2="";print $4}')
+package_hash=$(head -1 ${output_concretize} | awk '{print $2}')
+package_spec=$(head -1 ${output_concretize} | awk '{$1="";$2="";print}')
+package_version=$(head -1 ${output_concretize} | sed 's/@/ /'g | sed 's/%/ /g' | awk '{$1="";$2="";print $4}')
 modfile=${modpath}/${package}-dependency-set.lua
 cp ${modfilebase} ${modfile}
 
@@ -65,8 +65,8 @@ sed -i 's/PACKAGE_NAME/'"${package}"'/g' ${modfile}
 # now get all the other packages 
 for ((i=2;i<${numlines};i++))
 do
-    hash=$(head -n ${i} ${package}.concretize | tail -n 1 | awk '{print $2}')
-    dep=$(head -n ${i} ${package}.concretize | tail -n 1 | awk '{print $3}')
+    hash=$(head -n ${i} ${output_concretize} | tail -n 1 | awk '{print $2}')
+    dep=$(head -n ${i} ${output_concretize} | tail -n 1 | awk '{print $3}')
     basemodname=$(spack module lmod find /${hash})
     if [ ! -z ${basemodname} ]; then
         echo "load(\"${basemodname}\")" >> ${modfile}
@@ -77,7 +77,7 @@ do
     basemodname=""
 done
 
-rm ${package}.concretize
+rm ${output_concretize}
 
 # now strip key strings from the modules that are loaded. 
 # list of module categories included in variables.sh (sourced above)

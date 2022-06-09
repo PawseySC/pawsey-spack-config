@@ -26,7 +26,7 @@ custom_full_modules_dir_zen3_gcc="${root_dir}/${custom_modules_dir}/zen3/gcc/${g
 mkdir -p ${custom_full_modules_dir_zen3_gcc}
 
 # wrf dependency module
-./make_metamoduledependencies.sh wrf ../environments/env_wrf ${custom_full_modules_dir_zen3_gcc}
+./make_metamoduledependencies.sh wrf ${script_dir}/../environments/env_wrf ${custom_full_modules_dir_zen3_gcc}
 
 # roms dependency module
-./make_metamoduledependencies.sh roms ../environments/env_roms ${custom_full_modules_dir_zen3_gcc}
+./make_metamoduledependencies.sh roms ${script_dir}/../environments/env_roms ${custom_full_modules_dir_zen3_gcc}

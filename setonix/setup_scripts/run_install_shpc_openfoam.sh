@@ -38,8 +38,7 @@ recipes_dir="${script_dir}/../shpc_registry"
 sif_symlink_dir="${root_dir}/containers/openfoam-sif"
 
 # make sure root directory exists, for container modules installation
-cd ${root_dir}
-mkdir -p ${containers_root_dir}
+mkdir -p ${root_dir}/${containers_root_dir}
 # and for SIF symlinks
 mkdir -p ${sif_symlink_dir}
 

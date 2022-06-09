@@ -31,39 +31,36 @@ module load py-setuptools/${setuptools_version}-py${python_version}
 module load py-pip/${pip_version}-py${python_version}
 
 # create and enter install directory
-cd ${root_dir}
-mkdir -p ${shpc_install_dir}
-cd ${shpc_install_dir}
+mkdir -p ${root_dir}/${shpc_install_dir}
 
 # pip install package
-sg spack -c "pip install --prefix=$(pwd) singularity-hpc==$shpc_version"
+sg spack -c "pip install --prefix=${root_dir}/${shpc_install_dir} singularity-hpc==${shpc_version}"
 
 # get registry from github repo
-git clone https://github.com/singularityhub/singularity-hpc
-cd singularity-hpc
+git clone https://github.com/singularityhub/singularity-hpc ${root_dir}/${shpc_install_dir}/singularity-hpc
 # checkout registry, too, for reproducibility
+cd ${root_dir}/${shpc_install_dir}/singularity-hpc
 git checkout $shpc_version
-cd ..
-mv singularity-hpc/registry .
+cd -
+mv ${root_dir}/${shpc_install_dir}/singularity-hpc/registry ${root_dir}/${shpc_install_dir}/
 # do not need rest of github repo
-rm -fr singularity-hpc
+rm -fr ${root_dir}/${shpc_install_dir}/singularity-hpc
 
 # fix long shebang
-sed -i "s;/.*/python.*$;/bin/sh\n'''exec' & \"\$0\" \"\$@\"\n' ''';g" bin/shpc
+sed -i "s;/.*/python.*$;/bin/sh\n'''exec' & \"\$0\" \"\$@\"\n' ''';g" ${root_dir}/${shpc_install_dir}/bin/shpc
 # the one below only because all dep packages are in same path
-sed -i "s;/.*/python.*$;/bin/sh\n'''exec' & \"\$0\" \"\$@\"\n' ''';g" bin/spython
+sed -i "s;/.*/python.*$;/bin/sh\n'''exec' & \"\$0\" \"\$@\"\n' ''';g" ${root_dir}/${shpc_install_dir}/bin/spython
 
 # apply patch (may not be needed in future versions)
 # - add SINGULARITY_CONTAINER, |tool|-container in lua modulefiles
 # - enable symlinks to have shorter form <tool>/<ver>.lua
-patch lib/python${python_version_major}.${python_version_minor}/site-packages/shpc/main/modules/templates/singularity.lua ${root_dir}/pawsey-spack-config/setonix/fixes/shpc_sif_variable_short_symlinks.patch
+patch \
+  ${root_dir}/${shpc_install_dir}/lib/python${python_version_major}.${python_version_minor}/site-packages/shpc/main/modules/templates/singularity.lua \
+  ${root_dir}/pawsey-spack-config/setonix/fixes/shpc_sif_variable_short_symlinks.patch
 
 # need to configure shpc for use, to change configs
-export PATH=$(pwd)/bin:$PATH
-export PYTHONPATH=$(pwd)/lib/python${python_version_major}.${python_version_minor}/site-packages:$PYTHONPATH
-
-# back to root_dir
-cd ${root_dir}
+export PATH=${root_dir}/${shpc_install_dir}/bin:$PATH
+export PYTHONPATH=${root_dir}/${shpc_install_dir}/lib/python${python_version_major}.${python_version_minor}/site-packages:$PYTHONPATH
 
 #### ALL SHPC CONFIG COMMANDS HERE
 # in alternative, we could provide edited yamls, just to copy over

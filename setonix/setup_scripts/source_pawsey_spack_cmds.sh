@@ -125,15 +125,15 @@ function spack_env_concretize()
 {
     # environment dir is always the current dir
     # use just the innest dir in the path as env name
-    local env="$(pwd)"
+    local env="$( readlink -f $(pwd) )"
     local env="${env##*/}"
     local timestamp="$(get_timestamp)"
     local logdir="$(get_logdir)"
     mkdir -p $logdir
     local logfile="spack.concretize.env.${timestamp}.${env}"
     # environment dir is always the current dir
-    spack env activate .
-    echo "ENV_DIR: $(pwd)" > ${logdir}/${logfile}.log
+    spack env activate ${env}
+    echo "ENV_DIR: ${env}" > ${logdir}/${logfile}.log
     spack concretize -f 1>> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
     spack_examine_concretize_err ${logdir}/${logfile}.err
     # also check if concretization has duplicates. still needs fleshing out
@@ -147,15 +147,15 @@ function spack_env_install()
     local args="$@"
     # environment dir is always the current dir
     # use just the innest dir in the path as env name
-    local env="$(pwd)"
+    local env="$( readlink -f $(pwd) )"
     local env="${env##*/}"
     local timestamp="$(get_timestamp)"
     local logdir="$(get_logdir)"
     mkdir -p $logdir
     local logfile="spack.install.env.${timestamp}.${env}"
     # environment dir is always the current dir
-    spack env activate .
-    echo "ENV_DIR: $(pwd)" > ${logdir}/${logfile}.log
+    spack env activate ${env}
+    echo "ENV_DIR: ${env}" > ${logdir}/${logfile}.log
     spack concretize -f 1>> ${logdir}/${logfile}.log 2> ${logdir}/${logfile}.err
     spack_examine_concretize_err ${logdir}/${logfile}.err
     sg $(get_install_group) -c "spack install ${args} 1>> ${logdir}/${logfile}.log 2>> ${logdir}/${logfile}.err"
