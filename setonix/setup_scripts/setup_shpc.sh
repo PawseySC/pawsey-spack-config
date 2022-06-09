@@ -11,7 +11,7 @@ else
 
 # source setup variables
 # if copy/pasting these commands, need to run from this directory
-script_dir="$(readlink -f "$(dirname $0 2>/dev/null)" || pwd)"
+script_dir="$(readlink -f "$(dirname $0 2>/dev/null)" || readlink -f "$(pwd)")"
 . ${script_dir}/variables.sh
 
 # for provisional setup (no spack modulepaths yet)
