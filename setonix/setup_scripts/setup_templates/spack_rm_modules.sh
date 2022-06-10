@@ -1,2 +1,2 @@
 #!/bin/bash
-spack module lmod rm "$@"
+spack module lmod rm $@

@@ -1,2 +1,2 @@
 #!/bin/bash
-spack module lmod refresh "$@"
+spack module lmod refresh $@
