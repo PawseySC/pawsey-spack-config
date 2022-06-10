@@ -1,0 +1,12 @@
+# project_wide: overwrite other yamls
+# to make sure to only use system_wide as upstream
+
+upstreams::
+# this is the location of the system wide installation
+# it acts as an upstream installation for user-specific installations
+  system_wide:
+    install_tree: /software/setonix/DATE_TAG/software
+# autoload+upstream currently does not work, 
+# so better not to expose upstreams modules to user installations
+#    modules:
+#      lmod: /software/setonix/DATE_TAG/modules

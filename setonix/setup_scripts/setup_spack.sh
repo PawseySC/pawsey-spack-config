@@ -69,9 +69,16 @@ cp -p \
 cp -p \
   ${root_dir}/pawsey-spack-config/setonix/configs/spackuser_pawseystaff/*.yaml \
   ~/.spack/
+# copy project-wide configs into spack tree, too
+mkdir -p ${root_dir}/spack/etc/spack/project_allusers
+cp -p \
+  ${root_dir}/pawsey-spack-config/setonix/configs/project_allusers/*.yaml \
+  ${root_dir}/spack/etc/spack/project_allusers/
 # edit DATE_TAG in config files
 sed -i "s/DATE_TAG/$date_tag/g" \
-  ${root_dir}/spack/etc/spack/*.yaml ~/.spack/*.yaml
+  ${root_dir}/spack/etc/spack/*.yaml \
+  ~/.spack/*.yaml \
+  ${root_dir}/spack/etc/spack/project_allusers/*.yaml
 
 # edit DATE_TAG in sourceable script with spack functions
 sed -i "s;date_tag=.*;date_tag=\"${date_tag}\" # DATE_TAG;g" \
@@ -113,9 +120,14 @@ cp -p \
   ${script_dir}/setup_templates/spack_refresh_modules.sh \
   ${script_dir}/setup_templates/spack_rm_modules.sh \
   ${root_dir}/spack/bin/
+sed \
+  -e "s;ROOT_DIR;${root_dir};g" \
+  ${script_dir}/setup_templates/spack_project.sh \
+  >${root_dir}/spack/bin/spack_project.sh
 chmod a+rx \
   ${root_dir}/spack/bin/spack_refresh_modules.sh \
-  ${root_dir}/spack/bin/spack_rm_modules.sh
+  ${root_dir}/spack/bin/spack_rm_modules.sh \
+  ${script_dir}/setup_templates/spack_project.sh
 
 # edit and copy over Spack modulefile
 mkdir -p ${root_dir}/${spack_module_dir}
