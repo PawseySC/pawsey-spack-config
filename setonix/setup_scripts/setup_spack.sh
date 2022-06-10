@@ -127,7 +127,7 @@ sed \
 chmod a+rx \
   ${root_dir}/spack/bin/spack_refresh_modules.sh \
   ${root_dir}/spack/bin/spack_rm_modules.sh \
-  ${script_dir}/setup_templates/spack_project.sh
+  ${root_dir}/spack/bin/spack_project.sh
 
 # edit and copy over Spack modulefile
 mkdir -p ${root_dir}/${spack_module_dir}
