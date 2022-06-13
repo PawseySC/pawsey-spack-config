@@ -62,23 +62,8 @@ cd ${root_dir}/spack
 git checkout v${spack_version}
 cd -
 
-# copy configs into spack tree
-cp -p \
-  ${root_dir}/pawsey-spack-config/setonix/configs/site_allusers/*.yaml \
-  ${root_dir}/spack/etc/spack/
-cp -p \
-  ${root_dir}/pawsey-spack-config/setonix/configs/spackuser_pawseystaff/*.yaml \
-  ~/.spack/
-# copy project-wide configs into spack tree, too
-mkdir -p ${root_dir}/spack/etc/spack/project_allusers
-cp -p \
-  ${root_dir}/pawsey-spack-config/setonix/configs/project_allusers/*.yaml \
-  ${root_dir}/spack/etc/spack/project_allusers/
-# edit DATE_TAG in config files
-sed -i "s/DATE_TAG/$date_tag/g" \
-  ${root_dir}/spack/etc/spack/*.yaml \
-  ~/.spack/*.yaml \
-  ${root_dir}/spack/etc/spack/project_allusers/*.yaml
+# sync configs from pawsey-spack-config onto spack tree
+bash "${script_dir}/update_spack_configs_from_pawseyspackconfig.sh"
 
 # edit DATE_TAG in sourceable script with spack functions
 sed -i "s;date_tag=.*;date_tag=\"${date_tag}\" # DATE_TAG;g" \
