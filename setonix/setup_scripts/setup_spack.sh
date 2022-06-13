@@ -114,7 +114,6 @@ sed \
   -e "s;R_VERSION_MAJORMINOR;${r_version_majorminor};g" \
   ${script_dir}/setup_templates/spack_create_user_moduletree.sh \
   >${root_dir}/spack/bin/spack_create_user_moduletree.sh
-chmod a+rx ${root_dir}/spack/bin/spack_create_user_moduletree.sh
 #
 cp -p \
   ${script_dir}/setup_templates/spack_refresh_modules.sh \
@@ -125,6 +124,7 @@ sed \
   ${script_dir}/setup_templates/spack_project.sh \
   >${root_dir}/spack/bin/spack_project.sh
 chmod a+rx \
+  ${root_dir}/spack/bin/spack_create_user_moduletree.sh \
   ${root_dir}/spack/bin/spack_refresh_modules.sh \
   ${root_dir}/spack/bin/spack_rm_modules.sh \
   ${root_dir}/spack/bin/spack_project.sh
