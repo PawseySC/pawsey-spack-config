@@ -101,7 +101,7 @@ mkdir -p ${root_dir}/${utilities_modules_dir}
 mkdir -p ${root_dir}/${utilities_software_dir}
 
 # create backbone of module directories
-bash "${script_dir}/setup_create_system_moduletree.sh"
+bash "${script_dir}/update_create_system_moduletree.sh"
 
 # copy over utility scripts
 sed \

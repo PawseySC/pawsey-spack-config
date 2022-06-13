@@ -43,12 +43,12 @@ fi
 
 # step 2. creates all missing module directories
 echo "Creating all missing module directories.."
-bash "${script_dir}/setup_create_system_moduletree.sh"
+bash "${script_dir}/update_create_system_moduletree.sh"
 
 
 # step 3. update singularity modules
 echo "Updating Singularity modules.."
-bash "${script_dir}/setup_singularity_pawsey_modules.sh"
+bash "${script_dir}/update_singularity_pawsey_modules.sh"
 
 
 # step 4. refresh wrf/roms dependency modules
