@@ -85,6 +85,7 @@ class AnsysFluidstructures(Package):
         env.prepend_path('PATH', "{0}/fluidstructures/v221/Framework/bin/Linux64/".format(self.prefix))
         env.prepend_path('PATH', "{0}/fluidstructures/v221/fluent/bin/".format(self.prefix))
         env.prepend_path('PATH', "{0}/fluidstructures/v221/ansys/bin/".format(self.prefix))
+        env.prepend_path('PATH', "{0}/fluidstructures/v221/CFX/bin/".format(self.prefix))
         ldpathlist=[
 	    "/ansys/lib/linx64/",
 	    "/ansys/syslib/ansGRPC/",
