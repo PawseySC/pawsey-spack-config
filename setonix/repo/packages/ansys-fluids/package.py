@@ -79,6 +79,7 @@ class AnsysFluids(Package):
         #env.set('ANSYS_VERSION', versiontoansysversion[self.version])
         env.prepend_path('PATH', "{0}/fluids/v221/Framework/bin/Linux64/".format(self.prefix))
         env.prepend_path('PATH', "{0}/fluids/v221/fluent/bin/".format(self.prefix))
+        env.prepend_path('PATH', "{0}/fluids/v221/CFX/bin/".format(self.prefix))
         ldpathlist=[
             "/fluent/lib/lnamd64/",
             "/tp/hdf5/1_10_5/linx64/lib/",
