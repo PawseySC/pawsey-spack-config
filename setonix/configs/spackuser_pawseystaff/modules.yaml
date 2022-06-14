@@ -43,6 +43,8 @@ modules:
         autoload: direct
       kokkos:
         autoload: direct
+      charmpp:
+        autoload: direct
 
       # numerical libraries
       amdblis:
@@ -162,6 +164,7 @@ modules:
         "boost ~python cxxstd=14 visibility=global": 'dependencies/.{name}/{version}-c++14-globalvis'
         "boost ~python cxxstd=11 visibility=global": 'dependencies/.{name}/{version}-c++11-globalvis'
         "boost ~python cxxstd=98 visibility=global": 'dependencies/.{name}/{version}-c++98-globalvis'
+        charmpp: 'libraries/{name}/{version}'
         eigen: 'libraries/{name}/{version}'
         fftw: 'libraries/{name}/{version}'
         gsl: 'libraries/{name}/{version}'
