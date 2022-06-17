@@ -64,6 +64,12 @@ modules:
         # so better to turn off autoload completely for user installations
         autoload: none
 
+      # needed by bug in cray-mpich logic,
+      # see https://github.com/spack/spack/issues/21696
+      cray-mpich:
+        filter:
+          environment_blacklist: ['CPATH']
+
       projections:
         # we want to keep these simple for user-specific installations
         # name, version, hash to avoid conflicts, no categories
