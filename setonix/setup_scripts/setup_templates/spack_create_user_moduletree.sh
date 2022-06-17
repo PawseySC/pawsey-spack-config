@@ -9,8 +9,11 @@ project_modules_suffix="PROJECT_MODULES_SUFFIX"
 user_modules_suffix="USER_MODULES_SUFFIX"
 shpc_containers_modules_dir="SHPC_CONTAINERS_MODULES_DIR"
 r_version_majorminor="R_VERSION_MAJORMINOR"
-project_root_dir="/software/projects/${PAWSEY_PROJECT}/setonix"
-user_root_dir="/software/projects/${PAWSEY_PROJECT}/${USER}/setonix"
+
+# for user and project directories, give option to provide project via CLI
+tree_project="${1:-$PAWSEY_PROJECT}"
+project_root_dir="/software/projects/${tree_project}/setonix"
+user_root_dir="/software/projects/${tree_project}/${USER}/setonix"
 
 archs="zen3 zen2"
 compilers="gcc/${gcc_version} aocc/${aocc_version} cce/${cce_version}"
