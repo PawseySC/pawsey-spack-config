@@ -35,6 +35,15 @@ if [ "${present_root_dir}" != "${new_root_dir}" ] ; then
   echo "Exiting."
   exit 1
 else
+  # make sure pawsey-spack-config is in the appropriate DATE_TAG branch
+  cd ${root_dir}/pawsey-spack-config
+  branch_exist=$( git rev-parse --quiet --verify ${new_date_tag} &>/dev/null ; echo $? )
+  if [ "${branch_exist}" == "0" ] ; then
+    git checkout ${new_date_tag}
+  else
+    git checkout -b ${new_date_tag}
+  fi
+  cd -
   # updating date_tag in variables.sh
   sed -i "s;date_tag=.*;date_tag=\"${new_date_tag}\";g" \
     ${present_script_dir}/variables.sh
