@@ -2,7 +2,7 @@
 
 # this script goes through 5 steps
 # 1. refresh spack modules
-# 2. creates all missing module directories
+# 2. create all missing module directories
 # 3. update singularity modules
 # 4. refresh wrf/roms dependency modules
 # 5. create hpc-python view and module
@@ -41,7 +41,7 @@ else
 fi
 
 
-# step 2. creates all missing module directories
+# step 2. create all missing module directories
 echo "Creating all missing module directories.."
 bash "${script_dir}/update_create_system_moduletree.sh"
 
