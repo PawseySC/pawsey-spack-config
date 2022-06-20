@@ -97,7 +97,7 @@ The update provides extra tokens that can be used when creating the module name 
 These features have now been packaged in a patch, that is applied by `setup_spack.sh`.  
 
 
-# System-wide installation: general procedure
+### System-wide installation: general procedure
 
 Scripts residing in `setup_scripts/` allow for the full deployment of the system Spack.  This is the ideal list of steps that are required (minus the unexpected):
 
@@ -120,7 +120,7 @@ Scripts residing in `setup_scripts/` allow for the full deployment of the system
     g. refresh symlinks for SHPC container modules  
 
 
-# System-wide installation: maintenance notes
+### System-wide installation: maintenance notes
 
 * Adding Spack packages
   1. add package to appropriate environment
