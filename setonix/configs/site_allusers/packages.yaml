@@ -33,8 +33,9 @@ packages:
 #    buildable: false
 # FFTW non buildable, to avoid proliferation of variants, 
 # that are ultimately a subset of the system-wide one (env_num_libs)
-  fftw-api:
-    buildable: false
+# Edit: FFTW buildable, otherwise in Spack 0.17.0 the concretiser crashes
+#  fftw-api:
+#    buildable: false
   pkgconfig:
     buildable: false
 # don't build compilers neither
