@@ -3,6 +3,14 @@
 # source setup variables
 # if copy/pasting these commands, need to run from this directory
 script_dir="$(readlink -f "$(dirname $0 2>/dev/null)" || readlink -f "$(pwd)")"
+. ${script_dir}/variables.sh
+
+# spack module
+is_loaded_spack="$( module is-loaded spack/${spack_version} ; echo "$?" )"
+if [ "${is_loaded_spack}" != "0" ] ; then
+  module load spack/${spack_version}
+fi
+
 
 # list of environments from command line
 if [ "$#" -gt 1 ] ; then

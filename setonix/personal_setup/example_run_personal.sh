@@ -3,8 +3,6 @@
 # location of your Spack build
 spack_dir="<BLA>"
 
-# use PrgEnv-gnu
-module swap PrgEnv-cray PrgEnv-gnu
 # for first run, use cray-python, because there is no Spack python yet
 module load cray-python
 # initialise spack 
