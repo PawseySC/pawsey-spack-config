@@ -230,6 +230,8 @@ modules:
         py-setuptools: 'utilities/{name}/{version}-py{^python.version}'
         reframe: 'utilities/{name}/{version}'
         singularity: 'utilities/{name}/{version}'
+        tower-agent: 'utilities/{name}/{version}'
+        tower-cli: 'utilities/{name}/{version}'
 
         # S3 clients 
         awscli: 'utilities/{name}/{version}'
