@@ -1,5 +1,5 @@
 --- a/ambertools_tmpdir/AmberTools/src/configure2	2020-04-28 09:19:43.000000000 +0800
-+++ b/ambertools_tmpdir/AmberTools/src/configure2	2022-02-14 11:13:05.000000000 +0800
++++ b/ambertools_tmpdir/AmberTools/src/configure2	2022-02-14 11:13:05.0000000 +0800
 @@ -11,7 +11,7 @@
  cat<<EOD
  Usage: ./configure [flags] compiler
@@ -225,26 +225,26 @@
 +
 +    freeformat_flag="-ffree-form"
 +
-+    #PMEMD Specifics
-+    cat > conftest.f90 <<EOF
-+program conftest
-+include 'fftw3.f'
-+       write(*,'(a)') 'gotcha!'
-+end program conftest
-+EOF
-+    echo ""
-+    echo "Checking for external FFTW3 library (required for PMEMD w/ $compiler compilers)"
-+    $fc $fflags $fnooptflags -o conftest$suffix conftest.f90 -lfftw3 -I${PAWSEY_FFTW_HOME}/include/
-+    echo "     $fc $fflags $fnooptflags -o conftest$suffix conftest.f90"
-+    ./conftest$suffix | grep "gotcha!" > /dev/null
-+    status=$?
-+    if [ $status -gt 0 ]; then
-+      echo "Error: FFTW3 library not found."
-+      echo "       Ensure FFTW3 library can be found by your compiler."
-+      exit 1
-+    fi
-+    echo "OK"
-+    /bin/rm -f conftest.f90 conftest$objsuffix conftest$suffix
++#     #PMEMD Specifics
++#     cat > conftest.f90 <<EOF
++# program conftest
++# include 'fftw3.f'
++#        write(*,'(a)') 'gotcha!'
++# end program conftest
++# EOF
++#     echo ""
++#     echo "Checking for external FFTW3 library (required for PMEMD w/ $compiler compilers)"
++#     $fc $fflags $fnooptflags -o conftest$suffix conftest.f90 -lfftw3 -I${PAWSEY_FFTW_HOME}/include/
++#     echo "     $fc $fflags $fnooptflags -o conftest$suffix conftest.f90"
++#     ./conftest$suffix | grep "gotcha!" > /dev/null
++#     status=$?
++#     if [ $status -gt 0 ]; then
++#       echo "Error: FFTW3 library not found."
++#       echo "       Ensure FFTW3 library can be found by your compiler."
++#       exit 1
++#     fi
++#     echo "OK"
++#     /bin/rm -f conftest.f90 conftest$objsuffix conftest$suffix
 +
 +    pmemd_fpp_flags='-DPUBFFT -DGNU_HACKS'
 +    pmemd_foptflags="$foptflags $cray_omp_flag -fallow-invalid-boz -fallow-argument-mismatch"

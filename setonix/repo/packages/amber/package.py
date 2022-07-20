@@ -134,16 +134,21 @@ class Amber(Package, CudaPackage):
             default=False)
     variant('rism', default=False, description='Build with RISM')
     variant('fftw', default=False, description='Build with FFTW')
+    variant('python', description='Build python packages',
+            default=True)
 
     depends_on('zlib')
     depends_on('bzip2')
     depends_on('flex', type='build')
     depends_on('bison', type='build')
     depends_on('netcdf-fortran')
+    depends_on('parallel-netcdf')
     depends_on('fftw-api@3', when='+fftw')
     # Potential issues with openmpi 4
     # (http://archive.ambermd.org/201908/0105.html)
     depends_on('mpi', when='+mpi')
+    depends_on('python', when='+python')
+    depends_on('py-setuptools', when='+python')
 
     # Cuda dependencies
     depends_on('cuda@:10.2.89', when='@18:+cuda')
@@ -220,9 +225,10 @@ class Amber(Package, CudaPackage):
 
         # Base configuration
         conf = Executable('./configure')
-        base_args = ['--skip-python',
+        base_args = [
                      '--with-netcdf-c', self.spec['netcdf-c'].prefix, 
                      '--with-netcdf-fortran', self.spec['netcdf-fortran'].prefix, 
+                     '--with-pnetcdf', self.spec['parallel-netcdf'].prefix, 
                      ]
         if self.spec.satisfies('~fftw'):
             base_args += ['-nofftw3']
@@ -230,6 +236,10 @@ class Amber(Package, CudaPackage):
             base_args += ['-noX11']
         if self.spec.satisfies('~rism'):
             base_args += ['-norism']
+        if self.spec.satisfies('~python'):
+            base_args += ['-skip-python']
+        else:
+            base_args += ['--with-python', self.spec['python'].prefix + '/bin/python']
 
         # Update the sources: Apply all upstream patches
         if self.spec.satisfies('+update'):
