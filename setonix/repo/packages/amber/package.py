@@ -117,8 +117,12 @@ class Amber(Package, CudaPackage):
     #patch('ambertools_configure2.patch', when='@20:')
     #patch('cpptraj_configure.patch', when='@20:')
     #patch('ambertools_configure2_for_netcdf.patch', when='@20:')
-    patch('ambertools_configure2_cray_shasta.patch', when='@20:')
+    #patch('ambertools_configure2_cray_shasta.patch', when='@20:')
+    patch('config2.patch', when='@20:')
     patch('cpptraj_configure_netcdf.patch', when='@20:')
+    patch('ambertools_makefile.patch', when='@20:')
+    patch('sander_mt19937.patch', when='@20:')
+    patch('sander_sebomd.patch', when='@20:')
 
     variant('mpi', description='Build MPI executables',
             default=True)
@@ -129,7 +133,7 @@ class Amber(Package, CudaPackage):
     variant('update', description='Update the sources prior compilation',
             default=False)
     variant('rism', default=False, description='Build with RISM')
-    variant('fftw', default=True, description='Build with FFTW')
+    variant('fftw', default=False, description='Build with FFTW')
 
     depends_on('zlib')
     depends_on('bzip2')
@@ -238,6 +242,10 @@ class Amber(Package, CudaPackage):
         if self.spec.target.family != 'x86_64':
             base_args += ['-nosse']
 
+        # default build
+        conf(*(base_args + [compiler]))
+        make('install')
+
         # CUDA
         if self.spec.satisfies('+cuda'):
             conf(*(base_args + ['-cuda', compiler]))
@@ -252,7 +260,7 @@ class Amber(Package, CudaPackage):
         if self.spec.satisfies('+openmp') and self.spec.satisfies('~mpi'):
             make('clean')
             conf(*(base_args + ['-openmp', compiler]))
-            make('openmp')
+            make('install')
 
         # MPI and OpenMP 
         if self.spec.satisfies('+openmp') and self.spec.satisfies('+mpi'):
@@ -263,12 +271,6 @@ class Amber(Package, CudaPackage):
         if self.spec.satisfies('+cuda') and self.spec.satisfies('+mpi'):
             make('clean')
             conf(*(base_args + ['-cuda', '-mpi', compiler]))
-            make('install')
-
-        # if not MPI and not openmp
-        # Single core
-        if self.spec.satisfies('~mpi') and self.spec.satisfies('~openmp'):
-            conf(*(base_args + [compiler]))
             make('install')
 
         # just install everything that was built

@@ -48,51 +48,7 @@
          --with-pnetcdf)   shift; pnetcdf_dir="$1" ;;
          --python-install) shift; python_install="$1";;
          --miniconda)      answer='y';;
-@@ -1250,24 +1261,40 @@
-     sm30flags='-gencode arch=compute_30,code=sm_30'
- 
-     cudaversion=`$nvcc --version | grep 'release' | cut -d' ' -f5 | cut -d',' -f1`
--    if [ "$cudaversion" = "9.0" -o "$cudaversion" = "9.1" -o "$cudaversion" = "9.2" -o \
--         "$cudaversion" = "10.0" -o "$cudaversion" = "10.1" -o "$cudaversion" = "10.2" ]; then
-+    if [ "$cudaversion" = "11.0" -o "$cudaversion" = "11.1" ]; then
-+      # Implement the standard, not warp synchronous, compilation
-+      sm80flags='-gencode arch=compute_80,code=sm_80'
-+      sm75flags='-gencode arch=compute_75,code=sm_75'
-+      sm70flags='-gencode arch=compute_70,code=sm_70'
-+      echo "CUDA Version $cudaversion detected"
-+      echo "Configuring for SM5.0, SM5.2, SM5.3, SM6.0, SM6.1, SM7.0, SM7.5 and SM8.0"
-+      nvccflags="$sm50flags $sm52flags $sm53flags $sm60flags $sm61flags $sm70flags $sm75flags $sm80flags -Wno-deprecated-declarations"
-+
-+    elif [ "$cudaversion" = "10.0" -o "$cudaversion" = "10.1" -o "$cudaversion" = "10.2" ]; then
-+      echo "CUDA Version $cudaversion detected"
-+      echo "Configuring for SM3.0, SM3.5, SM3.7, SM5.0, SM5.2, SM5.3, SM6.0, SM6.1, SM7.0 and SM7.5"
-+      nvccflags="$sm30flags $sm35flags $sm37flags $sm50flags $sm52flags $sm53flags $sm60flags $sm61flags $sm70flags $sm75flags -Wno-deprecated-declarations"
-+
-+    elif [ "$cudaversion" = "9.0" -o "$cudaversion" = "9.1" -o "$cudaversion" = "9.2" ]; then
-       echo "CUDA Version $cudaversion detected"
-       echo "Configuring for SM3.0, SM3.5, SM3.7, SM5.0, SM5.2, SM5.3, SM6.0, SM6.1 and SM7.0"
-       nvccflags="$sm30flags $sm35flags $sm37flags $sm50flags $sm52flags $sm53flags $sm60flags $sm61flags $sm70flags -Wno-deprecated-declarations"
-+
-     elif [ "$cudaversion" = "8.0" ]; then
-       echo "CUDA Version $cudaversion detected"
-       echo "Configuring for SM3.0, SM3.5, SM3.7, SM5.0, SM5.2, SM5.3, SM6.0 and SM6.1"
-       echo "BE AWARE: CUDA 8.0 does not support V100, GV100, Titan-V or later GPUs."
-       nvccflags="$sm30flags $sm35flags $sm37flags $sm50flags $sm52flags $sm53flags $sm60flags $sm61flags"
-+
-     elif [ "$cudaversion" = "7.5" ]; then
-       echo "CUDA Version $cudaversion detected"
-       echo "Configuring for SM3.0, SM3.5, SM3.7, SM5.0, SM5.2 and SM5.3"
-       echo "BE AWARE: CUDA 7.5 does not support GTX-1080, Titan-XP, DGX-1, V100 or other Pascal/Volta based or later GPUs."
-       nvccflags="$sm30flags  $sm35flags $sm37flags $sm50flags $sm52flags $sm53flags"
-+
-     else
-       echo "Error: Unsupported CUDA version $cudaversion detected."
--      echo "       Amber requires CUDA version 7.5, 8.0, 9.0-9.2, or 10.0-10.2"
-+      echo "       Amber requires CUDA version 7.5, 8.0, 9.0-9.2, 10.0-10.2 or 11.0-11.1"
-       exit 1
-     fi
-     nvcc="$nvcc $nvccflags"
-@@ -1359,7 +1386,7 @@
+@@ -1375,7 +1386,7 @@
        fflags="$fflags -g"
      fi
  
@@ -101,7 +57,7 @@
  
      if [ $cc_version_major -ge 4 -a $cc_version_minor -ge 2 -a "$optimise" = "yes" ]; then
        if [ $sse = 'yes' ]; then
-@@ -1574,7 +1601,7 @@
+@@ -1590,7 +1601,7 @@
          fflags="$fflags -g -debug all"
      fi
  
@@ -110,7 +66,7 @@
  
      # Intel 18.0.x not ready for prime time; srb mar 26, 2018; see
      # [AMBER-Developers] Intel compilers and Amber18
-@@ -2028,21 +2055,18 @@
+@@ -2044,21 +2055,18 @@
  #################### cray #######
  cray)
      test -z "$pic" && pic="-fpic"
@@ -136,7 +92,7 @@
      # The -lstdc++ flag gives lots of duplicate symbol errors with cray
      fc_cxx_link_flag=""
  
-@@ -2067,6 +2091,7 @@
+@@ -2083,6 +2091,7 @@
      #       -D_FILE_OFFSET_BITS etc.) cray compilers need '-h gnu'.
      #       Also, the fortran compile requires '-emf' to force
      #       the build of module files with all-lowercase names.
@@ -144,7 +100,7 @@
      if [ "$optimise" = 'no' ]; then
        cflags="$cflags -O0 $cray_omp_flag -h gnu"
        cnooptflags=""
-@@ -2097,7 +2122,7 @@
+@@ -2113,7 +2122,7 @@
        fflags="$fflags -g"
      fi
  
@@ -153,7 +109,7 @@
  
      # Set alignment of fortran compiler
      fcreal8="-s real64"
-@@ -2192,6 +2217,173 @@
+@@ -2208,6 +2217,169 @@
      fi
      ;;
  
@@ -171,7 +127,7 @@
 +    cxxflags="$pic -O3"
 +    ambercxxflags=""
 +    fc=ftn
-+    fflags="$pic -O3 -fallow-argument-mismatch"
++    fflags="$pic -O3 -fallow-argument-mismatch -fallow-invalid-boz"
 +    # The -lstdc++ flag gives lots of duplicate symbol errors with cray
 +    fc_cxx_link_flag="-lstdc++"
 +    
@@ -206,18 +162,17 @@
 +      cxxoptflags="$pic"
 +      fflags="$fflags -O0 $cray_omp_flag"
 +      fnooptflags=""
-+      foptflags="-ffixed-form"
++      foptflags=""
 +    else
-+      # cray compilers have equivalent of -O3 on by default
-+      cflags="$cflags $cray_omp_flag "
++      cflags="$cflags -O3 $cray_omp_flag "
 +      cnooptflags=""
 +      coptflags=""
-+      cxxflags="$cxxflags $cray_omp_flag "
++      cxxflags="$cxxflags -O3 $cray_omp_flag "
 +      cxxnooptflags=""
 +      cxxoptflags="$pic"
-+      fflags="$fflags $cray_omp_flag"
++      fflags="$fflags -O3 $cray_omp_flag"
 +      fnooptflags=""
-+      foptflags="-ffixed-form"
++      foptflags=""
 +    fi
 +
 +    # Debugging options
@@ -270,32 +225,29 @@
 +
 +    freeformat_flag="-ffree-form"
 +
-+#     #PMEMD Specifics
-+#     # PMEMD right now with cray requires external FFTW3 library
-+#     cat > conftest.f90 <<EOF
-+# program conftest
-+# include 'fftw3.f'
-+#        write(*,'(a)') 'gotcha!'
-+# end program conftest
-+# EOF
-+#     echo ""
-+#     echo "Checking for external FFTW3 library (required for PMEMD w/ $compiler compilers)"
-+#     $fc $fflags $fnooptflags -o conftest$suffix conftest.f90
-+#     echo "     $fc $fflags $fnooptflags -o conftest$suffix conftest.f90"
-+#     ./conftest$suffix | grep "gotcha!" > /dev/null
-+#     status=$?
-+#     if [ $status -gt 0 ]; then
-+#       echo "Error: FFTW3 library not found."
-+#       echo "       Ensure FFTW3 library can be found by your compiler."
-+#       echo "       On cray systems this can usually be done with 'module load fftw'"
-+#       exit 1
-+#     fi
-+#     echo "OK"
-+#     /bin/rm -f conftest.f90 conftest$objsuffix conftest$suffix
++    #PMEMD Specifics
++    cat > conftest.f90 <<EOF
++program conftest
++include 'fftw3.f'
++       write(*,'(a)') 'gotcha!'
++end program conftest
++EOF
++    echo ""
++    echo "Checking for external FFTW3 library (required for PMEMD w/ $compiler compilers)"
++    $fc $fflags $fnooptflags -o conftest$suffix conftest.f90 -lfftw3 -I${PAWSEY_FFTW_HOME}/include/
++    echo "     $fc $fflags $fnooptflags -o conftest$suffix conftest.f90"
++    ./conftest$suffix | grep "gotcha!" > /dev/null
++    status=$?
++    if [ $status -gt 0 ]; then
++      echo "Error: FFTW3 library not found."
++      echo "       Ensure FFTW3 library can be found by your compiler."
++      exit 1
++    fi
++    echo "OK"
++    /bin/rm -f conftest.f90 conftest$objsuffix conftest$suffix
 +
-+    #pmemd_fpp_flags='-DPUBFFT'
-+    pmemd_fpp_flags='-DFFTW_FFT'
-+    pmemd_foptflags="$foptflags $cray_omp_flag"
++    pmemd_fpp_flags='-DPUBFFT -DGNU_HACKS'
++    pmemd_foptflags="$foptflags $cray_omp_flag -fallow-invalid-boz -fallow-argument-mismatch"
 +    pmemd_coptflags="$coptflags  $cray_omp_flag"
 +
 +    if [ "$debug" = 'yes' ]; then
@@ -327,7 +279,7 @@
  #################### clang ####
  clang)
      if [ "$intelmpi" = 'yes' ]; then
-@@ -2308,7 +2500,7 @@
+@@ -2324,7 +2496,7 @@
        fi
      fi
  
@@ -336,7 +288,7 @@
      ;;
  #################### unknown choice #######
  *)
-@@ -2518,7 +2710,9 @@
+@@ -2534,7 +2706,9 @@
  
  echo ""
  echo "Testing the $cc compiler:"
@@ -347,7 +299,7 @@
  $cc $cflags $cnooptflags -o testp$suffix testp.c
  $wine ./testp$suffix | grep "testing a C program" > /dev/null
  status=$?
-@@ -2735,11 +2929,12 @@
+@@ -2751,11 +2925,12 @@
    cflags="$cflags -DBINTRAJ"
    pmemd_coptflags="$pmemd_coptflags -DBINTRAJ"
    fppflags="$fppflags -DBINTRAJ"
@@ -361,7 +313,7 @@
        exit 1
      fi
      # Initially set full paths for use with test_netcdf_compile.
-@@ -2877,38 +3072,77 @@
+@@ -2893,38 +3068,77 @@
      netcdf="\$(INCDIR)/netcdf.mod"
    else
      # A NetCDF directory was specified. Check that library exists and compiles
@@ -465,7 +417,7 @@
        exit 1
      fi
      echo "OK"
-@@ -3167,6 +3401,9 @@
+@@ -3183,6 +3397,9 @@
      if [ "$intelmpi" = "yes" ]; then
          mpicc="MPICC=mpiicc"
      fi
@@ -475,7 +427,7 @@
      if [ "$debug" = "yes" ]; then
          enable_debug="--enable-debug=yes --enable-debug-malloc=yes --enable-debug-alignment=yes"
      fi
-@@ -3365,6 +3602,10 @@
+@@ -3381,6 +3598,10 @@
        if [ -z "$MPICC" ]; then cc="mpiicc"; else cc="$MPICC"; fi
        if [ -z "$MPICXX" ]; then cplusplus="mpiicpc"; else cplusplus="$MPICXX"; fi
        if [ -z "$MPIF90" ]; then fc="mpiifort"; else fc="$MPIF90"; fi
@@ -486,7 +438,7 @@
    else
        if [ -z "$MPICC" ]; then cc="mpicc"; else cc="$MPICC"; fi
        if [ -z "$MPICXX" ]; then cplusplus="mpicxx"; else cplusplus="$MPICXX"; fi
-@@ -3558,6 +3799,8 @@
+@@ -3574,6 +3795,8 @@
  fi
  if [ ! -z "$netcdf_dir" ] ; then
    CPPTRAJOPTS="$CPPTRAJOPTS --with-netcdf=$netcdf_dir"
@@ -495,29 +447,29 @@
  else
    CPPTRAJOPTS="$CPPTRAJOPTS --with-netcdf=$CPPTRAJHOME"
  fi
-@@ -3777,6 +4020,16 @@
-   echo "Warning: Currently PBSA and related programs (MMPBSA, Sander, etc)"
-   echo "         do not build with cray compilers."
-   if [ "$installtype" = 'serial' ] ; then
+@@ -3799,6 +4022,16 @@
+   elif [ "$installtype" = 'openmp' ] ; then
+     installtype='cray_openmp'
+   fi
++elif [ "$compiler" = 'cray-shasta-gnu' ] ; then
++  echo "Warning: Currently PBSA and related programs (MMPBSA, Sander, etc)"
++  echo "         do not build with cray compilers."
++  if [ "$installtype" = 'serial' ] ; then
 +    installtype='cray_serial'
 +  elif [ "$installtype" = 'parallel' ] ; then
 +    installtype='cray_parallel'
 +  elif [ "$installtype" = 'openmp' ] ; then
 +    installtype='cray_openmp'
 +  fi
-+elif [ "$compiler" = 'cray-shasta-gnu' ] ; then
-+  echo "Warning: Currently PBSA and related programs (MMPBSA, Sander, etc)"
-+  echo "         do not build with cray compilers."
-+  if [ "$installtype" = 'serial' ] ; then
-     installtype='cray_serial'
-   elif [ "$installtype" = 'parallel' ] ; then
-     installtype='cray_parallel'
-@@ -4049,7 +4286,7 @@
+ fi
+ 
+ #------------------------------------------------------------------------------
+@@ -4049,7 +4282,7 @@
  PYTHON=$python
  PYTHON_INSTALL=$python_install_string
  SKIP_PYTHON=$skippython
 -PYTHONPATH=\$(AMBER_PREFIX)/lib/python$python_ver/site-packages
 +PYTHONPATH=$PYTHONPATH:\$(AMBER_PREFIX)/lib/python$python_ver/site-packages
  PYTHONLOG=$pythonlog
-
+ 
  PYSANDER=$pysander
