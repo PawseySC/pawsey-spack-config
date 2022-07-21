@@ -1,0 +1,50 @@
+--- a/ambertools_tmpdir/AmberTools/src/Makefile	2022-07-20 13:06:23.000000000 +0800
++++ b/ambertools_tmpdir/AmberTools/src/Makefile	2022-07-20 14:35:33.000000000 +0800
+@@ -131,7 +131,7 @@
+ 	(cd blas && $(MAKE) $(BLAS) )
+ 	(cd c9x-complex && $(MAKE) $(C9XCOMPLEX) )
+ 	(cd cifparse && $(MAKE) install )
+-	(cd antechamber && $(MAKE) install )
++#	(cd antechamber && $(MAKE) install )
+ 	(cd sqm && $(MAKE) install )
+ 	(cd reduce && $(MAKE) install )
+ 	(cd leap && $(MAKE) install )
+@@ -139,7 +139,7 @@
+ 	(cd addles && $(MAKE) install)
+ 	(cd nmode && $(MAKE) install)
+ 	$(MAKE) build_cpptraj
+-	(cd ambpdb && $(MAKE) install)
++#	(cd ambpdb && $(MAKE) install)
+ 	(cd sff && $(MAKE) install )
+ 	(cd rism && $(MAKE) $(RISM) )
+ 	(cd nab && $(MAKE) install )
+@@ -153,6 +153,7 @@
+ 	(cd FEW && $(MAKE) install)
+ 	(cd paramfit && $(MAKE) install)
+ 	(cd cphstats && $(MAKE) install)
++	(cd sander && $(MAKE) serial)
+ 	(if [ "$(SKIP_PYTHON)" = 'no' ]; then \
+ 		$(MAKE) python_serial ;\
+ 	fi ;\
+@@ -181,6 +182,7 @@
+ 		$(MAKE) python_parallel ;\
+ 	fi ;\
+ 	)
++
+ 	@echo ""
+ 	@echo "Installation of ${AMBERTOOLS} MPI (cray) is complete at `date`."
+ 	@echo ""
+@@ -487,8 +489,11 @@
+ #Rule for building python code
+ #all_python: parmed pymsmt pytraj pysander
+ 
+-python_serial:: parmed mmpbsa_py pysander pymsmt $(PYTRAJ) pdb4amber packmol-memgen
+-	$(PYTHON) fix_conda_fortran.py
++#python_serial:: parmed mmpbsa_py pysander pymsmt $(PYTRAJ) pdb4amber packmol-memgen
++#	$(PYTHON) fix_conda_fortran.py
++
++python_serial:: parmed pysander pymsmt $(PYTRAJ) pdb4amber packmol-memgen
++#	$(PYTHON) fix_conda_fortran.py
+ 
+ python_parallel:: parmed mmpbsa_py_parallel
+ 

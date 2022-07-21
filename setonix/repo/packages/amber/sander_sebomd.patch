@@ -1,0 +1,76 @@
+--- a/ambertools_tmpdir/AmberTools/src/sander/sebomd_module.F90	2022-07-20 13:29:09.000000000 +0800
++++ b/ambertools_tmpdir/AmberTools/src/sander/sebomd_module.F90	2022-07-20 13:43:02.000000000 +0800
+@@ -120,6 +120,36 @@
+   subroutine read_sebomd_namelist()
+     implicit none
+     integer :: stat
++    character(10) :: hamiltonian
++    character(10) :: modif
++    integer :: method
++    integer :: ncore
++    _REAL_ :: dbuff1
++    _REAL_ :: dbuff2
++    character(256) :: charge_out
++    character(256) :: bond_order_out
++    _REAL_ :: lambda
++    _REAL_ :: peptk
++    _REAL_ :: dpmax
++    _REAL_ :: bocut
++    integer :: charge
++    integer :: longrange
++    integer :: fullscf
++    integer :: ntwc
++    integer :: ntwb
++    integer :: chtype
++    integer :: chewald
++    integer :: screen
++    integer :: guess
++    integer :: pdump
++    integer :: ipolyn
++    integer :: nresidue
++    integer :: ntwh
++    integer :: peptcorr
++    integer :: iprec
++    integer :: debugmsg
++    integer :: debugforces
++    integer :: diag_routine
+ 
+     namelist /sebomd/ hamiltonian, &
+                       modif, &
+@@ -152,36 +182,6 @@
+                       dpmax, &
+                       bocut
+    
+-    character(10) :: hamiltonian
+-    character(10) :: modif
+-    integer :: method
+-    integer :: ncore
+-    _REAL_ :: dbuff1
+-    _REAL_ :: dbuff2
+-    character(256) :: charge_out
+-    character(256) :: bond_order_out
+-    _REAL_ :: lambda
+-    _REAL_ :: peptk
+-    _REAL_ :: dpmax
+-    _REAL_ :: bocut
+-    integer :: charge
+-    integer :: longrange
+-    integer :: fullscf
+-    integer :: ntwc
+-    integer :: ntwb
+-    integer :: chtype
+-    integer :: chewald
+-    integer :: screen
+-    integer :: guess
+-    integer :: pdump
+-    integer :: ipolyn
+-    integer :: nresidue
+-    integer :: ntwh
+-    integer :: peptcorr
+-    integer :: iprec
+-    integer :: debugmsg
+-    integer :: debugforces
+-    integer :: diag_routine
+ 
+     hamiltonian =   sebomd_obj%hamiltonian
+     modif =   sebomd_obj%modif

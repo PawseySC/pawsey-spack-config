@@ -114,11 +114,12 @@ class Amber(Package, CudaPackage):
     patch('nvhpc-boost.patch', when='@18: %nvhpc')
 
     # workaround for cray shasta gnu compilation ( and soon cray-shasta-*)
-    #patch('ambertools_configure2.patch', when='@20:')
-    #patch('cpptraj_configure.patch', when='@20:')
-    #patch('ambertools_configure2_for_netcdf.patch', when='@20:')
     patch('ambertools_configure2_cray_shasta.patch', when='@20:')
     patch('cpptraj_configure_netcdf.patch', when='@20:')
+    patch('ambertools_makefile.patch', when='@20:')
+    patch('sander_mt19937.patch', when='@20:')
+    patch('sander_sebomd.patch', when='@20:')
+    patch('pmemd_nfe.patch', when='@20:')
 
     variant('mpi', description='Build MPI executables',
             default=True)
@@ -129,17 +130,22 @@ class Amber(Package, CudaPackage):
     variant('update', description='Update the sources prior compilation',
             default=False)
     variant('rism', default=False, description='Build with RISM')
-    variant('fftw', default=True, description='Build with FFTW')
+    variant('fftw', default=False, description='Build with FFTW')
+    variant('python', description='Build python packages',
+            default=True)
 
     depends_on('zlib')
     depends_on('bzip2')
     depends_on('flex', type='build')
     depends_on('bison', type='build')
     depends_on('netcdf-fortran')
+    depends_on('parallel-netcdf')
     depends_on('fftw-api@3', when='+fftw')
     # Potential issues with openmpi 4
     # (http://archive.ambermd.org/201908/0105.html)
     depends_on('mpi', when='+mpi')
+    depends_on('python', when='+python')
+    depends_on('py-setuptools', when='+python')
 
     # Cuda dependencies
     depends_on('cuda@:10.2.89', when='@18:+cuda')
@@ -216,9 +222,10 @@ class Amber(Package, CudaPackage):
 
         # Base configuration
         conf = Executable('./configure')
-        base_args = ['--skip-python',
+        base_args = [
                      '--with-netcdf-c', self.spec['netcdf-c'].prefix, 
                      '--with-netcdf-fortran', self.spec['netcdf-fortran'].prefix, 
+                     '--with-pnetcdf', self.spec['parallel-netcdf'].prefix, 
                      ]
         if self.spec.satisfies('~fftw'):
             base_args += ['-nofftw3']
@@ -238,6 +245,15 @@ class Amber(Package, CudaPackage):
         if self.spec.target.family != 'x86_64':
             base_args += ['-nosse']
 
+        # default build
+        added_args = []
+        if self.spec.satisfies('~python'):
+            added_args = ['--skip-python', compiler]
+        else:
+            added_args = ['--with-python', self.spec['python'].prefix + '/bin/python', compiler]
+        conf(*(base_args + added_args))
+        make('install')
+
         # CUDA
         if self.spec.satisfies('+cuda'):
             conf(*(base_args + ['-cuda', compiler]))
@@ -245,30 +261,27 @@ class Amber(Package, CudaPackage):
 
         # MPI
         if self.spec.satisfies('+mpi') and self.spec.satisfies('~openmp'):
-            conf(*(base_args + ['-mpi', compiler]))
+            added_args = ['-mpi', '--skip-python', compiler]
+            conf(*(base_args + added_args))
             make('install')
 
         # Openmp
         if self.spec.satisfies('+openmp') and self.spec.satisfies('~mpi'):
             make('clean')
-            conf(*(base_args + ['-openmp', compiler]))
-            make('openmp')
+            added_args = ['-openmp', '--skip-python', compiler]
+            conf(*(base_args + added_args))
+            make('install')
 
         # MPI and OpenMP 
         if self.spec.satisfies('+openmp') and self.spec.satisfies('+mpi'):
-            conf(*(base_args + ['-mpi -openmp', compiler]))
+            added_args = ['-mpi', '-openmp', '--skip-python', compiler]
+            conf(*(base_args + added_args))
             make('install')
 
         # CUDA + MPI
         if self.spec.satisfies('+cuda') and self.spec.satisfies('+mpi'):
             make('clean')
             conf(*(base_args + ['-cuda', '-mpi', compiler]))
-            make('install')
-
-        # if not MPI and not openmp
-        # Single core
-        if self.spec.satisfies('~mpi') and self.spec.satisfies('~openmp'):
-            conf(*(base_args + [compiler]))
             make('install')
 
         # just install everything that was built
