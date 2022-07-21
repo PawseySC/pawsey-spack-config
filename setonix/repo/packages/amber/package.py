@@ -114,15 +114,12 @@ class Amber(Package, CudaPackage):
     patch('nvhpc-boost.patch', when='@18: %nvhpc')
 
     # workaround for cray shasta gnu compilation ( and soon cray-shasta-*)
-    #patch('ambertools_configure2.patch', when='@20:')
-    #patch('cpptraj_configure.patch', when='@20:')
-    #patch('ambertools_configure2_for_netcdf.patch', when='@20:')
-    #patch('ambertools_configure2_cray_shasta.patch', when='@20:')
-    patch('config2.patch', when='@20:')
+    patch('ambertools_configure2_cray_shasta.patch', when='@20:')
     patch('cpptraj_configure_netcdf.patch', when='@20:')
     patch('ambertools_makefile.patch', when='@20:')
     patch('sander_mt19937.patch', when='@20:')
     patch('sander_sebomd.patch', when='@20:')
+    patch('pmemd_nfe.patch', when='@20:')
 
     variant('mpi', description='Build MPI executables',
             default=True)
@@ -236,10 +233,6 @@ class Amber(Package, CudaPackage):
             base_args += ['-noX11']
         if self.spec.satisfies('~rism'):
             base_args += ['-norism']
-        if self.spec.satisfies('~python'):
-            base_args += ['-skip-python']
-        else:
-            base_args += ['--with-python', self.spec['python'].prefix + '/bin/python']
 
         # Update the sources: Apply all upstream patches
         if self.spec.satisfies('+update'):
@@ -253,7 +246,12 @@ class Amber(Package, CudaPackage):
             base_args += ['-nosse']
 
         # default build
-        conf(*(base_args + [compiler]))
+        added_args = []
+        if self.spec.satisfies('~python'):
+            added_args = ['--skip-python', compiler]
+        else:
+            added_args = ['--with-python', self.spec['python'].prefix + '/bin/python', compiler]
+        conf(*(base_args + added_args))
         make('install')
 
         # CUDA
@@ -263,18 +261,21 @@ class Amber(Package, CudaPackage):
 
         # MPI
         if self.spec.satisfies('+mpi') and self.spec.satisfies('~openmp'):
-            conf(*(base_args + ['-mpi', compiler]))
+            added_args = ['-mpi', '--skip-python', compiler]
+            conf(*(base_args + added_args))
             make('install')
 
         # Openmp
         if self.spec.satisfies('+openmp') and self.spec.satisfies('~mpi'):
             make('clean')
-            conf(*(base_args + ['-openmp', compiler]))
+            added_args = ['-openmp', '--skip-python', compiler]
+            conf(*(base_args + added_args))
             make('install')
 
         # MPI and OpenMP 
         if self.spec.satisfies('+openmp') and self.spec.satisfies('+mpi'):
-            conf(*(base_args + ['-mpi -openmp', compiler]))
+            added_args = ['-mpi', '-openmp', '--skip-python', compiler]
+            conf(*(base_args + added_args))
             make('install')
 
         # CUDA + MPI
