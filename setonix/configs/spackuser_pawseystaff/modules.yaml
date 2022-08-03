@@ -232,6 +232,7 @@ modules:
         singularity: 'utilities/{name}/{version}'
         tower-agent: 'utilities/{name}/{version}'
         tower-cli: 'utilities/{name}/{version}'
+        mpifileutils: 'utilities/{name}/{version}'
 
         # S3 clients 
         awscli: 'utilities/{name}/{version}'
