@@ -13,7 +13,7 @@ cpu_arch="zen3"
 # tool versions
 spack_version="0.17.0" # the prefix "v" is added in setup_spack.sh
 singularity_version="3.8.6" # has to match the version in the Spack env yaml
-shpc_version="0.0.53"
+shpc_version="0.0.57"
 
 # python (and py tools) versions
 python_name="python"
@@ -66,9 +66,10 @@ python_version_major="$( echo $python_version | cut -d '.' -f 1 )"
 python_version_minor="$( echo $python_version | cut -d '.' -f 2 )"
 python_version_bugfix="$( echo $python_version | cut -d '.' -f 3 )"
 
-# shpc module directory for SPACK USER (system wide installation)
-shpc_spackuser_modules_dir_long="modules-long"
-shpc_spackuser_modules_dir_short="modules"
+# shpc module directories for all users (system-wide and user-specific)
+shpc_allusers_modules_dir_long="modules-long"
+shpc_allusers_modules_dir_short="views/modules"
+# shpc module suffix for SPACK USER (system-wide)
 shpc_spackuser_container_tag="-container"
 # name of SHPC module: decide this once and for all
 shpc_name="shpc"
@@ -92,7 +93,9 @@ utilities_modules_dir="${utilities_root_dir}/modules"
 # location for Pawsey utility software
 utilities_software_dir="${utilities_root_dir}/software"
 # location for SHPC container modules
-shpc_containers_modules_dir="${containers_root_dir}/${shpc_spackuser_modules_dir_short}"
+shpc_containers_modules_dir="${containers_root_dir}/${shpc_allusers_modules_dir_short}"
+# location for SHPC container modules (long version, as installed)
+shpc_containers_modules_dir_long="${containers_root_dir}/${shpc_allusers_modules_dir_long}"
 # location for SHPC containers
 shpc_containers_dir="${containers_root_dir}/sif"
 
