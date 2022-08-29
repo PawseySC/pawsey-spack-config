@@ -1,6 +1,16 @@
 ## Setonix setup
 
 
+### NOTE for next deployment - October/November 2022
+
+Author: Marco.
+
+Following an update of the SHPC installation, the `MODULEPATH`s for SHPC modules needs a once-off change, both for system-wide and user-specific installations.  
+As a result, the following two steps are required, in collaboration with the Platforms team:
+1. update `pawsey` module, based on the newly generated `/software/setonix/2022.XX/pawsey_load_first.lua` (done with Kevin for previous deployment);
+2. update user account creation process, following the updated `/software/setonix/2022.XX/spack/bin/spack_create_user_moduletree.sh` (done with William for previous deployment).
+
+
 ### Contents of this directory
 
 * `configs/site_allusers/`: Spack configuration files for Setonix that are valid for all users, which will sit in $spack/etc/spack
@@ -127,16 +137,10 @@ Scripts residing in `setup_scripts/` allow for the full deployment of the system
   2. install with `run_installation_pick.sh`
   3. refresh modules with Spack CLI (avoid using `post_refresh_modules.sh`, which currently deletes and re-creates the whole tree)
 
-* Adding SHPC container modules - not OpenFoam
-  1. add container package to either `list_shpc_container_modules.sh`
+* Adding SHPC container modules
+  1. add container package to `list_shpc_container_modules.sh`
   2. install with `run_install_shpc_container_modules.sh`
-  3. refresh SHPC modules with `post_create_shpc_symlink_modules.sh`
-
-* Adding SHPC OpenFoam[-org] container modules
-  1. add version-specific recipe file with version-specific command aliases onto `shpc_registry/quay.io/pawsey/openfoam[-org]/`
-  2. add container package to list within `run_install_shpc_openfoam.sh`
-  3. install with `run_install_shpc_openfoam.sh` itself
-  4. refresh SHPC modules with `post_create_shpc_symlink_modules.sh`
+  3. customise SHPC modules with `post_customise_shpc_pawsey_modules.sh`
 
 * Updating Spack configuration files
   1. edit configuration in appropriate branch of `pawsey-spack-config`

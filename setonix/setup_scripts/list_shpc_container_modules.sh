@@ -29,4 +29,10 @@ quay.io/biocontainers/vcftools:0.1.16--pl5321h9a82719_6
 quay.io/biocontainers/velvet:1.2.10--h7132678_5
 quay.io/pawsey/hpc-python:2022.03
 quay.io/pawsey/hpc-python:2022.03-hdf5mpi
+quay.io/pawsey/openfoam:v2012
+quay.io/pawsey/openfoam:v2006
+quay.io/pawsey/openfoam:v1912
+quay.io/pawsey/openfoam:v1812
+quay.io/pawsey/openfoam-org:8
+quay.io/pawsey/openfoam-org:7
 "

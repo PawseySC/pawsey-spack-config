@@ -21,7 +21,5 @@ for container in $container_list ; do
   shpc install $container
 done
 
-# create compact, symlinked module tree
-bash ${script_dir}/post_create_shpc_symlink_modules.sh
-# it's the symlinked module tree that needs to go in MODULEPATH:
-# `module use ${root_dir}/containers/${shpc_spackuser_modules_dir_short}`
+# customise Pawsey container modules
+bash ${script_dir}/post_customise_shpc_pawsey_modules.sh

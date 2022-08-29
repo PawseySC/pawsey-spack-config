@@ -75,12 +75,12 @@ else
 fi
 
 
-# step 7. refresh shpc symlink modules
-echo "Do you want to refresh the shpc symlink modules? (yes/no)"
+# step 7. customise shpc container modules
+echo "Do you want to customise the shpc container modules? (yes/no)"
 read shpc_answer
 if [ ${shpc_answer,,} == "yes" ] ; then
-  echo "Refreshing shpc symlink modules.."
-  bash ${script_dir}/post_create_shpc_symlink_modules.sh
+  echo "Customising shpc container modules.."
+  bash ${script_dir}/post_customise_shpc_pawsey_modules.sh
 else
-  echo "Skipping deletion and re-creation of shpc symlink modules."
+  echo "Skipping customisation of shpc container modules."
 fi
