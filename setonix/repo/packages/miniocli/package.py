@@ -14,16 +14,29 @@ class Miniocli(MakefilePackage):
     homepage = "https://docs.min.io/docs/minio-client-complete-guide.html"
     url      = "https://github.com/minio/mc/archive/refs/tags/RELEASE.2022-02-02T02-03-24Z.tar.gz"
   
-    version('2022-05-04T06-07-55Z', sha256='2b935c3744228978c93c14186b65a6078e4ffc267f32cdb8c994eff2dda95a6e') 
-    version('2022-03-31T04-55-30Z', sha256='3b983ea1cc50768b0826989dba931044ac3f8e841cc09aefed217301c92fa8a3') 
+    version(
+        '2022-05-04',
+        sha256='2b935c3744228978c93c14186b65a6078e4ffc267f32cdb8c994eff2dda95a6e',
+        url="https://github.com/minio/mc/archive/RELEASE.2022-05-04T06-07-55Z.tar.gz",
+    )
+    version(
+        '2022-03-31',
+        sha256='3b983ea1cc50768b0826989dba931044ac3f8e841cc09aefed217301c92fa8a3',
+        url="https://github.com/minio/mc/archive/RELEASE.2022-03-31T04-55-30Z.tar.gz",
+    ) 
     # versions of 2022-03-* or later require  github.com/shirou/gopsutil/v3 and this is generating an error
-    version('2022-02-02T02-03-24Z', sha256='2d4a64c17935d40d0e325761cc214b2efceb19ce006101c192da9b31f8920a97')
-    version('2022-01-05T23-52-51Z', sha256='d5dbd32b7a7f79baace09dd6518121798d2fcbb84b81046b61ff90f980c8f963')
+    version(
+        '2022-02-02',
+        sha256='2d4a64c17935d40d0e325761cc214b2efceb19ce006101c192da9b31f8920a97',
+        url="https://github.com/minio/mc/archive/RELEASE.2022-02-02T02-03-24Z.tar.gz",
+    )
+    version(
+        '2022-01-05',
+        sha256='d5dbd32b7a7f79baace09dd6518121798d2fcbb84b81046b61ff90f980c8f963',
+        url="https://github.com/minio/mc/archive/RELEASE.2022-01-05T23-52-51Z.tar.gz",
+    )
 
     depends_on('go', type='build')
-
-    def url_for_version(self, version):
-        return ("https://github.com/minio/mc/archive/RELEASE.{0}.tar.gz".format(version))
 
     def install(self, spec, prefix):
         go('build')
