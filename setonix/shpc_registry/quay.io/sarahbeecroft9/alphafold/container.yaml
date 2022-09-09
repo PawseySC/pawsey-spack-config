@@ -9,4 +9,6 @@ tags:
 aliases:
 - name: alphafold
   command: alphafold
-  singularity_options: --nv -B /scratch/references/alphafold
+  singularity_options: -B /scratch/references/alphafold
+features:
+  gpu: true
