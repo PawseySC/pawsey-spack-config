@@ -8,5 +8,5 @@ tags:
   '2.2.3': sha256:cb4af40028e49dd340403b469ff667c924672c5c1ac3caa40eb4f2c680ad74a0
 aliases:
 - name: alphafold
-  command: alphafold
+  command: bash /app/run_alphafold.sh
   singularity_options: -B /scratch/references/alphafold
