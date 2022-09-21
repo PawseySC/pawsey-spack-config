@@ -112,25 +112,32 @@ These features have now been packaged in a patch, that is applied by `setup_spac
 Scripts residing in `setup_scripts/` allow for the full deployment of the system Spack.  This is the ideal list of steps that are required (minus the unexpected):
 
 1. Review `variables.sh` for any required update (e.g. date_tag, compiler versions, tools versions)
-2. Git clone `pawsey-spack-config` in appropriate final location (e.g. `/software/setonix/2022.01/pawsey-spack-config`)
-3. Setup Spack using `setup_spack.sh`
-4. Install Python via Spack using `run_first_python_install.sh` (after this, the `spack` module can be used)
-5. Test concretisations with `run_concretization.sh`
-6. Install all Spack packages with `run_installation_all.sh`, or equivalent manual operations; `env_num_libs` must be amongst the first ones, because it builds otherwise non-buildable packages; some environments will need to be re-run with `-j 1` (`run_installation_pick.sh` can be used to this end)
-7. After `singularity` is installed, create its customised modules using the small script `update_singularity_pawsey_modules.sh`
-8. After `singularity` is installed, install `shpc` with `setup_shpc.sh`
-9. After `singularity` and `shpc` are installed, install container modules with 2x scripts, `run_install_shpc_container_modules.sh` and `run_install_shpc_openfoam.sh`
-10. Perform a set of post-installation tasks by running the interactive script `post_refresh_modules.sh`  
+2. Create appropriate host directory (e.g. `/software/setonix/2022.01`)
+3. Git clone `pawsey-spack-config` in appropriate final location (e.g. `/software/setonix/2022.01/pawsey-spack-config`)
+4. Setup Spack using `setup_spack.sh`
+5. Install Python via Spack using `run_first_python_install.sh` (after this, the `spack` module can be used)
+6. NOTE: from now on, make sure you are using the Spack version you just installed. You may need something like the following:
+    ```
+    module unload pawsey_prgenv
+    module use /software/setonix/2022.01/pawsey_temp
+    module load pawsey_temp
+    ```
+7. Test concretisations with `run_concretization.sh`
+8. Install all Spack packages with `run_installation_all.sh`, or equivalent manual operations; `env_num_libs` must be amongst the first ones, because it builds otherwise non-buildable packages; some environments will need to be re-run with `-j 1` (`run_installation_pick.sh` can be used to this end)
+9.  After `singularity` is installed, create its customised modules using the small script `update_singularity_pawsey_modules.sh`
+10. After `singularity` is installed, install `shpc` with `setup_shpc.sh`
+11. After `singularity` and `shpc` are installed, install container modules with `run_install_shpc_container_modules.sh`
+12. Perform a set of post-installation tasks by running the interactive script `post_refresh_modules.sh`  
     a. refresh Spack modules  
     b. create missing module directories  
     c. update (again) Singularity modules  
-    d. create wrf/roms dependency modules  
-    e. create hpc-python collection module  
-    f. apply restricted permissions to licensed packages  
-    g. refresh symlinks for SHPC container modules  
+    d. refresh wrf/roms dependency modules  
+    e. create hpc-python view and module  
+    f. apply licensing permissions  
+    g. refresh SHPC symlink modules  
 
 
-### System-wide installation: maintenance notes
+### System-wide installation: maintenance notes (proposed)
 
 * Adding Spack packages
   1. add package to appropriate environment
@@ -140,7 +147,7 @@ Scripts residing in `setup_scripts/` allow for the full deployment of the system
 * Adding SHPC container modules
   1. add container package to `list_shpc_container_modules.sh`
   2. install with `run_install_shpc_container_modules.sh`
-  3. customise SHPC modules with `post_customise_shpc_pawsey_modules.sh`
+  3. customise SHPC modules with `post_customise_shpc_pawsey_modules.sh` (only for Pawsey modules)
 
 * Updating Spack configuration files
   1. edit configuration in appropriate branch of `pawsey-spack-config`
