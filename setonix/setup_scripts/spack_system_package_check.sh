@@ -1,12 +1,15 @@
 #!/bin/bash
 
-function PackageCheck() 
+function PackageCheck()
 {
-    # missing from zypper 
+    # missing from zypper
     # ncdu z3
     # package list
+    # currently has placeholders containing "?" which need to be updated 
+    # based on list of 
     packages=(\
-    libz1 zlib-devel libpopt0 popt-devel \
+    libz1 zlib-devel zlib-devel-static \
+    libpopt0 popt-devel \
     shadow \
     libuuid-devel libuuid1 util-linux \
     lvm2 lvm2-devel \
@@ -47,37 +50,46 @@ function PackageCheck()
     numactl \
     openssl \
     perl \
-    "pkg-config" 
-    "libreadline*" "readline-devel" \ 
+    "pkg-config"
+    "libreadline*" "readline-devel" \
     rsync \
     sqlite3 sqlite3-devel \
     subversion \
     swig \
     tar \
     tcl \
-    texinfo \
+    texinfo texlive-ae texlive-fancyvrb \
     vim \
     wget \
-    xz xz-devel \
+    xz xz-devel xz-static-devel \
     yasm \
-    libz1 zlib-devel \
-    libzstd1 libzstd-devel \
     python-devel \
-    lz4
+    lz4 \
     )
-    
+
+    # number of lines return by zypper that contains useful info about a package
+    num_lines=12
     runarg="zypper info"
-    fname=$1 
+    fname=$1
     if [ $# -eq 2 ]
-    then 
+    then
         runarg="$2 ${runarg}"
     fi
-    echo "Packages of interest: ${packages[@]} '\n'"
+    echo "Packages of interest: ${packages[@]} "
     echo "Saving results to $fname"
+
+    rm -f all_packages.out
+    ${runarg} "${packages[@]}" 1> all_packages.out 2> /dev/null
+
     for p in ${packages[@]}
     do
-        ${runarg} $p 1> $p.out 2> /dev/null
-        name=$(grep "Name" $p.out | awk '{print $3}' )
+	# get rid of any ? in the package name for now, need to update list
+    p=$(echo $p | sed "s:?::g" | sed "s:*::g")
+    viable=$(grep -c "Information for package $p:" all_packages.out)
+	if [ "${viable}" -gt "0" ]; then
+        # get the info associated with the pacakge form information of all packages
+        end=$(grep -n "Information for package $p:" all_packages.out | sed "s\:\ \g" | awk -v var=${num_lines} '{print $1+var}')
+		head -n ${end} all_packages.out | tail -n ${num_lines} > $p.out
         installed=$(grep "Installed      : Yes" $p.out)
         message=""
         if [ -z "$installed" ]
@@ -85,21 +97,24 @@ function PackageCheck()
             message="Package $p"
             message="${message}: Not installed!"
             echo ${message}
-            echo "Running substring search"
-            ${runarg} -s ${p}
-	
-        else 
+        else
             version=$(grep "Version" $p.out | sed "s:-: :g" | awk '{print $3}' )
-            message="Package ${name}"
+            message="Package ${p}"
             message="${message}@${version}"
-        fi 
-        rm $p.out 
-        echo ${message} >> ${fname}
+        fi
+        rm $p.out
+    else
+        listofpossiblenames=$(${runarg} -s ${p} | grep "Information for package " | sed "s\:\ \g" | sed "s:Information for package::g")
+        message="Package $p"
+        message="${message}: Not in list of packages, possible names ${listofpossiblenames}"
+        echo ${message}
+    fi
+    echo ${message} >> ${fname}
     done
+    rm -f all_packages.out
 }
 
-
-function NodeCheck() 
+function NodeCheck()
 {
     timestamp=$(date +"%Y-%m-%d_%Hh%M")
     basename="package_results.node"
@@ -107,7 +122,6 @@ function NodeCheck()
     check_login=1
     check_compute=0
     loginnode=$(hostname)
-    nodelist=(001008 001009)
     while getopts l:n: flag
     do
         case "${flag}" in
@@ -115,13 +129,19 @@ function NodeCheck()
             n) check_compute=${OPTARG};;
         esac
     done
+    # if checking compute get list of all nodes
+    if [ ${check_compute} -eq '1' ]
+    then
+        nodelist=($(scontrol -o show nodes | sed "s:NodeName=::g" | sed "s:nid::g" | awk '{print $1}'))
+    fi
+    # output listof nodes to be checked 
     message="Checking: "
     if [ ${check_login} -eq '1' ]
-    then 
+    then
         message="${message} Login "
     fi
     if [ ${check_compute} -eq '1' ]
-    then 
+    then
         activenodes=""
         for n in ${nodelist[@]}
         do
@@ -130,25 +150,24 @@ function NodeCheck()
             then
                 activenodes="${activenodes} ${n}"
             fi
-        done 
+        done
         message="${message} ${activenodes} "
     fi
     echo $message
-   
+
     if [ ${check_login} -eq '1' ]
-    then 
-        PackageCheck ${basename}.${loginnode}.${timestamp}.out 
+    then
+        PackageCheck ${basename}.${loginnode}.${timestamp}.out
     fi
     if [ ${check_compute} -eq '1' ]
-    then 
+    then
         for n in ${nodelist[@]}
         do
             active=$(sinfo -n nid${n} | grep "down")
             if [ -z "${active}" ]
             then
                 PackageCheck ${basename}.nid${n}.${timestamp}.out "srun -w nid${n} -n 1 -c 1"
-            fi 
+            fi
         done
     fi
 }
-
