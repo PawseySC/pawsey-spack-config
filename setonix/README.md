@@ -123,13 +123,16 @@ Scripts residing in `setup_scripts/` allow for the full deployment of the system
     module load pawsey_temp
     ```
 7. Test concretisations with `run_concretization.sh`
-8. Install all Spack packages with `run_installation_all.sh`, or equivalent manual operations; `env_num_libs` must be amongst the first ones, because it builds otherwise non-buildable packages; some environments will need to be re-run with `-j 1` (`run_installation_pick.sh` can be used to this end)
-9.  After `singularity` is installed  
+8. Install all Spack packages with `run_installation_all.sh`, or equivalent manual operations.  Some notes:  
+    a. `env_num_libs` must be amongst the first ones, because it builds otherwise non-buildable packages;  
+    b. some environments will need to be re-run with `-j 1` (`run_installation_pick.sh` can be used to this end);  
+    c. make sure `env_apps` has symlinks to the tarballs for licensed software (Vasp and so on);  
+9.  After `singularity` is installed:  
     a. create its customised modules using the small script `update_singularity_pawsey_modules.sh`  
     b. install `shpc` with `setup_shpc.sh`  
     c. ask platform staff with `root` rights to run the script `spack_perms_fix.sh` within the `singularity` installation  
 10. After `singularity` and `shpc` are both installed, install container modules with `run_install_shpc_container_modules.sh`
-11. Perform a set of post-installation tasks by running the interactive script `post_refresh_modules.sh`  
+11. Perform a set of post-installation tasks by running the interactive script `post_refresh_modules.sh`:  
     a. refresh Spack modules  
     b. create missing module directories  
     c. update (again) Singularity modules  
