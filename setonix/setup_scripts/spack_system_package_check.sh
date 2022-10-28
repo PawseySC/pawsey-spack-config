@@ -19,6 +19,7 @@ function PackageCheck()
     "libX11-?" \
     "libreadline*" \
     "libyaml????" \
+    hwloc hwloc-devel \
     )
 
     # list of packages 
@@ -42,10 +43,11 @@ function PackageCheck()
     emacs \
     ffmpeg \
     flex \
-    libfreetype6 freetype-devel \
+    libfreetype6 freetype2-devel \
     gettext-runtime perl-gettext gettext-tools \
     make \
-    hwloc hwloc-devel \
+#    hwloc hwloc-devel \
+    cray-hwloc \
     libedit0 libedit-devel \
     libelf1 libelf-devel \
     libffi7 libffi-devel \
@@ -134,8 +136,8 @@ function NodeCheck()
     local timestamp=$(date +"%Y-%m-%d_%Hh%M")
     local basename="package_results.node"
     echo "Checking system-wide root installs of packges @ ${timestamp}"
-    local check_login=0
-    local check_compute=1
+    local check_login=1
+    local check_compute=0
     local loginnode=$(hostname)
     while getopts l:n: flag
     do
@@ -165,8 +167,6 @@ function NodeCheck()
         for nid in ${nodelist[@]}
         do
 	        local state=$(scontrol show node ${nid} | grep State= | sed "s:State=::g" | awk '{print $1}')
-	        #local active=$(echo $state | grep -i "down" 
-            echo ${nid} ${state}
             if [ "${state}" = "IDLE" ]
             then
                 activenodes="${activenodes} ${nid}"
