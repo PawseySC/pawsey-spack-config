@@ -2,11 +2,26 @@
 
 function PackageCheck()
 {
-    # missing from zypper
-    # ncdu z3
-    # package list
     # currently has placeholders containing "?" which need to be updated 
-    # based on list of 
+    # since packages with ? are typically ones where the number keeps changing, 
+    # one can alter search to use these to find possible names 
+    packages_with_varying_names=(
+    "libedit?" \
+    "libelf?" \
+    "libffi?" \
+    "libfuse?" \
+    "libicu-s*" \
+    "libjpeg?" "libjpeg?-devel" \
+    "libnuma?" \
+    "libpciaccess?" \
+    "libpng????" "libpng??-devel" \
+    "libxml2-?" \
+    "libX11-?" \
+    "libreadline*" \
+    "libyaml????" \
+    )
+
+    # list of packages 
     packages=(\
     libz1 zlib-devel zlib-devel-static \
     libpopt0 popt-devel \
@@ -27,31 +42,31 @@ function PackageCheck()
     emacs \
     ffmpeg \
     flex \
-    "libfreetype?" freetype-devel \
+    libfreetype6 freetype-devel \
     gettext-runtime perl-gettext gettext-tools \
     make \
     hwloc hwloc-devel \
-    "libedit?" libedit-devel \
-    "libelf?" libelf-devel \
-    "libffi?" libffi-devel \
-    "libfuse?" fuse-devel \
-    "libicu-s*" libicu-devel \
-    "libjpeg?" "libjpeg?-devel" \
-    "libnuma?" libnuma-devel \
-    "libpciaccess?" libpciaccess-devel \
-    "libpng????" "libpng??-devel" \
-    "libxml2-?" "libxml2-devel" \
-    "libX11-?" "libX11-devel" \
-    "libyaml????" "libyaml-devel" \
+    libedit0 libedit-devel \
+    libelf1 libelf-devel \
+    libffi7 libffi-devel \
+    libfuse2 fuse-devel \
+    libicu-suse65_1 libicu-devel \
+    libjpeg8 libjpeg8-devel \
+    libnuma1 libnuma-devel \
+    libpciaccess0 libpciaccess-devel \
+    libpng12-0 libpng16-16 libpng12-devel libpng16-devel \
+    libxml2-2 libxml2-devel \
+    libX11-6 libX11-devel \
+    libyaml-0-2 libyaml-devel \
     nano \
     nasm \
-    "ncurses-utils" "ncurses-devel" \
+    ncurses-utils ncurses-devel \
     ninja \
     numactl \
     openssl \
     perl \
-    "pkg-config"
-    "libreadline*" "readline-devel" \
+    pkg-config
+    libreadline7 readline-devel \
     rsync \
     sqlite3 sqlite3-devel \
     subversion \
@@ -116,12 +131,12 @@ function PackageCheck()
 
 function NodeCheck()
 {
-    timestamp=$(date +"%Y-%m-%d_%Hh%M")
-    basename="package_results.node"
+    local timestamp=$(date +"%Y-%m-%d_%Hh%M")
+    local basename="package_results.node"
     echo "Checking system-wide root installs of packges @ ${timestamp}"
-    check_login=1
-    check_compute=0
-    loginnode=$(hostname)
+    local check_login=0
+    local check_compute=1
+    local loginnode=$(hostname)
     while getopts l:n: flag
     do
         case "${flag}" in
@@ -130,25 +145,31 @@ function NodeCheck()
         esac
     done
     # if checking compute get list of all nodes
+    local nodelist=()
+    local partitionlist=()
     if [ ${check_compute} -eq '1' ]
     then
-        nodelist=($(scontrol -o show nodes | sed "s:NodeName=::g" | sed "s:nid::g" | awk '{print $1}'))
+        nodelist=($(scontrol show nodes | grep NodeName| sed "s:NodeName=::g" | awk '{print $1}'))
+        partitionlist=($(scontrol show nodes | grep Partitions | sed "s:Partitions=::g" | awk '{print $1}'))
     fi
     # output listof nodes to be checked 
-    message="Checking: "
+    local message="Checking: "
     if [ ${check_login} -eq '1' ]
     then
         message="${message} Login "
     fi
+    states=("DOWN" "NOT_RESPONDING" "IDLE+RESERVED")
     if [ ${check_compute} -eq '1' ]
     then
-        activenodes=""
-        for n in ${nodelist[@]}
+        local activenodes=""
+        for nid in ${nodelist[@]}
         do
-            active=$(sinfo -n nid${n} | grep "down")
-            if [ -z "${active}" ]
+	        local state=$(scontrol show node ${nid} | grep State= | sed "s:State=::g" | awk '{print $1}')
+	        #local active=$(echo $state | grep -i "down" 
+            echo ${nid} ${state}
+            if [ "${state}" = "IDLE" ]
             then
-                activenodes="${activenodes} ${n}"
+                activenodes="${activenodes} ${nid}"
             fi
         done
         message="${message} ${activenodes} "
@@ -161,12 +182,14 @@ function NodeCheck()
     fi
     if [ ${check_compute} -eq '1' ]
     then
-        for n in ${nodelist[@]}
+        for ((i=0;i<${#nodelist[@]};i++))
         do
-            active=$(sinfo -n nid${n} | grep "down")
-            if [ -z "${active}" ]
+        	local nid=${nodelist[${i}]}
+        	local p=${partitionlist[${i}]}
+            local state=$(scontrol show node ${nid} | grep State= | sed "s:State=::g" | awk '{print $1}')
+            if [ "${state}" = "IDLE" ]
             then
-                PackageCheck ${basename}.nid${n}.${timestamp}.out "srun -w nid${n} -n 1 -c 1"
+                PackageCheck ${basename}.${nid}.${timestamp}.out "srun -w ${nid} -p ${p} -n 1 -c 1"
             fi
         done
     fi
