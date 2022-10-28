@@ -55,6 +55,30 @@ compilers:
     environment: {}
     extra_rpaths: []
 
+- compiler:
+    spec: gcc@12.1.0
+    paths:
+      cc: cc
+      cxx: CC
+      f77: ftn
+      fc: ftn
+    flags:
+      cflags: -O3
+      cxxflags: -O3
+      cppflags: -O3
+      fflags: -O3 -fallow-argument-mismatch
+    operating_system: sles15
+    target: any
+    modules:
+    - PrgEnv-gnu
+    - gcc/12.1.0
+    - craype
+    - craype-x86-milan
+    - craype-network-ofi
+    environment: {}
+    extra_rpaths: []
+
+
 # similar to above but has debugging flags
 # these must be defined as a different version
 # by convention we add debug to the name
@@ -127,7 +151,7 @@ compilers:
 
 # cray compilers 
 - compiler:
-    spec: cce@13.0.2
+    spec: cce@14.0.3
     paths:
       cc: cc
       cxx: CC
@@ -142,7 +166,7 @@ compilers:
     target: any
     modules:
     - PrgEnv-cray
-    - cce/13.0.2
+    - cce/14.0.3
     - craype
     - craype-x86-milan
     - craype-network-ofi
@@ -150,7 +174,7 @@ compilers:
     extra_rpaths: []
 
 - compiler:
-    spec: cce@13.0.2noflags
+    spec: cce@14.0.3noflags
     paths:
       cc: cc
       cxx: CC
@@ -160,7 +184,7 @@ compilers:
     target: any
     modules:
     - PrgEnv-cray
-    - cce/13.0.2
+    - cce/14.0.3
     - craype
     - craype-x86-milan
     - craype-network-ofi
