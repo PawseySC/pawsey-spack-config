@@ -82,6 +82,12 @@ function PackageCheck()
     yasm \
     python-devel \
     lz4 \
+    maven \
+    libseccomp2 libseccomp-devel \
+    zstd libzstd1 \
+    libgpg-error0 libgpg-error-devel \
+    icu.691 icu4j \
+	libblkd1 libblkid-devel \
     )
 
     # number of lines return by zypper that contains useful info about a package
