@@ -1,11 +1,12 @@
 #!/bin/bash
 
+INSTALL_GROUP=pawsey0001
 # EDIT at each rebuild of the software stack
-date_tag="2022.05"
+date_tag="2022.10"
 
 # compiler versions (needed for module trees with compiler dependency)
-gcc_version="11.2.0"
-cce_version="13.0.2"
+gcc_version="12.1.0"
+cce_version="14.0.3"
 aocc_version="3.2.0"
 # architecture of login/compute nodes (needed by Singularity symlink module)
 cpu_arch="zen3"
@@ -58,7 +59,7 @@ env_wrf
 ### TYPICALLY NO EDIT NEEDED PAST THIS POIINT
 
 # if you change this, you need to propagate also in other places (mostly Spack config yamls)
-top_root_dir="/software/setonix"
+top_root_dir="${MYSOFTWARE}/setonixtrial"
 root_dir="${top_root_dir}/${date_tag}"
 
 # python version info (no editing needed)
