@@ -132,7 +132,7 @@ compilers:
 # ===================================================================
 
 - compiler:
-    spec: gcc@11.2.0
+    spec: gcc@12.1.0
     paths:
       cc: cc
       cxx: CC
@@ -147,7 +147,7 @@ compilers:
     target: any
     modules:
     - PrgEnv-gnu
-    - gcc/11.2.0
+    - gcc/12.1.0
     - craype
     - craype-x86-milan
     - craype-network-ofi
@@ -158,7 +158,7 @@ compilers:
 # these must be defined as a different version
 # by convention we add debug to the name
 - compiler:
-    spec: gcc@11.2.0debug
+    spec: gcc@12.1.0debug
     paths:
       cc: cc
       cxx: CC
@@ -173,7 +173,7 @@ compilers:
     target: any
     modules:
     - PrgEnv-gnu
-    - gcc/11.2.0
+    - gcc/12.1.0
     - craype
     - craype-x86-milan
     - craype-network-ofi
@@ -184,7 +184,7 @@ compilers:
 # these must be defined as a different version
 # by convention we add profile to the name
 - compiler:
-    spec: gcc@11.2.0profile
+    spec: gcc@12.1.0profile
     paths:
       cc: cc
       cxx: CC
@@ -199,7 +199,7 @@ compilers:
     target: any
     modules:
     - PrgEnv-gnu
-    - gcc/11.2.0
+    - gcc/12.1.0
     - craype
     - craype-x86-rome
     - craype-network-ofi
@@ -207,7 +207,7 @@ compilers:
     extra_rpaths: []
 
 - compiler:
-    spec: gcc@11.2.0noflags
+    spec: gcc@12.1.0noflags
     paths:
       cc: cc
       cxx: CC
@@ -217,7 +217,7 @@ compilers:
     target: any
     modules:
     - PrgEnv-gnu
-    - gcc/11.2.0
+    - gcc/12.1.0
     - craype
     - craype-x86-milan
     - craype-network-ofi

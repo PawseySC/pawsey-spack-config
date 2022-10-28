@@ -292,7 +292,7 @@ packages:
     buildable: false
   findutils:
     externals:
-    - spec: findutils@4.6.0
+    - spec: findutils@4.8.0
       prefix: /usr
     buildable: false
   flex:
@@ -307,7 +307,7 @@ packages:
     buildable: false
   git:
     externals:
-    - spec: git@2.26.2~tcltk
+    - spec: git@2.34.1~tcltk
       prefix: /usr
     buildable: false
   gmake:
@@ -322,7 +322,7 @@ packages:
     buildable: false
   lustre:
     externals:
-    - spec: lustre@2.12.4.4_cray_63_g22dbafd
+    - spec: lustre@2.15.0.2_rc2_cray_113_g62287d0
       prefix: /usr
     buildable: false
   m4:
@@ -332,7 +332,7 @@ packages:
     buildable: false
   maven:
     externals:
-    - spec: maven@3.6.0
+    - spec: maven@3.6.3 ??
       prefix: /usr/local/maven
     buildable: false
   openssh:
@@ -340,8 +340,8 @@ packages:
 # getting rid of letter in version, as clingo/spack has buggy behaviour
 # fooling spack is risky; however, openssh website mentions 
 # these 2 versions are equivalent; also seem equivalent within spack
-#    - spec: openssh@8.1p1
-    - spec: openssh@8.1
+#    - spec: openssh@8.4p1
+    - spec: openssh@8.4
       prefix: /usr
     buildable: false
   openssl:
@@ -402,12 +402,12 @@ packages:
     buildable: false
   binutils:
     externals:
-    - spec: binutils@2.35.1
+    - spec: binutils@2.37
       prefix: /usr
     buildable: false
   hwloc:
     externals:
-    - spec: hwloc@2.1.0
+    - spec: hwloc@2.5.0
       prefix: /usr
     buildable: false
   libxml2:
@@ -448,11 +448,11 @@ packages:
     - spec: libfuse@2.9.7
       prefix: /usr
     buildable: false
-  #lz4:
-  #  externals:
-  #  - spec: lz4@1.8.0
-  #    prefix: /usr
-  #  buildable: false
+  lz4:
+    externals:
+    - spec: lz4@1.9.2
+      prefix: /usr
+    buildable: false
   slurm:
     externals:
     - spec: slurm@20-11-5-1
@@ -470,17 +470,17 @@ packages:
     buildable: false
   zstd:
     externals:
-    - spec: zstd@1.4.4
+    - spec: zstd@1.4.4 ??
       prefix: /usr
     buildable: false
   cryptsetup:
     externals:
-    - spec: cryptsetup@2.0.6
+    - spec: cryptsetup@2.3.7
       prefix: /usr
     buildable: false
   libseccomp:
     externals:
-    - spec: libseccomp@2.4.1
+    - spec: libseccomp@2.5.3
       prefix: /usr
     buildable: false
   libgpg-error:
@@ -495,7 +495,7 @@ packages:
     buildable: false
   icu4c:
     externals:
-    - spec: icu4c@65.1
+    - spec: icu4c@69.1 ??
       prefix: /usr
     buildable: false 
   lvm2:
@@ -505,31 +505,31 @@ packages:
     buildable: false
   blkid:
     externals:
-    - spec: blkid@2.33.1
+    - spec: blkid@2.36.2
       prefix: /usr
     buildable: false
   squashfs:
     externals:
-    - spec: squashfs@4.3
+    - spec: squashfs@4.4
       prefix: /usr
     buildable: false
-  shadow: 
+  shadow:
     externals:
-    - spec: shadow@4.6
+    - spec: shadow@4.8.1
       prefix: /usr
     buildable: false
   util-linux:
     externals:
-    - spec: util-linux@2.33.1
+    - spec: util-linux@2.36.2
       prefix: /usr
     buildable: false
   util-linux-uuid:
     externals:
-    - spec: util-linux-uuid@2.33.1
+    - spec: util-linux-uuid@2.36.2
       prefix: /usr
     buildable: false
   time:
-    externals: 
+    externals:
     - spec: time@1.9
       prefix: /usr
     buildable: false
@@ -543,51 +543,51 @@ packages:
 # adding prefixes as in NERSC Perlmutter configs
   cray-mpich:
     externals:
-    - spec: cray-mpich@8.1.14%gcc
+    - spec: cray-mpich@8.1.19%gcc
       modules:
-      - cray-mpich/8.1.14
+      - cray-mpich/8.1.19
       - craype-network-ofi
-      prefix: /opt/cray/pe/mpich/8.1.14/ofi/gnu/9.1
-    - spec: cray-mpich@8.1.14%cce
+      prefix: /opt/cray/pe/mpich/8.1.19/ofi/gnu/9.1
+    - spec: cray-mpich@8.1.19%cce
       modules:
-      - cray-mpich/8.1.14
+      - cray-mpich/8.1.19
       - craype-network-ofi
-      prefix: /opt/cray/pe/mpich/8.1.14/ofi/cray/10.0
-    - spec: cray-mpich@8.1.14%aocc
+      prefix: /opt/cray/pe/mpich/8.1.19/ofi/cray/10.0
+    - spec: cray-mpich@8.1.19%aocc
       modules:
-      - cray-mpich/8.1.14
+      - cray-mpich/8.1.19
       - craype-network-ofi
-      prefix: /opt/cray/pe/mpich/8.1.14/ofi/aocc/3.0
+      prefix: /opt/cray/pe/mpich/8.1.19/ofi/aocc/3.0
     buildable: false
 # Cray-LibSci: commenting out, as bug was identified (21 December 2021)
 #  cray-libsci:
 #    externals:
-#    - spec: cray-libsci@21.08.1.2%gcc
+#    - spec: cray-libsci@22.08.1.1%gcc
 #      modules:
-#      - cray-libsci/21.08.1.2
-#      prefix: /opt/cray/pe/libsci/21.08.1.2/gnu/9.1/x86_64
+#      - cray-libsci/22.08.1.1
+#      prefix: /opt/cray/pe/libsci/22.08.1.1/gnu/9.1/x86_64
 #    - spec: cray-libsci@21.08.1.2%cce
 #      modules:
-#      - cray-libsci/21.08.1.2
-#      prefix: /opt/cray/pe/libsci/21.08.1.2/cray/9.0/x86_64
-#    - spec: cray-libsci@21.08.1.2%aocc
+#      - cray-libsci/22.08.1.1
+#      prefix: /opt/cray/pe/libsci/22.08.1.1/cray/9.0/x86_64
+#    - spec: cray-libsci@22.08.1.1%aocc
 #      modules:
-#      - cray-libsci/21.08.1.2
-#      prefix: /opt/cray/pe/libsci/21.08.1.2/aocc/2.0/x86_64
+#      - cray-libsci/22.08.1.1
+#      prefix: /opt/cray/pe/libsci/22.08.1.1/aocc/2.0/x86_64
 #    buildable: false
 # Cray-FFTW: commenting out, as for Cray-Libsci
 #  cray-fftw:
 #    externals:
-#    - spec: cray-fftw@3.3.8.12 target=zen2
-#      modules:
-#      - craype-x86-rome
-#      - cray-fftw/3.3.8.12
-#      prefix: /opt/cray/pe/fftw/3.3.8.12/x86_rome
-#    - spec: cray-fftw@3.3.8.12 target=zen3
+#    - spec: cray-fftw@3.3.10.1 target=zen3
 #      modules:
 #      - craype-x86-milan
-#      - cray-fftw/3.3.8.12
-#      prefix: /opt/cray/pe/fftw/3.3.8.12/x86_milan
+#      - cray-fftw/3.3.10.1
+#      prefix: /opt/cray/pe/fftw/3.3.10.1/x86_milan
+#    - spec: cray-fftw@3.3.10.1 target=zen3
+#      modules:
+#      - craype-x86-milan
+#      - cray-fftw/3.3.10.1
+#      prefix: /opt/cray/pe/fftw/3.3.10.1/x86_milan
 #    buildable: false
   # more cray
   # no longer present on setonix
@@ -600,17 +600,17 @@ packages:
   #  buildable: false
   xpmem:
     externals:
-    - spec: xpmem@2.2.40
+    - spec: xpmem@2.4.4
       modules:
-      - xpmem/2.2.40-2.1_2.56__g3cf3325.shasta
-      prefix: /opt/cray/xpmem/2.2.40-2.1_2.56__g3cf3325.shasta
+      - xpmem/xpmem/2.4.4-2.3_9.1__gff0e1d9.shasta
+      prefix: /opt/cray/xpmem/xpmem/2.4.4-2.3_9.1__gff0e1d9.shasta
     buildable: false
   libfabric:
     externals:
-    - spec: libfabric@1.11.0.4.75
+    - spec: libfabric@1.11.0.4.128
       modules:
-      - libfabric/1.11.0.4.75
-      prefix: /opt/cray/libfabric/1.11.0.4.75
+      - libfabric/1.11.0.4.128
+      prefix: /opt/cray/libfabric/1.11.0.4.128
     buildable: false
   # no longer on setonix
   #ucx:
@@ -622,10 +622,10 @@ packages:
   #  buildable: false
   papi:
     externals:
-    - spec: papi@6.0.0.12
+    - spec: papi@6.0.0.16
       modules:
-      - papi/6.0.0.12
-      prefix: /opt/cray/pe/papi/6.0.0.12
+      - papi/6.0.0.16
+      prefix: /opt/cray/pe/papi/6.0.0.16
     buildable: false
 
 # cray hdf5
