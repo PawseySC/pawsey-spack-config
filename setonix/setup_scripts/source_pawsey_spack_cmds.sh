@@ -26,7 +26,7 @@ function get_daystamp()
 function get_logdir()
 {
     if [ "$USER" == "spack" ] ; then
-        local date_tag="2022.05" # DATE_TAG
+        local date_tag="2022.10" # DATE_TAG
         local logdir=${SPACK_LOGS_BASEDIR:-"/software/setonix/${date_tag}/software/${USER}/logs"}
     else
         local logdir=${SPACK_LOGS_BASEDIR:-"/software/projects/${PAWSEY_PROJECT}/${USER}/setonix/software/$USER/logs"}

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-INSTALL_GROUP=pawsey0001
+INSTALL_GROUP=director2183
 # EDIT at each rebuild of the software stack
 date_tag="2022.10"
 

@@ -31,9 +31,9 @@ for env in ${env_list} ; do
   spack env activate ${envdir}/${env} 
   spack concretize -f 1> ${logdir}/spack.concretize.${env}.log 2> ${logdir}/spack.concretize.${env}.err
   if [ "${env}" == "env_roms" ] || [ "${env}" == "env_wrf" ] ; then
-    sg spack -c "spack install --no-checksum -j${nprocs} --only dependencies 1> ${logdir}/spack.install.${env}.log 2> ${logdir}/spack.install.${env}.err"
+    sg $INSTALL_GROUP -c "spack install --no-checksum -j${nprocs} --only dependencies
   else
-    sg spack -c "spack install --no-checksum -j${nprocs} 1> ${logdir}/spack.install.${env}.log 2> ${logdir}/spack.install.${env}.err"
+    sg $INSTALL_GROUP -c "spack install --no-checksum -j${nprocs}
   fi
   spack env deactivate
   cd -
