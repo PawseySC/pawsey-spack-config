@@ -332,7 +332,7 @@ packages:
     buildable: false
   maven:
     externals:
-    - spec: maven@3.6.3 ??
+    - spec: maven@3.6.3 # ??
       prefix: /usr/local/maven
     buildable: false
   openssh:
@@ -470,7 +470,7 @@ packages:
     buildable: false
   zstd:
     externals:
-    - spec: zstd@1.4.4 ??
+    - spec: zstd@1.4.4 # ??
       prefix: /usr
     buildable: false
   cryptsetup:
@@ -495,7 +495,7 @@ packages:
     buildable: false
   icu4c:
     externals:
-    - spec: icu4c@69.1 ??
+    - spec: icu4c@69.1 # ??
       prefix: /usr
     buildable: false 
   lvm2:
