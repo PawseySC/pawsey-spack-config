@@ -4,8 +4,8 @@
 date_tag="2022.05"
 
 # compiler versions (needed for module trees with compiler dependency)
-gcc_version="11.2.0"
-cce_version="13.0.2"
+gcc_version="12.1.0"
+cce_version="14.0.3"
 aocc_version="3.2.0"
 # architecture of login/compute nodes (needed by Singularity symlink module)
 cpu_arch="zen3"
@@ -17,7 +17,7 @@ shpc_version="0.0.57"
 
 # python (and py tools) versions
 python_name="python"
-python_version="3.9.7" # has to match the version in the Spack env yaml
+python_version="3.9.15" # has to match the version in the Spack env yaml
 setuptools_version="57.4.0" # has to match the version in the Spack env yaml
 pip_version="21.1.2" # has to match the version in the Spack env yaml
 # r major minor version
