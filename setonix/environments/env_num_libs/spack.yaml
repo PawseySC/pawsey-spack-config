@@ -6,18 +6,15 @@ spack:
       buildable: true
   definitions:
   - parallel:
-    
     # boost: might need several boosts with different stadards
-    - boost@1.76.0 +mpi +numpy +python cxxstd=14
-    - boost@1.76.0 +mpi +numpy +python cxxstd=98
+    - boost@1.80.0 +mpi +numpy +python cxxstd=14
+    - boost@1.80.0 +mpi +numpy +python cxxstd=98
     - hpx@1.6.0 +async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi cxxstd=14
       build_type=Release ^boost
     # rather silly kokkos has std=98,11, etc setting cxxstd. BUT all other packages 
     # use the flag cxxstd ... Update in recipes might fix this but for the moment, we fix 
     # this in our repo
     - kokkos@3.4.01 +hwloc +memkind +numactl +openmp +tuning cxxstd=14 build_type=Release
-
-    
     # for hpx must explicitly set openmp off 
     - kokkos@3.4.01 +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ~openmp
       cxxstd=14 build_type=Release ^hpx@1.6.0 +async_mpi malloc=jemalloc max_cpu_count=128
@@ -52,8 +49,6 @@ spack:
     - aocl-sparse@3.0 build_type=Release
     - amdfftw@3.0 precision=float,double,long_double
     - amdlibm@3.0
-
-    
     # some heavier numerical library builds 
     - opencv@4.5.2 build_type=Release
     - opencv@3.4.12 build_type=Release
@@ -68,10 +63,10 @@ spack:
   specs:
   - matrix:
     - [$parallel]
-    - ['%gcc@11.2.0']
+    - ['%gcc@12.1.0']
     - [target=zen3]
   - matrix:
     - [$numerical]
-    - ['%gcc@11.2.0']
+    - ['%gcc@12.1.0']
     - [target=zen3]
   view: false
