@@ -4,8 +4,8 @@
 date_tag="2022.05"
 
 # compiler versions (needed for module trees with compiler dependency)
-gcc_version="11.2.0"
-cce_version="13.0.2"
+gcc_version="12.1.0"
+cce_version="14.0.3"
 aocc_version="3.2.0"
 # architecture of login/compute nodes (needed by Singularity symlink module)
 cpu_arch="zen3"
