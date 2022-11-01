@@ -39,7 +39,7 @@ developer-tools
 dependencies
 "
 
-# list of spack build environments
+# list of spack build environments - missing env_vis
 env_list="
 env_utils
 env_num_libs

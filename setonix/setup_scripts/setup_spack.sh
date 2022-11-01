@@ -12,12 +12,12 @@ fi
 
 
 # protecting from accidental installations
-echo "Do you want to install Spack on this system? (yes/no)"
-read install_answer
-if [ ${install_answer,,} != "yes" ] ; then
-  echo "Exiting."
-  exit
-else
+#echo "Do you want to install Spack on this system? (yes/no)"
+#read install_answer
+#if [ ${install_answer,,} != "yes" ] ; then
+#  echo "Exiting."
+#  exit
+#else
 
 
 # test that repo location and provided DATE_TAG are consistent with installation
@@ -180,5 +180,3 @@ sed \
   > ${root_dir}/${pawsey_temp}/${pawsey_temp}.lua
 
 
-# protecting from accidental installations
-fi

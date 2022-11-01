@@ -11,7 +11,7 @@ module load cray-python
 . ${root_dir}/spack/share/spack/setup-env.sh 
 
 # make sure Clingo is bootstrapped
-spack spec nano
+spack -d spec nano
 
 # define log directory
 timestamp=$(date +"%Y-%m-%d_%Hh%M")
