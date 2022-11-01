@@ -7,7 +7,7 @@
 # and clone the pawsey-spack-config repo in it. Then you can execute this script.
 
 # export top_root_dir="/software/projects/director2183/cdipietrantonio/setonixtrial"
-
+# export INSTALL_GROUP=director2183
 . variables.sh
 
 ./setup_spack.sh ${date_tag}
