@@ -121,7 +121,7 @@ packages:
   py-pandas:
     version: [1.3.4]
   py-pip:
-    version: [21.1.2]
+    version: [22.2.2]
   py-plotly:
     version: [5.2.2]
   py-scikit-learn:
@@ -275,6 +275,11 @@ packages:
     - spec: bzip2@1.0.6
       prefix: /usr
     buildable: false
+  binutils:
+    externals:
+    - spec: elfutils@2.37
+      prefix: /usr
+    buildable: false
   cpio:
     externals:
     - spec: cpio@2.12
@@ -283,6 +288,11 @@ packages:
   diffutils:
     externals:
     - spec: diffutils@3.6
+      prefix: /usr
+    buildable: false
+  elfutils:
+    externals:
+    - spec: elfutils@0.168
       prefix: /usr
     buildable: false
   file:
@@ -343,6 +353,11 @@ packages:
   libffi:
     externals:
     - spec: libffi@3.2.1
+      prefix: /usr
+    buildable: false
+  libxpm:
+    externals:
+    - spec: libxpm@3.5.12
       prefix: /usr
     buildable: false
   m4:
