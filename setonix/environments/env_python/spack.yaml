@@ -24,7 +24,7 @@ spack:
 
   # need these here, too, for the python collection
   - utilities:
-    - py-pip@21.1.2
+    - py-pip@22.2.2
     - py-setuptools@57.4.0
 
   specs:

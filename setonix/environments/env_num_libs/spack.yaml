@@ -40,15 +40,6 @@ spack:
     # builds OK with openblas
     - slate@2021.05.02 build_type=Release ^openblas
     - plumed@2.7.2
-    # AMD AOCL
-    - amdblis@3.0 threads=openmp
-    # variant below useful for at least one PaCER
-    - amdblis@3.0 threads=openmp ~suphandling
-    - amdlibflame@3.0 threads=openmp
-    - amdscalapack@3.0 build_type=Release
-    - aocl-sparse@3.0 build_type=Release
-    - amdfftw@3.0 precision=float,double,long_double
-    - amdlibm@3.0
     # some heavier numerical library builds 
     - opencv@4.5.2 build_type=Release
     - opencv@3.4.12 build_type=Release
@@ -59,7 +50,16 @@ spack:
     # for the moment trilinos disabled 
     #- petsc@3.15.5 +fftw +trilinos +hwloc +openmp +complex ~cuda
     - petsc@3.15.5 +fftw ~trilinos +hwloc +openmp +complex ~cuda
-
+  - amd:
+    # AMD AOCL
+    - amdblis@3.0 threads=openmp
+    # variant below useful for at least one PaCER
+    - amdblis@3.0 threads=openmp ~suphandling
+    - amdlibflame@3.0 threads=openmp
+    - amdscalapack@3.0 build_type=Release
+    - aocl-sparse@3.0 build_type=Release
+    - amdfftw@3.0 precision=float,double,long_double
+    - amdlibm@3.0
   specs:
   - matrix:
     - [$parallel]
@@ -68,5 +68,9 @@ spack:
   - matrix:
     - [$numerical]
     - ['%gcc@12.1.0']
+    - [target=zen3]
+  - matrix:
+    - [$amd]
+    - ['%gcc@12.1.0', '%aocc@3.2.0']
     - [target=zen3]
   view: false
