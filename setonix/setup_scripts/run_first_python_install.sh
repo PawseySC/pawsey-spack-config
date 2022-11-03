@@ -26,8 +26,8 @@ spack spec python@3.9.15 +optimizations %gcc@12.1.0 target=zen3
 
 echo "Installing Python with default compilers.."
 # install gcc
-sg $INSTALL_GROUP -c 'spack -d install python@3.9.15 +optimizations %gcc@12.1.0 target=zen3'
+sg $INSTALL_GROUP -c 'spack install python@3.9.15 +optimizations %gcc@12.1.0 target=zen3'
 # install cce
-sg $INSTALL_GROUP -c 'spack -d install python@3.9.15 +optimizations %cce@14.0.3 target=zen3'
+sg $INSTALL_GROUP -c 'spack install python@3.9.15 +optimizations %cce@14.0.3 target=zen3'
 # install aocc
-sg $INSTALL_GROUP -c 'spack -d install python@3.9.15 +optimizations %aocc@3.2.0 target=zen3'
+sg $INSTALL_GROUP -c 'spack install python@3.9.15 +optimizations %aocc@3.2.0 target=zen3'
