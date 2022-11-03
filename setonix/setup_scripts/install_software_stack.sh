@@ -6,12 +6,11 @@
 #
 # and clone the pawsey-spack-config repo in it. Then you can execute this script.
 
-# export top_root_dir="/software/projects/director2183/cdipietrantonio/setonixtrial"
-# export INSTALL_GROUP=director2183
+export top_root_dir="/software/projects/pawsey0001/cdipietrantonio/tmpsoftwarestack"
+export INSTALL_GROUP=pawsey0001
 . variables.sh
 
-./setup_spack.sh ${date_tag}
-
+./setup_spack.sh ${date_tag} 
 echo "Running first python install"
 ./run_first_python_install.sh
 
@@ -21,8 +20,10 @@ module use ${top_root_dir}/${date_tag}/pawsey_temp
 module use ${top_root_dir}/${date_tag}/modules/zen3/gcc/12.1.0/programming-languages
 module --ignore-cache load pawsey_temp
 module load spack/0.17.0
+
+spack -d install singularity 
 echo "Run concretization.."
-./run_concretization.sh
+#./run_concretization.sh
 
 echo "Run install all.."
-./run_installation_all.sh
+# ./run_installation_all.sh
