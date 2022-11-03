@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # EDIT at each rebuild of the software stack
-date_tag="2022.10"
+date_tag="2022.11"
 
 # compiler versions (needed for module trees with compiler dependency)
 gcc_version="12.1.0"
