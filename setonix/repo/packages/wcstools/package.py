@@ -22,7 +22,8 @@ class Wcstools(MakefilePackage):
     homepage = "http://tdc-www.harvard.edu/wcstools/"
     url      = "http://tdc-www.harvard.edu/software/wcstools/wcstools-3.9.7.tar.gz"
 
-    version('3.9.7', sha256='efebf6970f6158ed002fdfe320d4ff4738e3a049b333a749da6cc464b3579860')
+    version('3.9.7', sha256='525f6970eb818f822db75c1526b3122b1af078affa572dce303de37df5c7b088')
+    #version('3.9.7', sha256='efebf6970f6158ed002fdfe320d4ff4738e3a049b333a749da6cc464b3579860')
 
     def _make(self, *args, **kwargs):
         # PREFIX must be defined on macOS even when building the library, since

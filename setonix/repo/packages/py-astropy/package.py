@@ -43,6 +43,7 @@ class PyAstropy(PythonPackage):
     depends_on('pkgconfig', type='build')
     depends_on('py-extension-helpers', when='@4.1:', type=('build', 'run'))
     depends_on('py-jinja2', when='@4.1:', type=('build', 'run'))
+    depends_on('py-erfa', type=('build', 'run'))
 
     # Optional dependencies
     depends_on('py-scipy@0.18:', when='+extras', type=('build', 'run'))

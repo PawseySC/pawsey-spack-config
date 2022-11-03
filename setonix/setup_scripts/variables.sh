@@ -17,7 +17,7 @@ shpc_version="0.0.57"
 
 # python (and py tools) versions
 python_name="python"
-python_version="3.9.7" # has to match the version in the Spack env yaml
+python_version="3.9.15" # has to match the version in the Spack env yaml
 setuptools_version="57.4.0" # has to match the version in the Spack env yaml
 pip_version="21.1.2" # has to match the version in the Spack env yaml
 # r major minor version

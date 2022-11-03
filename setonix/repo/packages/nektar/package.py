@@ -59,6 +59,7 @@ class Nektar(CMakePackage):
         args.append('-DNEKTAR_USE_FFTW=ON')
         args.append('-DNEKTAR_USE_ARPACK=ON')
         args.append('-DNEKTAR_USE_HDF5=ON')
+        args.append('-DNEKTAR_ERROR_ON_WARNINGS=OFF')
 
         args.append('-DNEKTAR_USE_MPI=%s' % hasfeature('+mpi'))
         # args.append('-DNEKTAR_USE_FFTW=%s' % hasfeature('+fftw'))
