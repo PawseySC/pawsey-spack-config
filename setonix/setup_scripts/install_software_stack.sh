@@ -6,8 +6,18 @@
 #
 # and clone the pawsey-spack-config repo in it. Then you can execute this script.
 
-export top_root_dir="/software/projects/pawsey0001/cdipietrantonio/tmpsoftwarestack"
-export INSTALL_GROUP=pawsey0001
+# export top_root_dir="/software/projects/pawsey0001/cdipietrantonio/tmpsoftwarestack"
+if [ -z ${top_root_dir+x} ]; then
+    echo "The 'top_root_dir' variable must be set to the path where to the software stack will be installed."
+    exit 1
+fi
+
+# export INSTALL_GROUP=pawsey0001
+if [ -z ${INSTALL_GROUP+x} ]; then
+    echo "The 'INSTALL_GROUP' variable must be set to the path where to the software stack will be installed."
+    exit 1
+fi
+
 . variables.sh
 
 ./setup_spack.sh ${date_tag} 
@@ -23,7 +33,7 @@ module load spack/0.17.0
 
 spack -d install singularity 
 echo "Run concretization.."
-#./run_concretization.sh
+./run_concretization.sh
 
 echo "Run install all.."
-# ./run_installation_all.sh
+./run_installation_all.sh
