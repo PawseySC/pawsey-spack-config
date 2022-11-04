@@ -6,13 +6,11 @@
 #
 # and clone the pawsey-spack-config repo in it. Then you can execute this script.
 
-# export top_root_dir="/software/projects/pawsey0001/cdipietrantonio/tmpsoftwarestack"
 if [ -z ${top_root_dir+x} ]; then
     echo "The 'top_root_dir' variable must be set to the path where to the software stack will be installed."
     exit 1
 fi
 
-# export INSTALL_GROUP=pawsey0001
 if [ -z ${INSTALL_GROUP+x} ]; then
     echo "The 'INSTALL_GROUP' variable must be set to the path where to the software stack will be installed."
     exit 1
