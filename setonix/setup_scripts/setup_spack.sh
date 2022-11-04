@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 # need to provide DATE_TAG as arg
 if [ "$#" -eq 0 ] ; then
@@ -12,12 +12,12 @@ fi
 
 
 # protecting from accidental installations
-echo "Do you want to install Spack on this system? (yes/no)"
-read install_answer
-if [ ${install_answer,,} != "yes" ] ; then
-  echo "Exiting."
-  exit
-else
+#echo "Do you want to install Spack on this system? (yes/no)"
+#read install_answer
+#if [ ${install_answer,,} != "yes" ] ; then
+#  echo "Exiting."
+#  exit
+#else
 
 
 # test that repo location and provided DATE_TAG are consistent with installation
@@ -35,14 +35,16 @@ if [ "${present_root_dir}" != "${new_root_dir}" ] ; then
   echo "Exiting."
   exit 1
 else
+  root_dir="${new_root_dir}"
   # make sure pawsey-spack-config is in the appropriate DATE_TAG branch
   cd ${root_dir}/pawsey-spack-config
-  branch_exist=$( git rev-parse --quiet --verify ${new_date_tag} &>/dev/null ; echo $? )
-  if [ "${branch_exist}" == "0" ] ; then
-    git checkout ${new_date_tag}
-  else
-    git checkout -b ${new_date_tag}
-  fi
+  # echo `pwd`
+  # branch_exist=$( git rev-parse --quiet --verify ${new_date_tag} &>/dev/null ; echo $? )
+  # if [ "${branch_exist}" == "0" ] ; then
+  #   git checkout ${new_date_tag}
+  # else
+  #   git checkout -b ${new_date_tag}
+  # fi
   cd -
   # updating date_tag in variables.sh
   sed -i "s;date_tag=.*;date_tag=\"${new_date_tag}\";g" \
@@ -65,7 +67,7 @@ mkdir ~/.spack
 # now assuming that pawsey-spack-config is cloned beforehand
 #git clone https://github.com/pawseysc/pawsey-spack-config \
 #  ${root_dir}/pawsey-spack-config
-git clone https://github.com/pawseysc/spack \
+[ -e ${root_dir}/spack ] || git clone https://github.com/pawseysc/spack \
   ${root_dir}/spack
 cd ${root_dir}/spack
 git checkout v${spack_version}
@@ -80,14 +82,16 @@ sed -i "s;date_tag=.*;date_tag=\"${date_tag}\" # DATE_TAG;g" \
 
 # apply fixes into spack tree
 # Marco,s Lmod arch family fix for the module tree
-patch ${root_dir}/spack/lib/spack/spack/modules/lmod.py \
-  ${root_dir}/pawsey-spack-config/setonix/fixes/lmod_arch_family.patch
-# Pascal,s enhancements to modulefiles
-patch ${root_dir}/spack/lib/spack/spack/modules/common.py \
-  ${root_dir}/pawsey-spack-config/setonix/fixes/modulenames_plus_common.patch
-patch ${root_dir}/spack/lib/spack/spack/cmd/modules/__init__.py \
-  ${root_dir}/pawsey-spack-config/setonix/fixes/modulenames_plus_init.patch
-
+if ! [ -e ${root_dir}/spack/.patch_applied ]; then
+  patch ${root_dir}/spack/lib/spack/spack/modules/lmod.py \
+    ${root_dir}/pawsey-spack-config/setonix/fixes/lmod_arch_family.patch
+  # Pascal,s enhancements to modulefiles
+  patch ${root_dir}/spack/lib/spack/spack/modules/common.py \
+    ${root_dir}/pawsey-spack-config/setonix/fixes/modulenames_plus_common.patch
+  patch ${root_dir}/spack/lib/spack/spack/cmd/modules/__init__.py \
+    ${root_dir}/pawsey-spack-config/setonix/fixes/modulenames_plus_init.patch
+  touch ${root_dir}/spack/.patch_applied
+fi
 # create base directories for Pawsey custom builds and Pawsey utilities
 mkdir -p ${root_dir}/${custom_modules_dir}
 mkdir -p ${root_dir}/${custom_software_dir}
@@ -96,6 +100,8 @@ mkdir -p ${root_dir}/${utilities_software_dir}
 
 # create backbone of module directories
 bash "${script_dir}/update_create_system_moduletree.sh"
+
+sed -i "s|SOFTWARESTACK_ROOT_DIR|$root_dir|g" ${script_dir}/setup_templates/*
 
 # copy over utility scripts
 sed \
@@ -174,5 +180,3 @@ sed \
   > ${root_dir}/${pawsey_temp}/${pawsey_temp}.lua
 
 
-# protecting from accidental installations
-fi

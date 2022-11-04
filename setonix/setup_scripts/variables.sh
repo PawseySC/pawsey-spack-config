@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # EDIT at each rebuild of the software stack
-date_tag="2022.05"
+date_tag="2022.11"
 
 # compiler versions (needed for module trees with compiler dependency)
 gcc_version="12.1.0"
@@ -38,7 +38,7 @@ developer-tools
 dependencies
 "
 
-# list of spack build environments
+# list of spack build environments - missing env_vis
 env_list="
 env_utils
 env_num_libs
@@ -58,7 +58,11 @@ env_wrf
 ### TYPICALLY NO EDIT NEEDED PAST THIS POIINT
 
 # if you change this, you need to propagate also in other places (mostly Spack config yamls)
-top_root_dir="/software/setonix"
+# top_root_dir= /path/to/installation/dir
+if [ -z ${top_root_dir+x} ]; then
+    echo "top_root_dir is not defined."
+    exit 1
+fi
 root_dir="${top_root_dir}/${date_tag}"
 
 # python version info (no editing needed)

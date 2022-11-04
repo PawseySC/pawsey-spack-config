@@ -31,7 +31,9 @@ compilers:
 # 
 # Note also the addition of default flags
 
-# gnu compilers 
+# ===================================================================
+#                        GNU 12.1.0
+# ===================================================================
 - compiler:
     spec: gcc@12.1.0
     paths:
@@ -125,6 +127,7 @@ compilers:
     environment: {}
     extra_rpaths: []
 
+
 # cray compilers 
 - compiler:
     spec: cce@14.0.3
@@ -160,7 +163,7 @@ compilers:
     target: any
     modules:
     - PrgEnv-cray
-    - cce/13.0.2
+    - cce/14.0.3
     - craype
     - craype-x86-milan
     - craype-network-ofi

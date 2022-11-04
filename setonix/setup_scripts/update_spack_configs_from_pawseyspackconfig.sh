@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 # source setup variables
 # if copy/pasting these commands, need to run from this directory
@@ -18,8 +18,8 @@ cp -p \
   ${root_dir}/pawsey-spack-config/setonix/configs/project_allusers/*.yaml \
   ${root_dir}/spack/etc/spack/project_allusers/
 
-# edit DATE_TAG in config files
-sed -i "s/DATE_TAG/$date_tag/g" \
+
+sed -i "s|SOFTWARESTACK_ROOT_DIR|$root_dir|g" \
   ${root_dir}/spack/etc/spack/*.yaml \
   ~/.spack/*.yaml \
   ${root_dir}/spack/etc/spack/project_allusers/*.yaml

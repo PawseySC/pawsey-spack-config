@@ -10,12 +10,12 @@ help([[A package management tool designed to support multiple versions and confi
 
 load("PYTHON_MODULEFILE")
 
-setenv("PAWSEY_SPACK_HOME","/software/setonix/DATE_TAG/spack")
+setenv("PAWSEY_SPACK_HOME","SOFTWARESTACK_ROOT_DIR/spack")
 
 -- Define logs directory
 local user = os.getenv("USER")
 if ( user == "spack" ) then
-  setenv("SPACK_LOGS_BASEDIR", "/software/setonix/DATE_TAG/software/" .. user .. "/logs")
+  setenv("SPACK_LOGS_BASEDIR", "SOFTWARESTACK_ROOT_DIR/software/" .. user .. "/logs")
 else
   setenv("SPACK_LOGS_BASEDIR", "/software/projects/" .. os.getenv("PAWSEY_PROJECT") .. "/" .. user .. "/setonix/software/" .. user .. "/logs")
 end
@@ -25,7 +25,7 @@ end
 -- Joey has 8.3, so this is not usable
 
 -- The following is NOT unloadable
-execute{cmd=". /software/setonix/DATE_TAG/spack/share/spack/setup-env.sh", modeA={"load"}}
+execute{cmd=". SOFTWARESTACK_ROOT_DIR/spack/share/spack/setup-env.sh", modeA={"load"}}
 -- Warn users about this fact
 if (mode() == "load" or mode() == "unload") then
   LmodMessage("Note: when this module is unloaded, the shell environment will NOT revert to its original state, and retain some Spack settings. If you need the original shell environment, start a new shell session instead.")

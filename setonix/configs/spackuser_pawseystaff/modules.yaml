@@ -2,7 +2,7 @@ modules:
 
   default:
     roots:
-      lmod: /software/setonix/DATE_TAG/modules
+      lmod: SOFTWARESTACK_ROOT_DIR/modules
 
     lmod:
 

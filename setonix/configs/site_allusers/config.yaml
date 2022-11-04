@@ -8,7 +8,7 @@ config:
   template_dirs:
   # This is now for all users
   # Some edits are useful to everyone, none has known side effects for end users
-    - /software/setonix/DATE_TAG/pawsey-spack-config/setonix/templates
+    - SOFTWARESTACK_ROOT_DIR/pawsey-spack-config/setonix/templates
 
   # Temporary locations Spack can try to use for builds.
   #

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 # source setup variables
 # if copy/pasting these commands, need to run from this directory
@@ -11,7 +11,7 @@ module load cray-python
 . ${root_dir}/spack/share/spack/setup-env.sh 
 
 # make sure Clingo is bootstrapped
-spack spec nano
+spack -d spec nano
 
 # define log directory
 timestamp=$(date +"%Y-%m-%d_%Hh%M")
@@ -21,11 +21,13 @@ mkdir -p ${logdir}
 
 # first thing we need is Python
 # spec gcc
-spack spec python@3.9.15 +optimizations %gcc@12.1.0 target=zen3 1> ${logdir}/spack.python.concretize.log 2> ${logdir}/spack.python.concretize.err
+echo "Concretization of Python.."
+spack spec python@3.9.15 +optimizations %gcc@12.1.0 target=zen3 
 
+echo "Installing Python with default compilers.."
 # install gcc
-sg spack -c 'spack install python@3.9.15 +optimizations %gcc@12.1.0 target=zen3' 1> ${logdir}/spack.python.install.log 2> ${logdir}/spack.python.install.err
+sg $INSTALL_GROUP -c 'spack install python@3.9.15 +optimizations %gcc@12.1.0 target=zen3'
 # install cce
-sg spack -c 'spack install python@3.9.15 +optimizations %cce@14.0.3 target=zen3' 1>> ${logdir}/spack.python.install.log 2>> ${logdir}/spack.python.install.err
+sg $INSTALL_GROUP -c 'spack install python@3.9.15 +optimizations %cce@14.0.3 target=zen3'
 # install aocc
-sg spack -c 'spack install python@3.9.15 +optimizations %aocc@3.2.0 target=zen3' 1>> ${logdir}/spack.python.install.log 2>> ${logdir}/spack.python.install.err
+sg $INSTALL_GROUP -c 'spack install python@3.9.15 +optimizations %aocc@3.2.0 target=zen3'
