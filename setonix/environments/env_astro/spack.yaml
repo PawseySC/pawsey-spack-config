@@ -37,6 +37,7 @@ spack:
     - subversion
   - mwa-util-set:
     - chgcentre build_type=Release ^casacore ~python build_type=Release
+  - mwa-util-set-with-python:
     - wsclean@3.0 +mpi +idg +everybeam build_type=Release ^chgcentre build_type=Release
       ^casacore ~python build_type=Release
     - wsclean@3.0 ~mpi +idg +everybeam build_type=Release ^chgcentre build_type=Release
@@ -69,8 +70,12 @@ spack:
     - ['%gcc@12.1.0']
     - [target=zen3]
   - matrix:
-    - [$mwa-util-set]
+    - [$mwa-util-set-with-python]
     - [^python@3.9.15]
+    - ['%gcc@12.1.0']
+    - [target=zen3]
+  - matrix:
+    - [$mwa-util-set]
     - ['%gcc@12.1.0']
     - [target=zen3]
   - matrix:
