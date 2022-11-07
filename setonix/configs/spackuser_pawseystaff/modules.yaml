@@ -253,7 +253,7 @@ modules:
         py-h5py: 'python-packages/{name}/{version}'
         py-ipython: 'python-packages/{name}/{version}'
         py-matplotlib: 'python-packages/{name}/{version}'
-        py-mpi4py: 'python-packages/{name}/{version}'
+        py-mpi4py: 'python-packages/{name}/{version}-py{^python.version}'
         py-netcdf4: 'python-packages/{name}/{version}'
         py-numba: 'python-packages/{name}/{version}'
         py-numpy: 'python-packages/{name}/{version}'

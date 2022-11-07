@@ -56,12 +56,11 @@ spack:
   - amd-with-python:
     # AMD AOCL
     - amdblis@3.0 threads=openmp
+    - amdblis@3.0
     # variant below useful for at least one PaCER
-    - amdblis@3.0 threads=openmp ~suphandling
-    - amdlibflame@3.0 threads=openmp
+    - amdlibflame@3.0
     - amdscalapack@3.0 build_type=Release
     - aocl-sparse@3.0 build_type=Release
-    #- amdfftw@3.0 precision=float,double,long_double
   - amd:
     - amdfftw@3.0 precision=float,double,long_double
   specs:
@@ -79,13 +78,14 @@ spack:
     - ['%gcc@12.1.0']
     - [^python@3.9.15]
     - [target=zen3]
-  - matrix:
-    - [$amd]
-    - ['%gcc@12.1.0', '%cce@14.0.3', '%aocc@3.2.0']
-    - [target=zen3]
-  - matrix:
-    - [$amd-with-python]
-    - ['%gcc@12.1.0', '%cce@14.0.3', '%aocc@3.2.0']
-    - [^python@3.9.15]
-    - [target=zen3]
+# for now don't build amd math libraries
+  #- matrix:
+  #  - [$amd]
+  #  - ['%gcc@12.1.0', '%cce@14.0.3', '%aocc@3.2.0']
+  #  - [target=zen3]
+  #- matrix:
+  #  - [$amd-with-python]
+  #  - ['%gcc@12.1.0', '%cce@14.0.3', '%aocc@3.2.0']
+  #  - [^python@3.9.15]
+  #  - [target=zen3]
   view: false
