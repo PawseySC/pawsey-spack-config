@@ -8,8 +8,7 @@ spack:
       buildable: true
   definitions:
   - packages-with-python:
-    - namd@2.14 interface=python fftw=3 +plumed ^charmpp@6.10.2 backend=ofi
-    - nwchem@7.0.2
+    - amber@20 +openmp ^hdf@4.2.15 +external-xdr
     - cp2k@8.2 +plumed ^plumed@2.7.2
     - gromacs@2020.4 +double +lapack +plumed build_type=Release ^plumed@2.6.6
     - gromacs@2021.4 +double +lapack +plumed build_type=Release ^plumed@2.7.2
@@ -23,17 +22,18 @@ spack:
       +ptm +python +qeq +qtb +reaction +reaxff +replica +rigid +shock +smtbq +sph
       +spin +srd +tally +uef +voronoi +yaff build_type=Release ^kokkos@3.4.01+hwloc+memkind+numactl+openmp+tuning
       cxxstd=14 build_type=Release ^plumed@2.7.2
+    - namd@2.14 interface=python fftw=3 +plumed ^charmpp@6.10.2 backend=ofi
+    - nwchem@7.0.2
+# Failing:    - openfoam-org@8 #Alexis still working on it
+# Current alternative:
+    - openfoam@2012
   - packages:
-    - amber@20 +openmp ^hdf@4.2.15 +external-xdr
     - cpmd@4.3 +mpi +omp
 #lapack and blas path not set, error in cmake file "SET(NATIVE_BLAS_LAPACK_SEARCH_PATHS /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 )
 # look into this file nektar/cmake/FindNativeBlasLapack.cmake
 # Custom Pawsey recipe, that builds all dependencies internally - OK
     - nektar@5.0.2 build_type=Release
     - quantum-espresso@6.8 +epw +openmp hdf5=parallel
-# Failing:    - openfoam-org@8 #Alexis still working on it
-# Current alternative:
-    - openfoam@2012
   - ansys_packages:
     - ansys-fluids@2022R1
     - ansys-structures@2022R1
