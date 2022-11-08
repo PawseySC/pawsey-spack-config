@@ -30,7 +30,7 @@ chmod --silent -R g+rwX "${project_root_dir}/modules"
 
 # create shpc container modules base dir (symlinks - views)
 mkdir -p "${user_root_dir}/${shpc_containers_modules_dir}"
-cat >${user_root_dir}/${shpc_containers_modules_dir}/view.yaml << EOF
+cat << EOF >"${user_root_dir}/${shpc_containers_modules_dir}/view.yaml"
 view:
   name: modules
   modules: []
