@@ -54,6 +54,7 @@ compilers:
     - craype
     - craype-x86-milan
     - craype-network-ofi
+    - xpmem
     environment: {}
     extra_rpaths: []
 
@@ -80,6 +81,7 @@ compilers:
     - craype
     - craype-x86-milan
     - craype-network-ofi
+    - xpmem
     environment: {}
     extra_rpaths: []
 
@@ -104,8 +106,9 @@ compilers:
     - PrgEnv-gnu
     - gcc/12.1.0
     - craype
-    - craype-x86-rome
+    - craype-x86-milan
     - craype-network-ofi
+    - xpmem
     environment: {}
     extra_rpaths: []
 
@@ -124,6 +127,7 @@ compilers:
     - craype
     - craype-x86-milan
     - craype-network-ofi
+    - xpmem
     environment: {}
     extra_rpaths: []
 
@@ -149,6 +153,7 @@ compilers:
     - craype
     - craype-x86-milan
     - craype-network-ofi
+    - xpmem
     environment: {}
     extra_rpaths: []
 
@@ -167,6 +172,7 @@ compilers:
     - craype
     - craype-x86-milan
     - craype-network-ofi
+    - xpmem
     environment: {}
     extra_rpaths: []
 
@@ -191,6 +197,7 @@ compilers:
     - craype
     - craype-x86-milan
     - craype-network-ofi
+    - xpmem
     environment: {}
     extra_rpaths: []
 
@@ -209,6 +216,7 @@ compilers:
     - craype
     - craype-x86-milan
     - craype-network-ofi
+    - xpmem
     environment: {}
     extra_rpaths: []
 
