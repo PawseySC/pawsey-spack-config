@@ -61,6 +61,9 @@ class Charmpp(Package):
     # Update v6.10.2 with shasta targets (backport from 7.0.0).
     patch("shasta.patch.1", when="@:6.10.2")
 
+    # Remove PythonCCS (relies on Python 2 API)
+    patch("deserpenticate.patch")
+
     # Build targets
     # "target" is reserved, so we have to use something else.
     variant(
