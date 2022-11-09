@@ -16,6 +16,7 @@ class Casacore(CMakePackage):
 
     maintainers = ['mpokorny']
 
+    version('3.5.0', sha256='63f1c8eff932b0fcbd38c598a5811e6e5397b72835b637d6f426105a183b3f91')
     version('3.4.0', sha256='31f02ad2e26f29bab4a47a2a69e049d7bc511084a0b8263360e6157356f92ae1')
     version('3.3.0', sha256='3a714644b908ef6e81489b792cc9b80f6d8267a275e15d38a42a6a5137d39d3d')
     version('3.2.1', sha256='f87ce81d2b42ec5401cff8317baeeb9a3b408b716bb791ef252ad97af6e235ad')
@@ -62,6 +63,7 @@ class Casacore(CMakePackage):
     depends_on('python@2.6:', when='+python')
     depends_on('boost+python', when='+python')
     depends_on('py-numpy', when='+python')
+    depends_on('gsl', when='@3.5.0:')
 
     def cmake_args(self):
         args = []
