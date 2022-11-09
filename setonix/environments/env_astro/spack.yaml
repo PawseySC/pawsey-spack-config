@@ -32,7 +32,8 @@ spack:
     - apr-util
     - gsl
     - cppunit
-    - log4cxx
+    - log4cxx cxxstd=17
+    - log4cxx cxxstd=11 ^python@3.9.15
     - mcpp
     - xerces-c
     - subversion
