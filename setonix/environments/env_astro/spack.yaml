@@ -11,7 +11,6 @@ spack:
     'fftw-api:':
       buildable: true
   definitions:
-  
   # casacore variants
   # try running spack install --no-checksum 
   - casacore-legacy:
@@ -19,6 +18,8 @@ spack:
   - casacore-set:
     - casacore@3.3.0
     - casacore@3.4.0
+  - casacore-new-set:
+    - casacore@3.5.0 +openmp+python+hdf5 build_type=Release
   - astro-util-set:
     - cfitsio
     - wcslib
@@ -80,6 +81,11 @@ spack:
     - [target=zen3]
   - matrix:
     - [$python-astro-set]
+    - [^python@3.9.15]
+    - ['%gcc@12.1.0']
+    - [target=zen3]
+  - matrix:
+    - [$casacore-new-set]
     - [^python@3.9.15]
     - ['%gcc@12.1.0']
     - [target=zen3]
