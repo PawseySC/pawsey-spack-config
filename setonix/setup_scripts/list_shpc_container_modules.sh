@@ -35,4 +35,6 @@ quay.io/pawsey/openfoam:v1912
 quay.io/pawsey/openfoam:v1812
 quay.io/pawsey/openfoam-org:8
 quay.io/pawsey/openfoam-org:7
+quay.io/sarahbeecroft9/alphafold:2.2.3
+quay.io/sarahbeecroft9/interproscan:5.56-89.0
 "
