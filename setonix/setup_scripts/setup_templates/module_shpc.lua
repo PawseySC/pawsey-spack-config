@@ -11,10 +11,10 @@ help([[Local filesystem registry for containers (intended for HPC) using Lmod or
 load("PYTHON_MODULEFILE")
 load("SINGULARITY_MODULEFILE")
 
-setenv("PAWSEY_SHPC_HOME","SOFTWARESTACK_ROOT_DIR/SHPC_INSTALL_DIR")
+setenv("PAWSEY_SHPC_HOME","INSTALL_PREFIX/SHPC_INSTALL_DIR")
 
-prepend_path("PATH","SOFTWARESTACK_ROOT_DIR/SHPC_INSTALL_DIR/bin")
-prepend_path("PYTHONPATH","SOFTWARESTACK_ROOT_DIR/SHPC_INSTALL_DIR/lib/pythonPYTHON_MAJORMINOR/site-packages")
+prepend_path("PATH","INSTALL_PREFIX/SHPC_INSTALL_DIR/bin")
+prepend_path("PYTHONPATH","INSTALL_PREFIX/SHPC_INSTALL_DIR/lib/pythonPYTHON_MAJORMINOR/site-packages")
 
 -- Enforce explicit usage of versions by requiring full module name
 if (mode() == "load") then

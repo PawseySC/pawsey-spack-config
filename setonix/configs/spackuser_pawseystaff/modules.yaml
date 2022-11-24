@@ -2,7 +2,7 @@ modules:
 
   default:
     roots:
-      lmod: SOFTWARESTACK_ROOT_DIR/modules
+      lmod: INSTALL_PREFIX/modules
 
     lmod:
 

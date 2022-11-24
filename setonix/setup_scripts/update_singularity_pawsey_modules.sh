@@ -15,8 +15,8 @@ script_dir="$(readlink -f "$(dirname $0 2>/dev/null)" || readlink -f "$(pwd)")"
 #    - to avoid confusion
 
 # define source (Spack) and destination (Pawsey) directories for Singularity
-src_dir="${root_dir}/modules/${cpu_arch}/gcc/${gcc_version}/utilities/${singularity_name}"
-dst_dir="${root_dir}/${singularity_symlink_module_dir}"
+src_dir="${INSTALL_PREFIX}/modules/${cpu_arch}/gcc/${gcc_version}/utilities/${singularity_name}"
+dst_dir="${INSTALL_PREFIX}/${singularity_symlink_module_dir}"
 
 # ensure destination directory exists
 mkdir -p ${dst_dir}

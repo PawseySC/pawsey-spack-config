@@ -63,7 +63,7 @@ for package in amber ansys-fluids ansys-structures ansys-fluidstructures cpmd na
   fi
   for arch in $archs; do
     for compiler in $compilers; do
-      add_module_dir="${root_dir}/modules/${arch}/${compiler}/applications/${tool_module}"
+      add_module_dir="${INSTALL_PREFIX}/modules/${arch}/${compiler}/applications/${tool_module}"
       if [ -d "${add_module_dir}" ] ; then
         module_dirs+="${add_module_dir}"
       fi

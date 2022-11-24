@@ -6,13 +6,13 @@ script_dir="$(readlink -f "$(dirname $0 2>/dev/null)" || readlink -f "$(pwd)")"
 . ${script_dir}/variables.sh
 
 # define source and destination directories for container modulefiles
-long_dir="${root_dir}/${shpc_containers_modules_dir_long}"
-short_dir="${root_dir}/${shpc_containers_modules_dir}"
+long_dir="${INSTALL_PREFIX}/${shpc_containers_modules_dir_long}"
+short_dir="${INSTALL_PREFIX}/${shpc_containers_modules_dir}"
 
 # sif directory (for Openfoam SIF symlinkst)
-sif_dir="${root_dir}/${shpc_containers_dir}"
+sif_dir="${INSTALL_PREFIX}/${shpc_containers_dir}"
 # target directory for Openfoam SIF symlinks
-of_dir="${root_dir}/${containers_root_dir}/openfoam-sif"
+of_dir="${INSTALL_PREFIX}/${containers_root_dir}/openfoam-sif"
 # create it
 mkdir -p ${of_dir}
 

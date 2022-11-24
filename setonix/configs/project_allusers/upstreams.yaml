@@ -5,8 +5,8 @@ upstreams::
 # this is the location of the system wide installation
 # it acts as an upstream installation for user-specific installations
   system_wide:
-    install_tree: SOFTWARESTACK_ROOT_DIR/software
+    install_tree: INSTALL_PREFIX/software
 # autoload+upstream currently does not work, 
 # so better not to expose upstreams modules to user installations
 #    modules:
-#      lmod: SOFTWARESTACK_ROOT_DIR/modules
+#      lmod: INSTALL_PREFIX/modules

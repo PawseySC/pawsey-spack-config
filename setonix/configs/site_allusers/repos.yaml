@@ -8,4 +8,4 @@ repos:
 # 
 # Spack user (Pawsey staff) populates this one with fixed recipes for Setonix
 # that are not (yet) in the Spack public repo
-- SOFTWARESTACK_ROOT_DIR/pawsey-spack-config/setonix/repo
+- INSTALL_PREFIX/pawsey-spack-config/setonix/repo

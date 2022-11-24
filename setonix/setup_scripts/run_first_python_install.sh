@@ -8,7 +8,7 @@ script_dir="$(readlink -f "$(dirname $0 2>/dev/null)" || readlink -f "$(pwd)")"
 # for first run, use cray-python, because there is no Spack python yet
 module load cray-python
 # initialise spack 
-. ${root_dir}/spack/share/spack/setup-env.sh 
+. ${INSTALL_PREFIX}/spack/share/spack/setup-env.sh 
 
 # make sure Clingo is bootstrapped
 spack -d spec nano

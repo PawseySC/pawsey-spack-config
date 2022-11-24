@@ -13,7 +13,6 @@
 
 -- Service variables for this module
 -- 
-local psc_sw_env_date_tag = "DATE_TAG"
 --
 local fh = assert(io.open(os.getenv("HOME") .. "/.pawsey_project", "r"))
 local psc_sw_env_project = fh:read("l")
@@ -24,7 +23,7 @@ local psc_sw_env_user = os.getenv("USER")
 -- corresponding values found in `variables.sh` in this same directory
 -- 
 -- This is handy for testing, as it is the only one to tweak
-local psc_sw_env_root_dir = "TOP_ROOT_DIR/" .. psc_sw_env_date_tag
+local psc_sw_env_root_dir = "INSTALL_PREFIX"
 -- 
 local psc_sw_env_custom_modules_dir = "CUSTOM_MODULES_DIR"
 local psc_sw_env_utilities_modules_dir = "UTILITIES_MODULES_DIR"

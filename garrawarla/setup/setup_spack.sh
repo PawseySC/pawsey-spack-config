@@ -15,7 +15,7 @@ fi
 mkdir ~/.spack
 
 # get spack and its config from github
-cd ${root_dir}
+cd ${INSTALL_PREFIX}
 git clone https://github.com/pawseysc/pawsey-spack-config
 git clone https://github.com/pawseysc/spack
 cd spack/

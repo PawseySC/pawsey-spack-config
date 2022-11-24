@@ -19,10 +19,10 @@ view_env_dir="${script_dir}/view_python"
 # name for the view
 view_name="hpc-python-collection"
 # target directory for view installation
-view_software_root_dir="${root_dir}/${custom_software_dir}/${cpu_arch}/gcc/${gcc_version}"
+view_software_root_dir="${INSTALL_PREFIX}/${custom_software_dir}/${cpu_arch}/gcc/${gcc_version}"
 view_software_dir="${view_software_root_dir}/${view_name}"
 # target directory for view module
-view_module_dir="${root_dir}/${custom_modules_dir}/${cpu_arch}/gcc/${gcc_version}/${custom_modules_suffix}/${view_name}"
+view_module_dir="${INSTALL_PREFIX}/${custom_modules_dir}/${cpu_arch}/gcc/${gcc_version}/${custom_modules_suffix}/${view_name}"
 # template for view module
 view_module_template="${script_dir}/setup_templates/module_hpc_python_collection.lua"
 
