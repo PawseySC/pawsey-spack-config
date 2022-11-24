@@ -1,1 +1,0 @@
-../setup_scripts/source_pawsey_spack_cmds.sh
