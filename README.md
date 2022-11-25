@@ -13,9 +13,9 @@ As a result, the following two steps are required, in collaboration with the Pla
 
 ### Contents of this directory
 
-* `configs/site_allusers/`: Spack configuration files for Setonix that are valid for all users, which will sit in $spack/etc/spack
-* `configs/spackuser_pawseystaff/`: Spack configuration files for system-wide installs (Pawsey staff), which will sit in ~/.spack/, allowing spack user overrides of config
-* `configs/project_allusers/`: Spack configuration files that are valid for project-wide installations by all users (used by the dedicated script spack_project.sh)
+* `configs/site/`: Spack configuration files for Setonix that are valid for all users, which will sit in $spack/etc/spack
+* `configs/spackuser/`: Spack configuration files for system-wide installs (Pawsey staff), which will sit in ~/.spack/, allowing spack user overrides of config
+* `configs/project/`: Spack configuration files that are valid for project-wide installations by all users (used by the dedicated script spack_project.sh)
 * `custom_installs/`: custom installation scripts (for packages yet without Spack recipe)
 * `environments/`: Spack environments for deployment on Setonix
 * `fixes/`: Pawsey fixes to be applied to Spack prior to production use

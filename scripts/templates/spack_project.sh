@@ -4,4 +4,4 @@
 umask g+rwx
 
 # use spack configs for project-wide setup
-spack -C INSTALL_PREFIX/spack/etc/spack/project_allusers $@
+spack -C INSTALL_PREFIX/spack/etc/spack/project $@

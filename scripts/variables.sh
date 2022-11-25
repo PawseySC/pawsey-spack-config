@@ -12,6 +12,8 @@ elif [ "${INSTALL_PREFIX#$DATE_TAG}" = "${INSTALL_PREFIX}" ];
     exit 1
 fi
 
+pawseyenv_version="${DATE_DAG}"
+
 # compiler versions (needed for module trees with compiler dependency)
 gcc_version="12.1.0"
 cce_version="14.0.3"
