@@ -1,4 +1,6 @@
 #!/bin/bash
+if [ -z ${__PSC_VARIABLES__+x} ]; then # include guard
+__PSC_VARIABLES__=1
 
 # EDIT at each rebuild of the software stack
 DATE_TAG="2022.11"
@@ -12,6 +14,25 @@ elif [ "${INSTALL_PREFIX%$DATE_TAG}" = "${INSTALL_PREFIX}" ]; then
     exit 1
 fi
 
+if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
+    SYSTEM="$PAWSEY_CLUSTER"
+fi
+
+if [ -z ${SYSTEM+x} ]; then
+    echo "The 'SYSTEM' variable is not set. Please specify the system you want to
+    build Spack for."
+    exit 1
+fi
+
+if [ "$USER" = "spack" ]; then
+    INSTALL_GROUP="spack"
+fi
+
+if [ -z ${INSTALL_GROUP+x} ]; then
+    echo "The 'INSTALL_GROUP' variable must be set to linux group that will own the installed files."
+    exit 1
+fi
+
 pawseyenv_version="${DATE_TAG}"
 
 # compiler versions (needed for module trees with compiler dependency)
@@ -20,6 +41,8 @@ cce_version="14.0.3"
 aocc_version="3.2.0"
 # architecture of login/compute nodes (needed by Singularity symlink module)
 cpu_arch="zen3"
+# all archs to support
+archs="zen3 zen2"
 
 # tool versions
 spack_version="0.19.0" # the prefix "v" is added in setup_spack.sh
@@ -126,3 +149,5 @@ spack_module_dir="${utilities_modules_dir}/spack"
 
 # location for pawsey_temp module (pawsey staff use)
 pawsey_temp="pawsey_temp"
+
+fi # end include guard

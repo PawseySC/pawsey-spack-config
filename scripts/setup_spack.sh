@@ -4,22 +4,6 @@
 # 
 ROOT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 
-if [ -z ${INSTALL_PREFIX+x} ]; then
-    echo "The 'INSTALL_PREFIX' variable is not set. Please specify the installation
-    path for the software stack being built."
-    exit 1
-fi
-
-if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
-  SYSTEM="$PAWSEY_CLUSTER"
-fi
-
-if [ -z ${SYSTEM+x} ]; then
-    echo "The 'SYSTEM' variable is not set. Please specify the system you want to
-    build Spack for."
-    exit 1
-fi
-
 . "${ROOT_DIR}/scripts/variables.sh"
 
 # The ~/.spack directory for the 'spack' user dictates where and how the system-wide
@@ -34,7 +18,7 @@ mkdir ~/.spack
 if ! [ -e ${INSTALL_PREFIX}/spack ]; then
   git clone https://github.com/pawseysc/spack ${INSTALL_PREFIX}/spack
   cd "${INSTALL_PREFIX}/spack"
-  git checkout v${SPACK_VERSION}
+  git checkout v${spack_version}
 
   # apply Marco's LMOD fixes into spack tree
   patch ${INSTALL_PREFIX}/spack/lib/spack/spack/modules/lmod.py \
@@ -56,6 +40,10 @@ cp ${ROOT_DIR}/systems/${SYSTEM}/configs/spackuser/*.yaml ~/.spack/
 # copy project-wide configs into spack tree, too
 mkdir -p ${INSTALL_PREFIX}/spack/etc/spack/project
 cp ${ROOT_DIR}/systems/${SYSTEM}/configs/project/*.yaml ${INSTALL_PREFIX}/spack/etc/spack/project/
+
+# Copy over custom Pawsey recipes in a spack pawsey repo within the spack installation
+[ -e "${INSTALL_PREFIX}/spack/var/spack/repos/pawsey" ] || mkdir -p "${INSTALL_PREFIX}/spack/var/spack/repos/pawsey"
+cp -r ${ROOT_DIR}/repo/* "${INSTALL_PREFIX}/spack/var/spack/repos/pawsey/"
 
 # and finally customise them with the actual software stack installation path.
 sed -i "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g" \
