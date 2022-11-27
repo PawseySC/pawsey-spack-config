@@ -112,7 +112,7 @@ mkdir -p ${INSTALL_PREFIX}/${utilities_modules_dir}
 mkdir -p ${INSTALL_PREFIX}/${utilities_software_dir}
 
 # create backbone of module directories
-"./${ROOT_DIR}/scripts/update_create_system_moduletree.sh"
+"${ROOT_DIR}/scripts/update_create_system_moduletree.sh"
 
 
 # create a template for the pawsey module, inside ${INSTALL_PREFIX},

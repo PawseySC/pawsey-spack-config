@@ -7,12 +7,12 @@ if [ -z ${INSTALL_PREFIX+x} ]; then
     echo "The 'INSTALL_PREFIX' variable is not set. Please specify the installation
     path for the software stack being built."
     exit 1
-elif [ "${INSTALL_PREFIX#$DATE_TAG}" = "${INSTALL_PREFIX}" ];
-    echo "The path in 'INSTALL_PREFIX' must end with ${DATE_DAG} but its value is ${INSTALL_PREFIX}"
+elif [ "${INSTALL_PREFIX%$DATE_TAG}" = "${INSTALL_PREFIX}" ]; then
+    echo "The path in 'INSTALL_PREFIX' must end with ${DATE_TAG} but its value is ${INSTALL_PREFIX}"
     exit 1
 fi
 
-pawseyenv_version="${DATE_DAG}"
+pawseyenv_version="${DATE_TAG}"
 
 # compiler versions (needed for module trees with compiler dependency)
 gcc_version="12.1.0"
@@ -22,7 +22,7 @@ aocc_version="3.2.0"
 cpu_arch="zen3"
 
 # tool versions
-SPACK_VERSION="0.19.0" # the prefix "v" is added in setup_spack.sh
+spack_version="0.19.0" # the prefix "v" is added in setup_spack.sh
 singularity_version="3.8.6" # has to match the version in the Spack env yaml
 shpc_version="0.0.57"
 
@@ -67,14 +67,6 @@ env_wrf
 "
 
 ### TYPICALLY NO EDIT NEEDED PAST THIS POIINT
-
-# if you change this, you need to propagate also in other places (mostly Spack config yamls)
-# top_root_dir= /path/to/installation/dir
-if [ -z ${top_root_dir+x} ]; then
-    echo "top_root_dir is not defined."
-    exit 1
-fi
-
 
 # python version info (no editing needed)
 python_version_major="$( echo $python_version | cut -d '.' -f 1 )"
