@@ -22,9 +22,9 @@ echo "Installing Python with default compilers.."
 
 for arch in $archs; do
     # install gcc
-    sg $INSTALL_GROUP -c "spack install python@${python_version} +optimizations %gcc@${gcc_version} target=$arch"
+    sg $INSTALL_GROUP -c "spack install --no-checksum python@${python_version} +optimizations %gcc@${gcc_version} target=$arch"
     # install cce
-    sg $INSTALL_GROUP -c "spack install python@${python_version} +optimizations %cce@${cce_version} target=$arch"
+    sg $INSTALL_GROUP -c "spack install --no-checksum python@${python_version} +optimizations %cce@${cce_version} target=$arch"
     # install aocc
-    sg $INSTALL_GROUP -c "spack install python@${python_version} +optimizations %aocc@${aocc_version} target=$arch"
+    sg $INSTALL_GROUP -c "spack install --no-checksum python@${python_version} +optimizations %aocc@${aocc_version} target=$arch"
 done
