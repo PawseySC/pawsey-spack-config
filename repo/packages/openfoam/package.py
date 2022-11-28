@@ -48,7 +48,7 @@ import shutil
 
 import llnl.util.tty as tty
 
-from spack import *
+from spack.package import *
 from spack.util.environment import EnvironmentModifications
 
 #AEG: Will use this function to save the original files before any modification

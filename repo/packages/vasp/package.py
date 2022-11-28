@@ -7,7 +7,7 @@ import os
 import grp
 import shutil
 
-from spack import *
+from spack.package import *
 
 
 class Vasp(MakefilePackage):

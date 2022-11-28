@@ -28,7 +28,7 @@ import platform
 import re
 
 from spack.util.prefix import Prefix
-from spack import *
+from spack.package import *
 
 class AnsysStructures(Package):
     """
