@@ -16,11 +16,11 @@ spack -d spec nano
 # first thing we need is Python
 # spec gcc
 echo "Concretization of Python.."
-spack spec python@${python_version} +optimizations %gcc@${gcc_version} target=zen3 
+spack -d spec python@${python_version} +optimizations %gcc@${gcc_version} # target=zen3 
 
 echo "Installing Python with default compilers.."
 
-for arch in $archs; do
+for arch in "zen2"; do #archs; do
     # install gcc
     sg $INSTALL_GROUP -c "spack install --no-checksum python@${python_version} +optimizations %gcc@${gcc_version} target=$arch"
     # install cce
