@@ -1,13 +1,24 @@
 #!/bin/bash -e
 
-ROOT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
-. "${ROOT_DIR}/scripts/variables.sh"
+# Check input variables
+if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
+    SYSTEM="$PAWSEY_CLUSTER"
+fi
 
-#echo "Setting up spack.."
-#"${ROOT_DIR}/scripts/setup_spack.sh"
-#
-#echo "Running first python install"
-#"${ROOT_DIR}/scripts/run_first_python_install.sh"
+if [ -z ${SYSTEM+x} ]; then
+    echo "The 'SYSTEM' variable is not set. Please specify the system you want to
+    build Spack for."
+    exit 1
+fi
+
+ROOT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
+. "${ROOT_DIR}/systems/${SYSTEM}/settings.sh"
+
+echo "Setting up spack.."
+"${ROOT_DIR}/scripts/setup_spack.sh"
+
+echo "Running first python install"
+"${ROOT_DIR}/scripts/run_first_python_install.sh"
 
 module --ignore-cache unload pawsey_prgenv
 module use ${INSTALL_PREFIX}/staff_modulefiles 

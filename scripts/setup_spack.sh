@@ -2,9 +2,18 @@
 # 
 # Install Spack on a supercomputing system.
 # 
-ROOT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
+if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
+    SYSTEM="$PAWSEY_CLUSTER"
+fi
 
-. "${ROOT_DIR}/scripts/variables.sh"
+if [ -z ${SYSTEM+x} ]; then
+    echo "The 'SYSTEM' variable is not set. Please specify the system you want to
+    build Spack for."
+    exit 1
+fi
+
+ROOT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
+. "${ROOT_DIR}/systems/${SYSTEM}/settings.sh"
 
 # The ~/.spack directory for the 'spack' user dictates where and how the system-wide
 # software stack installation takes place. We must make sure that current settings

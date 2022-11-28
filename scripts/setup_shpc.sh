@@ -1,18 +1,17 @@
 #!/bin/bash
 
-# protecting from accidental installations
-echo "Do you want to install SHPC on this system? (yes/no)"
-read install_answer
-if [ ${install_answer,,} != "yes" ] ; then
-  echo "Exiting."
-  exit
-else
+if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
+    SYSTEM="$PAWSEY_CLUSTER"
+fi
 
+if [ -z ${SYSTEM+x} ]; then
+    echo "The 'SYSTEM' variable is not set. Please specify the system you want to
+    build Spack for."
+    exit 1
+fi
 
-# source setup variables
-# if copy/pasting these commands, need to run from this directory
-script_dir="$(readlink -f "$(dirname $0 2>/dev/null)" || readlink -f "$(pwd)")"
-. ${script_dir}/variables.sh
+ROOT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
+. "${ROOT_DIR}/systems/${SYSTEM}/settings.sh"
 
 # assumes using PrgEnv-gnu
 # load needed python toolkit
@@ -104,7 +103,3 @@ sed \
   -e "s/PYTHON_MAJORMINOR/${python_version_major}.${python_version_minor}/g" \
  ${script_dir}/setup_templates/module_${shpc_name}.lua \
  > ${INSTALL_PREFIX}/${shpc_module_dir}/${shpc_version}.lua
-
-
-# protecting from accidental installations
-fi

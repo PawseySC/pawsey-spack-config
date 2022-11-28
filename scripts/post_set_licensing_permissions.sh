@@ -3,11 +3,18 @@
 # setting appropriate groups permissions for licensed software
 # doing it one by one
 
-# source setup variables
-# if copy/pasting these commands, need to run from this directory
-script_dir="$(readlink -f "$(dirname $0 2>/dev/null)" || readlink -f "$(pwd)")"
-. ${script_dir}/variables.sh
+if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
+    SYSTEM="$PAWSEY_CLUSTER"
+fi
 
+if [ -z ${SYSTEM+x} ]; then
+    echo "The 'SYSTEM' variable is not set. Please specify the system you want to
+    build Spack for."
+    exit 1
+fi
+
+ROOT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
+. "${ROOT_DIR}/systems/${SYSTEM}/settings.sh"
 # spack module
 is_loaded_spack="$( module is-loaded spack/${spack_version} ; echo "$?" )"
 if [ "${is_loaded_spack}" != "0" ] ; then
