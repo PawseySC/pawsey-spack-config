@@ -21,5 +21,7 @@ spack:
   - matrix:
     - [$math-tests, $mpi-tests, $io-tests]
     - ['%gcc@12.1.0']
-    - [target=zen3]
+    #- [target=zen3]
   view: false
+  concretizer:
+    unify: when_possible

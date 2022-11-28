@@ -25,5 +25,7 @@ spack:
   - matrix:
     - [$s3-go-set]
     - ['%gcc@12.1.0']
-    - [target=zen2, target=zen3]
+    #- [target=zen2, target=zen3]
   view: false
+  concretizer:
+    unify: when_possible
