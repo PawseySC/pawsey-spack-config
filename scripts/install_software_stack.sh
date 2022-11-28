@@ -1,6 +1,5 @@
 #!/bin/bash -e
 
-# Check input variables
 if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
     SYSTEM="$PAWSEY_CLUSTER"
 fi
