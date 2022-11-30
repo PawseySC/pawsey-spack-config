@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash 
 
 if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
     SYSTEM="$PAWSEY_CLUSTER"
