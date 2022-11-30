@@ -37,6 +37,7 @@ if ! [ -e ${INSTALL_PREFIX}/spack ]; then
     ${PAWSEY_SPACK_CONFIG_REPO}/fixes/modulenames_plus_common.patch
   patch ${INSTALL_PREFIX}/spack/lib/spack/spack/cmd/modules/__init__.py \
     ${PAWSEY_SPACK_CONFIG_REPO}/fixes/modulenames_plus_init.patch
+  rm "${INSTALL_PREFIX}/spack/.git" -rf
   cd -
 fi
 
