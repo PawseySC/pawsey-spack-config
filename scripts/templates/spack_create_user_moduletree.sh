@@ -12,8 +12,8 @@ r_version_majorminor="R_VERSION_MAJORMINOR"
 
 # for user and project directories, give option to provide project via CLI
 tree_project="${1:-$PAWSEY_PROJECT}"
-project_root_dir="/software/projects/${tree_project}/setonix"
-user_root_dir="/software/projects/${tree_project}/${USER}/setonix"
+project_root_dir="USER_PERMANENT_FILES_PREFIX/${tree_project}/setonix"
+user_root_dir="USER_PERMANENT_FILES_PREFIX/${tree_project}/${USER}/setonix"
 
 archs="zen3 zen2"
 compilers="gcc/${gcc_version} aocc/${aocc_version} cce/${cce_version}"

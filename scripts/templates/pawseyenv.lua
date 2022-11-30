@@ -59,19 +59,19 @@ end
 -- Add User modules to Cray Lmod hierarchy variables
 -- Compiler modulefiles: /opt/cray/pe/lmod/modulefiles/core/<compiler>/<version>.lua
 -- Cray service functions: /opt/cray/pe/admin-pe/lmod_scripts/lmodHierarchy.lua
-local psc_sw_env_user_modules_root = "/software/projects/" .. psc_sw_env_project .. "/" .. psc_sw_env_user .. "/setonix/modules/" .. arch
+local psc_sw_env_user_modules_root =  "USER_PERMANENT_FILES_PREFIX/" .. psc_sw_env_project .. "/" .. psc_sw_env_user .. "/setonix/modules/" .. arch
 prepend_path("LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX", psc_sw_env_user_modules_root .. "/gcc/" .. psc_sw_env_gcc_version .. "/" .. psc_sw_env_user_modules_suffix)
 prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_14_0_PREFIX", psc_sw_env_user_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_user_modules_suffix)
 prepend_path("LMOD_CUSTOM_COMPILER_AOCC_3_0_PREFIX", psc_sw_env_user_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_user_modules_suffix)
 
 
 -- Add User SHPC modules to MODULEPATH
-local psc_sw_env_shpc_user_root = "/software/projects/" .. psc_sw_env_project .. "/" .. psc_sw_env_user .. "/setonix/" .. psc_sw_env_shpc_containers_modules_dir
+local psc_sw_env_shpc_user_root = "USER_PERMANENT_FILES_PREFIX/" .. psc_sw_env_project .. "/" .. psc_sw_env_user .. "/setonix/" .. psc_sw_env_shpc_containers_modules_dir
 prepend_path("MODULEPATH", psc_sw_env_shpc_user_root)
 
 
 -- Add Project modules to Cray Lmod hierarchy variables
-local psc_sw_env_project_modules_root = "/software/projects/" .. psc_sw_env_project .. "/setonix/modules/" .. arch
+local psc_sw_env_project_modules_root = "USER_PERMANENT_FILES_PREFIX/" .. psc_sw_env_project .. "/setonix/modules/" .. arch
 prepend_path("LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX", psc_sw_env_project_modules_root .. "/gcc/" .. psc_sw_env_gcc_version .. "/" .. psc_sw_env_project_modules_suffix)
 prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_14_0_PREFIX", psc_sw_env_project_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_project_modules_suffix)
 prepend_path("LMOD_CUSTOM_COMPILER_AOCC_3_0_PREFIX", psc_sw_env_project_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_project_modules_suffix)

@@ -56,7 +56,10 @@ cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/project/*.yaml ${INSTAL
 cp -r ${PAWSEY_SPACK_CONFIG_REPO}/repo/* "${INSTALL_PREFIX}/spack/var/spack/repos/pawsey/"
 
 # and finally customise them with the actual software stack installation path.
-sed -i "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g" \
+sed -i 
+  -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g" \
+  -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
+  -e "s|USER_TEMP_FILES_PREFIX|${USER_TEMP_FILES_PREFIX}|g"\
   ${INSTALL_PREFIX}/spack/etc/spack/*.yaml \
   ~/.spack/*.yaml \
   ${INSTALL_PREFIX}/spack/etc/spack/project/*.yaml
@@ -73,6 +76,7 @@ sed \
   -e "s;USER_MODULES_SUFFIX;${user_modules_suffix};g" \
   -e "s;SHPC_CONTAINERS_MODULES_DIR;${shpc_containers_modules_dir};g" \
   -e "s;R_VERSION_MAJORMINOR;${r_version_majorminor};g" \
+  -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
   ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_create_user_moduletree.sh \
   >${INSTALL_PREFIX}/spack/bin/spack_create_user_moduletree.sh
 
@@ -97,6 +101,7 @@ chmod a+rx \
 mkdir -p ${INSTALL_PREFIX}/${spack_module_dir}
 sed \
   -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g"\
+  -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
   -e "s/SPACK_VERSION/${spack_version}/g" \
   -e "s/PYTHON_MODULEFILE/${python_name}\/${python_version}/g" \
   ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack.lua \
@@ -123,6 +128,7 @@ done
 
 sed \
   -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g"\
+  -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
   -e "s;CUSTOM_MODULES_DIR;${custom_modules_dir};g" \
   -e "s;UTILITIES_MODULES_DIR;${utilities_modules_dir};g" \
   -e "s;SHPC_CONTAINERS_MODULES_DIR;${shpc_containers_modules_dir};g" \

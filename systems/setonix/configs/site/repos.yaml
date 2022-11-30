@@ -4,7 +4,7 @@ repos:
 # and take precedence
 #
 # This one is for user recipes
-- /software/projects/$PAWSEY_PROJECT/$USER/setonix/spack_repo
+- USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix/spack_repo
 # 
 # Spack user (Pawsey staff) populates this one with fixed recipes for Setonix
 # that are not (yet) in the Spack public repo

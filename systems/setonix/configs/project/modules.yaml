@@ -3,4 +3,4 @@
 modules:
   default:
     roots:
-      lmod: /software/projects/$PAWSEY_PROJECT/setonix/modules
+      lmod: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/setonix/modules

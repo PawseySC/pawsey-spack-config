@@ -33,6 +33,10 @@ if [ -z ${INSTALL_GROUP+x} ]; then
     exit 1
 fi
 
+# Note the use of '' instead of "" to allow env variables to be present in config files
+USER_PERMANENT_FILES_PREFIX='/software/projects'
+USER_TEMP_FILES_PREFIX='/scratch'
+
 pawseyenv_version="${DATE_TAG}"
 
 # compiler versions (needed for module trees with compiler dependency)
