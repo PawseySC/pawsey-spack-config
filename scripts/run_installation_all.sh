@@ -29,7 +29,7 @@ nprocs="128"
 echo "Running installation with $nprocs cores.."
 
 
-for env in `ls $envdir`; do
+for env in $env_list; do
   echo "Installing environment $env..."
   cd ${envdir}/${env}
   spack env activate ${envdir}/${env} 

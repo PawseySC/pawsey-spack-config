@@ -315,11 +315,6 @@ packages:
     - spec: gawk@4.2.1
       prefix: /usr
     buildable: false
-  gettext:
-    externals:
-    - spec: gettext@0.20.2
-      prefix: /usr
-    buildable: false
   ghostscript:
     externals:
     - spec: ghostscript@9.52

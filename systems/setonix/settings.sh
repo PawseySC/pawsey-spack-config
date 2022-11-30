@@ -3,7 +3,7 @@ if [ -z ${__PSC_VARIABLES__+x} ]; then # include guard
 __PSC_VARIABLES__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2022.11"
+DATE_TAG="2023.01"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
     echo "The 'INSTALL_PREFIX' variable is not set. Please specify the installation
