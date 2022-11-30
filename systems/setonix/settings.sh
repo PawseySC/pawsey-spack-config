@@ -1,15 +1,15 @@
 #!/bin/bash
-if [ -z ${__PSC_VARIABLES__+x} ]; then # include guard
-__PSC_VARIABLES__=1
+if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
+__PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
 DATE_TAG="2023.01"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
-    echo "The 'INSTALL_PREFIX' variable is not set. Please specify the installation
-    path for the software stack being built."
-    exit 1
-elif [ "${INSTALL_PREFIX%$DATE_TAG}" = "${INSTALL_PREFIX}" ]; then
+    INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
+fi
+
+if [ "${INSTALL_PREFIX%$DATE_TAG}" = "${INSTALL_PREFIX}" ]; then
     echo "The path in 'INSTALL_PREFIX' must end with ${DATE_TAG} but its value is ${INSTALL_PREFIX}"
     exit 1
 fi
@@ -39,10 +39,9 @@ pawseyenv_version="${DATE_TAG}"
 gcc_version="12.1.0"
 cce_version="14.0.3"
 aocc_version="3.2.0"
+
 # architecture of login/compute nodes (needed by Singularity symlink module)
 cpu_arch="zen3"
-# all archs to support
-archs="zen3 zen2"
 
 # tool versions
 spack_version="0.19.0" # the prefix "v" is added in setup_spack.sh
@@ -146,8 +145,5 @@ singularity_symlink_module_dir="${utilities_modules_dir}/${singularity_name}"
 
 # location for Spack modulefile
 spack_module_dir="${utilities_modules_dir}/spack"
-
-# location for pawsey_temp module (pawsey staff use)
-pawsey_temp="pawsey_temp"
 
 fi # end include guard
