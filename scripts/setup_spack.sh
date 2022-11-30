@@ -55,6 +55,11 @@ cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/project/*.yaml ${INSTAL
 [ -e "${INSTALL_PREFIX}/spack/var/spack/repos/pawsey" ] || mkdir -p "${INSTALL_PREFIX}/spack/var/spack/repos/pawsey"
 cp -r ${PAWSEY_SPACK_CONFIG_REPO}/repo/* "${INSTALL_PREFIX}/spack/var/spack/repos/pawsey/"
 
+# .. and custom module templates
+[ -e "${INSTALL_PREFIX}/spack/templates" ] || mkdir -p "${INSTALL_PREFIX}/spack/templates"
+cp -r ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/templates/* "${INSTALL_PREFIX}/spack/templates/"
+
+
 # and finally customise them with the actual software stack installation path.
 sed -i 
   -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g" \
