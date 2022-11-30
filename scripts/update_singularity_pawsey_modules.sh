@@ -12,8 +12,8 @@ if [ -z ${SYSTEM+x} ]; then
     exit 1
 fi
 
-ROOT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
-. "${ROOT_DIR}/systems/${SYSTEM}/settings.sh"
+PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
+. "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
 # This script creates end user singularity modules, starting from the Spack one
 # For each version:

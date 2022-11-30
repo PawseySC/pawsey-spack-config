@@ -10,17 +10,17 @@ if [ -z ${SYSTEM+x} ]; then
     exit 1
 fi
 
-ROOT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
-. "${ROOT_DIR}/systems/${SYSTEM}/settings.sh"
+PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
+. "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
 echo "Setting up spack.."
-"${ROOT_DIR}/scripts/setup_spack.sh"
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/setup_spack.sh"
 
 echo "Running first python install"
-"${ROOT_DIR}/scripts/run_first_python_install.sh"
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_first_python_install.sh"
 
 echo "Run concretization.."
-"${ROOT_DIR}/scripts/run_concretization.sh"
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_concretization.sh"
 
 echo "Run install all.."
-"${ROOT_DIR}/scripts/run_installation_all.sh"
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_installation_all.sh"
