@@ -16,7 +16,7 @@ ROOT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 # for first run, use cray-python, because there is no Spack python yet
 module load cray-python
 # initialise spack 
-. ${INSTALL_PREFIX}/spack/share/spack/setup-env.sh 
+. "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh "
 
 # make sure Clingo is bootstrapped
 echo "Running 'spack -d spec nano' to bootstrap Clingo.."
