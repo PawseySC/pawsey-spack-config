@@ -275,27 +275,65 @@ class Openfoam(Package):
     list_url = "https://sourceforge.net/projects/openfoam/files/"
     list_depth = 2
 
-    version('develop', branch='develop', submodules='True')
-    version('master', branch='master', submodules='True')
-    version('2106', sha256='11e41e5b9a253ef592a8f6b79f6aded623b28308192d02cec1327078523b5a37')
-    version('2012_210414', sha256='5260aaa79f91aad58a3a305c1a12d0d48b10f12e37cd99a6fa561969b15ea09d')
-    version('2012', sha256='3d6e39e39e7ae61d321fbc6db6c3748e6e5e1c4886454207a7f1a7321469e65a')
-    version('2006_201012', sha256='9afb7eee072bfddcf7f3e58420c93463027db2394997ac4c3b87a8b07c707fb0')
-    version('2006', sha256='30c6376d6f403985fc2ab381d364522d1420dd58a42cb270d2ad86f8af227edc')
-    version('1912_200506', sha256='831a39ff56e268e88374d0a3922479fd80260683e141e51980242cc281484121')
-    version('1912_200403', sha256='1de8f4ddd39722b75f6b01ace9f1ba727b53dd999d1cd2b344a8c677ac2db4c0')
-    version('1912', sha256='437feadf075419290aa8bf461673b723a60dc39525b23322850fb58cb48548f2')
-    version('1906_200312', sha256='f75645151ed5d8c5da592d307480979fe580a25627cc0c9718ef370211577594')
-    version('1906_191103', sha256='631a7fcd926ccbcdef0ab737a9dc55e58d6bedae2f3acaa041ea679db6c9303b')
-    version('1906', sha256='bee03c4b1da0d2c9f98eb469eeffbce3a8614728ef8e87f664042a7490976537')
-    version('1812_200312', sha256='925d2877c12740fab177a30fdcaa8899c262c15b90225f9c29d18a2d97532de0')
-    version('1812_191001', sha256='857a3d476696679313ea9a3f022b33446ddef2bcd417049a9486d504c12038dd')
-    version('1812_190531', sha256='51f0ef49a199edf3cd94e2ccfc7330e54e93c8e4ddb29ee66fe3e6b443583b34')
-    version('1812', sha256='d4d23d913419c6a364b1fe91509c1fadb5661bdf2eedb8fe9a8a005924eb2032')
-    version('1806', sha256='6951aab6405294fe59cec90b0a4e425f5403043191cda02ebaaa890ce1fcc819')
-    version('1712', sha256='4d22caa25d638d4c59bb93ee4dec51e8f71724f9f507eeb4162f771ebe885d21')
-    version('1706', sha256='7779048bb53798d9a5bd2b2be0bf302c5fd3dff98e29249d6e0ef7eeb83db79a')
-    version('1612', sha256='2909c43506a68e1f23efd0ca6186a6948ae0fc8fe1e39c78cc23ef0d69f3569d')
+    version("develop", branch="develop", submodules="True")
+    version("master", branch="master", submodules="True")
+    version("2206", sha256="db95eda4afb97ca870733b2d4201ef539099d0778e3f3eca9a075d4f1a0eea46")
+    version(
+        "2112_220610", sha256="e07fd7220520e4bcfd6c8100a7e027fba13eeca2b11085c9dd4642758422a63d"
+    )
+    version("2112", sha256="3e838731e79db1c288acc27aad8cc8a43d9dac1f24e5773e3b9fa91419a8c3f7")
+    version(
+        "2106_220610", sha256="5081a1493f4a316c165abf273c69bc2d1e07cf184e8b17ff97f845f876673231"
+    )
+    version(
+        "2106_211215", sha256="08c0d0b90b43505693ff8838e827f09e14ec9fb475956ef53cc2206c736277b1"
+    )
+    version("2106", sha256="11e41e5b9a253ef592a8f6b79f6aded623b28308192d02cec1327078523b5a37")
+    version(
+        "2012_220610", sha256="abbe46b0e93f0653397429f1fa2867d4459e0f6c28d90a08da0d4272f89d0757"
+    )
+    version(
+        "2012_210414", sha256="5260aaa79f91aad58a3a305c1a12d0d48b10f12e37cd99a6fa561969b15ea09d"
+    )
+    version("2012", sha256="3d6e39e39e7ae61d321fbc6db6c3748e6e5e1c4886454207a7f1a7321469e65a")
+    version(
+        "2006_220610", sha256="b8e9801c304f3fdf512ed8840093bf3f348fb8701121c88f3febd45e3826cb22"
+    )
+    version(
+        "2006_201012", sha256="9afb7eee072bfddcf7f3e58420c93463027db2394997ac4c3b87a8b07c707fb0"
+    )
+    version("2006", sha256="30c6376d6f403985fc2ab381d364522d1420dd58a42cb270d2ad86f8af227edc")
+    version(
+        "1912_220610", sha256="a0be015bd651b8eaa9c0fca0ffa97708821979fde9e2e23a1d98d9064c5c3f02"
+    )
+    version(
+        "1912_200506", sha256="831a39ff56e268e88374d0a3922479fd80260683e141e51980242cc281484121"
+    )
+    version(
+        "1912_200403", sha256="1de8f4ddd39722b75f6b01ace9f1ba727b53dd999d1cd2b344a8c677ac2db4c0"
+    )
+    version("1912", sha256="437feadf075419290aa8bf461673b723a60dc39525b23322850fb58cb48548f2")
+    version(
+        "1906_200312", sha256="f75645151ed5d8c5da592d307480979fe580a25627cc0c9718ef370211577594"
+    )
+    version(
+        "1906_191103", sha256="631a7fcd926ccbcdef0ab737a9dc55e58d6bedae2f3acaa041ea679db6c9303b"
+    )
+    version("1906", sha256="bee03c4b1da0d2c9f98eb469eeffbce3a8614728ef8e87f664042a7490976537")
+    version(
+        "1812_200312", sha256="925d2877c12740fab177a30fdcaa8899c262c15b90225f9c29d18a2d97532de0"
+    )
+    version(
+        "1812_191001", sha256="857a3d476696679313ea9a3f022b33446ddef2bcd417049a9486d504c12038dd"
+    )
+    version(
+        "1812_190531", sha256="51f0ef49a199edf3cd94e2ccfc7330e54e93c8e4ddb29ee66fe3e6b443583b34"
+    )
+    version("1812", sha256="d4d23d913419c6a364b1fe91509c1fadb5661bdf2eedb8fe9a8a005924eb2032")
+    version("1806", sha256="6951aab6405294fe59cec90b0a4e425f5403043191cda02ebaaa890ce1fcc819")
+    version("1712", sha256="4d22caa25d638d4c59bb93ee4dec51e8f71724f9f507eeb4162f771ebe885d21")
+    version("1706", sha256="7779048bb53798d9a5bd2b2be0bf302c5fd3dff98e29249d6e0ef7eeb83db79a")
+    version("1612", sha256="2909c43506a68e1f23efd0ca6186a6948ae0fc8fe1e39c78cc23ef0d69f3569d")
 
     variant('float32', default=False,
             description='Use single-precision')
@@ -469,7 +507,8 @@ class Openfoam(Package):
 
                 env.extend(mods)
                 minimal = False
-                tty.info('OpenFOAM bashrc env: {0}'.format(bashrc))
+                #AEG:solutionFromSpack#284444:tty.info('OpenFOAM bashrc env: {0}'.format(bashrc))
+                tty.debug('OpenFOAM bashrc env: {0}'.format(bashrc))
             except Exception:
                 minimal = True
 
@@ -1143,11 +1182,14 @@ class OpenfoamArch(object):
             ('WM_MPLIB',       self.mplib),
         ])
 
-    def _rule_directory(self, projdir, general=False):
-        """Return the wmake/rules/ General or compiler rules directory.
+    def _rule_directory(self, projdir, general=False, common=False):
+        """Return the wmake/rules/ General/common, General or
+        compiler rules directory.
         Supports wmake/rules/<ARCH><COMP> and wmake/rules/<ARCH>/<COMP>.
         """
         rules_dir = os.path.join(projdir, 'wmake', 'rules')
+        if common:
+            return os.path.join(rules_dir, 'General', 'common')
         if general:
             return os.path.join(rules_dir, 'General')
 
@@ -1171,10 +1213,41 @@ class OpenfoamArch(object):
                 + 'No wmake rule for {0} {1}'.format(self.arch, self.compiler))
         return True
 
+    def _rule_add_rpath(self, rpath, src, dst):
+        """Create {c,c++}-spack rules in the specified project directory.
+        The compiler rules are based on the respective {cflags,cxxflags}-Opt or
+        {c,c++}Opt rules with additional rpath information for the OpenFOAM libraries.
+
+        The '-spack' rules channel spack information into OpenFOAM wmake
+        rules with minimal modification to OpenFOAM.
+        The rpath is used for the installed libpath (continue to use
+        LD_LIBRARY_PATH for values during the build).
+        """
+        # Note: the 'c' rules normally don't need rpath, since they are just
+        # used for some statically linked wmake tools, but left in anyhow.
+
+        ok = os.path.isfile(src)
+
+        if ok:
+            with open(src, 'r') as infile:
+                with open(dst, 'w') as outfile:
+                    for line in infile:
+                        line = line.rstrip()
+                        outfile.write(line)
+                        if re.match(r'^\S+DBUG\s*:?=', line):
+                            outfile.write(" ")
+                            outfile.write(rpath)
+                        elif re.match(r'^\S+OPT\s*:?=', line):
+                            if self.arch_option:
+                                outfile.write(' ')
+                                outfile.write(self.arch_option)
+                        outfile.write('\n')
+        return ok
+
     def create_rules(self, projdir, foam_pkg):
-        """ Create {c,c++}-spack and mplib{USERMPI}
-        rules in the specified project directory.
-        The compiler rules are based on the respective {c,c++}Opt rules
+        """ Create {c,c++}-spack and mplib{USERMPI} rules in the
+        specified project directory.
+        Uses General/common/{c,c++}Opt or arch-specific {c,c++}Opt rules,
         but with additional rpath information for the OpenFOAM libraries.
 
         The '-spack' rules channel spack information into OpenFOAM wmake
@@ -1192,26 +1265,20 @@ class OpenfoamArch(object):
 
         user_mpi = mplib_content(foam_pkg.spec)
         rule_dir = self._rule_directory(projdir)
+        comm_dir = self._rule_directory(projdir, False, True)
+
+        # Compiler: copy existing {c,c++}Opt or General/common/{c,c++}Opt
+        # and modify '*DBUG' value to include rpath
+
+        for lang in ['c', 'c++']:
+            gen = join_path(comm_dir, '{0}Opt'.format(lang))
+            src = join_path(rule_dir, '{0}Opt'.format(lang))
+            dst = join_path(rule_dir, '{0}{1}'.format(lang, self.compile_option))
+
+            if not self._rule_add_rpath(rpath, src, dst):
+                self._rule_add_rpath(rpath, gen, dst)
 
         with working_dir(rule_dir):
-            # Compiler: copy existing cOpt,c++Opt and modify '*DBUG' value
-            for lang in ['c', 'c++']:
-                src = '{0}Opt'.format(lang)
-                dst = '{0}{1}'.format(lang, self.compile_option)
-                with open(src, 'r') as infile:
-                    with open(dst, 'w') as outfile:
-                        for line in infile:
-                            line = line.rstrip()
-                            outfile.write(line)
-                            if re.match(r'^\S+DBUG\s*=', line):
-                                outfile.write(' ')
-                                outfile.write(rpath)
-                            elif re.match(r'^\S+OPT\s*=', line):
-                                if self.arch_option:
-                                    outfile.write(' ')
-                                    outfile.write(self.arch_option)
-                            outfile.write('\n')
-
             # MPI rules
             for mplib in ['mplibUSERMPI']:
                 with open(mplib, 'w') as out:
