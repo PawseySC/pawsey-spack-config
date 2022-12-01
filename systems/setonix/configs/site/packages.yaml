@@ -90,7 +90,7 @@ packages:
   gdbm:
     version: [1.19]
   gettext:
-    version: [0.21.0]
+    version: [0.21.1]
 # Commented out - see GENERAL NOTES above
 #    externals:
 #    - spec: python@3.9.7+optimizations

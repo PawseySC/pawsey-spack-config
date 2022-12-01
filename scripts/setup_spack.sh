@@ -61,7 +61,7 @@ cp -r ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/templates/* "${INSTALL_PREFI
 
 
 # and finally customise them with the actual software stack installation path.
-sed -i 
+sed -i \
   -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g" \
   -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
   -e "s|USER_TEMP_FILES_PREFIX|${USER_TEMP_FILES_PREFIX}|g"\
