@@ -37,15 +37,15 @@ spack:
     # some heavier numerical library builds 
     - opencv@4.5.2 build_type=Release
     - opencv@3.4.12 build_type=Release
-    - trilinos@13.0.1 +adios2 +openmp +python ~cuda ^adios2@2.7.1 build_type=Release
-      ^hdf5@1.12.1 build_type=Release
+    - trilinos@13.0.1 +adios2 +openmp +python ~cuda ^adios2@2.8.3 build_type=Release
+      ^hdf5@1.12.1 build_type=Release    
     # TODO: currently unable to configure petsc with trilinos. 
     # not clear if issue is with petsc or the version of trilinos
     # for the moment trilinos disabled 
     #- petsc@3.15.5 +fftw +trilinos +hwloc +openmp +complex ~cuda
-    - petsc@3.15.5 +fftw ~trilinos +hwloc +openmp +complex ~cuda
+    - petsc@3.18.2 +fftw ~trilinos +hwloc +openmp +complex ~cuda
   - numerical:
-    - openblas@0.3.15 threads=openmp
+    - openblas@0.3.21 threads=openmp
     - netlib-lapack@3.9.1 build_type=Release
     - netlib-scalapack@2.1.0
     - blaspp@2021.04.01 ~cuda build_type=Release ^openblas
