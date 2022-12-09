@@ -74,6 +74,7 @@ export PYTHONPATH="${INSTALL_PREFIX}/${shpc_install_dir}/lib/python${python_vers
 shpc config set module_sys:lmod
 # singularity for containers
 shpc config set container_tech:singularity
+shpc config remove registry:\$root_dir/registry
 shpc config add "registry:${INSTALL_PREFIX}/${shpc_install_dir}/registry"
 shpc config add "registry:${INSTALL_PREFIX}/${shpc_install_dir}/pawsey_registry"
 shpc config add "registry:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/shpc_registry"
