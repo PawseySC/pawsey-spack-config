@@ -24,3 +24,9 @@ echo "Run concretization.."
 
 echo "Run install all.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_installation_all.sh"
+
+echo "Update singularity modules.."
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/update_singularity_pawsey_modules.sh"
+
+echo "Installing shpc..."
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/setup_shpc.sh"
