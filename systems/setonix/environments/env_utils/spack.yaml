@@ -27,11 +27,11 @@ spack:
   - matrix:
     - [cmake@3.21.4]
     - ['%gcc@12.1.0', '%cce@14.0.3', '%aocc@3.2.0']
-      # - [target=zen3, target=zen2]
+    - [target=zen3, target=zen2]
   - matrix:
     - [$packages]
     - ['%gcc@12.1.0']
-      # - [target=zen3, target=zen2]
+    - [target=zen3, target=zen2]
 # TODO: build licensed software
   # - matrix:
   #   - [$licensed]
