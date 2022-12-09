@@ -30,3 +30,9 @@ echo "Update singularity modules.."
 
 echo "Installing shpc..."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/setup_shpc.sh"
+
+echo "Installing containers.."
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_install_shpc_container_modules.sh"
+
+echo "Post installation operations.."
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/post_installation_operations.sh"
