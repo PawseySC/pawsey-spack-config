@@ -28,7 +28,8 @@ echo "Concretization of Python.."
 spack -d spec python@${python_version} +optimizations %gcc@${gcc_version}
 
 echo "Installing Python with default compilers.."
-
-sg $INSTALL_GROUP -c "spack install --no-checksum python@${python_version} +optimizations %gcc@${gcc_version}"
-sg $INSTALL_GROUP -c "spack install --no-checksum python@${python_version} +optimizations %cce@${cce_version}"
-sg $INSTALL_GROUP -c "spack install --no-checksum python@${python_version} +optimizations %aocc@${aocc_version}"
+for arch in $archs; do
+    sg $INSTALL_GROUP -c "spack install --no-checksum python@${python_version} +optimizations %gcc@${gcc_version} target=$arch"
+    sg $INSTALL_GROUP -c "spack install --no-checksum python@${python_version} +optimizations %cce@${cce_version} target=$arch"
+    sg $INSTALL_GROUP -c "spack install --no-checksum python@${python_version} +optimizations %aocc@${aocc_version} target=$arch"
+done

@@ -3,7 +3,7 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2023.02"
+DATE_TAG="2023.01"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
     INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
@@ -39,6 +39,7 @@ USER_TEMP_FILES_PREFIX='/scratch'
 
 pawseyenv_version="${DATE_TAG}"
 
+archs="zen2 zen3"
 # compiler versions (needed for module trees with compiler dependency)
 gcc_version="12.1.0"
 cce_version="14.0.3"

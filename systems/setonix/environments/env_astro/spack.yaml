@@ -59,6 +59,7 @@ spack:
   - matrix:
     - [$casacore-set]
     - ['%gcc@12.1.0']
+    - [target=zen3]
     - [+python build_type=Release ^python@3.9.15]
     - [+openmp, ~openmp]
     - [~adios2 ~hdf5, +adios2 +hdf5 ^adios2@2.8.3 +hdf5 ^hdf5@1.12.1 +hl +fortran
@@ -66,30 +67,30 @@ spack:
   - matrix:
     - [$casacore-legacy]
     - ['%gcc@12.1.0']
-    #- [target=zen3]
+    - [target=zen3]
   - matrix:
     - [$astro-util-set, $askap-util-set]
     - ['%gcc@12.1.0']
-    #- [target=zen3]
+    - [target=zen3]
   - matrix:
     - [$mwa-util-set-with-python]
     - [^python@3.9.15]
     - ['%gcc@12.1.0']
-    #- [target=zen3]
+    - [target=zen3]
   - matrix:
     - [$mwa-util-set]
     - ['%gcc@12.1.0']
-    #- [target=zen3]
+    - [target=zen3]
   - matrix:
     - [$python-astro-set]
     - [^python@3.9.15]
     - ['%gcc@12.1.0']
-    #- [target=zen3]
+    - [target=zen3]
   - matrix:
     - [$casacore-new-set]
     - [^python@3.9.15]
     - ['%gcc@12.1.0']
-    #- [target=zen3]
+    - [target=zen3]
   view: false
   concretizer:
     unify: when_possible
