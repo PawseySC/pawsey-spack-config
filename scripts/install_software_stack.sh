@@ -14,25 +14,25 @@ PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /d
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
 echo "Setting up spack.."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/setup_spack.sh"
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_spack.sh"
 
 echo "Running first python install"
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_first_python_install.sh"
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_python.sh"
 
 echo "Run concretization.."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_concretization.sh"
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/concretize_environments.sh"
 
-echo "Run install all.."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_installation_all.sh"
+echo "Install environments.."
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_environments.sh"
 
 echo "Update singularity modules.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/update_singularity_pawsey_modules.sh"
 
 echo "Installing shpc..."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/setup_shpc.sh"
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_shpc.sh"
 
 echo "Installing containers.."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_install_shpc_container_modules.sh"
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_shpc_containers.sh"
 
 echo "Post installation operations.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/post_installation_operations.sh"

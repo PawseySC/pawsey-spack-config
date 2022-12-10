@@ -39,29 +39,29 @@ spack module lmod refresh -y --delete-tree
 
 # step 2. create all missing module directories
 echo "Creating all missing module directories.."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/update_create_system_moduletree.sh"
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_system_moduletree.sh"
 
 
 # step 3. update singularity modules
 echo "Updating Singularity modules.."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/update_singularity_pawsey_modules.sh"
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_custom_singularity_modules.sh"
 
 
 # step 4. refresh wrf/roms dependency modules
 echo "Refreshing wrf/roms dependency modules.."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/post_make_wrf_roms_dependency_modules.sh"
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_wrf_roms_dependency_modules.sh"
 
 
 # step # 5. create hpc-python view and module
 echo "Creating hpc-python view and module.."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/post_make_hpc_python_collection_view_module.sh"
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_hpc_python_collection_view_module.sh"
 
 
 # step 6. apply licensing permissions
 echo "Apply licensing permissions.."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/post_set_licensing_permissions.sh"
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/set_licensing_permissions.sh"
 
 # step 7. customise shpc container modules
 echo "Customising shpc container modules.."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/post_customise_shpc_pawsey_modules.sh
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/patch_shpc_pawsey_modules.sh
 
