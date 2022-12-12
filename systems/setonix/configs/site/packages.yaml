@@ -63,7 +63,8 @@ packages:
     variants: '+pic'
   mbedtls:
     variants: '+pic'
-
+  zlib:
+    version : [1.2.13]
   # preferred versions and variants, utils/python
   # Note: setting autoconf/automake/cmake as non buildable
   cmake:
@@ -86,7 +87,7 @@ packages:
   # preferred versions and variants, python
   python:
     version: [3.9.15]
-    variants: '+optimizations'
+    variants: '+optimizations +zlib'
   gdbm:
     version: [1.19]
   gettext:
@@ -493,11 +494,6 @@ packages:
   wget:
     externals:
     - spec: wget@1.20.3
-      prefix: /usr
-    buildable: false
-  zlib:
-    externals:
-    - spec: zlib@1.2.11
       prefix: /usr
     buildable: false
   zstd:
