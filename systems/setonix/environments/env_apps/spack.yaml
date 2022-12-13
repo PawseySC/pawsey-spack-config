@@ -31,17 +31,14 @@ spack:
     - openfoam@2012
   - packages:
     - cpmd@4.3 +mpi +omp
-
+    - ansys-fluids@2022R1
     
 #lapack and blas path not set, error in cmake file "SET(NATIVE_BLAS_LAPACK_SEARCH_PATHS /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 )
 # look into this file nektar/cmake/FindNativeBlasLapack.cmake
 # Custom Pawsey recipe, that builds all dependencies internally - OK
     - nektar@5.0.2 build_type=Release
     - quantum-espresso@6.8 +epw +openmp hdf5=parallel
-  - ansys_packages:
-    - ansys-fluids@2022R1
-    - ansys-structures@2022R1
-    - ansys-fluidstructures@2022R1
+
   - vasp_packages:
     - vasp@5.4.4 +scalapack
     - vasp@6.2.1 +scalapack
