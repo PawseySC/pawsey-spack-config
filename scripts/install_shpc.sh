@@ -87,7 +87,7 @@ shpc config set "container_base:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/
 # user install location for modulefiles (symlinks - views)
 # variable substitutions assume format like views/modules
 shpc config set "views_base:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/${shpc_containers_modules_dir%/*}"
-shpc config set :default_view:${shpc_containers_modules_dir##*/}""
+shpc config set "default_view:${shpc_containers_modules_dir##*/}"
 # singularity module
 shpc config set "singularity_module:${singularity_name}/${singularity_version}"
 # enable wrapper scripts
