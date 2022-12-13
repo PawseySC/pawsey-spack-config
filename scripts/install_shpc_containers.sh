@@ -27,4 +27,4 @@ for container in $container_list ; do
 done
 
 # customise Pawsey container modules
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/post_customise_shpc_pawsey_modules.sh"
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/patch_shpc_pawsey_modules.sh"

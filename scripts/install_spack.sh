@@ -22,10 +22,13 @@ if ! [ -L ~/.spack ]; then
   if [ -e ~/.spack ]; then
     mv ~/.spack ~/.spack.old.$( date -Iminutes | sed 's/+.*//' | tr ':' '.' )
   fi
-  tmp_spack=/tmp/spack.$( date -Iminutes | sed 's/+.*//' | tr ':' '.' )
-  mkdir "${tmp_spack}"
-  ln -s "${tmp_spack}" ~/.spack
+else
+  rm ~/.spack
 fi
+
+tmp_spack=/tmp/spack.$( date -Iminutes | sed 's/+.*//' | tr ':' '.' )
+mkdir "${tmp_spack}"
+ln -s "${tmp_spack}" ~/.spack
 
 # We will use the Pawsey spack mirror, to which several patches will be applied.
 if ! [ -e ${INSTALL_PREFIX}/spack ]; then

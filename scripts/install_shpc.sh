@@ -54,7 +54,7 @@ fi
 
 # install Pawsey registry
 if ! [ -e "${INSTALL_PREFIX}/${shpc_install_dir}/pawsey_registry" ]; then
-    cp -r "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/shpc_registry" "${INSTALL_PREFIX}/${shpc_install_dir}/"
+    cp -r "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/shpc_registry" "${INSTALL_PREFIX}/${shpc_install_dir}/pawsey_registry"
 fi
 
 # fix long shebang
