@@ -18,10 +18,14 @@ PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /d
 # The ~/.spack directory for the 'spack' user dictates where and how the system-wide
 # software stack installation takes place. We must make sure that current settings
 # are used instead of old ones. 
-if [ -e ~/.spack ] ; then
-  mv ~/.spack ~/.spack.old.$( date -Iminutes | sed 's/+.*//' | tr ':' '.' )
+if ! [ -L ~/.spack ]; then
+  if [ -e ~/.spack ]; then
+    mv ~/.spack ~/.spack.old.$( date -Iminutes | sed 's/+.*//' | tr ':' '.' )
+  fi
+  tmp_spack=/tmp/spack.$( date -Iminutes | sed 's/+.*//' | tr ':' '.' )
+  mkdir "${tmp_spack}"
+  ln -s "${tmp_spack}" ~/.spack
 fi
-mkdir ~/.spack
 
 # We will use the Pawsey spack mirror, to which several patches will be applied.
 if ! [ -e ${INSTALL_PREFIX}/spack ]; then
