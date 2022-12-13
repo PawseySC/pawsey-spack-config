@@ -24,12 +24,12 @@ spack:
     - py-setuptools@57.4.0
   specs:
   - matrix:
-    - [python@3.9.15 +optimizations]
+    - [python@3.9.15 +optimizations+zlib]
     - ['%gcc@12.1.0']
     - [target=zen3]
   - matrix:
     - [$packages, $utilities]
-    - [^python@3.9.15 +optimizations]
+    - [^python@3.9.15 +optimizations+zlib]
     - ['%gcc@12.1.0']
     - [target=zen3]
   view: false

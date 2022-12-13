@@ -21,7 +21,7 @@ spack:
       +netcdf +openmp-package +opt +orient +peri +phonon +plugin +plumed +png +poems
       +ptm +python +qeq +qtb +reaction +reaxff +replica +rigid +shock +smtbq +sph
       +spin +srd +tally +uef +voronoi +yaff build_type=Release ^kokkos@3.4.01+hwloc+memkind+numactl+openmp+tuning
-      cxxstd=14 build_type=Release ^plumed@2.7.2
+      cxxstd=14 build_type=Release ^plumed@2.7.2 ^adios2@2.8.3
     - namd@2.14 interface=python fftw=3 +plumed ^charmpp@6.10.2 backend=ofi
     - nwchem@7.0.2
 
@@ -49,7 +49,7 @@ spack:
   specs:
   - matrix:
     - [$packages-with-python]
-    - [^python@3.9.15]
+    - [^python@3.9.15 +optimizations+zlib]
     - ['%gcc@12.1.0']
     - [target=zen3]
   - matrix:

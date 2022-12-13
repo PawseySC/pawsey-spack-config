@@ -17,7 +17,7 @@ spack:
     - kokkos@3.4.01 +hwloc +memkind +numactl +openmp +tuning cxxstd=14 build_type=Release
     # for hpx must explicitly set openmp off 
     - kokkos@3.4.01 +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ~openmp
-      cxxstd=14 build_type=Release ^hpx@1.6.0 +async_mpi malloc=jemalloc max_cpu_count=128
+      cxxstd=14 build_type=Release ^hpx@1.6.0 +async_mpi max_cpu_count=128
       networking=mpi build_type=Release
   # because of odd concretization of packages with python dependences defaulting to 3.9.9 and not the 
   # version specified in the packages.yaml, separate packages between those with python dep and those without
@@ -76,7 +76,7 @@ spack:
   - matrix:
     - [$numerical-with-python]
     - ['%gcc@12.1.0']
-    - [^python@3.9.15]
+    - [^python@3.9.15 +optimizations+zlib]
     - [target=zen3]
 # for now don't build amd math libraries
   #- matrix:
