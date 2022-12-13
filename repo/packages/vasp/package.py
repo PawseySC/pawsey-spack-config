@@ -44,7 +44,7 @@ class Vasp(MakefilePackage):
             'https://github.com/henniggroup/VASPsol')
 
     depends_on('rsync', type='build')
-    depends_on('blas')
+    depends_on('openblas')
     depends_on('lapack')
     depends_on('fftw')
     depends_on('mpi', type=('build', 'link', 'run'))
