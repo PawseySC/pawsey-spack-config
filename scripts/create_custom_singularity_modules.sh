@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 # source setup variables
 # if copy/pasting these commands, need to run from this directory

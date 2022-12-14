@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
     SYSTEM="$PAWSEY_CLUSTER"
@@ -14,16 +14,19 @@ PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /d
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
 # spack module
-is_loaded_spack="$( module is-loaded spack/${spack_version} ; echo "$?" )"
-if [ "${is_loaded_spack}" != "0" ] ; then
-  module load spack/${spack_version}
-fi
+module use ${INSTALL_PREFIX}/staff_modulefiles
+# we need the python module to be available in order to run spack
+module --ignore-cache load pawseyenv/${pawseyenv_version}
+# swap is needed for the pawsey_temp module to work
+module swap PrgEnv-gnu PrgEnv-cray
+module swap PrgEnv-cray PrgEnv-gnu
+module load spack/${spack_version}
 
 
 # original environment yaml
-original_env_yaml="${script_dir}/../environments/env_python/spack.yaml"
+original_env_yaml="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments/env_python/spack.yaml"
 # directory to create derivative yaml for the view
-view_env_dir="${script_dir}/view_python"
+view_env_dir="${PAWSEY_SPACK_CONFIG_REPO}/view_python"
 # name for the view
 view_name="hpc-python-collection"
 # target directory for view installation
@@ -32,7 +35,7 @@ view_software_dir="${view_software_root_dir}/${view_name}"
 # target directory for view module
 view_module_dir="${INSTALL_PREFIX}/${custom_modules_dir}/${cpu_arch}/gcc/${gcc_version}/${custom_modules_suffix}/${view_name}"
 # template for view module
-view_module_template="${script_dir}/setup_templates/module_hpc_python_collection.lua"
+view_module_template="${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/module_hpc_python_collection.lua"
 
 # only proceed if original environment yaml exists
 if [ -e ${original_env_yaml} ] ; then
@@ -43,22 +46,10 @@ mkdir -p ${view_env_dir}
 mkdir -p ${view_software_root_dir}
 mkdir -p ${view_module_dir}
 
-# delete files from previous view installation
-echo "You are about to delete the following items:"
-echo "  ${view_env_dir}"
-echo "  ${view_software_dir}"
-echo "  ${view_module_dir}"
-echo "Do these directories correspond to the view environment ${view_name} ?"
-echo "Do you want to delete them? (yes/no)"
-read view_answer
-if [ ${view_answer,,} == "yes" ] ; then
-  rm -rf ${view_env_dir}/spack.* ${view_env_dir}/.spack*
-  rm -rf ${view_software_dir} ${view_software_root_dir}/._${view_name}
-  rm -f ${view_module_dir}/*.lua
-else
-  echo "Skipping deletion of view directories. Stopping process to create view ${view_name} ."
-  exit 1
-fi
+rm -rf ${view_env_dir}/spack.* ${view_env_dir}/.spack*
+rm -rf ${view_software_dir} ${view_software_root_dir}/._${view_name}
+rm -f ${view_module_dir}/*.lua
+
 
 # create Spack environment with view
 sed "s;  view: .*[fF]alse;  view: ${view_software_dir};g" \

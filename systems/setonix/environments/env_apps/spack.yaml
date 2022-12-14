@@ -54,7 +54,7 @@ spack:
     - ['%gcc@12.1.0']
     - [target=zen3]
   - matrix:
-    - [$vasp_packages, $ansys_packages]
+    - [$vasp_packages]
     - ['%gcc@12.1.0']
     - [target=zen3]
   view: false

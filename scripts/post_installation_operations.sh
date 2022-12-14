@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 # this script goes through 5 steps
 # 1. refresh spack modules

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 # setting appropriate groups permissions for licensed software
 # doing it one by one
@@ -15,12 +15,14 @@ fi
 
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
-# spack module
-is_loaded_spack="$( module is-loaded spack/${spack_version} ; echo "$?" )"
-if [ "${is_loaded_spack}" != "0" ] ; then
-  module load spack/${spack_version}
-fi
 
+module use ${INSTALL_PREFIX}/staff_modulefiles
+# we need the python module to be available in order to run spack
+module --ignore-cache load pawseyenv/${pawseyenv_version}
+# swap is needed for the pawsey_temp module to work
+module swap PrgEnv-gnu PrgEnv-cray
+module swap PrgEnv-cray PrgEnv-gnu
+module load spack/${spack_version}
 
 # utility function
 function apply_permissions()
@@ -55,7 +57,7 @@ else
 fi
 
 # Spack installations
-for package in amber ansys-fluids ansys-structures ansys-fluidstructures cpmd namd vasp@5 vasp@6 ; do
+for package in amber ansys-fluids cpmd namd vasp@5 vasp@6 ; do
   software_dirs=$( spack find -p $package |grep ^${package} |tr -s ' ' |cut -d ' ' -f 2 )
   module_dirs=""
   if [ "${package}" == "vasp@6" ] ; then

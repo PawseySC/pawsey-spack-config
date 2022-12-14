@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
     SYSTEM="$PAWSEY_CLUSTER"
@@ -22,11 +22,11 @@ sif_dir="${INSTALL_PREFIX}/${shpc_containers_dir}"
 # target directory for Openfoam SIF symlinks
 of_dir="${INSTALL_PREFIX}/${containers_root_dir}/openfoam-sif"
 # create it
-mkdir -p ${of_dir}
+mkdir -p "${of_dir}"
 
 
 # Pawsey only - add -container suffix to tool directories
-for tool in ${short_dir}/openfoam ${short_dir}/openfoam-org ${short_dir}/hpc-python ; do
+for tool in "${short_dir}/openfoam" "${short_dir}/openfoam-org" "${short_dir}/hpc-python" ; do
   if [ -d ${tool} ] ; then
     mv ${tool} ${tool}${shpc_spackuser_container_tag}
   fi
