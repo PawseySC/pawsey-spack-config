@@ -58,5 +58,3 @@ spack:
     - ['%gcc@12.1.0']
     - [target=zen3]
   view: false
-  concretizer:
-    unify: when_possible
