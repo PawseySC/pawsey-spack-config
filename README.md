@@ -1,67 +1,66 @@
-## Setonix setup
+# Pawsey Spack Configuration
+
+Scripts and configuration files used by the Pawsey Supercomputing Research Centre to deploy Spack and to install the scientific software stack on its supercomputing systems.
+
+## Installation
+
+Here is how to launch the software stack installation.
+
+1. Make sure the system you want to install the software stack on has a corresponding directory in `systems`. If not, you can start by creating a copy of an existing one.
+2. Edit the file `systems/<system>/settings.sh` as needed.
+3. Set and export the `INSTALL_PREFIX` variable to the full path of the filesystem location where you want the installation to be placed in. Note that it has to end with the same string as the one stored in the `DATE_DAG` variable, meaning that installations are versioned by installation date.
+4. Set and export the `INSTALL_GROUP` variable to the linux group that is going to own the installed files.
+5. Set and export the `SYSTEM` variable to the system you want to run the installation for, if it differs from the content of the `PAWSEY_CLUSTER` environment variable.
+6. Run the `scripts/install_software_stack.sh` script, preferably in a Slurm job or as a process detached from the login shell to prevent the installation from being aborted in case the SSH connection were to be interrupted unexpectedly.
+
+### Singularity
+
+You will need to ask the platforms team to apply root permissions to Singularity ss soon as it is installed. The script to run as root is found in the `bin` directory within the spack installation prefix.
+
+## Repository structure
+
+The repository is composed of the directories:
+
+* `fixes/`: patches implemented by Pawsey staff to be applied to Spack prior to production use. They are meant to improve usability of Spack for Pawsey-specific use cases.
+* `repo/`: custom Spack package recipes for software not yet supported by Spack or that needed modification in the build process to work on Pawsey systems.
+* `scripts/`: BASH scripts used to automate the deployment process.
+* `systems/<system>`: a directory containing configuration files specific to a system. Scripts will use these files to customise the Spack deployment and installation of the software stack.
 
 
-### NOTE for next deployment - October/November 2022
+The `scripts/install_software_stack.sh` is the top-level script that executes the installation from start to finish except licensed software, that need some manual work. Refer to this script also as documentation of the installation process.
 
-Author: Marco.
+## The `scripts` directory
 
-Following an update of the SHPC installation, the `MODULEPATH`s for SHPC modules needs a once-off change, both for system-wide and user-specific installations.  
-As a result, the following two steps are required, in collaboration with the Platforms team:
-1. update `pawsey` module, based on the newly generated `/software/setonix/2022.XX/pawsey_load_first.lua` (done with Kevin for previous deployment);
-2. update user account creation process, following the updated `/software/setonix/2022.XX/spack/bin/spack_create_user_moduletree.sh` (done with William for previous deployment).
+This project makes up a build system for the scientific software stack on Pawsey supercomputers. On a high level, there are two logical compontents to it: 
+one to deploy Spack and SHPC (a software package to manage containers), and the other to use the tools mentioned before to install scientific software.
 
+The deployment of Spack and SHPC is implemented through the following executables BASH scripts within the `scripts` directory:
 
-### Contents of this directory
+* `install_spack.sh` installs Spack on the system and creates the directory structure for the system-wide software stack installation.
+* `install_python.sh` installs Python using Spack. To do so, and only in this case, Spack chooses `cray-python` as interpreter. Once Python is installed for different architectures and versions, `cray-python` won't be used anymore.
+* `install_shpc.sh` installs SHPC, a tool used to deploy containers.
 
-* `configs/site/`: Spack configuration files for Setonix that are valid for all users, which will sit in $spack/etc/spack
-* `configs/spackuser/`: Spack configuration files for system-wide installs (Pawsey staff), which will sit in ~/.spack/, allowing spack user overrides of config
-* `configs/project/`: Spack configuration files that are valid for project-wide installations by all users (used by the dedicated script spack_project.sh)
-* `custom_installs/`: custom installation scripts (for packages yet without Spack recipe)
-* `environments/`: Spack environments for deployment on Setonix
-* `fixes/`: Pawsey fixes to be applied to Spack prior to production use
-* `repo/`: custom Spack package recipes for Setonix
-* `setup_scripts/`: files for system-wide installation (scripts and custom modulefiles)
-* `shpc_registry/`: custom Singularity-HPC (SHPC) recipes for Pawsey (non-Spack related)
-* `templates/`: custom Spack templates (modulefiles, Dockerfiles)
+The software stack deployment is implemented in these scripts instead:
+* `concretize_environments.sh` runs the concretization step for all Spack environments to be installed.
+* `install_environments.sh` will install all Spack environments using Spack.
+* `install_shpc_containers.sh` will pull Pawsey-supported containers and install them using SHPC. 
+* `post_installation_operations.sh` refreshes Lmod modulefiles for the installed software, applies permissions to licensed software, and other operations needed after the full stack deployment executed by Spack.
 
 
-### Setonix software stack tree
+## The `systems/<system>` directory
 
-The system-wide software stack is installed under:
-```
-/software/setonix/YYYY.MM
-```
+This is where system specific configurations are placed. In particular, the following items must always be present.
 
-At every stack rebuild (every 6 months, or when needed by Cray OS updates), the latest stack will be symlinked for end users to:
-```
-/software/setonix/current
-```
-
-The software stack tree has the following sub-directories, related to Spack installations:
-* `software/`: Spack software installations
-* `modules/`: Spack modulefules
-* `spack/`: Spack installation
-* `pawsey-spack-config/`: this repo, including `setonix/repo/` for customised package recipes
-
-Other sub-directories also sit here, that are unrelated to Spack:
-* `custom/` (those that need a compiler/arch tree)
-  * `custom/software/`: Pawsey custom installations (ie manual software builds)
-  * `custom/modules/`: corresponding modules
-* `pawsey/` (compiler/arch independent)
-  * `pawsey/software/`: Pawsey utilities (scripts, **SHPC**)
-  * `pawsey/modules/`: corresponding modules (plus module for **Spack**)
-* `containers/`
-  * `containers/sif/`: system-wide SHPC containers (eg bioinformatics, HPC Python, OpenFoam)
-  * `containers/modules/`: system-wide SHPC container modules
+* `configs/` is a directory containing `yaml` configuraiton files for Spack. There are three types of configuration:
+  * `site/`: Spack configuration files that are valid for all users, which will sit in `$spack/etc/spack`.
+  * `project/`: Spack configuration files that are valid for project-wide installations executed by any user using the dedicated script `spack_project.sh`.
+  * `spackuser/`: Spack configuration files for system-wide installs, performed by Pawsey staff, which will sit in `/home/spack/.spack/`, allowing the `spack` user to override system-wide settings.
+* `environments/`: Spack environments to be deployed.
+* `shpc_registry/`: custom Singularity-HPC (SHPC) recipes to deploy containers.
+* `templates/`: modulefile templates for Spack.
 
 
-### Note on Spack configuration YAMLs
-
-As regards configuration YAMLs, note that Spack prioritises user configs to site configs (*i.e.* those in the Spack installation directory).  
-In order to minimise edits in users' home directories, we're putting:
-* user-specific settings in the site YAMLs
-* system-wide settings (Pawsey staff) in the *spack* user's YAMLs
-
+## Notes
 
 ### Module categories in use
 
@@ -86,75 +85,8 @@ In order to minimise edits in users' home directories, we're putting:
   - `containers/modules`
 
 
-### Deployment tips
-
-* install `python` first, so you can use it as the Python interpreter for Spack itself
-* `env_num_libs` needs to be installed amongst the first ones, as it builds otherwise non buildable packages (only *fftw* at the moment)
-* other environments can be built in parallel
-
-
-### Usage tips
-
-* Check spec first before install. Use `spack spec -I` to see what will be installed.
-* When playing with compiler flags or compilers, use `spack spec -I` and `spack spec -I --reuse` to see if there are significant changes to the packages that will be installed. Reuse is quite good at reducing the number of dependencies that will be installed. Remember that compiler flags are propagated to dependencies, which may not be desirable. An example is debugging, where it is unlikely that debugging symbols are required for libraries.
-* Beware of `spack load` as it will edit `PATH` and `LD_LIBRARY_PATH` with not just the package being loaded but all the dependencies (despite spack using rpaths). This can cause issues when running codes like gdb.
-
-
 ### Testing Modules
 
 Current `modules.yaml` and the template `modulefile.lua` rely on additional features of Spack found in the feature/improved-lmod-modules (https://github.com/PawseySC/spack/tree/feature/improved-lmod-modules).  
 The update provides extra tokens that can be used when creating the module name and also extra keywords to the template.  
-These features have now been packaged in a patch, that is applied by `setup_spack.sh`.  
-
-
-### System-wide installation: general procedure
-
-Scripts residing in `setup_scripts/` allow for the full deployment of the system Spack.  This is the ideal list of steps that are required (minus the unexpected):
-
-1. Review `variables.sh` for any required update (e.g. date_tag, compiler versions, tools versions)
-2. Create appropriate host directory (e.g. `/software/setonix/2022.01`)
-3. Git clone `pawsey-spack-config` in appropriate final location (e.g. `/software/setonix/2022.01/pawsey-spack-config`)
-4. Setup Spack using `setup_spack.sh`
-5. Install Python via Spack using `run_first_python_install.sh` (after this, the `spack` module can be used)
-6. NOTE: from now on, make sure you are using the Spack version you just installed. You may need something like the following:
-    ```
-    module unload pawsey_prgenv
-    module use /software/setonix/2022.01/pawsey_temp
-    module load pawsey_temp
-    ```
-7. Test concretisations with `run_concretization.sh`
-8. Install all Spack packages with `run_installation_all.sh`, or equivalent manual operations.  Some notes:  
-    a. `env_num_libs` must be amongst the first ones, because it builds otherwise non-buildable packages;  
-    b. some environments will need to be re-run with `-j 1` (`run_installation_pick.sh` can be used to this end);  
-    c. make sure `env_apps` has symlinks to the tarballs for licensed software (Vasp and so on);  
-9.  After `singularity` is installed:  
-    a. create its customised modules using the small script `update_singularity_pawsey_modules.sh`  
-    b. install `shpc` with `setup_shpc.sh`  
-    c. ask platform staff with `root` rights to run the script `spack_perms_fix.sh` within the `singularity` installation  
-10. After `singularity` and `shpc` are both installed, install container modules with `run_install_shpc_container_modules.sh`
-11. Perform a set of post-installation tasks by running the interactive script `post_refresh_modules.sh`:  
-    a. refresh Spack modules  
-    b. create missing module directories  
-    c. update (again) Singularity modules  
-    d. refresh wrf/roms dependency modules  
-    e. create hpc-python view and module  
-    f. apply licensing permissions  
-    g. refresh SHPC symlink modules  
-
-
-### System-wide installation: maintenance notes (proposed)
-
-* Adding Spack packages
-  1. add package to appropriate environment
-  2. install with `run_installation_pick.sh`
-  3. refresh modules with Spack CLI (avoid using `post_refresh_modules.sh`, which currently deletes and re-creates the whole tree)
-
-* Adding SHPC container modules
-  1. add container package to `list_shpc_container_modules.sh`
-  2. install with `run_install_shpc_container_modules.sh`
-  3. customise SHPC modules with `post_customise_shpc_pawsey_modules.sh` (only for Pawsey modules)
-
-* Updating Spack configuration files
-  1. edit configuration in appropriate branch of `pawsey-spack-config`
-  2. update Spack deployment using the script `update_spack_configs_from_pawseyspackconfig.sh`
-
+These features have now been packaged in a patch, that is applied by `install_spack.sh`.  
