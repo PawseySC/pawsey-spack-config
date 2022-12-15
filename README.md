@@ -17,6 +17,11 @@ Here is how to launch the software stack installation.
 
 You will need to ask the platforms team to apply root permissions to Singularity ss soon as it is installed. The script to run as root is found in the `bin` directory within the spack installation prefix.
 
+### Software stack modulefile
+
+The platforms team will need to install the `$INSTALL_PREFIX/staff_modulefiles/pawseyenv/*lua` module such that it will be loaded before the Cray compilers. They will also need to update user account creation process, following the updated `$INSTALL_PREFIX/spack/bin/spack_create_user_moduletree.sh`.
+
+
 ## Repository structure
 
 The repository is composed of the directories:
