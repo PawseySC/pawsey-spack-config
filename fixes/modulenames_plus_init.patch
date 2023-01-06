@@ -1,0 +1,12 @@
+diff --git a/lib/spack/spack/cmd/modules/__init__.py b/lib/spack/spack/cmd/modules/__init__.py
+index 203c807dc1..bb598b3d82 100644
+--- a/lib/spack/spack/cmd/modules/__init__.py
++++ b/lib/spack/spack/cmd/modules/__init__.py
+@@ -328,6 +328,7 @@ def refresh(module_type, specs, args):
+                 for x in writer_list:
+                     message += "spec: {0}\n".format(x.spec.format())
+         tty.error(message)
++        tty.error("Consider updating naming convention to include hash")
+         tty.error("Operation aborted")
+         raise SystemExit(1)
+ 

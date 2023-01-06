@@ -1,0 +1,14 @@
+diff --git a/lib/spack/spack/modules/lmod.py b/lib/spack/spack/modules/lmod.py
+index f98db9614c..8980777a4a 100644
+--- a/lib/spack/spack/modules/lmod.py
++++ b/lib/spack/spack/modules/lmod.py
+@@ -223,9 +223,7 @@ def arch_dirname(self):
+         arch_folder_conf = spack.config.get("modules:%s:arch_folder" % self.conf.name, True)
+         if arch_folder_conf:
+             # include an arch specific folder between root and filename
+-            arch_folder = "-".join(
+-                [str(self.spec.platform), str(self.spec.os), str(self.spec.target.family)]
+-            )
++            arch_folder = str(self.spec.target)
+             return os.path.join(self.dirname(), arch_folder)
+         return self.dirname()

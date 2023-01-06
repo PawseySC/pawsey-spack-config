@@ -1,0 +1,38 @@
+diff --git a/lib/spack/spack/modules/common.py b/lib/spack/spack/modules/common.py
+index eaf79f6d04..1be017f46e 100644
+--- a/lib/spack/spack/modules/common.py
++++ b/lib/spack/spack/modules/common.py
+@@ -95,9 +95,11 @@ def configuration(module_set_name):
+ _valid_tokens = (
+     "name",
+     "version",
++    "variants",
+     "compiler",
+     "compiler.name",
+     "compiler.version",
++    "compiler.flags",
+     "architecture",
+     # tokens from old-style format strings
+     "package",
+@@ -614,8 +616,9 @@ def use_name(self):
+             projection = self.conf.default_projections["all"]
+ 
+         name = self.spec.format(projection)
+-        # Not everybody is working on linux...
+-        parts = name.split("/")
++        # Not everybody is working on linux... so split on /
++        # Remove " " from the module name
++        parts = name.replace(" ","_").replace('"',"_").split("/")
+         name = os.path.join(*parts)
+         # Add optional suffixes based on constraints
+         path_elements = [name] + self.conf.suffixes
+@@ -849,6 +852,9 @@ def write(self, overwrite=False):
+             tty.debug(msg.format(self.spec.cshort_spec))
+             return
+ 
++        # store the installation time of the package
++        self.spec.installation_time = datetime.datetime.fromtimestamp(os.path.getmtime(self.spec.prefix)).strftime('%c')
++
+         # Print a warning in case I am accidentally overwriting
+         # a module file that is already there (name clash)
+         if not overwrite and os.path.exists(self.layout.filename):

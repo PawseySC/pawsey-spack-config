@@ -1,3 +1,0 @@
-upstreams:: {}
-# Spack user (Pawsey staff) is the one installing the system-wide stack
-# hence, it must overwrite the site yaml, and NOT see it as an upstream
