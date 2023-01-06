@@ -128,9 +128,11 @@ modules:
         namd: 'applications/{name}/{version}'
         nektar: 'applications/{name}/{version}'
         nwchem: 'applications/{name}/{version}'
-        # Openfoam not generated for now as per chat with Alexis
-        # we're supporting Openfoam mainly through containers
-        #openfoam: 'dependencies/.{name}/{version}'
+        # Previously, no openfoam modules were generated for bare-metal installs
+        # But after issues with singularity in Nov2022, now openfoam bare metal
+        # will also be offered as module
+        openfoam: 'dependencies/.{name}/{version}'
+        # This other flavour of openfoam will be kept blocked until bare-metal install is tested
         #openfoam-org: 'dependencies/.{name}/{version}'
         quantum-espresso: 'applications/{name}/{version}'
         "vasp@6": 'applications/{name}6/{version}'
