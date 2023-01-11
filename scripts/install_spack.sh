@@ -15,20 +15,13 @@ fi
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
-# The ~/.spack directory for the 'spack' user dictates where and how the system-wide
+# The $SPACK_USER_CONFIG_PATH directory for the 'spack' user dictates where and how the system-wide
 # software stack installation takes place. We must make sure that current settings
 # are used instead of old ones. 
-if ! [ -L ~/.spack ]; then
-  if [ -e ~/.spack ]; then
-    mv ~/.spack ~/.spack.old.$( date -Iminutes | sed 's/+.*//' | tr ':' '.' )
-  fi
-else
-  rm ~/.spack
+if [ -e $SPACK_USER_CONFIG_PATH ]; then
+  mv $SPACK_USER_CONFIG_PATH $SPACK_USER_CONFIG_PATH.old.$( date -Iminutes | sed 's/+.*//' | tr ':' '.' )
 fi
-
-tmp_spack=/tmp/spack.$( date -Iminutes | sed 's/+.*//' | tr ':' '.' )
-mkdir "${tmp_spack}"
-ln -s "${tmp_spack}" ~/.spack
+  mkdir -p $SPACK_USER_CONFIG_PATH
 
 # We will use the Pawsey spack mirror, to which several patches will be applied.
 if ! [ -e ${INSTALL_PREFIX}/spack ]; then
@@ -44,6 +37,8 @@ if ! [ -e ${INSTALL_PREFIX}/spack ]; then
     ${PAWSEY_SPACK_CONFIG_REPO}/fixes/modulenames_plus_common.patch
   patch ${INSTALL_PREFIX}/spack/lib/spack/spack/cmd/modules/__init__.py \
     ${PAWSEY_SPACK_CONFIG_REPO}/fixes/modulenames_plus_init.patch
+  patch ${INSTALL_PREFIX}/spack/lib/spack/spack/paths.py \
+    ${PAWSEY_SPACK_CONFIG_REPO}/fixes/dot_spack.patch
   rm "${INSTALL_PREFIX}/spack/.git" -rf
   cd -
 fi
@@ -52,7 +47,7 @@ fi
 # process for both the Pawsey staff installations (spack user), and the user and 
 # project-wide ones.
 cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/site/*.yaml ${INSTALL_PREFIX}/spack/etc/spack/
-cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/spackuser/*.yaml ~/.spack/
+cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/spackuser/*.yaml $SPACK_USER_CONFIG_PATH/
 
 # copy project-wide configs into spack tree, too
 mkdir -p ${INSTALL_PREFIX}/spack/etc/spack/project
@@ -72,8 +67,9 @@ sed -i \
   -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g" \
   -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
   -e "s|USER_TEMP_FILES_PREFIX|${USER_TEMP_FILES_PREFIX}|g"\
+  -e "s|BOOTSTRAP_PATH|${BOOTSTRAP_PATH}|g"\
   ${INSTALL_PREFIX}/spack/etc/spack/*.yaml \
-  ~/.spack/*.yaml \
+  $SPACK_USER_CONFIG_PATH/*.yaml \
   ${INSTALL_PREFIX}/spack/etc/spack/project/*.yaml
 
 

@@ -3,7 +3,7 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2023.01"
+DATE_TAG="2023.02"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
     INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
@@ -36,6 +36,8 @@ fi
 # Note the use of '' instead of "" to allow env variables to be present in config files
 USER_PERMANENT_FILES_PREFIX='/software/projects'
 USER_TEMP_FILES_PREFIX='/scratch'
+SPACK_USER_CONFIG_PATH="$MYSOFTWARE/setonix/.spack_user_config"
+BOOTSTRAP_PATH='$MYSOFTWARE/setonix/.spack_user_config/bootstrap'
 
 pawseyenv_version="${DATE_TAG}"
 
