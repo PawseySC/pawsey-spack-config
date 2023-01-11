@@ -1,18 +1,45 @@
 diff --git a/lib/spack/spack/paths.py b/lib/spack/spack/paths.py
-index fc617342e8..c4f7b4277d 100644
+index fc617342e8..6e25762252 100644
 --- a/lib/spack/spack/paths.py
 +++ b/lib/spack/spack/paths.py
-@@ -120,7 +120,12 @@ def _get_user_cache_path():
+@@ -75,6 +75,22 @@
+ gpg_path = os.path.join(opt_path, "spack", "gpg")
  
- # User configuration and caches in $HOME/.spack
- def _get_user_config_path():
--    return os.path.expanduser(os.getenv("SPACK_USER_CONFIG_PATH") or "~%s.spack" % os.sep)
+ 
++def _get_pawsey_custom_path():
++    """
++    At Pawsey we would like to avoid writing a user's Spack files in the /home
++    directory. We use a filesystem dedicated to software installations instead.
++    There are several reasons. One is a limitation on the number of files we allow
++    in /home. The second is that we want to have a different user-level configuration
++    and cache directory for each software stack deployment.
++    """
 +    _mysoftware_path = os.getenv("MYSOFTWARE")
 +    if _mysoftware_path is None:
 +        user_path =  ("~%s.spack" % os.sep)
 +    else:
 +        user_path = f"{_mysoftware_path}{os.sep}setonix{os.sep}.spack_user_config"
-+    return os.path.expanduser(user_path)
++    return user_path
++
++
+ # Below paths are where Spack can write information for the user.
+ # Some are caches, some are not exactly caches.
+ #
+@@ -85,7 +101,7 @@
+ # setting `SPACK_USER_CACHE_PATH`. Otherwise it defaults to ~/.spack.
+ #
+ def _get_user_cache_path():
+-    return os.path.expanduser(os.getenv("SPACK_USER_CACHE_PATH") or "~%s.spack" % os.sep)
++    return os.path.expanduser(os.getenv("SPACK_USER_CACHE_PATH") or _get_pawsey_custom_path())
+ 
+ 
+ user_cache_path = _get_user_cache_path()
+@@ -120,7 +136,7 @@ def _get_user_cache_path():
+ 
+ # User configuration and caches in $HOME/.spack
+ def _get_user_config_path():
+-    return os.path.expanduser(os.getenv("SPACK_USER_CONFIG_PATH") or "~%s.spack" % os.sep)
++    return os.path.expanduser(_get_pawsey_custom_path())
  
  
  # Configuration in /etc/spack on the system
