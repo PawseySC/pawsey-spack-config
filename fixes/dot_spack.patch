@@ -1,5 +1,5 @@
 diff --git a/lib/spack/spack/paths.py b/lib/spack/spack/paths.py
-index fc617342e8..6e25762252 100644
+index fc617342e8..885f00081a 100644
 --- a/lib/spack/spack/paths.py
 +++ b/lib/spack/spack/paths.py
 @@ -75,6 +75,22 @@
@@ -39,7 +39,7 @@ index fc617342e8..6e25762252 100644
  # User configuration and caches in $HOME/.spack
  def _get_user_config_path():
 -    return os.path.expanduser(os.getenv("SPACK_USER_CONFIG_PATH") or "~%s.spack" % os.sep)
-+    return os.path.expanduser(_get_pawsey_custom_path())
++    return os.path.expanduser(os.getenv("SPACK_USER_CONFIG_PATH") or _get_pawsey_custom_path())
  
  
  # Configuration in /etc/spack on the system
