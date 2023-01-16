@@ -68,6 +68,7 @@ cp -r ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/templates/* "${INSTALL_PREFI
 # and finally customise them with the actual software stack installation path.
 sed -i \
   -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g" \
+  -e "s|DATE_TAG|$DATE_TAG|g"\
   -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
   -e "s|USER_TEMP_FILES_PREFIX|${USER_TEMP_FILES_PREFIX}|g"\
   -e "s|BOOTSTRAP_PATH|${BOOTSTRAP_PATH}|g"\
@@ -85,6 +86,7 @@ sed \
   -e "s;CCE_VERSION;${cce_version};g" \
   -e "s;PROJECT_MODULES_SUFFIX;${project_modules_suffix};g" \
   -e "s;USER_MODULES_SUFFIX;${user_modules_suffix};g" \
+  -e "s|DATE_TAG|$DATE_TAG|g"\
   -e "s;SHPC_CONTAINERS_MODULES_DIR;${shpc_containers_modules_dir};g" \
   -e "s;R_VERSION_MAJORMINOR;${r_version_majorminor};g" \
   -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
@@ -112,6 +114,7 @@ chmod a+rx \
 mkdir -p ${INSTALL_PREFIX}/${spack_module_dir}
 sed \
   -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g"\
+  -e "s|DATE_TAG|$DATE_TAG|g"\
   -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
   -e "s/SPACK_VERSION/${spack_version}/g" \
   -e "s/PYTHON_MODULEFILE/${python_name}\/${python_version}/g" \
@@ -139,6 +142,7 @@ done
 
 sed \
   -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g"\
+  -e "s|DATE_TAG|$DATE_TAG|g"\
   -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
   -e "s;CUSTOM_MODULES_DIR;${custom_modules_dir};g" \
   -e "s;UTILITIES_MODULES_DIR;${utilities_modules_dir};g" \
