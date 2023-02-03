@@ -45,12 +45,17 @@ for version in $( ls ${src_dir}/*.lua ${src_dir}/.*.lua 2>/dev/null ) ; do
   # 1.A singularity does not bind mount /askapbuffer
   sed \
     -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
-    -e '/singularity_bindpath *=/ s;/astro;;g' \
-    ${dst_dir}/${version/\.lua/-astro.lua} \
-    >${dst_dir}/${version}-mpi
+    ${dst_dir}/${version/\.lua/-mpi.lua} \
   # TODO 
-  # 1.C singularity does not add any mpi related stuff
-  #  >${dst_dir}/${version}-nompi
-  # 1.D singularity does not add any thing at all from host 
-  #  >${dst_dir}/${version}-nohost
+  1.C singularity does not add any mpi related stuff
+  sed \
+    -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
+    -e '/^# add MPI START /,/^# add MPI END/{/^# add MPI START/!{/^# add MPI END/!d}}' \
+    ${dst_dir}/${version/\.lua/-nompi.lua}
+  1.D singularity does not add any thing at all from host 
+  sed \
+    -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
+    -e '/^# add MPI START /,/^# add MPI END/{/^# add MPI START/!{/^# add MPI END/!d}}' \
+    -e '/^# add CRAY PATHS START /,/^# add CRAY PATHS END/{/^# add CRAY PATHS START/!{/^# add CRAY PATHS END/!d}}' \
+    ${dst_dir}/${version/\.lua/-nohost.lua}
 done
