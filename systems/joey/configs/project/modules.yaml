@@ -1,0 +1,6 @@
+# project_wide: use appropriate install locations
+
+modules:
+  default:
+    roots:
+      lmod: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/joey/modules
