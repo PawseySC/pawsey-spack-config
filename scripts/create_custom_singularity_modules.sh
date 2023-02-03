@@ -40,12 +40,17 @@ for version in $( ls ${src_dir}/*.lua ${src_dir}/.*.lua 2>/dev/null ) ; do
   if [ -e ${src_dir}/${version} ] ; then
     mv ${src_dir}/${version} ${src_dir}/.${version}
   fi
-  # 1.B singularity-astro is just the original module
-  cp -p ${src_dir}/.${version} ${dst_dir}/${version/\.lua/-astro.lua}
-  # 1.A singularity does not bind mount /askapbuffer and /astro
+  # 1.B singularity-askap is just the original module
+  cp -p ${src_dir}/.${version} ${dst_dir}/${version/\.lua/-askap.lua}
+  # 1.A singularity does not bind mount /askapbuffer
   sed \
     -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
     -e '/singularity_bindpath *=/ s;/astro;;g' \
     ${dst_dir}/${version/\.lua/-astro.lua} \
-    >${dst_dir}/${version}
+    >${dst_dir}/${version}-mpi
+  # TODO 
+  # 1.C singularity does not add any mpi related stuff
+  #  >${dst_dir}/${version}-nompi
+  # 1.D singularity does not add any thing at all from host 
+  #  >${dst_dir}/${version}-nohost
 done
