@@ -37,7 +37,7 @@ for tool in ${long_dir}/quay.io/pawsey/openfoam* ; do
   for module in ${tool}/*/module.lua ; do
     if [ -e ${module} ] ; then
       new_conflict="conflict(\"${tool##*/}${shpc_spackuser_container_tag}\")"
-      sed -i '/conflict(/c '"${new_conflict}"'' ${module}
+      sed --follow-links -i '/conflict(/c '"${new_conflict}"'' ${module}
     fi
   done
 done
