@@ -72,10 +72,10 @@ export PYTHONPATH="${INSTALL_PREFIX}/${shpc_install_dir}/lib/python${python_vers
 shpc config set module_sys:lmod
 # singularity for containers
 shpc config set container_tech:singularity
-shpc config remove registry:https://github.com/singularityhub/shpc-registry
-shpc config add "registry:${INSTALL_PREFIX}/${shpc_install_dir}/registry"
-shpc config add "registry:${INSTALL_PREFIX}/${shpc_install_dir}/pawsey_registry"
-shpc config add "registry:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/shpc_registry"
+shpc config remove registry https://github.com/singularityhub/shpc-registry
+shpc config add "registry ${INSTALL_PREFIX}/${shpc_install_dir}/registry"
+shpc config add "registry ${INSTALL_PREFIX}/${shpc_install_dir}/pawsey_registry"
+shpc config add "registry ${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/shpc_registry"
 # user install location for modulefiles
 shpc config set "module_base:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/${shpc_containers_modules_dir_long}"
 # disable default version for modulefiles (original)
