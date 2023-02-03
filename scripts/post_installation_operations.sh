@@ -7,7 +7,7 @@
 # 4. refresh wrf/roms dependency modules
 # 5. create hpc-python view and module
 # 6. apply licensing permissions
-# 7. refresh shpc symlink modules
+# 7. customise shpc symlink modules
 
 # source setup variables
 # if copy/pasting these commands, need to run from this directory
