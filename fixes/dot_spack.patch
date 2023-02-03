@@ -18,7 +18,7 @@ index fc617342e8..885f00081a 100644
 +    if _mysoftware_path is None:
 +        user_path =  ("~%s.spack" % os.sep)
 +    else:
-+        user_path = f"{_mysoftware_path}{os.sep}setonix{os.sep}.spack_user_config"
++        user_path = f"{_mysoftware_path}{os.sep}PAWSEY_SYSTEM{os.sep}DATE_TAG{os.sep}.spack_user_config"
 +    return user_path
 +
 +
