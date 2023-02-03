@@ -87,6 +87,12 @@ modules:
         autoload: direct
       petsc:
         autoload: direct
+      metis:
+        autoload: direct
+      parmetis:
+        autoload: direct
+      scotch:
+        autoload: direct
 
       # i/o libraries
       hdf5:
@@ -184,6 +190,10 @@ modules:
         netlib-scalapack: 'libraries/{name}/{version}'
         slate: 'libraries/{name}/{version}'
         trilinos: 'libraries/{name}/{version}'
+        "metis ~int64": 'libraries/{name}/{version}'
+        "parmetis ~int64": 'libraries/{name}/{version}'
+        "metis +int64": 'libraries/{name}/{version}-int64'
+        "parmetis +int64": 'libraries/{name}/{version}-int64'
 
         # IO libraries 
         # to account for all the hdf5 variants 
@@ -220,6 +230,7 @@ modules:
         # utilities 
         autoconf: 'utilities/{name}/{version}'
         automake: 'utilities/{name}/{version}'
+        libtool: 'utilities/{name}/{version}'
         cmake: 'utilities/{name}/{version}'
         emacs: 'utilities/{name}/{version}'
         ffmpeg: 'utilities/{name}/{version}'
