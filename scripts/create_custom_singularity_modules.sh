@@ -38,24 +38,24 @@ for version in $( ls ${src_dir}/*.lua ${src_dir}/.*.lua 2>/dev/null ) ; do
   version="${version#.}"
   #2. hide Spack module
   if [ -e ${src_dir}/${version} ] ; then
-    mv ${src_dir}/${version} ${src_dir}/.${version}
+    mv ${src_dir}/${version}.lua ${src_dir}/.${version}
   fi
   # 1.B singularity-askap is just the original module
-  cp -p ${src_dir}/.${version} ${dst_dir}/${version/\.lua/-askap.lua}
+  cp -p ${src_dir}/.${version} ${dst_dir}/${version}-askap.lua
   # 1.A singularity does not bind mount /askapbuffer
   sed \
     -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
-    ${dst_dir}/${version/\.lua/-mpi.lua} \
-  # TODO 
-  1.C singularity does not add any mpi related stuff
+    ${src_dir}/.${version} > ${dst_dir}/${version}-mpi.lua
+  # 1.C singularity does not add any mpi related stuff
   sed \
     -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
-    -e '/^# add MPI START /,/^# add MPI END/{/^# add MPI START/!{/^# add MPI END/!d}}' \
-    ${dst_dir}/${version/\.lua/-nompi.lua}
-  1.D singularity does not add any thing at all from host 
+    -e '/^-- add MPI START/,/^-- add MPI END/{/^-- add MPI START/!{/^-- add MPI END/!d}}' \
+    ${src_dir}/.${version} > ${dst_dir}/${version}-nompi.lua
+  # 1.D singularity does not add any thing at all from host 
   sed \
     -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
-    -e '/^# add MPI START /,/^# add MPI END/{/^# add MPI START/!{/^# add MPI END/!d}}' \
-    -e '/^# add CRAY PATHS START /,/^# add CRAY PATHS END/{/^# add CRAY PATHS START/!{/^# add CRAY PATHS END/!d}}' \
-    ${dst_dir}/${version/\.lua/-nohost.lua}
+    -e '/^-- add MPI START/,/^-- add MPI END/{/^-- add MPI START/!{/^ add MPI END/!d}}' \
+    -e '/^-- add CRAY_PATHS START/,/^-- add CRAY_PATHS END/{/^-- add CRAY_PATHS START/!{/^-- add CRAY_PATHS END/!d}}' \
+    -e '/^-- add CURRENT_HOST_LD_PATH START/,/^-- add CURRENT_HOST_LD_PATH END/{/^-- add CURRENT_HOST_LD_PATH START/!{/^-- add CURRENT_HOST_LD_PATH END/!d}}' \
+    ${src_dir}/.${version} > ${dst_dir}/${version}-nohost.lua 
 done

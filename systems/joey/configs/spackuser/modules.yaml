@@ -194,6 +194,7 @@ modules:
         "parmetis ~int64": 'libraries/{name}/{version}'
         "metis +int64": 'libraries/{name}/{version}-int64'
         "parmetis +int64": 'libraries/{name}/{version}-int64'
+        scotch: 'libraries/{name}/{version}'
 
         # IO libraries 
         # to account for all the hdf5 variants 
