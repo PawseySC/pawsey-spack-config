@@ -52,7 +52,8 @@ cpu_arch="zen3"
 
 # tool versions
 spack_version="0.19.0" # the prefix "v" is added in setup_spack.sh
-singularity_version="3.8.6" # has to match the version in the Spack env yaml
+singularity_version="3.8.6-nompi" # has to match the version in the Spack env yaml + nompi tag
+singularity_mpi_version="3.8.6-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.0.57"
 
 # python (and py tools) versions
@@ -136,6 +137,10 @@ quay.io/biocontainers/trimmomatic:0.39--hdfd78af_2
 quay.io/biocontainers/trinity:2.13.2--ha140323_0
 quay.io/biocontainers/vcftools:0.1.16--pl5321h9a82719_6
 quay.io/biocontainers/velvet:1.2.10--h7132678_5
+quay.io/sarahbeecroft9/alphafold:2.2.3
+quay.io/sarahbeecroft9/interproscan:5.56-89.0
+"
+container_list_mpi="
 quay.io/pawsey/hpc-python:2022.03
 quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 quay.io/pawsey/openfoam:v2012
@@ -144,9 +149,8 @@ quay.io/pawsey/openfoam:v1912
 quay.io/pawsey/openfoam:v1812
 quay.io/pawsey/openfoam-org:8
 quay.io/pawsey/openfoam-org:7
-quay.io/sarahbeecroft9/alphafold:2.2.3
-quay.io/sarahbeecroft9/interproscan:5.56-89.0
 "
+
 # name of Singularity module (Spack has singularity and singularityce)
 singularity_name="singularity"
 
