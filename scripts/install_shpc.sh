@@ -64,6 +64,9 @@ sed -i "s;/.*/python.*$;/bin/sh\n'''exec' & \"\$0\" \"\$@\"\n' ''';g" "${INSTALL
 export PATH="${INSTALL_PREFIX}/${shpc_install_dir}/bin":$PATH
 export PYTHONPATH="${INSTALL_PREFIX}/${shpc_install_dir}/lib/python${python_version_major}.${python_version_minor}/site-packages":$PYTHONPATH
 
+# need to create this registry directory, otherwise corresponding config command above will fail
+mkdir -p ${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/shpc_registry
+
 #### ALL SHPC CONFIG COMMANDS HERE
 # in alternative, we could provide edited yamls, just to copy over
 
