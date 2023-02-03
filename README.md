@@ -28,6 +28,7 @@ The repository is composed of the directories:
 
 * `fixes/`: patches implemented by Pawsey staff to be applied to Spack prior to production use. They are meant to improve usability of Spack for Pawsey-specific use cases.
 * `repo/`: custom Spack package recipes for software not yet supported by Spack or that needed modification in the build process to work on Pawsey systems.
+* `shpc_registry/`: custom Singularity-HPC (SHPC) recipes to deploy containers.
 * `scripts/`: BASH scripts used to automate the deployment process.
 * `systems/<system>`: a directory containing configuration files specific to a system. Scripts will use these files to customise the Spack deployment and installation of the software stack.
 
@@ -61,7 +62,6 @@ This is where system specific configurations are placed. In particular, the foll
   * `project/`: Spack configuration files that are valid for project-wide installations executed by any user using the dedicated script `spack_project.sh`.
   * `spackuser/`: Spack configuration files for system-wide installs, performed by Pawsey staff, which will sit in `/home/spack/.spack/`, allowing the `spack` user to override system-wide settings.
 * `environments/`: Spack environments to be deployed.
-* `shpc_registry/`: custom Singularity-HPC (SHPC) recipes to deploy containers.
 * `templates/`: modulefile templates for Spack.
 
 
