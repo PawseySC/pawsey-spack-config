@@ -36,8 +36,8 @@ fi
 # Note the use of '' instead of "" to allow env variables to be present in config files
 USER_PERMANENT_FILES_PREFIX='/software/projects'
 USER_TEMP_FILES_PREFIX='/scratch'
-SPACK_USER_CONFIG_PATH="$MYSOFTWARE/setonix/.spack_user_config"
-BOOTSTRAP_PATH='$MYSOFTWARE/setonix/.spack_user_config/bootstrap'
+SPACK_USER_CONFIG_PATH="$MYSOFTWARE/setonix/$DATE_TAG/.spack_user_config"
+BOOTSTRAP_PATH='$MYSOFTWARE/setonix/'$DATE_TAG/.spack_user_config/bootstrap
 
 pawseyenv_version="${DATE_TAG}"
 
