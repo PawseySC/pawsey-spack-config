@@ -56,9 +56,9 @@ if ! [ -e "${INSTALL_PREFIX}/${shpc_install_dir}/pawsey_registry" ]; then
 fi
 
 # fix long shebang
-sed -i "s;/.*/python.*$;/bin/sh\n'''exec' & \"\$0\" \"\$@\"\n' ''';g" "${INSTALL_PREFIX}/${shpc_install_dir}/bin/shpc"
+sed -i "s;/.*/python.*/.*$;/bin/sh\n'''exec' & \"\$0\" \"\$@\"\n' ''';g" "${INSTALL_PREFIX}/${shpc_install_dir}/bin/shpc"
 # the one below only because all dep packages are in same path
-sed -i "s;/.*/python.*$;/bin/sh\n'''exec' & \"\$0\" \"\$@\"\n' ''';g" "${INSTALL_PREFIX}/${shpc_install_dir}/bin/spython"
+sed -i "s;/.*/python.*/.*$;/bin/sh\n'''exec' & \"\$0\" \"\$@\"\n' ''';g" "${INSTALL_PREFIX}/${shpc_install_dir}/bin/spython"
 
 # need to configure shpc for use, to change configs
 export PATH="${INSTALL_PREFIX}/${shpc_install_dir}/bin":$PATH
