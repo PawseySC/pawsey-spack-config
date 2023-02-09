@@ -42,14 +42,12 @@ sg ${INSTALL_GROUP} -c "pip install --prefix=${INSTALL_PREFIX}/${shpc_install_di
 
 # get registry from github repo
 if ! [ -e "${INSTALL_PREFIX}/${shpc_install_dir}/registry" ]; then
-    git clone https://github.com/singularityhub/singularity-hpc "${INSTALL_PREFIX}/${shpc_install_dir}/singularity-hpc"
+    # get registry from github repo
+    git clone https://github.com/singularityhub/shpc-registry ${INSTALL_PREFIX}/${shpc_install_dir}/registry
     # checkout registry, too, for reproducibility
-    cd "${INSTALL_PREFIX}/${shpc_install_dir}/singularity-hpc"
-    git checkout $shpc_version
+    cd ${INSTALL_PREFIX}/${shpc_install_dir}/registry
+    git checkout ${shpc_registry_version}
     cd -
-    mv "${INSTALL_PREFIX}/${shpc_install_dir}/singularity-hpc/registry" "${INSTALL_PREFIX}/${shpc_install_dir}/"
-    # do not need rest of github repo
-    rm -fr "${INSTALL_PREFIX}/${shpc_install_dir}/singularity-hpc"
 fi
 
 # install Pawsey registry
@@ -57,14 +55,12 @@ if ! [ -e "${INSTALL_PREFIX}/${shpc_install_dir}/pawsey_registry" ]; then
     cp -r "${PAWSEY_SPACK_CONFIG_REPO}/shpc_registry" "${INSTALL_PREFIX}/${shpc_install_dir}/pawsey_registry"
 fi
 
-# fix long shebang
-sed -i "s;/.*/python.*$;/bin/sh\n'''exec' & \"\$0\" \"\$@\"\n' ''';g" "${INSTALL_PREFIX}/${shpc_install_dir}/bin/shpc"
-# the one below only because all dep packages are in same path
-sed -i "s;/.*/python.*$;/bin/sh\n'''exec' & \"\$0\" \"\$@\"\n' ''';g" "${INSTALL_PREFIX}/${shpc_install_dir}/bin/spython"
-
 # need to configure shpc for use, to change configs
 export PATH="${INSTALL_PREFIX}/${shpc_install_dir}/bin":$PATH
 export PYTHONPATH="${INSTALL_PREFIX}/${shpc_install_dir}/lib/python${python_version_major}.${python_version_minor}/site-packages":$PYTHONPATH
+
+# need to create this registry directory, otherwise corresponding config command above will fail
+mkdir -p ${USER_PERMANENT_FILES_PREFIX}/$PAWSEY_PROJECT/$USER/setonix/$DATE_TAG/shpc_registry
 
 #### ALL SHPC CONFIG COMMANDS HERE
 # in alternative, we could provide edited yamls, just to copy over
@@ -74,10 +70,10 @@ export PYTHONPATH="${INSTALL_PREFIX}/${shpc_install_dir}/lib/python${python_vers
 shpc config set module_sys:lmod
 # singularity for containers
 shpc config set container_tech:singularity
-shpc config remove registry:\$root_dir/registry
-shpc config add "registry:${INSTALL_PREFIX}/${shpc_install_dir}/registry"
-shpc config add "registry:${INSTALL_PREFIX}/${shpc_install_dir}/pawsey_registry"
-shpc config add "registry:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/shpc_registry"
+shpc config remove registry https://github.com/singularityhub/shpc-registry
+shpc config add registry "${INSTALL_PREFIX}/${shpc_install_dir}/registry"
+shpc config add registry "${INSTALL_PREFIX}/${shpc_install_dir}/pawsey_registry"
+shpc config add registry "${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/shpc_registry"
 # user install location for modulefiles
 shpc config set "module_base:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/${shpc_containers_modules_dir_long}"
 # disable default version for modulefiles (original)
