@@ -25,6 +25,9 @@ mkdir -p "${INSTALL_PREFIX}/${containers_root_dir}"
 for container in $container_list ; do
   shpc install $container
 done
+for container in $container_list_mpi ; do
+  shpc -c set:singularity_module:${singularity_name}/${singularity_mpi_version} install $container
+done
 
 # customise Pawsey container modules
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/patch_shpc_pawsey_modules.sh"
