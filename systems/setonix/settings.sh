@@ -148,6 +148,7 @@ quay.io/pawsey/openfoam:v2012
 quay.io/pawsey/openfoam:v2006
 quay.io/pawsey/openfoam:v1912
 quay.io/pawsey/openfoam:v1812
+quay.io/pawsey/openfoam-org:10
 quay.io/pawsey/openfoam-org:8
 quay.io/pawsey/openfoam-org:7
 "
