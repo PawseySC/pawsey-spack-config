@@ -28,6 +28,8 @@ done
 for container in $container_list_mpi ; do
   shpc -c set:singularity_module:${singularity_name}/${singularity_mpi_version} install $container
 done
-
+for container in $container_list_gpu ; do
+  shpc -c set:module_name:"{{tool}}-gfx90a-container" install $container
+done
 # customise Pawsey container modules
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/patch_shpc_pawsey_modules.sh"

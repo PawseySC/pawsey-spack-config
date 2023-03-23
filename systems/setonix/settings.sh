@@ -152,6 +152,10 @@ quay.io/pawsey/openfoam-org:8
 quay.io/pawsey/openfoam-org:7
 "
 
+container_list_gpu="
+amd/gromacs:2022.3.amd1_174
+amd/cp2k:8.2
+"
 # name of Singularity module (Spack has singularity and singularityce)
 singularity_name="singularity"
 

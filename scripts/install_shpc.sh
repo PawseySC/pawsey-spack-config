@@ -67,25 +67,25 @@ mkdir -p ${USER_PERMANENT_FILES_PREFIX}/$PAWSEY_PROJECT/$USER/setonix/$DATE_TAG/
 
 ## ALL USERS
 # lmod for modules
-shpc config set module_sys:lmod
+shpc config set module_sys lmod
 # singularity for containers
-shpc config set container_tech:singularity
+shpc config set container_tech singularity
 shpc config remove registry https://github.com/singularityhub/shpc-registry
 shpc config add registry "${INSTALL_PREFIX}/${shpc_install_dir}/registry"
 shpc config add registry "${INSTALL_PREFIX}/${shpc_install_dir}/pawsey_registry"
 shpc config add registry "${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/shpc_registry"
 # user install location for modulefiles
-shpc config set "module_base:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/${shpc_containers_modules_dir_long}"
+shpc config set module_base "${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/${shpc_containers_modules_dir_long}"
 # disable default version for modulefiles (original)
 shpc config set default_version:null
 # user install location for containers
-shpc config set "container_base:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/${shpc_containers_dir}"
+shpc config set container_base "${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/${shpc_containers_dir}"
 # user install location for modulefiles (symlinks - views)
 # variable substitutions assume format like views/modules
-shpc config set "views_base:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/${shpc_containers_modules_dir%/*}"
-shpc config set "default_view:${shpc_containers_modules_dir##*/}"
+shpc config set views_base "${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/${shpc_containers_modules_dir%/*}"
+shpc config set default_view "${shpc_containers_modules_dir##*/}"
 # singularity module
-shpc config set "singularity_module:${singularity_name}/${singularity_version}"
+shpc config set singularity_module "${singularity_name}/${singularity_version}"
 # enable wrapper scripts
 shpc config set wrapper_scripts:enabled:true
 # GPU support (Phase 2)
@@ -98,13 +98,13 @@ shpc config set "container_features:home:\$MYSOFTWARE/setonix/$DATE_TAG/.${shpc_
 ## SPACK USER (system wide installation)
 shpc config inituser
 # system install location for modulefiles (original)
-shpc config set module_base:"${INSTALL_PREFIX}/${shpc_containers_modules_dir_long}"
+shpc config set module_base "${INSTALL_PREFIX}/${shpc_containers_modules_dir_long}"
 # system install location for containers
-shpc config set "container_base:${INSTALL_PREFIX}/${shpc_containers_dir}"
+shpc config set container_base "${INSTALL_PREFIX}/${shpc_containers_dir}"
 # system install location for modulefiles (symlinks - views)
 # variable substitutions assume format like views/modules
-shpc config set "views_base:${INSTALL_PREFIX}/${shpc_containers_modules_dir%/*}"
-shpc config set "default_view:${shpc_containers_modules_dir##*/}"
+shpc config set views_base "${INSTALL_PREFIX}/${shpc_containers_modules_dir%/*}"
+shpc config set default_view "${shpc_containers_modules_dir##*/}"
 shpc view create "${shpc_containers_modules_dir##*/}"
 
 # edit and copy over SHPC modulefile

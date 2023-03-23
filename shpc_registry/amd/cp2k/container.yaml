@@ -1,0 +1,12 @@
+docker: amdih/cp2k
+url: https://www.amd.com/en/technologies/infinity-hub/cp2k
+description: CP2K is a quantum chemistry and solid state physics software package that can perform atomistic simulations of solid state, liquid, molecular, periodic, material, crystal, and biological systems. 
+latest:
+  '8.2': sha256:5947603de32c4e690f734075f7625563a2de18d1c3276ec10fceccdb332022ec
+tags:
+  '8.2': sha256:5947603de32c4e690f734075f7625563a2de18d1c3276ec10fceccdb332022ec
+aliases:
+- name: ??
+  command: ??
+  # singularity_options: -B /scratch/references/alphafold
+
