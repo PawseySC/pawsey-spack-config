@@ -172,7 +172,7 @@ modules:
         gsl: 'libraries/{name}/{version}'
         hpx: 'libraries/{name}/{version}'
         "kokkos +hpx": 'libraries/{name}/{version}-hpx'
-        "kokkos +openmp": 'libraries/{name}/{version}-openmp'
+        "kokkos +openmp +rocm": 'libraries/{name}/{version}-omp-rocm'
         kokkos: 'libraries/{name}/{version}'
         netlib-lapack: 'libraries/{name}/{version}'
         openblas: 'libraries/{name}/{version}'
