@@ -195,4 +195,7 @@ singularity_symlink_module_dir="${utilities_modules_dir}/${singularity_name}"
 # location for Spack modulefile
 spack_module_dir="${utilities_modules_dir}/spack"
 
+ROCM_VERSION=5.4.3
+ROCM_SCRIPT_REV=0
+ROCM_INSTALL_DIR=$INSTALL_REFIX/pawsey/software/rocm/rocm-${ROCM_VERSION}rev${ROCM_SCRIPT_REV}
 fi # end include guard
