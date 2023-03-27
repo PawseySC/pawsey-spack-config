@@ -97,21 +97,6 @@ env_roms
 env_wrf
 "
 
-### TYPICALLY NO EDIT NEEDED PAST THIS POIINT
-
-# python version info (no editing needed)
-python_version_major="$( echo $python_version | cut -d '.' -f 1 )"
-python_version_minor="$( echo $python_version | cut -d '.' -f 2 )"
-python_version_bugfix="$( echo $python_version | cut -d '.' -f 3 )"
-
-# shpc module directories for all users (system-wide and user-specific)
-shpc_allusers_modules_dir_long="modules-long"
-shpc_allusers_modules_dir_short="views/modules"
-# shpc module suffix for SPACK USER (system-wide)
-shpc_spackuser_container_tag="-container"
-# name of SHPC module: decide this once and for all
-shpc_name="shpc"
-
 container_list="
 quay.io/biocontainers/bamtools:2.5.1--hd03093a_10
 quay.io/biocontainers/bbmap:38.96--h5c4e2a8_0
@@ -151,6 +136,21 @@ quay.io/pawsey/openfoam:v1812
 quay.io/pawsey/openfoam-org:8
 quay.io/pawsey/openfoam-org:7
 "
+
+### TYPICALLY NO EDIT NEEDED PAST THIS POIINT
+
+# python version info (no editing needed)
+python_version_major="$( echo $python_version | cut -d '.' -f 1 )"
+python_version_minor="$( echo $python_version | cut -d '.' -f 2 )"
+python_version_bugfix="$( echo $python_version | cut -d '.' -f 3 )"
+
+# shpc module directories for all users (system-wide and user-specific)
+shpc_allusers_modules_dir_long="modules-long"
+shpc_allusers_modules_dir_short="views/modules"
+# shpc module suffix for SPACK USER (system-wide)
+shpc_spackuser_container_tag="-container"
+# name of SHPC module: decide this once and for all
+shpc_name="shpc"
 
 # name of Singularity module (Spack has singularity and singularityce)
 singularity_name="singularity"
