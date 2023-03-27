@@ -268,7 +268,11 @@ packages:
   # ===========================================================================
   #                                  EXTERNALS
   # ===========================================================================
-
+  pkg-config:
+    externals:
+    - spec: pkg-config@0.29.2
+      prefix: /usr
+    buildable: false
 
 
   # ---------------------------------------------------------------------------
@@ -477,61 +481,61 @@ packages:
 
 # The following libraries have not been installed yet
 
-  aomp:
-    externals:
-    - spec: aomp@5.4.3
-      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
-    buildable: false
-  rocm-opencl:
-    externals:
-    - spec: rocm-opencl@5.4.3
-      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
-    buildable: false
-  rocmlir:
-    externals:
-    - spec: rocmlir@5.4.3
-      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
-    buildable: false
-  rccl-tests:
-    externals:
-    - spec: rccl-tests@5.4.3
-      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
-    buildable: false
-  migraphx:
-    externals:
-    - spec: migraphx@5.4.3
-      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
-    buildable: false
-  miopengemm:
-    externals:
-    - spec: miopengemm@5.4.3
-      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
-    buildable: false
-  miopen-hip:
-    externals:
-    - spec: miopen-hip@5.4.3
-      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
-    buildable: false
-  miopen-opencl:
-    externals:
-    - spec: miopen-opencl@5.4.3
-      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
-    buildable: false
-  miopen-tensile:
-    externals:
-    - spec: miopen-tensile@5.4.3
-      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
-    buildable: false
-  mivisionx:
-    externals:
-    - spec: lustre@5.4.3
-      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
-    buildable: false
-  mlirmiopen:
-    externals:
-    - spec: mlirmiopen@5.4.3
-      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
-    buildable: false
+    #  aomp:
+    #    externals:
+    #    - spec: aomp@5.4.3
+    #      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
+    #    buildable: false
+    #  rocm-opencl:
+    #    externals:
+    #    - spec: rocm-opencl@5.4.3
+    #      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
+    #    buildable: false
+    #  rocmlir:
+    #    externals:
+    #    - spec: rocmlir@5.4.3
+    #      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
+    #    buildable: false
+    #  rccl-tests:
+    #    externals:
+    #    - spec: rccl-tests@5.4.3
+    #      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
+    #    buildable: false
+    #  migraphx:
+    #    externals:
+    #    - spec: migraphx@5.4.3
+    #      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
+    #    buildable: false
+    #  miopengemm:
+    #    externals:
+    #    - spec: miopengemm@5.4.3
+    #      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
+    #    buildable: false
+    #  miopen-hip:
+    #    externals:
+    #    - spec: miopen-hip@5.4.3
+    #      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
+    #    buildable: false
+    #  miopen-opencl:
+    #    externals:
+    #    - spec: miopen-opencl@5.4.3
+    #      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
+    #    buildable: false
+    #  miopen-tensile:
+    #    externals:
+    #    - spec: miopen-tensile@5.4.3
+    #      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
+    #    buildable: false
+    #  mivisionx:
+    #    externals:
+    #    - spec: lustre@5.4.3
+    #      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
+    #    buildable: false
+    #  mlirmiopen:
+    #    externals:
+    #    - spec: mlirmiopen@5.4.3
+    #      prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev0
+    #    buildable: false
 
 # ----------------------------------------------------------------------------
 #                                        CRAY
