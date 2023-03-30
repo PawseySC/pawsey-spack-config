@@ -14,6 +14,7 @@ spack:
     # rather silly kokkos has std=98,11, etc setting cxxstd. BUT all other packages 
     # use the flag cxxstd ... Update in recipes might fix this but for the moment, we fix 
     # this in our repo
+    - kokkos@3.4.01 +hwloc +memkind +numactl +openmp +tuning cxxstd=14 build_type=Release
     - kokkos@3.4.01 +hwloc +memkind +numactl +openmp +rocm +tuning cxxstd=14 build_type=Release
     # for hpx must explicitly set openmp off 
     - kokkos@3.4.01 +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ~openmp
