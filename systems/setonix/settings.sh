@@ -3,7 +3,7 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2023.02"
+DATE_TAG="2023.07"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
     INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
@@ -195,7 +195,8 @@ singularity_symlink_module_dir="${utilities_modules_dir}/${singularity_name}"
 # location for Spack modulefile
 spack_module_dir="${utilities_modules_dir}/spack"
 
-ROCM_VERSION=5.4.3
+# Use the Cray provided ROCm until we have a stable custom build.
+ROCM_VERSION=5.0.2
 ROCM_SCRIPT_REV=0
-ROCM_INSTALL_DIR=$INSTALL_REFIX/pawsey/software/rocm/rocm-${ROCM_VERSION}rev${ROCM_SCRIPT_REV}
+ROCM_INSTALL_DIR=/opt/rocm-5.0.2  #$INSTALL_PREFIX/pawsey/software/rocm/rocm-${ROCM_VERSION}rev${ROCM_SCRIPT_REV}
 fi # end include guard
