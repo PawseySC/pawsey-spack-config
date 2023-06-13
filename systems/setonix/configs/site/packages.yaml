@@ -273,8 +273,18 @@ packages:
     - spec: pkg-config@0.29.2
       prefix: /usr
     buildable: false
+  
+  hwloc:
+    externals:
+    - spec: hwloc@2.5.0
+      prefix: /usr
+    buildable: false
 
-
+  numactl:
+    externals:
+    - spec: numactl@2.0.14
+      prefix: /usr
+    buildable: false
   # ---------------------------------------------------------------------------
   #                                     ROCM
   # ---------------------------------------------------------------------------
@@ -596,36 +606,20 @@ packages:
 #      prefix: /opt/cray/pe/fftw/3.3.10.1/x86_milan
 #    buildable: false
   # more cray
-  # no longer present on setonix
-  #jemalloc:
-  #  externals:
-  #  - spec: jemalloc@5.1.0.4
-  #    modules:
-  #    - cray-jemalloc/5.1.0.4
-  #    prefix: /opt/cray/pe/jemalloc/5.1.0.4
-  #  buildable: false
   xpmem:
     externals:
     - spec: xpmem@2.4.4
       modules:
-      - xpmem/xpmem/2.4.4-2.3_9.1__gff0e1d9.shasta
-      prefix: /opt/cray/xpmem/xpmem/2.4.4-2.3_9.1__gff0e1d9.shasta
+      - xpmem/2.4.4-2.3_13.8__gff0e1d9.shasta 
+      prefix: /opt/cray/xpmem/2.4.4-2.3_13.8__gff0e1d9.shasta
     buildable: false
   libfabric:
     externals:
-    - spec: libfabric@1.11.0.4.128
+    - spec: libfabric@1.15.0.0
       modules:
-      - libfabric/1.11.0.4.128
-      prefix: /opt/cray/libfabric/1.11.0.4.128
+      - libfabric/1.15.0.0
+      prefix: /opt/cray/libfabric/1.15.0.0 
     buildable: false
-  # no longer on setonix
-  #ucx:
-  #  externals:
-  #  - spec: ucx@2.7.0-1
-  #    modules:
-  #    - cray-ucx/2.7.0-1
-  #    prefix: /opt/cray/pe/cray-ucx/2.7.0-1/ucx
-  #  buildable: false
   papi:
     externals:
     - spec: papi@6.0.0.16
@@ -633,17 +627,3 @@ packages:
       - papi/6.0.0.16
       prefix: /opt/cray/pe/papi/6.0.0.16
     buildable: false
-
-# cray hdf5
-# cray parallel-netcdf
-# cray netcdf
-# taken out, as cray is dropping support, and there are missing APIs any way
-# available in examples/joey_sprint/configs/packages.yaml up to commit 5c797eefebf8264cba1930c64c5fba7aa0ac6edd
-
-# python additions, based on loading cray-python and running pip list 
-# we have tried to use them as externals, but Spack does not use them correctly:
-# 1. if specified with ^python@3.9.7, concretisation always fail
-# 2. if specified without ^python@3.9.7, would be used also with the wrong python versions
-# therefore, taken out
-# available in examples/joey_sprint/configs/packages.yaml up to commit bfef602ee1e7f5ae7bdb5c6b5120f116df4bea18
-

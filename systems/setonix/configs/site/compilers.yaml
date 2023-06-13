@@ -55,7 +55,9 @@ compilers:
     - craype-x86-milan
     - craype-network-ofi
     - xpmem
-    environment: {}
+    environment:
+      prepend_path:
+        PKG_CONFIG_PATH: /opt/cray/xpmem/2.4.4-2.3_13.8__gff0e1d9.shasta/lib64/pkgconfig
     extra_rpaths: []
 
 # similar to above but has debugging flags
