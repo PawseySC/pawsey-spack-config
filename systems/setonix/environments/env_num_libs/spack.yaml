@@ -15,6 +15,7 @@ spack:
     # use the flag cxxstd ... Update in recipes might fix this but for the moment, we fix 
     # this in our repo
     - kokkos@3.4.01 +hwloc +memkind +numactl +openmp +tuning cxxstd=14 build_type=Release
+    # - kokkos@3.4.01 +hwloc +memkind +numactl +openmp +rocm +tuning cxxstd=14 build_type=Release
     # for hpx must explicitly set openmp off 
     - kokkos@3.4.01 +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ~openmp
       cxxstd=14 build_type=Release ^hpx@1.6.0 +async_mpi max_cpu_count=128

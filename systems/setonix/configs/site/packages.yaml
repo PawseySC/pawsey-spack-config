@@ -265,313 +265,297 @@ packages:
   cghcentre:
     variants: 'build_type=Release'
 
-# packages found automatically by spack external find
-  bison:
-    externals:
-    - spec: bison@3.0.4
-      prefix: /usr
-    buildable: false
-  bzip2:
-    externals:
-    - spec: bzip2@1.0.6
-      prefix: /usr
-    buildable: false
-  binutils:
-    externals:
-    - spec: elfutils@2.37
-      prefix: /usr
-    buildable: false
-  cpio:
-    externals:
-    - spec: cpio@2.12
-      prefix: /usr
-    buildable: false
-  diffutils:
-    externals:
-    - spec: diffutils@3.6
-      prefix: /usr
-    buildable: false
-  elfutils:
-    externals:
-    - spec: elfutils@0.168
-      prefix: /usr
-    buildable: false
-  file:
-    externals:
-    - spec: file@5.32
-      prefix: /usr
-    buildable: false
-  findutils:
-    externals:
-    - spec: findutils@4.8.0
-      prefix: /usr
-    buildable: false
-  flex:
-    externals:
-    - spec: flex@2.6.4+lex
-      prefix: /usr
-    buildable: false
-  gawk:
-    externals:
-    - spec: gawk@4.2.1
-      prefix: /usr
-    buildable: false
-  ghostscript:
-    externals:
-    - spec: ghostscript@9.52
-      prefix: /usr
-    buildable: false
-  git:
-    externals:
-    - spec: git@2.34.1~tcltk
-      prefix: /usr
-    buildable: false
-  gmake:
-    externals:
-    - spec: gmake@4.2.1
-      prefix: /usr
-    buildable: false
-  groff:
-    externals:
-    - spec: groff@1.22.3
-      prefix: /usr
-    buildable: false
-  lustre:
-    externals:
-    - spec: lustre@2.15.0.2_rc2_cray_113_g62287d0
-      prefix: /usr
-    buildable: false
-  libelf:
-    externals:
-    - spec: libelf@0.168
-      prefix: /usr
-    buildable: false
-  libffi:
-    externals:
-    - spec: libffi@3.2.1
-      prefix: /usr
-    buildable: false
-  libxpm:
-    externals:
-    - spec: libxpm@3.5.12
-      prefix: /usr
-    buildable: false
-  m4:
-    externals:
-    - spec: m4@1.4.18
-      prefix: /usr
-    buildable: false
-  maven:
-    externals:
-    - spec: maven@3.6.3
-      prefix: /usr/local/maven
-    buildable: false
-  ninja:
-    externals:
-    - spec: ninja@1.10.0
-      prefix: /usr
-    buildable: false
-  openssh:
-    externals:
-# getting rid of letter in version, as clingo/spack has buggy behaviour
-# fooling spack is risky; however, openssh website mentions 
-# these 2 versions are equivalent; also seem equivalent within spack
-#    - spec: openssh@8.4p1
-    - spec: openssh@8.4
-      prefix: /usr
-    buildable: false
-  openssl:
-    externals:
-# getting rid of letter in version, as clingo/spack has buggy behaviour
-# fooling spack is risky; however, as of spack v0.17.0, 
-# these 2 versions are equivalent in recipes for depends/conflicts
-#    - spec: openssl@1.1.1d
-    - spec: openssl@1.1
-      prefix: /usr
-    buildable: false
+  # ===========================================================================
+  #                                  EXTERNALS
+  # ===========================================================================
   pkg-config:
     externals:
     - spec: pkg-config@0.29.2
       prefix: /usr
     buildable: false
-  readline:
-    externals:
-    - spec: readline@7.0
-      prefix: /usr
-    buildable: false
-  rsync:
-    externals:
-    - spec: rsync@3.1.3
-      prefix: /usr
-    buildable: false
-  sed:
-    externals:
-    - spec: sed@4.4
-      prefix: /usr
-    buildable: false
-  tar:
-    externals:
-    - spec: tar@1.30
-      prefix: /usr
-    buildable: false
-  texinfo:
-    externals:
-    - spec: texinfo@6.5
-      prefix: /usr
-    buildable: false
-  xz:
-    externals:
-    - spec: xz@5.2.3+pic
-      prefix: /usr
-    buildable: false
-
-# system packages (manually added)
-  autoconf:
-    externals:
-    - spec: autoconf@2.69
-      prefix: /usr
-    buildable: false
-  autogen:
-    externals:
-    - spec: autogen@5.18.12
-      prefix: /usr
-    buildable: false
-  automake:
-    externals:
-    - spec: automake@1.15.1
-      prefix: /usr
-    buildable: false
-  binutils:
-    externals:
-    - spec: binutils@2.37
-      prefix: /usr
-    buildable: false
+  
   hwloc:
     externals:
     - spec: hwloc@2.5.0
       prefix: /usr
     buildable: false
-  libxml2:
-    externals:
-    - spec: libxml2@2.9.7
-      prefix: /usr
-    buildable: false
-  libpciaccess:
-    externals:
-    - spec: libpciaccess@0.14
-      prefix: /usr
-    buildable: false
+
   numactl:
     externals:
     - spec: numactl@2.0.14
       prefix: /usr
     buildable: false
-  sqlite:
+  # ---------------------------------------------------------------------------
+  #                                     ROCM
+  # ---------------------------------------------------------------------------
+  atmi:
     externals:
-    - spec: sqlite@3.36.0
+    - spec: atmi@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  comgr:
+    externals:
+    - spec: comgr@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  hip:
+    externals:
+    - spec: hip@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  hipblas:
+    externals:
+    - spec: hipblas@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  hipcub:
+    externals:
+    - spec: hipcub@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  hipfft:
+    externals:
+    - spec: hipfft@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  hipfort:
+    externals:
+    - spec: hipfort@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  hipify-clang:
+    externals:
+    - spec: hipify-clang@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  hip-rocclr:
+    externals:
+    - spec: hip-rocclr@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  hipsolver:
+    externals:
+    - spec: hipsolver@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  hipsparse:
+    externals:
+    - spec: hipsparse@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  hsakmt-roct:
+    externals:
+    - spec: hsakmt-roct@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  hsa-rocr-dev:
+    externals:
+    - spec: hsa-rocr-dev@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  llvm-amdgpu:
+    externals:
+    - spec: llvm-amdgpu@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rccl:
+    externals:
+    - spec: rccl@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocalution:
+    externals:
+    - spec: rocalution@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocblas:
+    externals:
+    - spec: rocblas@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocfft:
+    externals:
+    - spec: rocfft@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocm-bandwidth-test:
+    externals:
+    - spec: rocm-bandwidth-test@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocm-clang-ocl:
+    externals:
+    - spec: rocm-clang-ocl@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocm-cmake:
+    externals:
+    - spec: rocm-cmake@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocm-dbgapi:
+    externals:
+    - spec: rocm-dbgapi@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocm-debug-agent:
+    externals:
+    - spec: rocm-debug-agent@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocm-device-libs:
+    externals:
+    - spec: rocm-device-libs@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocm-gdb:
+    externals:
+    - spec: rocm-gdb@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocminfo:
+    externals:
+    - spec: rocminfo@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocm-openmp-extras:
+    externals:
+    - spec: rocm-openmp-extras@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocm-smi:
+    externals:
+    - spec: rocm-smi@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocm-smi-lib:
+    externals:
+    - spec: rocm-smi-lib@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocm-tensile:
+    externals:
+    - spec: rocm-tensile@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocm-validation-suite:
+    externals:
+    - spec: rocm-validation-suite@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocprim:
+    externals:
+    - spec: rocprim@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocprofiler-dev:
+    externals:
+    - spec: rocprofiler-dev@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocrand:
+    externals:
+    - spec: rocrand@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocsolver:
+    externals:
+    - spec: rocsolver@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocsparse:
+    externals:
+    - spec: rocsparse@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocthrust:
+    externals:
+    - spec: rocthrust@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  roctracer-dev:
+    externals:
+    - spec: roctracer-dev@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  roctracer-dev-api:
+    externals:
+    - spec: roctracer-dev-api@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+  rocwmma:
+    externals:
+    - spec: rocwmma@ROCM_VERSION
+      prefix: ROCM_INSTALL_DIR
+    buildable: false
+
+# The following libraries have not been installed yet
+
+    #  aomp:
+    #    externals:
+    #    - spec: aomp@ROCM_VERSION
+    #      prefix: ROCM_INSTALL_DIR
+    #    buildable: false
+    #  rocm-opencl:
+    #    externals:
+    #    - spec: rocm-opencl@ROCM_VERSION
+    #      prefix: ROCM_INSTALL_DIR
+    #    buildable: false
+    #  rocmlir:
+    #    externals:
+    #    - spec: rocmlir@ROCM_VERSION
+    #      prefix: ROCM_INSTALL_DIR
+    #    buildable: false
+    #  rccl-tests:
+    #    externals:
+    #    - spec: rccl-tests@ROCM_VERSION
+    #      prefix: ROCM_INSTALL_DIR
+    #    buildable: false
+    #  migraphx:
+    #    externals:
+    #    - spec: migraphx@ROCM_VERSION
+    #      prefix: ROCM_INSTALL_DIR
+    #    buildable: false
+    #  miopengemm:
+    #    externals:
+    #    - spec: miopengemm@ROCM_VERSION
+    #      prefix: ROCM_INSTALL_DIR
+    #    buildable: false
+    #  miopen-hip:
+    #    externals:
+    #    - spec: miopen-hip@ROCM_VERSION
+    #      prefix: ROCM_INSTALL_DIR
+    #    buildable: false
+    #  miopen-opencl:
+    #    externals:
+    #    - spec: miopen-opencl@ROCM_VERSION
+    #      prefix: ROCM_INSTALL_DIR
+    #    buildable: false
+    #  miopen-tensile:
+    #    externals:
+    #    - spec: miopen-tensile@ROCM_VERSION
+    #      prefix: ROCM_INSTALL_DIR
+    #    buildable: false
+    #  mivisionx:
+    #    externals:
+    #    - spec: lustre@ROCM_VERSION
+    #      prefix: ROCM_INSTALL_DIR
+    #    buildable: false
+    #  mlirmiopen:
+    #    externals:
+    #    - spec: mlirmiopen@ROCM_VERSION
+    #      prefix: ROCM_INSTALL_DIR
+    #    buildable: false
+
+# ----------------------------------------------------------------------------
+#                                        CRAY
+# ----------------------------------------------------------------------------
+  lustre:
+    externals:
+    - spec: lustre@2.15.0.2_rc2_cray_113_g62287d0
       prefix: /usr
     buildable: false
-  curl:
-    externals:
-    - spec: curl@7.66.0
-      prefix: /usr
-    buildable: false
-  libfuse:
-    externals:
-    - spec: libfuse@2.9.7
-      prefix: /usr
-    buildable: false
-  lz4:
-    externals:
-    - spec: lz4@1.9.2
-      prefix: /usr
-    buildable: false
-  slurm:
-    externals:
-    - spec: slurm@20-11-5-1
-      prefix: /usr
-    buildable: false
-  wget:
-    externals:
-    - spec: wget@1.20.3
-      prefix: /usr
-    buildable: false
-  zstd:
-    externals:
-    - spec: zstd@1.4.4
-      prefix: /usr
-    buildable: false
-  cryptsetup:
-    externals:
-    - spec: cryptsetup@2.3.7
-      prefix: /usr
-    buildable: false
-  libseccomp:
-    externals:
-    - spec: libseccomp@2.5.3
-      prefix: /usr
-    buildable: false
-  libgpg-error:
-    externals:
-    - spec: libgpg-error@1.29
-      prefix: /usr
-    buildable: false
-  popt:
-    externals:
-    - spec: popt@1.16
-      prefix: /usr
-    buildable: false
-  icu4c:
-    externals:
-    - spec: icu4c@65.1
-      prefix: /usr
-    buildable: false 
-  lvm2:
-    externals:
-    - spec: lvm2@2.03
-      prefix: /usr
-    buildable: false
-  blkid:
-    externals:
-    - spec: blkid@2.36.2
-      prefix: /usr
-    buildable: false
-  squashfs:
-    externals:
-    - spec: squashfs@4.4
-      prefix: /usr
-    buildable: false
-  shadow:
-    externals:
-    - spec: shadow@4.8.1
-      prefix: /usr
-    buildable: false
-  util-linux:
-    externals:
-    - spec: util-linux@2.36.2
-      prefix: /usr
-    buildable: false
-  util-linux-uuid:
-    externals:
-    - spec: util-linux-uuid@2.36.2
-      prefix: /usr
-    buildable: false
-  time:
-    externals:
-    - spec: time@1.9
-      prefix: /usr
-    buildable: false
-  subversion:
-    externals:
-    - spec: subversion@1.10.6
-      prefix: /usr
-    buildable: false
-  swig:
-    externals:
-    - spec: swig@3.0.12
-      prefix: /usr
-    buildable: false
-# cray packages (manually added)
+
 # adding prefixes as in NERSC Perlmutter configs
   cray-mpich:
     externals:
@@ -622,36 +606,20 @@ packages:
 #      prefix: /opt/cray/pe/fftw/3.3.10.1/x86_milan
 #    buildable: false
   # more cray
-  # no longer present on setonix
-  #jemalloc:
-  #  externals:
-  #  - spec: jemalloc@5.1.0.4
-  #    modules:
-  #    - cray-jemalloc/5.1.0.4
-  #    prefix: /opt/cray/pe/jemalloc/5.1.0.4
-  #  buildable: false
   xpmem:
     externals:
     - spec: xpmem@2.4.4
       modules:
-      - xpmem/xpmem/2.4.4-2.3_9.1__gff0e1d9.shasta
-      prefix: /opt/cray/xpmem/xpmem/2.4.4-2.3_9.1__gff0e1d9.shasta
+      - xpmem/2.4.4-2.3_13.8__gff0e1d9.shasta 
+      prefix: /opt/cray/xpmem/2.4.4-2.3_13.8__gff0e1d9.shasta
     buildable: false
   libfabric:
     externals:
-    - spec: libfabric@1.11.0.4.128
+    - spec: libfabric@1.15.0.0
       modules:
-      - libfabric/1.11.0.4.128
-      prefix: /opt/cray/libfabric/1.11.0.4.128
+      - libfabric/1.15.0.0
+      prefix: /opt/cray/libfabric/1.15.0.0 
     buildable: false
-  # no longer on setonix
-  #ucx:
-  #  externals:
-  #  - spec: ucx@2.7.0-1
-  #    modules:
-  #    - cray-ucx/2.7.0-1
-  #    prefix: /opt/cray/pe/cray-ucx/2.7.0-1/ucx
-  #  buildable: false
   papi:
     externals:
     - spec: papi@6.0.0.16
@@ -659,17 +627,3 @@ packages:
       - papi/6.0.0.16
       prefix: /opt/cray/pe/papi/6.0.0.16
     buildable: false
-
-# cray hdf5
-# cray parallel-netcdf
-# cray netcdf
-# taken out, as cray is dropping support, and there are missing APIs any way
-# available in examples/joey_sprint/configs/packages.yaml up to commit 5c797eefebf8264cba1930c64c5fba7aa0ac6edd
-
-# python additions, based on loading cray-python and running pip list 
-# we have tried to use them as externals, but Spack does not use them correctly:
-# 1. if specified with ^python@3.9.7, concretisation always fail
-# 2. if specified without ^python@3.9.7, would be used also with the wrong python versions
-# therefore, taken out
-# available in examples/joey_sprint/configs/packages.yaml up to commit bfef602ee1e7f5ae7bdb5c6b5120f116df4bea18
-
