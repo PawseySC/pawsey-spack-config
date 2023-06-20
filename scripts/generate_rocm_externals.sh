@@ -1,14 +1,16 @@
 #!/bin/bash
+if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
+    SYSTEM="$PAWSEY_CLUSTER"
+fi
 
-ROCM_VERSIONS=(
-"5.0.2"
-"5.4.3"
-)
+if [ -z ${SYSTEM+x} ]; then
+    echo "The 'SYSTEM' variable is not set. Please specify the system you want to
+    build Spack for."
+    exit 1
+fi
 
-ROCM_PATHS=(
-"/opt/rocm-5.0.2"
-"/software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1"
-)
+PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
+. "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
 rocm_packages="
 atmi
@@ -68,19 +70,19 @@ NVERSIONS=${#ROCM_VERSIONS[@]}
 
 for package in $rocm_packages ; do
 echo """
-$package:
-    externals:"""
+  $package:
+      externals:"""
 idx=0
 while ((idx < NVERSIONS)); 
 do
 rocm_ver=${ROCM_VERSIONS[$idx]}
 rocm_path=${ROCM_PATHS[$idx]}
 
-echo """    - spec: $package@$rocm_ver
-      prefix: $rocm_path"""
-(( idx++ ))
+echo """      - spec: $package@$rocm_ver
+        prefix: $rocm_path"""
+	(( idx = idx + 1 ))
 done
 
-echo "    buildable: false"
+echo "      buildable: false"
 done
 

@@ -64,7 +64,10 @@ cp -r ${PAWSEY_SPACK_CONFIG_REPO}/repo/* "${INSTALL_PREFIX}/spack/var/spack/repo
 [ -e "${INSTALL_PREFIX}/spack/templates" ] || mkdir -p "${INSTALL_PREFIX}/spack/templates"
 cp -r ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/templates/* "${INSTALL_PREFIX}/spack/templates/"
 
-
+# Generate ROCm externals if on Setonix
+if [ "${SYSTEM}" = "setonix" ]; then
+  "${PAWSEY_SPACK_CONFIG_REPO}/scripts/generate_rocm_externals.sh" >>  ${INSTALL_PREFIX}/spack/etc/spack/packages.yaml
+fi
 # and finally customise them with the actual software stack installation path.
 sed -i \
   -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g" \
@@ -72,10 +75,8 @@ sed -i \
   -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
   -e "s|USER_TEMP_FILES_PREFIX|${USER_TEMP_FILES_PREFIX}|g"\
   -e "s|BOOTSTRAP_PATH|${BOOTSTRAP_PATH}|g"\
-  -e "s|ROCM_INSTALL_DIR|${ROCM_INSTALL_DIR}|g"\
-  -e "s|ROCM_VERSION|${ROCM_VERSION}|g"\
   ${INSTALL_PREFIX}/spack/etc/spack/*.yaml \
-  $SPACK_USER_CONFIG_PATH/*.yaml \
+  ${SPACK_USER_CONFIG_PATH}/*.yaml \
   ${INSTALL_PREFIX}/spack/etc/spack/project/*.yaml
 
 

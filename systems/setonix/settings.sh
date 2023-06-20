@@ -196,7 +196,15 @@ singularity_symlink_module_dir="${utilities_modules_dir}/${singularity_name}"
 spack_module_dir="${utilities_modules_dir}/spack"
 
 # Use the Cray provided ROCm until we have a stable custom build.
-ROCM_VERSION=5.0.2
-ROCM_SCRIPT_REV=0
-ROCM_INSTALL_DIR=/opt/rocm-5.0.2  #$INSTALL_PREFIX/pawsey/software/rocm/rocm-${ROCM_VERSION}rev${ROCM_SCRIPT_REV}
+
+ROCM_VERSIONS=(
+"5.0.2"
+"5.4.3"
+)
+
+ROCM_PATHS=(
+"/opt/rocm-5.0.2"
+"/software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1"
+)
+
 fi # end include guard
