@@ -288,264 +288,415 @@ packages:
   # ---------------------------------------------------------------------------
   #                                     ROCM
   # ---------------------------------------------------------------------------
+  
   atmi:
-    externals:
-    - spec: atmi@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: atmi@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: atmi@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   comgr:
-    externals:
-    - spec: comgr@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: comgr@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: comgr@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   hip:
-    externals:
-    - spec: hip@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: hip@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: hip@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   hipblas:
-    externals:
-    - spec: hipblas@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: hipblas@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: hipblas@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   hipcub:
-    externals:
-    - spec: hipcub@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: hipcub@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: hipcub@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   hipfft:
-    externals:
-    - spec: hipfft@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: hipfft@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: hipfft@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   hipfort:
-    externals:
-    - spec: hipfort@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: hipfort@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: hipfort@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   hipify-clang:
-    externals:
-    - spec: hipify-clang@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: hipify-clang@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: hipify-clang@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   hip-rocclr:
-    externals:
-    - spec: hip-rocclr@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: hip-rocclr@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: hip-rocclr@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   hipsolver:
-    externals:
-    - spec: hipsolver@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: hipsolver@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: hipsolver@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   hipsparse:
-    externals:
-    - spec: hipsparse@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: hipsparse@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: hipsparse@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   hsakmt-roct:
-    externals:
-    - spec: hsakmt-roct@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: hsakmt-roct@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: hsakmt-roct@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   hsa-rocr-dev:
-    externals:
-    - spec: hsa-rocr-dev@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: hsa-rocr-dev@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: hsa-rocr-dev@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   llvm-amdgpu:
-    externals:
-    - spec: llvm-amdgpu@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: llvm-amdgpu@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: llvm-amdgpu@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rccl:
-    externals:
-    - spec: rccl@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rccl@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rccl@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocalution:
-    externals:
-    - spec: rocalution@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocalution@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocalution@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocblas:
-    externals:
-    - spec: rocblas@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocblas@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocblas@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocfft:
-    externals:
-    - spec: rocfft@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocfft@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocfft@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocm-bandwidth-test:
-    externals:
-    - spec: rocm-bandwidth-test@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocm-bandwidth-test@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocm-bandwidth-test@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocm-clang-ocl:
-    externals:
-    - spec: rocm-clang-ocl@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocm-clang-ocl@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocm-clang-ocl@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocm-cmake:
-    externals:
-    - spec: rocm-cmake@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocm-cmake@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocm-cmake@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocm-dbgapi:
-    externals:
-    - spec: rocm-dbgapi@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocm-dbgapi@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocm-dbgapi@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocm-debug-agent:
-    externals:
-    - spec: rocm-debug-agent@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocm-debug-agent@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocm-debug-agent@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocm-device-libs:
-    externals:
-    - spec: rocm-device-libs@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocm-device-libs@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocm-device-libs@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocm-gdb:
-    externals:
-    - spec: rocm-gdb@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocm-gdb@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocm-gdb@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocminfo:
-    externals:
-    - spec: rocminfo@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocminfo@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocminfo@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocm-openmp-extras:
-    externals:
-    - spec: rocm-openmp-extras@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocm-openmp-extras@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocm-openmp-extras@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocm-smi:
-    externals:
-    - spec: rocm-smi@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocm-smi@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocm-smi@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocm-smi-lib:
-    externals:
-    - spec: rocm-smi-lib@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocm-smi-lib@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocm-smi-lib@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocm-tensile:
-    externals:
-    - spec: rocm-tensile@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocm-tensile@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocm-tensile@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocm-validation-suite:
-    externals:
-    - spec: rocm-validation-suite@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocm-validation-suite@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocm-validation-suite@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocprim:
-    externals:
-    - spec: rocprim@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocprim@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocprim@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocprofiler-dev:
-    externals:
-    - spec: rocprofiler-dev@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocprofiler-dev@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocprofiler-dev@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocrand:
-    externals:
-    - spec: rocrand@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocrand@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocrand@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocsolver:
-    externals:
-    - spec: rocsolver@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocsolver@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocsolver@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocsparse:
-    externals:
-    - spec: rocsparse@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocsparse@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocsparse@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocthrust:
-    externals:
-    - spec: rocthrust@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocthrust@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocthrust@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   roctracer-dev:
-    externals:
-    - spec: roctracer-dev@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: roctracer-dev@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: roctracer-dev@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   roctracer-dev-api:
-    externals:
-    - spec: roctracer-dev-api@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: roctracer-dev-api@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: roctracer-dev-api@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
   rocwmma:
-    externals:
-    - spec: rocwmma@ROCM_VERSION
-      prefix: ROCM_INSTALL_DIR
-    buildable: false
+      externals:
+      - spec: rocwmma@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocwmma@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
 
-# The following libraries have not been installed yet
+  aomp:
+      externals:
+      - spec: aomp@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: aomp@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
 
-    #  aomp:
-    #    externals:
-    #    - spec: aomp@ROCM_VERSION
-    #      prefix: ROCM_INSTALL_DIR
-    #    buildable: false
-    #  rocm-opencl:
-    #    externals:
-    #    - spec: rocm-opencl@ROCM_VERSION
-    #      prefix: ROCM_INSTALL_DIR
-    #    buildable: false
-    #  rocmlir:
-    #    externals:
-    #    - spec: rocmlir@ROCM_VERSION
-    #      prefix: ROCM_INSTALL_DIR
-    #    buildable: false
-    #  rccl-tests:
-    #    externals:
-    #    - spec: rccl-tests@ROCM_VERSION
-    #      prefix: ROCM_INSTALL_DIR
-    #    buildable: false
-    #  migraphx:
-    #    externals:
-    #    - spec: migraphx@ROCM_VERSION
-    #      prefix: ROCM_INSTALL_DIR
-    #    buildable: false
-    #  miopengemm:
-    #    externals:
-    #    - spec: miopengemm@ROCM_VERSION
-    #      prefix: ROCM_INSTALL_DIR
-    #    buildable: false
-    #  miopen-hip:
-    #    externals:
-    #    - spec: miopen-hip@ROCM_VERSION
-    #      prefix: ROCM_INSTALL_DIR
-    #    buildable: false
-    #  miopen-opencl:
-    #    externals:
-    #    - spec: miopen-opencl@ROCM_VERSION
-    #      prefix: ROCM_INSTALL_DIR
-    #    buildable: false
-    #  miopen-tensile:
-    #    externals:
-    #    - spec: miopen-tensile@ROCM_VERSION
-    #      prefix: ROCM_INSTALL_DIR
-    #    buildable: false
-    #  mivisionx:
-    #    externals:
-    #    - spec: lustre@ROCM_VERSION
-    #      prefix: ROCM_INSTALL_DIR
-    #    buildable: false
-    #  mlirmiopen:
-    #    externals:
-    #    - spec: mlirmiopen@ROCM_VERSION
-    #      prefix: ROCM_INSTALL_DIR
-    #    buildable: false
+  rocm-opencl:
+      externals:
+      - spec: rocm-opencl@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocm-opencl@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
+  rocmlir:
+      externals:
+      - spec: rocmlir@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rocmlir@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
+  rccl-tests:
+      externals:
+      - spec: rccl-tests@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: rccl-tests@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
+  migraphx:
+      externals:
+      - spec: migraphx@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: migraphx@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
+  miopengemm:
+      externals:
+      - spec: miopengemm@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: miopengemm@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
+  miopen-hip:
+      externals:
+      - spec: miopen-hip@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: miopen-hip@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
+  miopen-opencl:
+      externals:
+      - spec: miopen-opencl@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: miopen-opencl@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
+  miopen-tensile:
+      externals:
+      - spec: miopen-tensile@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: miopen-tensile@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
+  mivisionx:
+      externals:
+      - spec: mivisionx@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: mivisionx@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
+  mlirmiopen:
+      externals:
+      - spec: mlirmiopen@5.0.2
+        prefix: /opt/rocm-5.0.2
+      - spec: mlirmiopen@5.4.3
+        prefix: /software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1
+      buildable: false
+
 
 # ----------------------------------------------------------------------------
 #                                        CRAY
