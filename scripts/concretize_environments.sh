@@ -24,7 +24,7 @@ module load spack/${spack_version}
 # list of environments included in variables.sh (sourced above)
 envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 
-for env in `ls $envdir` ; do
+for env in $env_list ; do
   echo "Concretizing env $env.."
   spack env activate ${envdir}/${env} 
   spack concretize -f

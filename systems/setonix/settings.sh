@@ -52,18 +52,18 @@ cpu_arch="zen3"
 
 # tool versions
 spack_version="0.19.0" # the prefix "v" is added in setup_spack.sh
-singularity_version="3.8.6-nompi" # has to match the version in the Spack env yaml + nompi tag
-singularity_mpi_version="3.8.6-mpi" # has to match the version in the Spack env yaml + mpi tag
+singularity_version="3.8.7-nompi" # has to match the version in the Spack env yaml + nompi tag
+singularity_mpi_version="3.8.7-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.2"
 shpc_registry_version="5033baa6570ca8e4881dd3e7900051f84bc9886b"
 
 # python (and py tools) versions
 python_name="python"
-python_version="3.9.15" # has to match the version in the Spack env yaml
-setuptools_version="57.4.0" # has to match the version in the Spack env yaml
+python_version="3.10.10" # has to match the version in the Spack env yaml
+setuptools_version="65.5.0" # has to match the version in the Spack env yaml
 pip_version="22.2.2" # has to match the version in the Spack env yaml
 # r major minor version
-r_version_majorminor="4.1"
+r_version_majorminor="4.2.2"
 
 # list of module categories
 module_cat_list="
@@ -98,7 +98,7 @@ env_wrf
 "
 
 container_list="
-quay.io/biocontainers/bamtools:2.5.1--hd03093a_10
+quay.io/biocontainers/bamtools:2.5.2--hd03093a_0
 quay.io/biocontainers/bbmap:38.96--h5c4e2a8_0
 quay.io/biocontainers/bcftools:1.15--haf5b3da_0
 quay.io/biocontainers/bedtools:2.30.0--h468198e_3
@@ -112,16 +112,16 @@ quay.io/biocontainers/cutadapt:3.7--py38hbff2b2d_0
 quay.io/biocontainers/diamond:2.0.14--hdcc8f71_0
 quay.io/biocontainers/fastqc:0.11.9--hdfd78af_1
 quay.io/biocontainers/gatk4:4.2.5.0--hdfd78af_0
-quay.io/biocontainers/maker:3.01.03--pl526hb8757ab_0
-quay.io/biocontainers/mrbayes:3.2.7--h19cf415_2
-quay.io/biocontainers/mummer:3.23--pl5321h1b792b2_13
-quay.io/biocontainers/sambamba:0.8.1--h41abebc_0
+quay.io/biocontainers/maker:3.01.03--pl5262h8f1cd36_2
+quay.io/biocontainers/mrbayes:3.2.7--h5465cc4_4
+quay.io/biocontainers/mummer:3.23--pl5321h87f3376_14
+quay.io/biocontainers/sambamba:1.0--h98b6b92_0
 quay.io/biocontainers/samtools:1.15--h3843a85_0
 quay.io/biocontainers/spades:3.15.4--h95f258a_0
 quay.io/biocontainers/star:2.7.10a--h9ee0642_0
 quay.io/biocontainers/trimmomatic:0.39--hdfd78af_2
-quay.io/biocontainers/trinity:2.13.2--ha140323_0
-quay.io/biocontainers/vcftools:0.1.16--pl5321h9a82719_6
+quay.io/biocontainers/trinity:2.13.2--hea94271_3
+quay.io/biocontainers/vcftools:0.1.16--pl5321hd03093a_7
 quay.io/biocontainers/velvet:1.2.10--h7132678_5
 quay.io/sarahbeecroft9/alphafold:2.2.3
 quay.io/sarahbeecroft9/interproscan:5.56-89.0

@@ -9,16 +9,16 @@ spack:
 #      variants: ~external-xdr
   definitions:
   - hdf5-set:
-    - hdf5@1.12.1
+    - hdf5@1.12.2
     - hdf5@1.10.7
   - adios-set:
     - adios2@2.8.3
   - netcdf-set:
-    - netcdf-c@4.8.1 +hdf4 +parallel-netcdf
+    - netcdf-c@4.9.0 +hdf4 +parallel-netcdf
     - netcdf-cxx@4.2
-    - netcdf-cxx4@4.3.1 ^python@3.9.15 +optimizations+zlib
-    - netcdf-fortran@4.5.3
-    - parallel-netcdf@1.12.2
+    - netcdf-cxx4@4.3.1 ^python@3.10.10 +optimizations+zlib
+    - netcdf-fortran@4.6.0
+    - parallel-netcdf@1.12.3
   # currently netcdf has issues because packages require
   # very specific versions of certain dependencies which 
   # are typically have buildable = false 
@@ -38,7 +38,7 @@ spack:
     - [+mpi, ~mpi+cxx]
     - [+hl +fortran +szip build_type=Release]
   - matrix:
-    - [hdf5@1.12.1]
+    - [hdf5@1.12.2]
     - ['%gcc@12.1.0']
     - [api=v112]
     - [+mpi, ~mpi+cxx]
@@ -46,9 +46,9 @@ spack:
   - matrix:
     - [$adios-set]
     - ['%gcc@12.1.0']
-    - [+python ^python@3.9.15 +optimizations+zlib, ~python]
+    - [+python ^python@3.10.10 +optimizations+zlib, ~python]
     - [+hdf5]
-    - [^hdf5@1.12.1 +hl +fortran +szip api=v112 build_type=Release]
+    - [^hdf5@1.12.2 +hl +fortran +szip api=v112 build_type=Release]
     #- [^hdf5@1.12.1 +hl +fortran +szip api=v112 build_type=Release, ^hdf5@1.12.1 +hl +fortran +szip api=v110 build_type=Release,
     #  ^hdf5@1.12.1 +hl +fortran +szip api=v18 build_type=Release]
   - matrix:
