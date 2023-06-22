@@ -1,3 +1,10 @@
+#updated versions of py-botocore, py-docutils and py-pyyaml:
+#-    depends_on("py-botocore@1.13.44", when="@1.16.308", type=("build", "run"))
+#+    depends_on("py-botocore@1.21.12", when="@1.16.308", type=("build", "run"))
+#-    depends_on("py-docutils@0.10:0.15", type=("build", "run"))
+#+    depends_on("py-docutils@0.10:0.19", type=("build", "run"))
+#-    depends_on("py-pyyaml@3.10:5.2", when="^python@3.4:", type=("build", "run"))
+#+    depends_on("py-pyyaml@3.10:6.0", when="^python@3.4:", type=("build", "run"))
 ##############################################################################
 # Copyright 2013-2022 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.

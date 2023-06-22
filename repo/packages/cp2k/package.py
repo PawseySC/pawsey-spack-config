@@ -1,3 +1,7 @@
+#updating url to pick the latest version)
+#-    url = "https://github.com/cp2k/cp2k/releases/download/v3.0.0/cp2k-3.0.tar.bz2"
+#+    url = "https://github.com/cp2k/cp2k/releases/download/v2022.1/cp2k-2022.1.tar.bz2"
+
 # Copyright 2013-2022 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #

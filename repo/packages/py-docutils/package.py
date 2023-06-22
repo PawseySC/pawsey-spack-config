@@ -1,3 +1,10 @@
+#url change
+
+#-    homepage = "http://docutils.sourceforge.net/"
+#-    pypi = "docutils/docutils-0.15.2.tar.gz"
+#+    homepage = "https://files.pythonhosted.org/packages/6b/5c/330ea8d383eb2ce973df34d1239b3b21e91cd8c865d21ff82902d952f91f/"
+#+    pypi = "docutils-0.19.tar.gz"
+
 # Copyright 2013-2022 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
@@ -14,9 +21,6 @@ class PyDocutils(PythonPackage):
     man-pages, open-document or XML. It includes reStructuredText, the
     easy to read, easy to use, what-you-see-is-what-you-get plaintext
     markup language."""
-
-#    homepage = "http://docutils.sourceforge.net/"
-#    pypi = "docutils/docutils-0.15.2.tar.gz"
 
     homepage = "https://files.pythonhosted.org/packages/6b/5c/330ea8d383eb2ce973df34d1239b3b21e91cd8c865d21ff82902d952f91f/"
     pypi = "docutils-0.19.tar.gz"

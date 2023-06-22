@@ -1,3 +1,7 @@
+#updating py-docutils version
+#-    depends_on("py-docutils@0.10:0.15", type=("build", "run"), when="@:1.17")
+#+    depends_on("py-docutils@0.10:0.19", type=("build", "run"), when="@:1.17")
+
 # Copyright 2013-2022 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
