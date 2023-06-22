@@ -52,8 +52,8 @@ cpu_arch="zen3"
 
 # tool versions
 spack_version="0.19.0" # the prefix "v" is added in setup_spack.sh
-singularity_version="3.8.6-nompi" # has to match the version in the Spack env yaml + nompi tag
-singularity_mpi_version="3.8.6-mpi" # has to match the version in the Spack env yaml + mpi tag
+singularity_version="3.8.7-nompi" # has to match the version in the Spack env yaml + nompi tag
+singularity_mpi_version="3.8.7-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.2"
 shpc_registry_version="5033baa6570ca8e4881dd3e7900051f84bc9886b"
 
