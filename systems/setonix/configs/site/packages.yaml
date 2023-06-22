@@ -3,7 +3,7 @@ packages:
   # note the compiler and providers specifications
   # only suggest a priority order, they do not exclude other options
   # suggested priority for compilers.
-    compiler: [ gcc@12.1.0, cce@14.0.3, aocc@3.2.0 ]
+    compiler: [ gcc@12.2.0, cce@15.0.1, aocc@3.2.0 ]
     providers:
       mpi: [ cray-mpich ]
       blas: [ openblas, amdblis ] #, cray-libsci ] # commenting out cray-libsci as bug was identified

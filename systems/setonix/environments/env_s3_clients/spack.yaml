@@ -21,10 +21,10 @@ spack:
   - matrix:
     - [$s3-python-set]
     - [^python@3.10.10 +optimizations+zlib]
-    - ['%gcc@12.1.0']
+    - ['%gcc@12.2.0']
     - [target=zen2, target=zen3]
   - matrix:
     - [$s3-go-set]
-    - ['%gcc@12.1.0']
+    - ['%gcc@12.2.0']
     - [target=zen2, target=zen3]
   view: false
