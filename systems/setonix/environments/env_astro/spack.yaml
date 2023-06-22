@@ -72,11 +72,11 @@ spack:
     - [$astro-util-set, $askap-util-set]
     - ['%gcc@12.2.0']
     - [target=zen3]
-  - matrix:
-    - [$mwa-util-set-with-python]
-    - [^python@3.10.10]
-    - ['%gcc@12.2.0']
-    - [target=zen3]
+      #- matrix:
+      #  - [$mwa-util-set-with-python]
+      #  - [^python@3.10.10]
+      #  - ['%gcc@12.2.0']
+      #  - [target=zen3]
   - matrix:
     - [$mwa-util-set]
     - ['%gcc@12.2.0']
