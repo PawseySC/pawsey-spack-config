@@ -292,28 +292,28 @@ packages:
 # ----------------------------------------------------------------------------
   lustre:
     externals:
-    - spec: lustre@2.15.0.2_rc2_cray_113_g62287d0
+    - spec: lustre@2.15.0.4_rc2_cray_159_g856d338
       prefix: /usr
     buildable: false
 
 # adding prefixes as in NERSC Perlmutter configs
   cray-mpich:
     externals:
-    - spec: cray-mpich@8.1.19%gcc
+    - spec: cray-mpich@8.1.25%gcc
       modules:
-      - cray-mpich/8.1.19
+      - cray-mpich/8.1.25
       - craype-network-ofi
-      prefix: /opt/cray/pe/mpich/8.1.19/ofi/gnu/9.1
-    - spec: cray-mpich@8.1.19%cce
+      prefix: /opt/cray/pe/mpich/8.1.25/ofi/gnu/9.1
+    - spec: cray-mpich@8.1.25%cce
       modules:
-      - cray-mpich/8.1.19
+      - cray-mpich/8.1.25
       - craype-network-ofi
-      prefix: /opt/cray/pe/mpich/8.1.19/ofi/cray/10.0
+      prefix: /opt/cray/pe/mpich/8.1.25/ofi/crayclang/10.0
     - spec: cray-mpich@8.1.19%aocc
       modules:
-      - cray-mpich/8.1.19
+      - cray-mpich/8.1.25
       - craype-network-ofi
-      prefix: /opt/cray/pe/mpich/8.1.19/ofi/aocc/3.0
+      prefix: /opt/cray/pe/mpich/8.1.25/ofi/aocc/3.0
     buildable: false
 # Cray-LibSci: commenting out, as bug was identified (21 December 2021)
 #  cray-libsci:
@@ -348,22 +348,22 @@ packages:
   # more cray
   xpmem:
     externals:
-    - spec: xpmem@2.4.4
+    - spec: xpmem@2.5.2
       modules:
-      - xpmem/2.4.4-2.3_13.8__gff0e1d9.shasta 
-      prefix: /opt/cray/xpmem/2.4.4-2.3_13.8__gff0e1d9.shasta
+      - xpmem/2.5.2-2.4_3.30__gd0f7936.shasta
+      prefix: /opt/cray/xpmem/2.5.2-2.4_3.30__gd0f7936.shasta
     buildable: false
   libfabric:
     externals:
-    - spec: libfabric@1.15.0.0
+    - spec: libfabric@1.15.2.0
       modules:
-      - libfabric/1.15.0.0
-      prefix: /opt/cray/libfabric/1.15.0.0 
+      - libfabric/1.15.2.0
+      prefix: /opt/cray/libfabric/1.15.2.0
     buildable: false
   papi:
     externals:
-    - spec: papi@6.0.0.16
+    - spec: papi@7.0.0.1
       modules:
-      - papi/6.0.0.16
-      prefix: /opt/cray/pe/papi/6.0.0.16
+      - papi/7.0.0.1
+      prefix: /opt/cray/pe/papi/7.0.0.1
     buildable: false

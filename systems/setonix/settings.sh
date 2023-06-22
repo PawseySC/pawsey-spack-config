@@ -43,8 +43,8 @@ pawseyenv_version="${DATE_TAG}"
 
 archs="zen2 zen3"
 # compiler versions (needed for module trees with compiler dependency)
-gcc_version="12.1.0"
-cce_version="14.0.3"
+gcc_version="12.2.0"
+cce_version="15.0.1"
 aocc_version="3.2.0"
 
 # architecture of login/compute nodes (needed by Singularity symlink module)
@@ -198,13 +198,11 @@ spack_module_dir="${utilities_modules_dir}/spack"
 # Use the Cray provided ROCm until we have a stable custom build.
 
 ROCM_VERSIONS=(
-"5.0.2"
-"5.4.3"
+"5.2.3"
 )
 
 ROCM_PATHS=(
-"/opt/rocm-5.0.2"
-"/software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1"
+"/opt/rocm-5.2.3"
 )
 
 fi # end include guard
