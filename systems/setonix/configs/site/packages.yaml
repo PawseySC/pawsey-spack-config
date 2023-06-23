@@ -63,6 +63,8 @@ packages:
     variants: '+pic'
   mbedtls:
     variants: '+pic'
+  libseccomp:
+    version: [2.3.3]
   zlib:
     version : [1.2.13]
   # preferred versions and variants, utils/python
