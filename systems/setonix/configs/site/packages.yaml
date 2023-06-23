@@ -277,7 +277,12 @@ packages:
     - spec: pkg-config@0.29.2
       prefix: /usr
     buildable: false
-  
+
+  openssl:
+    externals:
+    - spec: openssl@1.1
+      prefix: /usr
+ 
   hwloc:
     externals:
     - spec: hwloc@2.5.0
