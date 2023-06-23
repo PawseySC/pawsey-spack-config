@@ -41,3 +41,6 @@ for env in $env_list; do
   spack env deactivate
   cd -
 done
+
+# Refresh module files
+for hash in `spack find -x --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
