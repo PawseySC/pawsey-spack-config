@@ -53,7 +53,7 @@ spack:
     #- petsc@3.15.5 +fftw +trilinos +hwloc +openmp +complex ~cuda
     - petsc@3.18.1 +fftw ~trilinos +hwloc +openmp +complex ~cuda
   - numerical:
-    - openblas@0.3.21 threads=openmp
+    # - openblas@0.3.21 threads=openmp # PLACEHOLDER - please look at scripts/install_environments.sh
     - netlib-lapack@3.9.1 build_type=Release
     - netlib-scalapack@2.1.0
     - blaspp@2021.04.01 ~cuda build_type=Release ^openblas

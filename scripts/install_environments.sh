@@ -21,10 +21,26 @@ module swap PrgEnv-gnu PrgEnv-cray
 module swap PrgEnv-cray PrgEnv-gnu
 module load spack/${spack_version}
 
+nprocs="128"
+# We are forced to install openblas outside an environment because its build fails
+# in a nondeterministic way. So we just keep trying.
+
+openblas_not_installed=1
+counter=0
+while (( openblas_not_installed > 0 ));
+do
+if (( counter > 5 )); then
+	echo "Tried to install openblas 5 times, and it didn't work. Stopping here.."
+	exit 1
+fi
+sg $INSTALL_GROUP -c "spack install openblas@0.3.21 threads=openmp"
+openblas_not_installed=$?
+(( counter = counter + 1 ))
+done
+
 # list of environments included in variables.sh (sourced above)
 envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 
-nprocs="128"
 echo "Running installation with $nprocs cores.."
 
 
