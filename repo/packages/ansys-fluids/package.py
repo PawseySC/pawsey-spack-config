@@ -19,6 +19,11 @@
 #
 # See the Spack documentation for more information on packaging.
 # ----------------------------------------------------------------------------
+# =======================================================================
+#                         PAWSEY ADDITIONS
+# =======================================================================
+# This recipe is not present in Spack.
+
 import os
 import shutil
 import stat

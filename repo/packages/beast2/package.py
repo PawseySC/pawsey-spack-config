@@ -2,7 +2,21 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-
+# =======================================================================
+#                         PAWSEY ADDITIONS
+# =======================================================================
+# Differences for the 'beast2' package
+# 6c6
+# < from spack.package import *
+# ---
+# > from spack import *
+# 20d19
+# <     version('2.6.7', sha256='05dcc619c2e10163f2c1089ec66149f6e53ec5a0583cd2cb8ffdccbbdb1d8183')
+# 26,27d24
+# <     variant('beagle', default=True, description='Build with libbeagle support')
+# < 
+# 29d25
+# <     depends_on('libbeagle', type=('build', 'link', 'run'), when="+beagle")
 from spack.package import *
 
 

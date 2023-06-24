@@ -2,7 +2,54 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-
+# Differences for the 'py-astropy' package
+# 8c8
+# < from spack.package import *
+# ---
+# > from spack import *
+# 19,20d18
+# <     version('5.1', sha256='1db1b2c7eddfc773ca66fa33bd07b25d5b9c3b5eee2b934e0ca277fa5b1b7b7e')
+# <     version('4.2.1', sha256='ed483e472241153daec45f4b0c318c2c63d9f47305b78e6e63d32fc388c18427')
+# 44,46d41
+# <     depends_on('py-extension-helpers', when='@4.1:', type=('build', 'run'))
+# <     depends_on('py-jinja2', when='@4.1:', type=('build', 'run'))
+# <     depends_on('py-erfa', type=('build', 'run'))
+# 73,80c68,73
+# <     #def patch(self, spec):
+# <     #    # forces the rebuild of files with cython
+# <     #    # avoids issues with PyCode_New() in newer
+# <     #    # versions of python in the distributed
+# <     #    # cython-ized files
+# <     #    #if spec.satisifies('@1.0:4.0.1'):
+# <     #    #    os.remove('astropy/cython_version.py')
+# <     #    #os.remove('astropy/cython_version.py')
+# ---
+# >     def patch(self):
+# >         # forces the rebuild of files with cython
+# >         # avoids issues with PyCode_New() in newer
+# >         # versions of python in the distributed
+# >         # cython-ized files
+# >         os.remove('astropy/cython_version.py')
+# 83,91c76,82
+# <         args = []
+# <         if spec.satisfies('@1:4.0'):
+# <             args.extend([
+# <                 '--use-system-libraries',
+# <                 '--use-system-erfa',
+# <                 '--use-system-wcslib',
+# <                 '--use-system-cfitsio',
+# <                 '--use-system-expat',
+# <             ])
+# ---
+# >         args = [
+# >             '--use-system-libraries',
+# >             '--use-system-erfa',
+# >             '--use-system-wcslib',
+# >             '--use-system-cfitsio',
+# >             '--use-system-expat'
+# >         ]
+# 94a86
+# > 
 import os
 
 from spack.package import *

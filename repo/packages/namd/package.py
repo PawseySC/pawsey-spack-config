@@ -2,7 +2,38 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-
+# Differences for the 'namd' package
+# 12c12
+# < from spack.package import *
+# ---
+# > from spack import *
+# 31,32c31,32
+# <     variant('fftw', default='3', values=('none', '2', '3', 'mkl', 'amdfftw', 'cray'),
+# <             description='Enable the use of FFTW/FFTW3/MKL FFT/AMDFFTW/CRAY FFTW')
+# ---
+# >     variant('fftw', default='3', values=('none', '2', '3', 'mkl', 'amdfftw'),
+# >             description='Enable the use of FFTW/FFTW3/MKL FFT/AMDFFTW')
+# 37,38d36
+# <     variant('plumed', default=False, description='Enable PLUMED support')
+# < 
+# 44,45d41
+# <     patch('charmpp-shasta-2.14.patch', when='@2.14')
+# <     patch('lpython-2.14.patch.2')
+# 55d50
+# <     depends_on('cray-fftw', when="fftw=cray")
+# 64,66d58
+# <     depends_on('plumed@2.6:+mpi', when='@2.12:2.13+plumed')
+# <     depends_on('plumed@2.7:+mpi', when='@2.14+plumed')
+# < 
+# 216,219d207
+# <         elif fftw_version == 'cray':
+# <             self._copy_arch_file('fftw3')
+# <             opts.extend(['--with-fftw3',
+# <                          '--fftw-prefix', spec['cray-fftw'].prefix])
+# 257,259d244
+# <     def patch(self):
+# <         if '+plumed' in self.spec:
+# <             self.spec['plumed'].package.apply_patch(self, force=True)
 import os
 import platform
 import sys

@@ -2,6 +2,10 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
+# Differences for the 'opencv' package
+# 290d289
+# <     patch('opencv3_cmakecompileroptions.patch', when='@3.2.2:3.4.12')
+
 class Opencv(CMakePackage, CudaPackage):
     """OpenCV (Open Source Computer Vision Library) is an open source computer
     vision and machine learning software library."""
