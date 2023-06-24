@@ -98,6 +98,7 @@ env_wrf
 "
 
 container_list="
+amdih/pytorch:rocm5.0_ubuntu18.04_py3.7_pytorch_1.10.0
 quay.io/biocontainers/bamtools:2.5.2--hd03093a_0
 quay.io/biocontainers/bbmap:38.96--h5c4e2a8_0
 quay.io/biocontainers/bcftools:1.15--haf5b3da_0
