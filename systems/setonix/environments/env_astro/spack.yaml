@@ -62,7 +62,7 @@ spack:
     - [target=zen3]
     - [+python build_type=Release ^python@3.10.10]
     - [+openmp, ~openmp]
-    - [~adios2 ~hdf5, +adios2 +hdf5 ^adios2@2.8.3 +hdf5 ^hdf5@1.12.2 +hl +fortran
+    - [~adios2 ~hdf5, +adios2 +hdf5 ^adios2@2.9.0 +hdf5 ^hdf5@1.12.2 +hl +fortran
         build_type=Release +szip api=v112]
   - matrix:
     - [$casacore-legacy]

@@ -39,12 +39,12 @@ spack:
     # however, patch only required for cray-libsci builds
     # builds OK with openblas
     - slate@2021.05.02 build_type=Release ^openblas
-    - plumed@2.7.2
+    - plumed@2.9.0
 
     # some heavier numerical library builds 
     - opencv@4.5.2 build_type=Release
     - opencv@3.4.12 build_type=Release
-    - trilinos@13.0.1 +adios2 +openmp +python ~cuda ^adios2@2.8.3 build_type=Release
+    - trilinos@13.0.1 +adios2 +openmp +python ~cuda ^adios2@2.9.0 build_type=Release
       ^hdf5@1.12.1 build_type=Release
     
     # TODO: currently unable to configure petsc with trilinos. 
