@@ -280,7 +280,7 @@ packages:
     externals:
     - spec: openssl@1.1
       prefix: /usr
- 
+
   hwloc:
     externals:
     - spec: hwloc@2.5.0
@@ -292,6 +292,50 @@ packages:
     - spec: numactl@2.0.14
       prefix: /usr
     buildable: false
+  
+  krb5:
+    externals:
+    - spec: krb5@1.19.2
+      prefix: /usr
+    buildable: false
+
+  pcre:
+    externals:
+    - spec: pcre@8.45
+      prefix: /usr
+    buildable: false
+
+  keyutils:
+    externals:
+    - spec: keyutils@1.6.3
+      prefix: /usr
+    buildable: false
+
+  brotli:
+    externals:
+    - spec: brotli@1.0.7
+      prefix: /usr
+    buildable: false
+
+  zstd:
+    externals:
+    - spec: zstd@1.5.0
+      prefix: /usr
+    buildable: false
+
+  libssh:
+    externals:
+    - spec: libssh@0.9.6
+      prefix: /usr
+    buildable: false
+
+  curl:
+    externals:
+    - spec: curl@7.79.1
+      prefix: /usr
+    buildable: false
+
+
 # ----------------------------------------------------------------------------
 #                                        CRAY
 # ----------------------------------------------------------------------------
@@ -300,6 +344,12 @@ packages:
     - spec: lustre@2.15.0.4_rc2_cray_159_g856d338
       prefix: /usr
     buildable: false
+
+  cray-pmi:
+    externals:
+    - spec: cray-pmi@6.1.10
+      modules:
+      - cray-pmi/6.1.10
 
 # adding prefixes as in NERSC Perlmutter configs
   cray-mpich:
