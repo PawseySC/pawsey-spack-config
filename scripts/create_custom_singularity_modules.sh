@@ -35,11 +35,15 @@ mkdir -p ${dst_dir}
 # remove old pawsey singularity modules
 rm -f ${dst_dir}/*.lua
 
-for version in $( ls ${src_dir}/*.lua ${src_dir}/.*.lua 2>/dev/null ) ; do
+# older script also processed .*.lua but shouldn't
+#for version in $( ls ${src_dir}/*.lua ${src_dir}/.*.lua 2>/dev/null ) ; do
+for version in $( ls ${src_dir}/*.lua 2>/dev/null ) ; do
   version="${version##*/}"
-  version="${version#.}"
+  #version="${version#.lua}"
+  version=$(echo ${version} | awk -F.lua '{print $1}')
+  echo "Generating specific modules for singularity ${version} "
   #2. hide Spack module
-  if [ -e ${src_dir}/${version} ] ; then
+  if [ -e ${src_dir}/${version}.lua ] ; then
     mv ${src_dir}/${version}.lua ${src_dir}/.${version}
   fi
   # 1.C singularity-askap is just the original module
@@ -63,9 +67,10 @@ for version in $( ls ${src_dir}/*.lua ${src_dir}/.*.lua 2>/dev/null ) ; do
     -e '/^-- add CRAY_PATHS START/,/^-- add CRAY_PATHS END/{/^-- add CRAY_PATHS START/!{/^-- add CRAY_PATHS END/!d}}' \
     -e '/^-- add CURRENT_HOST_LD_PATH START/,/^-- add CURRENT_HOST_LD_PATH END/{/^-- add CURRENT_HOST_LD_PATH START/!{/^-- add CURRENT_HOST_LD_PATH END/!d}}' \
     ${src_dir}/.${version} > ${dst_dir}/${version}-nohost.lua 
-  # 1.B singularity does not add any mpi related stuff
+  # 1.B singularity does not add any mpi related stuff but keeps slurm related mounts
   sed \
     -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
     -e '/^-- add MPI START/,/^-- add MPI END/{/^-- add MPI START/!{/^-- add MPI END/!d}}' \
     ${src_dir}/.${version} > ${dst_dir}/${version}-slurm.lua
+  echo "Finished generating modules for ${version}"
 done

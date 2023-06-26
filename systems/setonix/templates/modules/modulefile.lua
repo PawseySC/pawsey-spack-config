@@ -166,9 +166,9 @@ singularity_ld_preload = singularity_ld_preload .. ":/usr/lib64/liblustreapi.so.
 -- add MPI END
 prepend_path("SINGULARITYENV_LD_PRELOAD", singularity_ld_preload)
 {% endif %}
-{% if spec.name == 'r' %}setenv("R_LIBS_USER", os.getenv("MYSOFTWARE").."/joey/r/%v")
+{% if spec.name == 'r' %}setenv("R_LIBS_USER", os.getenv("MYSOFTWARE").."/setonix/r/%v")
 {% endif %}
-{% if spec.name == 'python' %}setenv("PYTHONUSERBASE", os.getenv("MYSOFTWARE").."/joey/python")
+{% if spec.name == 'python' %}setenv("PYTHONUSERBASE", os.getenv("MYSOFTWARE").."/setonix/python")
 prepend_path("PATH", os.getenv("PYTHONUSERBASE").."/bin")
 {% endif %}
 
