@@ -7,6 +7,7 @@
 # =======================================================================
 # This is a version of the recipe coming from the later 0.21.0-dev Spack
 # version. It will allow us to have the latest versions.
+# Already contributed
 import copy
 import os
 import os.path

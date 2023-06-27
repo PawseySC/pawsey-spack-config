@@ -33,6 +33,8 @@
 # < #       filter_file(r'^ *memory *fs *type *=.*',
 # < #                    'memory fs type = ramfs',
 # < #                    configuration_file)
+
+# For the next spack, move to singularityce package
 from spack.package import *
 from spack.pkg.builtin.singularityce import SingularityBase
 

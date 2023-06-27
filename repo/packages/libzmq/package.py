@@ -11,6 +11,7 @@
 # 68,69d67
 # <         # disable warnings to errors 
 # <         config_args.append('--disable-Werror')
+# Contribute: on new compilers it won't compile because warnings are converted to errors.
 from spack.package import *
 
 

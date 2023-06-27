@@ -33,6 +33,7 @@
 # <             config_args.append('--with-lustre')
 # <         else:
 # <             config_args.append('--without-lustre')
+# CONTRIBUTE Lustre additions
 from spack.package import *
 
 

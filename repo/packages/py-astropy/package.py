@@ -50,6 +50,8 @@
 # >         ]
 # 94a86
 # > 
+
+# Contribute dependency on py-erfa and spec.statisfies
 import os
 
 from spack.package import *
