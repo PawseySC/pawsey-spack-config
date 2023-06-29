@@ -34,6 +34,8 @@
 # <     def patch(self):
 # <         if '+plumed' in self.spec:
 # <             self.spec['plumed'].package.apply_patch(self, force=True)
+
+# Contribute cray additions
 import os
 import platform
 import sys

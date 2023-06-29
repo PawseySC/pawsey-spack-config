@@ -13,6 +13,7 @@ import re
 from spack.package import *
 
 
+# Code does not compile with newer compilers - Contribute
 class Opencv(CMakePackage, CudaPackage):
     """OpenCV (Open Source Computer Vision Library) is an open source computer
     vision and machine learning software library."""

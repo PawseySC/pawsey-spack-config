@@ -50,6 +50,8 @@
 # >     depends_on('py-pandas',     type=('build', 'run'))
 # >     depends_on('py-pydot',      type=('build', 'run'))
 # >     depends_on('py-pyyaml',     type=('build', 'run'))
+
+# Check if it works 
 from spack.package import *
 
 

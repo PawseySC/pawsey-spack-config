@@ -8,9 +8,10 @@ spack:
   - parallel:
     
     # boost: might need several boosts with different stadards
+    # spack/0.19.0 offers only up to boost@1.80.0
     - boost@1.80.0 +mpi +numpy +python cxxstd=14
     - boost@1.80.0 +mpi +numpy +python cxxstd=98
-    - hpx@1.7.1 +async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi cxxstd=14
+    - hpx@1.8.1 +async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi 
       build_type=Release ^boost
     
     # rather silly kokkos has std=98,11, etc setting cxxstd. BUT all other packages 
