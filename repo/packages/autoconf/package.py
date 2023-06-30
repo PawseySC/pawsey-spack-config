@@ -2,6 +2,21 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
+# =======================================================================
+#                         PAWSEY ADDITIONS
+# =======================================================================
+# Marco
+# Differences for the 'autoconf' package
+# 68c68
+# <             filter_file('^#! @PERL@.*',
+# ---
+# >             filter_file('^#! @PERL@ -w',
+# 87,88c87,88
+# <         filter_file('^#! /usr/bin/ev perl',
+# <                     '#! {0}'.format(self.spec['perl'].command.path),
+# ---
+# >         filter_file('^#! /usr/bin/env perl',
+# >                     '#! {0} -w'.format(self.spec['perl'].command.path),
 
 import re
 

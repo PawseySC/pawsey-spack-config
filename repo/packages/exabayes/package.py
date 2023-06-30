@@ -2,8 +2,42 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-
-
+# Differences for the 'exabayes' package
+# 11,12c11,12
+# <     homepage = "https://cme.h-its.org/exelixis/web/software/exabayes/index.html"
+# <     url      = "https://cme.h-its.org/exelixis/resource/download/software/exabayes-1.5.1.tar.gz"
+# ---
+# >     homepage = "https://sco.h-its.org/exelixis/web/software/exabayes/"
+# >     url      = "https://sco.h-its.org/exelixis/resource/download/software/exabayes-1.5.tar.gz"
+# 14a15
+# >     version('1.5', sha256='e401f1b4645e67e8879d296807131d0ab79bba81a1cd5afea14d7c3838b095a2')
+# 25,33c26,29
+# < 
+# <     # gcc 11.x has -std=gnu++17 by default, does not work to build exabayes, at least up to 1.5.1
+# <     def flag_handler(self, name, flags):
+# <         if self.spec.satisfies('%gcc@11:') and name == 'cxxflags':
+# <             flags.append('-std=gnu++14')
+# <         return (flags, None, None)
+# < 
+# <     # configure updated to better determine if MPI compiler available
+# <     patch('configure_mpi.patch', level=0, when='@1.5.1: +mpi', )
+# ---
+# >     conflicts('^intel-mpi', when='+mpi')
+# >     conflicts('^intel-parallel-studio+mpi', when='+mpi')
+# >     conflicts('^mvapich2', when='+mpi')
+# >     conflicts('^spectrum-mpi', when='+mpi')
+# 42,51d37
+# < 
+# <     # don't do anything autoreconf as configure 
+# <     # in exabayes is properly setup and
+# <     # the autotools are not 
+# <     def autoreconf(self, spec, prefix):
+# <        return
+# < 
+# < 
+# < 
+# < 
+# Contribute recipe and patch
 class Exabayes(AutotoolsPackage):
     """ExaBayes is a software package for Bayesian tree inference. It is
        particularly suitable for large-scale analyses on computer clusters."""

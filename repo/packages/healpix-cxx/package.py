@@ -2,7 +2,24 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-
+# Differences for the 'healpix-cxx' package
+# 6c6
+# < from spack.package import *
+# ---
+# > from spack import *
+# 20d19
+# <     patch('cfitsio_version_check.patch', when="@3.50:")
+# 21a21,29
+# >     def patch(self):
+# >         spec = self.spec
+# >         configure_fix = FileFilter('configure')
+# >         # Link libsharp static libs
+# >         configure_fix.filter(
+# >             r'^SHARP_LIBS=.*$',
+# >             'SHARP_LIBS="-L{0} -lsharp -lc_utils -lfftpack -lm"'
+# >             .format(spec['libsharp'].prefix.lib)
+# >         )
+# Contribute patch
 from spack.package import *
 
 

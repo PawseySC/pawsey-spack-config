@@ -7,7 +7,7 @@ spack:
     - openssl@3.0.7 ^perl@5.36.0
     # should this have an explicit openssl@3.0.7? I think this needs a fix
     - go@1.17.2 ^openssl@3.0.7
-    - go@1.19.10 
+    - go@1.19.10
     
     # NotReadyYet:    
     # - julia@1.6.1 #Default recipe is very weak. Faulty. Lots of needed dependencies are missing.
@@ -23,15 +23,15 @@ spack:
   specs:
   - matrix:
     - [python@3.10.10 +optimizations]
-    - ['%gcc@12.1.0', '%cce@14.0.3', '%aocc@3.2.0']
+    - ['%gcc@12.2.0', '%cce@15.0.1']
     - [target=zen3]
   - matrix:
     - [$py-utilities]
     - [^python@3.10.10 +optimizations+zlib]
-    - ['%gcc@12.1.0', '%cce@14.0.3', '%aocc@3.2.0']
+    - ['%gcc@12.2.0', '%cce@15.0.1']
     - [target=zen3]
   - matrix:
     - [$packages]
-    - ['%gcc@12.1.0']
+    - ['%gcc@12.2.0']
     - [target=zen3]
   view: false

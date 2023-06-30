@@ -2,7 +2,7 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-
+# Modifications have to do with avoiding using python2. Try a new version of the recipe.
 import llnl.util.tty as tty
 
 from spack.package import *

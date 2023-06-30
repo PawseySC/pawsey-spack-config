@@ -40,7 +40,7 @@ spack:
     - subversion
   - mwa-util-set:
     - chgcentre build_type=Release ^casacore ~python build_type=Release
-  - mwa-util-set-with-python:
+    #  - mwa-util-set-with-python:
     #    - wsclean@3.0 +mpi +idg +everybeam build_type=Release ^chgcentre build_type=Release
     #  ^casacore ~python build_type=Release
     #- wsclean@3.0 ~mpi +idg +everybeam build_type=Release ^chgcentre build_type=Release
@@ -58,37 +58,37 @@ spack:
   specs:
   - matrix:
     - [$casacore-set]
-    - ['%gcc@12.1.0']
+    - ['%gcc@12.2.0']
     - [target=zen3]
     - [+python build_type=Release ^python@3.10.10]
     - [+openmp, ~openmp]
-    - [~adios2 ~hdf5, +adios2 +hdf5 ^adios2@2.8.3 +hdf5 ^hdf5@1.12.2 +hl +fortran
+    - [~adios2 ~hdf5, +adios2 +hdf5 ^adios2@2.9.0 +hdf5 ^hdf5@1.12.2 +hl +fortran
         build_type=Release +szip api=v112]
   - matrix:
     - [$casacore-legacy]
-    - ['%gcc@12.1.0']
+    - ['%gcc@12.2.0']
     - [target=zen3]
   - matrix:
     - [$astro-util-set, $askap-util-set]
-    - ['%gcc@12.1.0']
+    - ['%gcc@12.2.0']
     - [target=zen3]
-  - matrix:
-    - [$mwa-util-set-with-python]
-    - [^python@3.10.10]
-    - ['%gcc@12.1.0']
-    - [target=zen3]
+      #- matrix:
+      #  - [$mwa-util-set-with-python]
+      #  - [^python@3.10.10]
+      #  - ['%gcc@12.2.0']
+      #  - [target=zen3]
   - matrix:
     - [$mwa-util-set]
-    - ['%gcc@12.1.0']
+    - ['%gcc@12.2.0']
     - [target=zen3]
   - matrix:
     - [$python-astro-set]
     - [^python@3.10.10]
-    - ['%gcc@12.1.0']
+    - ['%gcc@12.2.0']
     - [target=zen3]
   - matrix:
     - [$casacore-new-set]
     - [^python@3.10.10]
-    - ['%gcc@12.1.0']
+    - ['%gcc@12.2.0']
     - [target=zen3]
   view: false

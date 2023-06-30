@@ -3,6 +3,15 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
+# Differences for the 'libzmq' package
+# 6c6
+# < from spack.package import *
+# ---
+# > from spack import *
+# 68,69d67
+# <         # disable warnings to errors 
+# <         config_args.append('--disable-Werror')
+# Contribute: on new compilers it won't compile because warnings are converted to errors.
 from spack.package import *
 
 

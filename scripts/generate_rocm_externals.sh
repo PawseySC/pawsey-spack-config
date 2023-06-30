@@ -67,7 +67,9 @@ NVERSIONS=${#ROCM_VERSIONS[@]}
 for package in "${!rocm_packages[@]}"; do
 echo """
   $package:
-      externals:"""
+      buildable: false"""
+specs_string=""
+nspecs=0
 idx=0
 while ((idx < NVERSIONS)); 
 do
@@ -75,11 +77,16 @@ verification_file="${rocm_packages[$package]}"
 rocm_ver=${ROCM_VERSIONS[$idx]}
 rocm_path=${ROCM_PATHS[$idx]}
 if [ -e "${rocm_path}/${verification_file}" ]; then
-echo """      - spec: $package@$rocm_ver
-        prefix: $rocm_path"""
+(( nspecs++ ))
+specs_string="""$specs_string      - spec: $package@$rocm_ver
+        prefix: $rocm_path
+"""
 fi
 (( idx = idx + 1 ))
 done
-echo "      buildable: false"
+if (( nspecs > 0 )); then
+echo """      externals:
+$specs_string"""
+fi
 done
 

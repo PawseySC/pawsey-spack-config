@@ -43,8 +43,8 @@ pawseyenv_version="${DATE_TAG}"
 
 archs="zen2 zen3"
 # compiler versions (needed for module trees with compiler dependency)
-gcc_version="12.1.0"
-cce_version="14.0.3"
+gcc_version="12.2.0"
+cce_version="15.0.1"
 aocc_version="3.2.0"
 
 # architecture of login/compute nodes (needed by Singularity symlink module)
@@ -54,8 +54,8 @@ cpu_arch="zen3"
 spack_version="0.19.0" # the prefix "v" is added in setup_spack.sh
 singularity_version="3.11.4-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="3.11.4-mpi" # has to match the version in the Spack env yaml + mpi tag
-shpc_version="0.1.2"
-shpc_registry_version="5033baa6570ca8e4881dd3e7900051f84bc9886b"
+shpc_version="0.1.22"
+shpc_registry_version="7c177934889c6c5780d4efb16996d5072b91303a"
 
 # python (and py tools) versions
 python_name="python"
@@ -98,6 +98,7 @@ env_wrf
 "
 
 container_list="
+amdih/pytorch:rocm5.0_ubuntu18.04_py3.7_pytorch_1.10.0
 quay.io/biocontainers/bamtools:2.5.2--hd03093a_0
 quay.io/biocontainers/bbmap:38.96--h5c4e2a8_0
 quay.io/biocontainers/bcftools:1.15--haf5b3da_0
@@ -199,13 +200,11 @@ spack_module_dir="${utilities_modules_dir}/spack"
 # Use the Cray provided ROCm until we have a stable custom build.
 
 ROCM_VERSIONS=(
-"5.0.2"
-"5.4.3"
+"5.2.3"
 )
 
 ROCM_PATHS=(
-"/opt/rocm-5.0.2"
-"/software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1"
+"/opt/rocm-5.2.3"
 )
 
 fi # end include guard

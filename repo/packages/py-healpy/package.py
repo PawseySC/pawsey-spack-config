@@ -2,7 +2,15 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-
+# Differences for the 'py-healpy' package
+# 6c6
+# < from spack.package import *
+# ---
+# > from spack import *
+# 28,29d27
+# < 
+# <     patch('cfitsio_version_check.patch', when='@1.13:')
+# contribute the patch
 from spack.package import *
 
 
