@@ -94,7 +94,7 @@ setenv("NXF_SINGULARITY_CACHEDIR", os.getenv("MYSOFTWARE").."/.nextflow_singular
 {% endif %}
 {% if spec.name == 'openjdk' %}setenv("GRADLE_USER_HOME", os.getenv("MYSOFTWARE").."/.gradle")
 {% endif %}
-{% if spec.name == 'singularity' %}setenv("SINGULARITY_CACHEDIR", os.getenv("MYSOFTWARE").."/.singularity")
+{% if spec.name == 'singularity' or spec.name == 'singularityce' %}setenv("SINGULARITY_CACHEDIR", os.getenv("MYSOFTWARE").."/.singularity")
 -- Singularity configuration START
 -- LD_LIBRARY_PATH addition 
 local singularity_ld_path = ""
