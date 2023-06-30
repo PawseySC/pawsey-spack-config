@@ -10,6 +10,7 @@
 # 28,29d27
 # < 
 # <     patch('cfitsio_version_check.patch', when='@1.13:')
+# contribute the patch
 from spack.package import *
 
 

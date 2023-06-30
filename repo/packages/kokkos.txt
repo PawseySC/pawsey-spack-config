@@ -1,0 +1,32 @@
+Differences for the 'kokkos' package
+7c7
+< from spack.package import *
+---
+> from spack import *
+176d175
+<     conflicts("+hpx", when="+openmp", msg="HPX and OpenMP are incompatible. Choose one")
+178c177
+<     cxxstds = ["11", "14", "17", "20"]
+---
+>     stds = ["11", "14", "17", "20"]
+180c179
+<     variant("cxxstd", default="14", values=cxxstds, multi=False)
+---
+>     variant("std", default="14", values=stds, multi=False)
+184,185c183,184
+<     conflicts("+cuda", when="cxxstd=17 ^cuda@:10", msg="Current nvcc does not support C++17 or C++20")
+<     conflicts("+cuda", when="cxxstd=20", msg="Current nvcc does not support C++17 or C++20")
+---
+>     conflicts("+cuda", when="std=17 ^cuda@:10")
+>     conflicts("+cuda", when="std=20")
+188,189c187,188
+<     for std in cxxstds:
+<         depends_on('hpx cxxstd={0}'.format(std), when='+hpx cxxstd={0}'.format(std))
+---
+>     for std in stds:
+>         depends_on('hpx cxxstd={0}'.format(std), when='+hpx std={0}'.format(std))
+238c237
+<             from_variant("Kokkos_CXX_STANDARD", "cxxstd"),
+---
+>             from_variant("Kokkos_CXX_STANDARD", "std"),
+

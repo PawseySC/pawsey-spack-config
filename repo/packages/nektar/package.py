@@ -2,7 +2,7 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-
+# Nektar builds its own boost and other packages - better than let spack handling it.
 from spack.package import *
 
 
@@ -12,6 +12,7 @@ class Nektar(CMakePackage):
     homepage = "https://www.nektar.info/"
     url      = "https://gitlab.nektar.info/nektar/nektar/-/archive/v4.4.1/nektar-v4.4.1.tar.bz2"
 
+    #version('5.2.0', sha256="")
     version('5.1.0', sha256='f5fdb729909e4dcd42cb071f06569634fa87fe90384ba0f2f857a9e0e56b6ac5')
     version('5.0.3', sha256='1ef6f8f94f850ae78675bca3f752aa6c9f75401d1d6da4ec25df7fa795b860e9')
     version('5.0.2', sha256='24af60a48dbdf0455149540b35a6a59acd636c47b3150b261899a1a1ca886c0b')

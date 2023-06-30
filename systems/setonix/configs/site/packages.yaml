@@ -73,14 +73,6 @@ packages:
   # Note: setting autoconf/automake/cmake as non buildable
   cmake:
     version: [3.24.3]
-    variants: +doc+ncurses
-# Commented out - see GENERAL NOTES above
-#    externals:
-#  # manual addition with the latest version
-#    - spec: cmake@3.21.4
-#      prefix: /lus/joey/home/mdelapierre/Spack-sprints/v0.17.0_new/spack/opt/spack/cray-sles15-zen2/gcc-10.3.0/cmake-3.21.4-dgyicf6mmctyfw2fdzeja2jt5jf5gzl5
-#    - spec: cmake@3.10.2
-#      prefix: /usr
   ffmpeg:
     version: [4.4]
     variants: '+avresample'
@@ -97,16 +89,6 @@ packages:
     version: [1.23]
   gettext:
     version: [0.21.1]
-# Commented out - see GENERAL NOTES above
-#    externals:
-#    - spec: python@3.9.7+optimizations
-#      prefix: /lus/joey/home/mdelapierre/Spack-sprints/v0.17.0_new/spack/opt/spack/cray-sles15-zen2/gcc-10.3.0/python-3.9.7-2nk3ozgzzug2migecarn5ez4ppjov2oe
-#    - spec: python@3.8.5
-#      prefix: /opt/cray/pe/python/3.8.5.1
-#    - spec: python@3.6.12
-#      prefix: /usr
-#    - spec: python@2.7.17
-#      prefix: /usr
   py-cython:
     version: [0.29.30]
   py-dask:
@@ -195,7 +177,7 @@ packages:
     version: [1.8.1]
     variants: '+async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi cxxstd=14 build_type=Release'
   kokkos:
-    version: [3.6.00]
+    version: [3.7.02]
     variants: '+hwloc +memkind +numactl +openmp +tuning cxxstd=14 build_type=Release'
   netlib-lapack:
     version: [3.10.1]
@@ -213,7 +195,7 @@ packages:
     version: [3.18.1]
     variants: '+fftw' # commenting out trilinos as per environment note # +trilinos'
   plumed:
-    version: [2.7.2]
+    version: [2.9.0]
   netlib-scalapack:
     version: [2.2.0]
   slate:
@@ -229,7 +211,7 @@ packages:
   hdf:
     variants: '+external-xdr'
   adios2:
-    version: [2.8.3]
+    version: [2.9.0]
     variants: '+python +hdf5 build_type=Release'
   netcdf-c:
     version: [4.9.0]
@@ -278,7 +260,12 @@ packages:
     - spec: pkg-config@0.29.2
       prefix: /usr
     buildable: false
-  
+
+  openssl:
+    externals:
+    - spec: openssl@1.1
+      prefix: /usr
+
   hwloc:
     externals:
     - spec: hwloc@2.8.0
@@ -290,6 +277,50 @@ packages:
     - spec: numactl@2.0.14
       prefix: /usr
     buildable: false
+  
+  krb5:
+    externals:
+    - spec: krb5@1.19.2
+      prefix: /usr
+    buildable: false
+
+  pcre:
+    externals:
+    - spec: pcre@8.45
+      prefix: /usr
+    buildable: false
+
+  keyutils:
+    externals:
+    - spec: keyutils@1.6.3
+      prefix: /usr
+    buildable: false
+
+  brotli:
+    externals:
+    - spec: brotli@1.0.7
+      prefix: /usr
+    buildable: false
+
+  zstd:
+    externals:
+    - spec: zstd@1.5.0
+      prefix: /usr
+    buildable: false
+
+  libssh:
+    externals:
+    - spec: libssh@0.9.6
+      prefix: /usr
+    buildable: false
+
+  curl:
+    externals:
+    - spec: curl@7.79.1
+      prefix: /usr
+    buildable: false
+
+
 # ----------------------------------------------------------------------------
 #                                        CRAY
 # ----------------------------------------------------------------------------
@@ -299,10 +330,13 @@ packages:
       prefix: /usr
     buildable: false
 
-  # adding prefixes as in NERSC Perlmutter configs
-  # -----
-  # MPI and communication related externals 
-  # ----- 
+  cray-pmi:
+    externals:
+    - spec: cray-pmi@6.1.10
+      modules:
+      - cray-pmi/6.1.10
+
+# adding prefixes as in NERSC Perlmutter configs
   cray-mpich:
     externals:
     - spec: cray-mpich@8.1.25%gcc
