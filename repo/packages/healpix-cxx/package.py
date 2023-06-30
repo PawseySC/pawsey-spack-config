@@ -19,6 +19,7 @@
 # >             'SHARP_LIBS="-L{0} -lsharp -lc_utils -lfftpack -lm"'
 # >             .format(spec['libsharp'].prefix.lib)
 # >         )
+# Contribute patch
 from spack.package import *
 
 

@@ -10,7 +10,7 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-
+# There is a newer recipe in spack 0.20, remove this when upgrading.
 from spack.package import *
 
 

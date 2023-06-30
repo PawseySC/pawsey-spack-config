@@ -12,7 +12,7 @@ spack:
     - hdf5@1.12.2
     - hdf5@1.10.7
   - adios-set:
-    - adios2@2.8.3
+    - adios2@2.9.0
   - netcdf-set:
     - netcdf-c@4.9.0 +hdf4 +parallel-netcdf
     - netcdf-cxx@4.2

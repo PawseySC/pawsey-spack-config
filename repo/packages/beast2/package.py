@@ -17,6 +17,7 @@
 # < 
 # 29d25
 # <     depends_on('libbeagle', type=('build', 'link', 'run'), when="+beagle")
+# CONTRIBUTE - beagle dependency
 from spack.package import *
 
 

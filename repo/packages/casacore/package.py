@@ -2,7 +2,9 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-
+# Contribute
+# - Fix fftw dependency to set the fftw-api
+# - Dependency on gsl when @3.5.0:
 import os
 
 from spack.package import *
