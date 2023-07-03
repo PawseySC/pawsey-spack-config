@@ -284,9 +284,6 @@ packages:
     - spec: numactl@2.0.14
       prefix: /usr
     buildable: false
-  
-      prefix: /usr
-    buildable: false
 
   pcre:
     externals:
