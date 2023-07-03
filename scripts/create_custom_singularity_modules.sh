@@ -49,6 +49,8 @@ for version in $( ls ${src_dir}/*.lua 2>/dev/null ) ; do
   # 1.C singularity-askap is just the original module
   cp -p ${src_dir}/.${version} ${dst_dir}/${version}-askap.lua
   # 1.A singularity does not bind mount /askapbuffer nor add slurm
+  # the sed command removes some entries and also deletes items between specific lines
+  # leaving the delimiters between the lines intact for easy checks. 
   sed \
     -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
     -e '/^-- add SLURM START/,/^-- add SLURM END/{/^-- add SLURM START/!{/^-- add SLURM END/!d}}' \
