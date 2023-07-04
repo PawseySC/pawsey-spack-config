@@ -21,7 +21,7 @@ PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /d
 if [ -e $SPACK_USER_CONFIG_PATH ]; then
   mv $SPACK_USER_CONFIG_PATH $SPACK_USER_CONFIG_PATH.old.$( date -Iminutes | sed 's/+.*//' | tr ':' '.' )
 fi
-  mkdir -p $SPACK_USER_CONFIG_PATH
+mkdir -p ${SPACK_USER_CONFIG_PATH}
 
 # We will use the Pawsey spack mirror, to which several patches will be applied.
 if ! [ -e ${INSTALL_PREFIX}/spack ]; then
@@ -50,7 +50,7 @@ fi
 # process for both the Pawsey staff installations (spack user), and the user and 
 # project-wide ones.
 cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/site/*.yaml ${INSTALL_PREFIX}/spack/etc/spack/
-cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/spackuser/*.yaml $SPACK_USER_CONFIG_PATH/
+cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/spackuser/*.yaml ${SPACK_USER_CONFIG_PATH}/
 
 # copy project-wide configs into spack tree, too
 mkdir -p ${INSTALL_PREFIX}/spack/etc/spack/project
