@@ -25,9 +25,11 @@ PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /d
 # This script creates end user singularity modules, starting from the Spack one
 # For each version:
 # 1. creates several modules each setting different default behaviour:
-#    A. singularity/x.x.x-mpi : injects all necessary libraries to run MPI, binds filesystems /scratch, /software, etc
+#    A.1 singularity/x.x.x-mpi : injects all necessary libraries to run MPI, binds filesystems /scratch, /software
+#    A.2 singularity/x.x.x-mpi-gpu : injects all necessary libraries to run MPI, binds filesystems /scratch, /software, etc and also preloads the gtl library and sets the MPICH variable to enable GPU-GPU MPI.
 #    B. singularity/x.x.x-nompi : binds filesystems, also sets LD path based on currenty LD path 
-#    C. singularity/x.x.x-askap : like MPI but also addes /askapbuffer and also adds slurm related bind mounts 
+#    C.1 singularity/x.x.x-askap : like MPI but also addes /askapbuffer and also adds slurm related bind mounts 
+#    C.2 singularity/x.x.x-askap-gpu : like MPI but also addes /askapbuffer and also adds slurm related bind mounts 
 #    D. singularity/x.x.x-nohost : nothing from the host is injected, does mount file systems
 #    E. singularity/x.x.x-slurm : like nompi but also mounts directories related to running slurm in a container
 # 2. hides Spack module in {spack modules}/{arch}/{compiler}
@@ -60,26 +62,38 @@ for version in $( ls ${src_dir}/*.lua 2>/dev/null ) ; do
   if [ -e ${src_dir}/${version}.lua ] ; then
     mv ${src_dir}/${version}.lua ${src_dir}/.${version}
   fi
-  # 1.C singularity-askap is just the original module
-  cp -p ${src_dir}/.${version} ${dst_dir}/${version}-askap.lua
-  # 1.A singularity does not bind mount /askapbuffer nor add slurm
+  # 1.C.2 singularity-askap is just the original module
+  cp -p ${src_dir}/.${version} ${dst_dir}/${version}-askap-gpu.lua
+  # 1.C.1 singularity-askap is just the original module
+  sed \
+    -e '/^-- add GPUMPI START/,/^-- add GPUMPI END/{/^-- add GPUMPI START/!{/^-- add GPUMPI END/!d}}' \
+    ${src_dir}/.${version} > ${dst_dir}/${version}-askap.lua
+  # 1.A.2 singularity does not bind mount /askapbuffer nor add slurm
   # the sed command removes some entries and also deletes items between specific lines
   # leaving the delimiters between the lines intact for easy checks.
   sed \
     -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
     -e '/^-- add SLURM START/,/^-- add SLURM END/{/^-- add SLURM START/!{/^-- add SLURM END/!d}}' \
+    ${src_dir}/.${version} > ${dst_dir}/${version}-mpi-gpu.lua
+  # 1.A.1 
+  sed \
+    -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
+    -e '/^-- add SLURM START/,/^-- add SLURM END/{/^-- add SLURM START/!{/^-- add SLURM END/!d}}' \
+    -e '/^-- add GPUMPI START/,/^-- add GPUMPI END/{/^-- add GPUMPI START/!{/^-- add GPUMPI END/!d}}' \
     ${src_dir}/.${version} > ${dst_dir}/${version}-mpi.lua
   # 1.B singularity does not add any mpi related stuff
   sed \
     -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
     -e '/^-- add MPI START/,/^-- add MPI END/{/^-- add MPI START/!{/^-- add MPI END/!d}}' \
     -e '/^-- add SLURM START/,/^-- add SLURM END/{/^-- add SLURM START/!{/^-- add SLURM END/!d}}' \
+    -e '/^-- add GPUMPI START/,/^-- add GPUMPI END/{/^-- add GPUMPI START/!{/^-- add GPUMPI END/!d}}' \
     ${src_dir}/.${version} > ${dst_dir}/${version}-nompi.lua
   # 1.D singularity does not add any thing at all from host 
   sed \
     -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
     -e '/^-- add MPI START/,/^-- add MPI END/{/^-- add MPI START/!{/^ add MPI END/!d}}' \
     -e '/^-- add SLURM START/,/^-- add SLURM END/{/^-- add SLURM START/!{/^-- add SLURM END/!d}}' \
+    -e '/^-- add GPUMPI START/,/^-- add GPUMPI END/{/^-- add GPUMPI START/!{/^-- add GPUMPI END/!d}}' \
     -e '/^-- add CRAY_PATHS START/,/^-- add CRAY_PATHS END/{/^-- add CRAY_PATHS START/!{/^-- add CRAY_PATHS END/!d}}' \
     -e '/^-- add CURRENT_HOST_LD_PATH START/,/^-- add CURRENT_HOST_LD_PATH END/{/^-- add CURRENT_HOST_LD_PATH START/!{/^-- add CURRENT_HOST_LD_PATH END/!d}}' \
     ${src_dir}/.${version} > ${dst_dir}/${version}-nohost.lua 
@@ -87,6 +101,7 @@ for version in $( ls ${src_dir}/*.lua 2>/dev/null ) ; do
   sed \
     -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
     -e '/^-- add MPI START/,/^-- add MPI END/{/^-- add MPI START/!{/^-- add MPI END/!d}}' \
+    -e '/^-- add GPUMPI START/,/^-- add GPUMPI END/{/^-- add GPUMPI START/!{/^-- add GPUMPI END/!d}}' \
     ${src_dir}/.${version} > ${dst_dir}/${version}-slurm.lua
   echo "Finished generating modules for ${version}"
 done

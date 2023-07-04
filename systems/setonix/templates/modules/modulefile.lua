@@ -164,7 +164,16 @@ singularity_ld_preload = singularity_ld_preload .. ":/lib64/libselinux.so.1"
 -- lustre
 singularity_ld_preload = singularity_ld_preload .. ":/usr/lib64/liblustreapi.so.1:/usr/lib64/liblnetconfig.so.4:/usr/lib64/libyaml-0.so.2:/usr/lib64/libnl-genl-3.so.200:/usr/lib64/libnl-3.so.200"
 -- add MPI END
+-- add GPUMPI START
+singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/mpich/default/gtl/lib/libmpi_gtl_hsa.so.0"
+-- add GPUMPI END
 prepend_path("SINGULARITYENV_LD_PRELOAD", singularity_ld_preload)
+
+-- add GPUMPI START
+setenv("MPICH_GPU_SUPPORT_ENABLED","1")
+setenv("SINGULARITYENV_MPICH_GPU_SUPPORT_ENABLED","1")
+-- add GPUMPI END
+
 {% endif %}
 {% if spec.name == 'r' %}setenv("R_LIBS_USER", os.getenv("MYSOFTWARE").."/setonix/r/%v")
 {% endif %}
