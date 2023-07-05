@@ -4455,3 +4455,8 @@ Differences for the 'wcstools' package
 Differences for the 'wsclean' package
 
 
+Differences for the 'singularityce' package
+- is primarily the correct handling of the conmon dependency/build variant and also hash for new versions
+
+Differences for the 'go' package 
+- just the addition of newer versions and also pulled from spack dev as of 01/07/2023 as basis to add lots of versions. 
