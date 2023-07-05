@@ -58,6 +58,35 @@ compilers:
     environment: {}
     extra_rpaths: []
 
+- compiler:
+    spec: gcc@12.2.0gpu
+    paths:
+      cc: cc
+      cxx: CC
+      f77: ftn
+      fc: ftn
+    flags:
+      cflags: -O3 -L${CRAY_MPICH_ROOTDIR}/gtl/lib -lmpi_gtl_hsa
+      cxxflags: -O3 -L${CRAY_MPICH_ROOTDIR}/gtl/lib -lmpi_gtl_hsa
+      cppflags: -O3 -L${CRAY_MPICH_ROOTDIR}/gtl/lib -lmpi_gtl_hsa
+      fflags: -O3 -fallow-argument-mismatch -L${CRAY_MPICH_ROOTDIR}/gtl/lib -lmpi_gtl_hsa
+    operating_system: sles15
+    target: any
+    modules:
+    - PrgEnv-gnu
+    - gcc/12.2.0
+    - craype
+    - craype-accel-amd-gfx90a
+    - craype-network-ofi
+    - xpmem
+    - rocm/5.2.3
+    environment:
+      set:
+        MPICH_GPU_SUPPORT_ENABLED: "1"
+      prepend_path: # Similar for append|remove_path
+        LD_LIBRARY_PATH: ${CRAY_MPICH_ROOTDIR}/gtl/lib
+    extra_rpaths: []
+
 # similar to above but has debugging flags
 # these must be defined as a different version
 # by convention we add debug to the name
@@ -158,6 +187,35 @@ compilers:
     extra_rpaths: []
 
 - compiler:
+    spec: cce@15.0.1gpu
+    paths:
+      cc: cc
+      cxx: CC
+      f77: ftn
+      fc: ftn
+    flags:
+      cflags: -O3 -L${CRAY_MPICH_ROOTDIR}/gtl/lib -lmpi_gtl_hsa
+      cxxflags: -O3 -L${CRAY_MPICH_ROOTDIR}/gtl/lib -lmpi_gtl_hsa
+      cppflags: -O3 -L${CRAY_MPICH_ROOTDIR}/gtl/lib -lmpi_gtl_hsa
+      fflags: -O3 -L${CRAY_MPICH_ROOTDIR}/gtl/lib -lmpi_gtl_hsa
+    operating_system: sles15
+    target: any
+    modules:
+    - PrgEnv-cray
+    - cce/15.0.1
+    - craype
+    - craype-accel-amd-gfx90a
+    - craype-network-ofi
+    - xpmem
+    - rocm/5.2.3
+    environment:
+      set:
+        MPICH_GPU_SUPPORT_ENABLED: "1"
+      prepend_path: # Similar for append|remove_path
+        LD_LIBRARY_PATH: ${CRAY_MPICH_ROOTDIR}/gtl/lib
+    extra_rpaths: []
+
+- compiler:
     spec: cce@15.0.1noflags
     paths:
       cc: cc
@@ -199,6 +257,35 @@ compilers:
     - craype-network-ofi
     - xpmem
     environment: {}
+    extra_rpaths: []
+
+- compiler:
+    spec: aocc@3.2.0gpu
+    paths:
+      cc: cc
+      cxx: CC
+      f77: ftn
+      fc: ftn
+    flags:
+      cflags: -O3 -L${CRAY_MPICH_ROOTDIR}/gtl/lib -lmpi_gtl_hsa
+      cxxflags: -O3 -L${CRAY_MPICH_ROOTDIR}/gtl/lib -lmpi_gtl_hsa
+      cppflags: -O3 -L${CRAY_MPICH_ROOTDIR}/gtl/lib -lmpi_gtl_hsa
+      fflags: -O3 -L${CRAY_MPICH_ROOTDIR}/gtl/lib -lmpi_gtl_hsa
+    operating_system: sles15
+    target: any
+    modules:
+    - PrgEnv-aocc
+    - gcc/3.2.0
+    - craype
+    - craype-accel-amd-gfx90a
+    - craype-network-ofi
+    - xpmem
+    - rocm/5.2.3
+    environment:
+      set:
+        MPICH_GPU_SUPPORT_ENABLED: "1"
+      prepend_path: # Similar for append|remove_path
+        LD_LIBRARY_PATH: ${CRAY_MPICH_ROOTDIR}/gtl/lib
     extra_rpaths: []
 
 - compiler:

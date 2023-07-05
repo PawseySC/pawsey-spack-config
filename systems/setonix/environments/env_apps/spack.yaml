@@ -40,7 +40,7 @@ spack:
     - openfoam@2206
 
   - packages-with-oldpython:
-    - nwchem@7.0.2 ^python@3.9.15
+    - nwchem@7.2.0 +fftw3 +openmp ^python@3.9.15
 
   - packages:
     - cpmd@4.3 +mpi +omp
@@ -63,7 +63,6 @@ spack:
     - [target=zen3]
   - matrix:
     - [$packages-with-oldpython]
-    - [^python@3.9.15 +optimizations+zlib]
     - ['%gcc@12.2.0']
     - [target=zen3]
   - matrix:
