@@ -459,3 +459,273 @@ packages:
 #      - cray-fftw/3.3.10.1
 #      prefix: /opt/cray/pe/fftw/3.3.10.1/x86_milan
 #    buildable: false
+
+
+# =====================================================================
+#                       ROCM EXTERNALS
+# =====================================================================
+
+  rocm-bandwidth-test:
+      buildable: false
+      externals:
+      - spec: rocm-bandwidth-test@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocm-opencl:
+      buildable: false
+      externals:
+      - spec: rocm-opencl@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hipsparse:
+      buildable: false
+      externals:
+      - spec: hipsparse@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  atmi:
+      buildable: false
+
+  rocm-clang-ocl:
+      buildable: false
+      externals:
+      - spec: rocm-clang-ocl@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  llvm-amdgpu:
+      buildable: false
+      externals:
+      - spec: llvm-amdgpu@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hipfort:
+      buildable: false
+
+  hsa-rocr-dev:
+      buildable: false
+      externals:
+      - spec: hsa-rocr-dev@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hip-rocclr:
+      buildable: false
+      externals:
+      - spec: hip-rocclr@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  roctracer-dev-api:
+      buildable: false
+      externals:
+      - spec: roctracer-dev-api@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocm-smi:
+      buildable: false
+      externals:
+      - spec: rocm-smi@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocrand:
+      buildable: false
+      externals:
+      - spec: rocrand@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocm-cmake:
+      buildable: false
+      externals:
+      - spec: rocm-cmake@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocfft:
+      buildable: false
+      externals:
+      - spec: rocfft@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocm-device-libs:
+      buildable: false
+      externals:
+      - spec: rocm-device-libs@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hipfft:
+      buildable: false
+      externals:
+      - spec: hipfft@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocthrust:
+      buildable: false
+      externals:
+      - spec: rocthrust@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocprofiler-dev:
+      buildable: false
+      externals:
+      - spec: rocprofiler-dev@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocalution:
+      buildable: false
+      externals:
+      - spec: rocalution@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocm-debug-agent:
+      buildable: false
+      externals:
+      - spec: rocm-debug-agent@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hipblas:
+      buildable: false
+      externals:
+      - spec: hipblas@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocm-gdb:
+      buildable: false
+      externals:
+      - spec: rocm-gdb@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hipify-clang:
+      buildable: false
+      externals:
+      - spec: hipify-clang@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocprim:
+      buildable: false
+      externals:
+      - spec: rocprim@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hsakmt-roct:
+      buildable: false
+      externals:
+      - spec: hsakmt-roct@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  roctracer-dev:
+      buildable: false
+      externals:
+      - spec: roctracer-dev@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hipcub:
+      buildable: false
+      externals:
+      - spec: hipcub@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocm-smi-lib:
+      buildable: false
+      externals:
+      - spec: rocm-smi-lib@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocwmma:
+      buildable: false
+      externals:
+      - spec: rocwmma@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocm-openmp-extras:
+      buildable: false
+      externals:
+      - spec: rocm-openmp-extras@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  comgr:
+      buildable: false
+      externals:
+      - spec: comgr@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocblas:
+      buildable: false
+      externals:
+      - spec: rocblas@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rccl:
+      buildable: false
+      externals:
+      - spec: rccl@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocminfo:
+      buildable: false
+      externals:
+      - spec: rocminfo@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hip:
+      buildable: false
+      externals:
+      - spec: hip@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocsparse:
+      buildable: false
+      externals:
+      - spec: rocsparse@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocsolver:
+      buildable: false
+      externals:
+      - spec: rocsolver@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocm-dbgapi:
+      buildable: false
+      externals:
+      - spec: rocm-dbgapi@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hipsolver:
+      buildable: false
+      externals:
+      - spec: hipsolver@5.2.3
+        prefix: /opt/rocm-5.2.3
+
