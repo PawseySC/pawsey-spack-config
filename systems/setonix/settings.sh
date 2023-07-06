@@ -55,7 +55,7 @@ spack_version="0.19.0" # the prefix "v" is added in setup_spack.sh
 singularity_version="3.8.7-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="3.8.7-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.22"
-shpc_registry_version="7c177934889c6c5780d4efb16996d5072b91303a"
+shpc_registry_version="61a74214fb6d3b7667103cbaa022746fa931438d"
 
 # python (and py tools) versions
 python_name="python"
@@ -99,6 +99,7 @@ env_wrf
 
 container_list="
 amdih/pytorch:rocm5.0_ubuntu18.04_py3.7_pytorch_1.10.0
+rocm/tensorflow:rocm5.5-tf2.11-dev
 quay.io/biocontainers/bamtools:2.5.2--hd03093a_0
 quay.io/biocontainers/bbmap:38.96--h5c4e2a8_0
 quay.io/biocontainers/bcftools:1.15--haf5b3da_0
