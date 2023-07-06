@@ -29,9 +29,6 @@ if ! [ -e ${INSTALL_PREFIX}/spack ]; then
   cd "${INSTALL_PREFIX}/spack"
   git checkout v${spack_version}
 
-  sed -i -e "s|DATE_TAG|$DATE_TAG|g"\
-    -e "s|PAWSEY_SYSTEM|$SYSTEM|g"\
-    ${PAWSEY_SPACK_CONFIG_REPO}/fixes/dot_spack.patch
   # apply Marco's LMOD fixes into spack tree
   patch ${INSTALL_PREFIX}/spack/lib/spack/spack/modules/lmod.py \
     ${PAWSEY_SPACK_CONFIG_REPO}/fixes/lmod_arch_family.patch
@@ -42,6 +39,10 @@ if ! [ -e ${INSTALL_PREFIX}/spack ]; then
     ${PAWSEY_SPACK_CONFIG_REPO}/fixes/modulenames_plus_init.patch
   patch ${INSTALL_PREFIX}/spack/lib/spack/spack/paths.py \
     ${PAWSEY_SPACK_CONFIG_REPO}/fixes/dot_spack.patch
+  sed -i -e "s|DATE_TAG|$DATE_TAG|g"\
+    -e "s|PAWSEY_SYSTEM|$SYSTEM|g"\
+    ${INSTALL_PREFIX}/spack/lib/spack/spack/paths.py
+  
   rm "${INSTALL_PREFIX}/spack/.git" -rf
   cd -
 fi
