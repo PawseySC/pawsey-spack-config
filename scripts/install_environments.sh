@@ -60,3 +60,10 @@ done
 
 # Refresh module files
 for hash in `spack find -x --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
+
+# Generate commands for sysadmins to execute to fix Singularity permissions.
+echo """Singularity fix permissions:
+-----------------------------
+Ask the admins to execute the following scripts:
+"""
+for prefix in `spack find -x --format "{prefix}" singularity`; do echo ${prefix}/bin/spack_perms_fix.sh; done;
