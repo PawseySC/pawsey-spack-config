@@ -60,8 +60,8 @@ shpc_registry_version="7c177934889c6c5780d4efb16996d5072b91303a"
 # python (and py tools) versions
 python_name="python"
 python_version="3.10.10" # has to match the version in the Spack env yaml
-setuptools_version="65.5.0" # has to match the version in the Spack env yaml
-pip_version="22.2.2" # has to match the version in the Spack env yaml
+setuptools_version="68.0.0" # has to match the version in the Spack env yaml
+pip_version="23.1.2" # has to match the version in the Spack env yaml
 # r major minor version
 r_version_majorminor="4.2.2"
 

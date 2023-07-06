@@ -121,7 +121,7 @@ packages:
   py-pandas:
     version: [1.5.1]
   py-pip:
-    version: [22.2.2]
+    version: [23.1.2]
   py-plotly:
     version: [5.2.2]
   py-scikit-learn:
@@ -129,7 +129,7 @@ packages:
   py-scipy:
     version: [1.8.1]
   py-setuptools:
-    version: [65.5.0]
+    version: [68.0.0]
   # preferred versions and variants, compilers
   go:
     version: [1.17.2]
@@ -221,7 +221,7 @@ packages:
     version: [1.12.2]
     variants: 'api=v112 +hl +fortran +szip build_type=Release'
   hdf:
-    variants: '+external-xdr'
+    variants: '+external-xdr+shared'
   adios2:
     version: [2.9.0]
     variants: '+python +hdf5 build_type=Release'
