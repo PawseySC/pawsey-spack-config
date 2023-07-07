@@ -19,7 +19,7 @@ module load cray-python
 . "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh"
 
 # Initialise GPG keys to sign build cache
-# This needs to be run on compute nodes seems like.
+# This needs to be run on login nodes seems like.
 spack gpg init
 spack gpg create Spack spack@pawsey.org.au
 
