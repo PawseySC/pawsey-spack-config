@@ -22,19 +22,6 @@ spack:
       +reaction +reaxff +replica +rigid +shock +smtbq +sph +spin +srd +tally +uef
       +voronoi +yaff build_type=Release ^kokkos@3.7.02+hwloc+memkind+numactl+openmp+tuning
       build_type=Release ^plumed@2.9.0 ^adios2@2.9.0
-
-
-
-
-
-
-
-
-
-
-
-
-
     
       #    - lammps@20210929.3 +adios +asphere +atc +awpmd +bocs +body +brownian +cg-sdk
       #      +class2 +colloid +colvars +compress +coreshell +dielectric +diffraction +dipole
@@ -49,18 +36,6 @@ spack:
 
     - namd@2.14 interface=python fftw=3 +plumed ^charmpp@6.10.2 backend=ofi
     - namd@2.15a2 interface=python fftw=3  ^charmpp@7.0.0 backend=ofi
-
-
-
-
-
-
-
-
-
-
-
-
     
 # Failing:    - openfoam-org@8 #Alexis still working on it
 # Current alternative:
@@ -73,18 +48,6 @@ spack:
     - cpmd@4.3 +mpi +omp
     - ansys-fluids@2022R1
 
-
-
-
-
-
-
-
-
-
-
-
-    
 #lapack and blas path not set, error in cmake file "SET(NATIVE_BLAS_LAPACK_SEARCH_PATHS /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 )
 # look into this file nektar/cmake/FindNativeBlasLapack.cmake
 # Custom Pawsey recipe, that builds all dependencies internally - OK
