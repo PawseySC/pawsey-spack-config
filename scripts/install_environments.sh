@@ -58,6 +58,10 @@ for env in $env_list; do
   cd -
 done
 
+# Create binary cache
+if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
+  for hash in `spack find -x --format "{hash}"`; do spack buildcache create -a -m systemwide_buildcache  /$hash; done;
+fi
 # Refresh module files
 for hash in `spack find -x --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
 
