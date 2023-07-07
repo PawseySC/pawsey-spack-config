@@ -21,7 +21,7 @@ module load cray-python
 # Initialise GPG keys to sign build cache
 # This needs to be run on compute nodes seems like.
 spack gpg init
-spack gpg create Cristian cdipietrantonio@pawsey.org.au
+spack gpg create Spack spack@pawsey.org.au
 
 # Create/add mirror
 spack mirror add systemwide_buildcache "${SPACK_BUILDCACHE_PATH}"
