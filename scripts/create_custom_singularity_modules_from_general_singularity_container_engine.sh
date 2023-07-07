@@ -1,5 +1,12 @@
 #!/bin/bash -e
 
+# This script generates singularity named modules
+# from the singularityce spack module 
+# it is effectively the same as create_custom_singularity_modules_from_singularity.sh
+# the main difference is that the src_dr is singularityce_name and destination
+# uses singularity_name_general as the general container engine 
+# allowing the use of singularityce or apptainer recipes. 
+
 # source setup variables
 # if copy/pasting these commands, need to run from this directory
 if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
@@ -29,8 +36,15 @@ PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /d
 #    - to avoid confusion
 
 # define source (Spack) and destination (Pawsey) directories for Singularity
+src_old_dir="${INSTALL_PREFIX}/modules/${cpu_arch}/gcc/${gcc_version}/utilities/${singularity_name_general}"
 src_dir="${INSTALL_PREFIX}/modules/${cpu_arch}/gcc/${gcc_version}/utilities/${singularity_name}"
 dst_dir="${INSTALL_PREFIX}/${singularity_symlink_module_dir}"
+echo "Using module files in ${src_old_dir}"
+echo "Copying them to ${src_dir}"
+echo "And using this basis to generate modules in ${dst_dir}"
+
+# copy the singularityce modules to singularity directory
+cp ${src_old_dir}/*.lua ${src_dir}/
 
 # ensure destination directory exists
 mkdir -p ${dst_dir}

@@ -52,8 +52,8 @@ cpu_arch="zen3"
 
 # tool versions
 spack_version="0.19.0" # the prefix "v" is added in setup_spack.sh
-singularity_version="3.8.7-nompi" # has to match the version in the Spack env yaml + nompi tag
-singularity_mpi_version="3.8.7-mpi" # has to match the version in the Spack env yaml + mpi tag
+singularity_version="3.11.4-nompi" # has to match the version in the Spack env yaml + nompi tag
+singularity_mpi_version="3.11.4-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.22"
 shpc_registry_version="61a74214fb6d3b7667103cbaa022746fa931438d"
 
@@ -156,6 +156,7 @@ shpc_name="shpc"
 
 # name of Singularity module (Spack has singularity and singularityce)
 singularity_name="singularity"
+singularity_name_general="singularityce"
 
 # NOTE: the following are ALL RELATIVE to root_dir above
 # root location for Pawsey custom builds

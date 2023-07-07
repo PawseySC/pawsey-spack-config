@@ -12,7 +12,8 @@ spack:
     - parallel@20220522
     - reframe@3.12.0 ^python@3.10.10 +optimizations+zlib
     - reframe@3.10.1 ^python@3.10.10 +optimizations+zlib
-    - singularity@3.8.7
+    # now moving to singularityce rather than older singularity
+    - singularityce@3.11.4~conmon ^go@1.19.10
     - mpifileutils@0.11.1+lustre
     - feh@3.3
 # utilities for Nextflow Tower

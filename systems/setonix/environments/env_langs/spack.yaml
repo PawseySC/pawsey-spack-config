@@ -4,7 +4,11 @@ spack:
     
     # aocc, rocm, gcc, llvm: provided by system installations
     - perl@5.36.0
-    - go@1.17.2
+    # this is a proposed change to eliminate openss and older go
+    #- openssl@3.0.7 ^perl@5.36.0
+    # do we really need openssl 3.0.7?
+    #- go@1.17.2 ^openssl@3.0.7
+    - go@1.19.10
     
     # NotReadyYet:    
     # - julia@1.6.1 #Default recipe is very weak. Faulty. Lots of needed dependencies are missing.
