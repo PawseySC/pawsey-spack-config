@@ -49,7 +49,7 @@ spack:
 # look into this file nektar/cmake/FindNativeBlasLapack.cmake
 # Custom Pawsey recipe, that builds all dependencies internally - OK
     - nektar@5.0.2 build_type=Release
-    - quantum-espresso@6.8 +epw +openmp hdf5=parallel
+    - quantum-espresso@7.2 +epw +openmp hdf5=parallel
 
   - vasp_packages:
     - vasp@5.4.4 +scalapack
