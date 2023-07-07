@@ -18,6 +18,16 @@ module load cray-python
 # initialise spack 
 . "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh"
 
+# Initialise GPG keys to sign build cache
+# This needs to be run on login nodes seems like.
+if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
+    spack gpg init
+    spack gpg create Spack spack@pawsey.org.au
+
+    # Create/add mirror
+    spack mirror add systemwide_buildcache "${SPACK_BUILDCACHE_PATH}"
+fi
+
 # make sure Clingo is bootstrapped
 echo "Running 'spack -d spec nano' to bootstrap Clingo.."
 spack -d spec nano
