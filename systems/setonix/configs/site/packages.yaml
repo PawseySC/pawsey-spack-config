@@ -99,6 +99,8 @@ packages:
     variants: '+optimizations +zlib'
   gdbm:
     version: [1.23]
+  apr:
+    version: [1.5.2]
   gettext:
     version: [0.21.1]
   py-cython:
