@@ -221,7 +221,7 @@ packages:
     version: [1.12.2]
     variants: 'api=v112 +hl +fortran +szip build_type=Release'
   hdf:
-    variants: '+external-xdr+shared'
+    variants: '~external-xdr+shared'
   adios2:
     version: [2.9.0]
     variants: '+python +hdf5 build_type=Release'
