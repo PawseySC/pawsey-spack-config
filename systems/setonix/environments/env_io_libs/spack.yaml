@@ -14,7 +14,7 @@ spack:
   - adios-set:
     - adios2@2.9.0
   - netcdf-set:
-    - netcdf-c@4.9.0 +hdf4 +parallel-netcdf
+    - netcdf-c@4.9.0 +hdf4 +parallel-netcdf ^hdf+shared
     - netcdf-cxx@4.2
     - netcdf-cxx4@4.3.1 ^python@3.10.10 +optimizations+zlib
     - netcdf-fortran@4.6.0
