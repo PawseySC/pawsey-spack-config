@@ -14,7 +14,7 @@ spack:
   - mpi-tests:
     - osu-micro-benchmarks@5.7.1
   - io-tests:
-    - ior@3.3.0 +hdf5 +lustre
+    - ior@3.3.0 +hdf5 +lustre ^python@3.10.10
 
   # add package specs to the `specs` list
   specs:

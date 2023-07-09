@@ -9,9 +9,11 @@ spack:
   definitions:
   - packages-with-python:
     - amber@20 +openmp ^hdf@4.2.15 +external-xdr
-    - cp2k@2023.1 +plumed ^plumed@2.9.0
     - gromacs@2023 +double +lapack +plumed build_type=Release ^plumed@2.9.0
     - gromacs@2022.5 +double +lapack +plumed build_type=Release ^plumed@2.8.2
+    - namd@2.14 interface=python fftw=3 +plumed ^charmpp@7.0.0 backend=ofi
+    - namd@2.15a1 interface=python fftw=3 ^charmpp@7.0.0 backend=ofi
+    - cp2k@2023.1 +plumed ^plumed@2.9.0
     - lammps@20230615 +adios +asphere +atc +awpmd +bocs +body +brownian +cg-sdk +class2
       +colloid +colvars +compress +coreshell +dielectric +diffraction +dipole +dpd-basic
       +dpd-meso +dpd-react +dpd-smooth +drude +eff +extra-compute +extra-dump +extra-fix
@@ -34,7 +36,6 @@ spack:
       #      +spin +srd +tally +uef +voronoi +yaff build_type=Release ^kokkos@3.4.01+hwloc+memkind+numactl+openmp+tuning+rocm
       #      cxxstd=14 build_type=Release ^plumed@2.7.2 ^adios2@2.8.3
 
-    - namd@2.14 interface=python fftw=3 +plumed ^charmpp@6.10.2 backend=ofi
 # Failing:    - openfoam-org@8 #Alexis still working on it
 # Current alternative:
     - openfoam@2206
@@ -58,7 +59,7 @@ spack:
   specs:
   - matrix:
     - [$packages-with-python]
-    - [^python@3.10.10 +optimizations+zlib]
+    - [^python@3.10.10 +optimizations+zlib~ssl]
     - ['%gcc@12.2.0']
     - [target=zen3]
   - matrix:
