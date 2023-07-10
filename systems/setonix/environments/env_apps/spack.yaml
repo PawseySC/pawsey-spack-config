@@ -22,7 +22,7 @@ spack:
       +reaction +reaxff +replica +rigid +shock +smtbq +sph +spin +srd +tally +uef
       +voronoi +yaff build_type=Release ^kokkos@3.7.02+hwloc+memkind+numactl+openmp+tuning
       build_type=Release ^plumed@2.9.0 ^adios2@2.9.0
-
+    
       #    - lammps@20210929.3 +adios +asphere +atc +awpmd +bocs +body +brownian +cg-sdk
       #      +class2 +colloid +colvars +compress +coreshell +dielectric +diffraction +dipole
       #      +dpd-basic +dpd-meso +dpd-react +dpd-smooth +drude +eff +extra-compute +extra-dump
@@ -35,6 +35,8 @@ spack:
       #      cxxstd=14 build_type=Release ^plumed@2.7.2 ^adios2@2.8.3
 
     - namd@2.14 interface=python fftw=3 +plumed ^charmpp@6.10.2 backend=ofi
+    - namd@2.15a2 interface=python fftw=3  ^charmpp@7.0.0 backend=ofi
+    
 # Failing:    - openfoam-org@8 #Alexis still working on it
 # Current alternative:
     - openfoam@2206
@@ -45,11 +47,18 @@ spack:
   - packages:
     - cpmd@4.3 +mpi +omp
     - ansys-fluids@2022R1
+
 #lapack and blas path not set, error in cmake file "SET(NATIVE_BLAS_LAPACK_SEARCH_PATHS /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 )
 # look into this file nektar/cmake/FindNativeBlasLapack.cmake
 # Custom Pawsey recipe, that builds all dependencies internally - OK
     - nektar@5.0.2 build_type=Release
     - quantum-espresso@7.2 +epw +openmp hdf5=parallel
+
+# weather utilities  
+  - weather_utils:
+    #    - cdo@2.1.0 #eccodes compilation issue on Joey
+    - nco@5.1.6 ^pocl@4.0
+    - ncview@2.1.9
 
   - vasp_packages:
     - vasp@5.4.4 +scalapack
@@ -73,4 +82,8 @@ spack:
     - [$vasp_packages]
     - ['%gcc@12.2.0']
     - [target=zen3]
+  - matrix:
+    - [$weather_utils]
+    - ['%gcc@12.2.0']
+    - [target=zen3]      
   view: false

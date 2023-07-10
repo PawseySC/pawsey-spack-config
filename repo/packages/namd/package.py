@@ -56,6 +56,7 @@ class Namd(MakefilePackage, CudaPackage):
 
     version("master", branch="master")
     version('2.15a1', branch="master", tag='release-2-15-alpha-1')
+    version('2.15a2', sha256='b7ba66c0599254aec265470b477f5c51bf6fccedaeab810132b567cafbd854b7')
     version('2.14', sha256='34044d85d9b4ae61650ccdba5cda4794088c3a9075932392dd0752ef8c049235',
             preferred=True)
     version('2.13', '9e3323ed856e36e34d5c17a7b0341e38')
@@ -289,7 +290,7 @@ class Namd(MakefilePackage, CudaPackage):
                         join_path(self.build_directory, "Make.config"))
     def patch(self):
         if '+plumed' in self.spec:
-            self.spec['plumed'].package.apply_patch(self, force=True)
+            self.spec['plumed'].package.apply_patch(self)
 
     def install(self, spec, prefix):
         with working_dir(self.build_directory):
