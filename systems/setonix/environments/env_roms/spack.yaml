@@ -9,6 +9,5 @@ spack:
   - matrix:
     - [$packages]
     - ['%gcc@12.2.0']
-    - [^python@3.10.10]
     - [target=zen3]
   view: false
