@@ -145,6 +145,10 @@ modules:
         #roms: 'applications/{name}/{version}'
         #wrf: 'applications/{name}/{version}'
 
+        #cdo: 'applications/{name}/{version}'
+        nco: 'applications/{name}/{version}'
+        ncview: 'applications/{name}/{version}'
+
         # numerical or parallelisation libraries 
         "amdblis +suphandling": 'libraries/{name}/{version}'
         "amdblis ~suphandling": 'libraries/{name}/{version}-nosup'
