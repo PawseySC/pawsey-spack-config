@@ -224,7 +224,9 @@ modules:
         # utilities 
         autoconf: 'utilities/{name}/{version}'
         automake: 'utilities/{name}/{version}'
-        cmake: 'utilities/{name}/{version}'
+        libtool: 'utilities/{name}/{version}'
+        # to avoid multiple cmake modules, picking a specific one
+        "cmake ~doc+ncurses+ownlibs~qt": 'utilities/{name}/{version}'
         emacs: 'utilities/{name}/{version}'
         ffmpeg: 'utilities/{name}/{version}'
         gnuplot: 'utilities/{name}/{version}'
@@ -236,6 +238,7 @@ modules:
         py-setuptools: 'utilities/{name}/{version}-py{^python.version}'
         reframe: 'utilities/{name}/{version}'
         singularity: 'utilities/{name}/{version}'
+        singularityce: 'utilities/{name}/{version}'
         tower-agent: 'utilities/{name}/{version}'
         tower-cli: 'utilities/{name}/{version}'
         mpifileutils: 'utilities/{name}/{version}'

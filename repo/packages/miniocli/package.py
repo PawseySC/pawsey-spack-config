@@ -15,6 +15,11 @@ class Miniocli(MakefilePackage):
     url      = "https://github.com/minio/mc/archive/refs/tags/RELEASE.2022-02-02T02-03-24Z.tar.gz"
   
     version(
+        '2023-06-28',
+        sha256='033a80439474595665bdbc3ec72b059dc9e69e99db85fe6820877ad8973a080b',
+        url='https://github.com/minio/mc/archive/refs/tags/RELEASE.2023-06-28T21-54-17Z.tar.gz',
+    )
+    version(
         '2022-05-04',
         sha256='2b935c3744228978c93c14186b65a6078e4ffc267f32cdb8c994eff2dda95a6e',
         url="https://github.com/minio/mc/archive/RELEASE.2022-05-04T06-07-55Z.tar.gz",

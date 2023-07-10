@@ -73,11 +73,10 @@ packages:
     version: [0.13.1]
   krb5:
     version: [1.19.2]
-  # preferred versions and variants, utils/python
-  # Note: setting autoconf/automake/cmake as non buildable
+  # cmake can have multiple entries so set default
   cmake:
     version: [3.24.3]
-    variants: +doc+ncurses
+    variants: ~doc+ncurses+ownlibs~qt
 # Commented out - see GENERAL NOTES above
 #    externals:
 #  # manual addition with the latest version
@@ -96,7 +95,7 @@ packages:
   # preferred versions and variants, python
   python:
     version: [3.10.10]
-    variants: '+optimizations +zlib'
+    variants: '+optimizations +zlib ~ssl'
   gdbm:
     version: [1.23]
   apr:
@@ -131,7 +130,7 @@ packages:
   py-scipy:
     version: [1.8.1]
   py-setuptools:
-    version: [68.0.0]
+    version: [59.4.0]
   # preferred versions and variants, compilers
   go:
     version: [1.19.10]
@@ -223,7 +222,8 @@ packages:
     version: [1.12.2]
     variants: 'api=v112 +hl +fortran +szip build_type=Release'
   hdf:
-    variants: '~external-xdr+shared'
+    version: [4.2.15]
+    variants: '+shared+external-xdr'
   adios2:
     version: [2.9.0]
     variants: '+python +hdf5 build_type=Release'

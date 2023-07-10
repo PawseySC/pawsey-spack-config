@@ -9,13 +9,8 @@ spack:
     - awscli@1.16.308 ^py-botocore@1.21.12 ^py-docutils@0.19
     - py-boto3@1.18.12
   - s3-go-set:
-    - rclone@1.58.1
-    - rclone@1.59.2
-    
-    # later versions of minio require further updates and also 
-    # a recipe for a new go package it seems 
-    - miniocli@2022-02-02T02-03-24Z
-    - miniocli@2022-10-29T10-09-23Z
+    - rclone@1.62.2
+    - miniocli@2023-06-28
   # add package specs to the `specs` list
   specs:
   - matrix:
