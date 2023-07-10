@@ -130,7 +130,7 @@ packages:
   py-scipy:
     version: [1.8.1]
   py-setuptools:
-    version: [68.0.0]
+    version: [59.4.0]
   # preferred versions and variants, compilers
   go:
     version: [1.19.10]
