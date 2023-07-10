@@ -200,7 +200,7 @@ class Plumed(AutotoolsPackage):
 
         # Call plumed-patch to patch executables
         target = format_strings[other.name].format(other)
-        plumed_patch("-p", "-e", target)
+        plumed_patch("-p", "-e", target, "-f")
 
     def setup_dependent_package(self, module, dependent_spec):
         # Make plumed visible from dependent packages
