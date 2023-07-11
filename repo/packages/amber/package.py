@@ -38,8 +38,8 @@ class Amber(Package, CudaPackage):
 
     resources = {
         # [version amber, version ambertools , sha256sum]
-        "20": ("21", "f55fa930598d5a8e9749e8a22d1f25cab7fcf911d98570e35365dd7f262aaafd"),
-        # '20': ('20', 'b1e1f8f277c54e88abc9f590e788bbb2f7a49bcff5e8d8a6eacfaf332a4890f9'),
+       # "20": ("21", "f55fa930598d5a8e9749e8a22d1f25cab7fcf911d98570e35365dd7f262aaafd"),
+        '20': ('20', 'b1e1f8f277c54e88abc9f590e788bbb2f7a49bcff5e8d8a6eacfaf332a4890f9'),
         "18": ("19", "0c86937904854b64e4831e047851f504ec45b42e593db4ded92c1bee5973e699"),
         "16": ("16", "7b876afe566e9dd7eb6a5aa952a955649044360f15c1f5d4d91ba7f41f3105fa"),
     }

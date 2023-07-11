@@ -62,8 +62,11 @@ done
 if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
   for hash in `spack find -x --format "{hash}"`; do spack buildcache create -a -m systemwide_buildcache  /$hash; done;
 fi
-# Refresh module files
+# Refresh module files - explicit specs
 for hash in `spack find -x --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
+
+# Refresh dependencies - implicit specs (manually remove .llvm load from pocl modulefile)
+for hash in `spack find -X --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
 
 # Generate commands for sysadmins to execute to fix Singularity permissions.
 echo """Singularity fix permissions:

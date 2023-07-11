@@ -33,8 +33,9 @@ module swap PrgEnv-cray PrgEnv-gnu
 module load spack/${spack_version}
 
 #step 1 - refreshing spack modules
-echo "Deleting and re-creating Spack modules.."
-spack module lmod refresh -y --delete-tree
+#this step is now run in install_environments.sh
+##echo "Deleting and re-creating Spack modules.."
+#spack module lmod refresh -y --delete-tree
 
 
 # step 2. create all missing module directories
