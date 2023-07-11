@@ -44,6 +44,7 @@ echo "Copying them to ${src_dir}"
 echo "And using this basis to generate modules in ${dst_dir}"
 
 # copy the singularityce modules to singularity directory
+mkdir -p ${src_dir}
 cp ${src_old_dir}/*.lua ${src_dir}/
 
 # ensure destination directory exists
