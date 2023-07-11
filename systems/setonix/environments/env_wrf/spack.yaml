@@ -4,7 +4,7 @@
 spack:
   definitions:
   - packages:
-    - wrf@4.4 # charris: manual build for em_real okay in Nov sprint, using --only dependencies and option 47
+    - wrf@4.4 ^cmake@3.24.3 +doc+ncurses+ownlibs~qt # charris: manual build for em_real okay in Nov sprint, using --only dependencies and option 47
   specs:
   - matrix:
     - [$packages]
