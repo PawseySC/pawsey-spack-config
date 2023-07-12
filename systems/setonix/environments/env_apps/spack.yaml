@@ -34,7 +34,7 @@ spack:
       #      +spin +srd +tally +uef +voronoi +yaff build_type=Release ^kokkos@3.4.01+hwloc+memkind+numactl+openmp+tuning+rocm
       #      cxxstd=14 build_type=Release ^plumed@2.7.2 ^adios2@2.8.3
 
-    - namd@2.14 interface=python fftw=3 +plumed ^charmpp@6.10.2 backend=ofi
+    - namd@2.14 interface=python fftw=3 +plumed ^charmpp@7.0.0 backend=ofi
     - namd@2.15a2 interface=python fftw=3  ^charmpp@7.0.0 backend=ofi
 # Failing:    - openfoam-org@8 #Alexis still working on it
 # Current alternative:

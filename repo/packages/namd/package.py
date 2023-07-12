@@ -78,6 +78,9 @@ class Namd(MakefilePackage, CudaPackage):
     patch('charmpp-shasta-2.14.patch', when='@2.14')
     patch('lpython-2.14.patch.2')
 
+    # error: 'struct BaseLB::LDStats' has no member named 'n_objs'
+    patch('nobjs.patch', when='@2.14')
+
     depends_on('charmpp@6.10.1:', when="@2.14:")
     depends_on('charmpp@6.8.2', when="@2.13")
     depends_on('charmpp@6.7.1', when="@2.12")
