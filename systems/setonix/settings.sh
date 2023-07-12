@@ -137,10 +137,12 @@ quay.io/sarahbeecroft9/interproscan:5.56-89.0
 container_list_mpi="
 quay.io/pawsey/hpc-python:2022.03
 quay.io/pawsey/hpc-python:2022.03-hdf5mpi
+quay.io/pawsey/openfoam:v2212
 quay.io/pawsey/openfoam:v2012
 quay.io/pawsey/openfoam:v2006
 quay.io/pawsey/openfoam:v1912
 quay.io/pawsey/openfoam:v1812
+quay.io/pawsey/openfoam-org:10
 quay.io/pawsey/openfoam-org:8
 quay.io/pawsey/openfoam-org:7
 "
