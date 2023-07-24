@@ -8,7 +8,7 @@ spack:
       buildable: true
   definitions:
   - packages-with-python:
-    - amber@20 +openmp ^hdf@4.2.15 +external-xdr
+    #    - amber@20 +openmp ^hdf@4.2.15 +external-xdr
     - gromacs@2023 +double +lapack +plumed build_type=Release ^plumed@2.9.0
     - gromacs@2022.5 +double +lapack +plumed build_type=Release ^plumed@2.8.2
     - cp2k@2023.1 +plumed ^plumed@2.9.0
