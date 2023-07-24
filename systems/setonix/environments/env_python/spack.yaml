@@ -12,6 +12,10 @@ spack:
     - py-mpi4py@3.1.4
     - py-netcdf4@1.5.8
     - py-numba@0.56.0
+
+
+
+    
     # py-numpy: using spack's recipe
     - py-numpy@1.23.4
     - py-pandas@1.5.1
@@ -20,16 +24,16 @@ spack:
     - py-scipy@1.8.1
   # need these here, too, for the python collection
   - utilities:
-    - py-pip@22.2.2
-    - py-setuptools@65.5.0
+    - py-pip@23.1.2
+    - py-setuptools@68.0.0
   specs:
   - matrix:
     - [python@3.10.10 +optimizations+zlib]
-    - ['%gcc@12.1.0']
+    - ['%gcc@12.2.0']
     - [target=zen3]
   - matrix:
     - [$packages, $utilities]
     - [^python@3.10.10 +optimizations+zlib]
-    - ['%gcc@12.1.0']
+    - ['%gcc@12.2.0']
     - [target=zen3]
   view: false

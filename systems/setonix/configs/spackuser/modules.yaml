@@ -131,9 +131,9 @@ modules:
         # Previously, no openfoam modules were generated for bare-metal installs
         # But after issues with singularity in Nov2022, now openfoam bare metal
         # will also be offered as module
-        openfoam: 'dependencies/.{name}/{version}'
+        openfoam: 'applications/{name}/{version}'
         # This other flavour of openfoam will be kept blocked until bare-metal install is tested
-        #openfoam-org: 'dependencies/.{name}/{version}'
+        #openfoam-org: 'applications/{name}/{version}'
         quantum-espresso: 'applications/{name}/{version}'
         "vasp@6": 'applications/{name}6/{version}'
         vasp: 'applications/{name}/{version}'
@@ -144,6 +144,10 @@ modules:
         # these packages
         #roms: 'applications/{name}/{version}'
         #wrf: 'applications/{name}/{version}'
+
+        #cdo: 'applications/{name}/{version}'
+        nco: 'applications/{name}/{version}'
+        ncview: 'applications/{name}/{version}'
 
         # numerical or parallelisation libraries 
         "amdblis +suphandling": 'libraries/{name}/{version}'
@@ -220,7 +224,9 @@ modules:
         # utilities 
         autoconf: 'utilities/{name}/{version}'
         automake: 'utilities/{name}/{version}'
-        cmake: 'utilities/{name}/{version}'
+        libtool: 'utilities/{name}/{version}'
+        # to avoid multiple cmake modules, picking a specific one
+        "cmake ~doc+ncurses+ownlibs~qt": 'utilities/{name}/{version}'
         emacs: 'utilities/{name}/{version}'
         ffmpeg: 'utilities/{name}/{version}'
         gnuplot: 'utilities/{name}/{version}'
@@ -232,6 +238,7 @@ modules:
         py-setuptools: 'utilities/{name}/{version}-py{^python.version}'
         reframe: 'utilities/{name}/{version}'
         singularity: 'utilities/{name}/{version}'
+        singularityce: 'utilities/{name}/{version}'
         tower-agent: 'utilities/{name}/{version}'
         tower-cli: 'utilities/{name}/{version}'
         mpifileutils: 'utilities/{name}/{version}'

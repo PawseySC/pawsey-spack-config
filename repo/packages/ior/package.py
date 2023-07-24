@@ -2,7 +2,38 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-
+# Differences for the 'ior' package
+# 1c1
+# < # Copyright 2013-2022 Lawrence Livermore National Security, LLC and other
+# ---
+# > # Copyright 2013-2021 Lawrence Livermore National Security, LLC and other
+# 6c6
+# < from spack.package import *
+# ---
+# > from spack import *
+# 25d24
+# <     variant('lustre', default=False, description='support configurable Lustre striping values')
+# 34d32
+# <     depends_on('lustre', when='+lustre')
+# 38,39c36,37
+# <     patch('https://github.com/hpc/ior/commit/1dbca5c293f95074f9887ddb2043fa984670fb4d.patch?full_index=1',
+# <           sha256='ce7fa0eabf408f9b712c478a08aa62d68737d213901707ef8cbfc3aec02e2713',
+# ---
+# >     patch('https://github.com/hpc/ior/commit/1dbca5c293f95074f9887ddb2043fa984670fb4d.patch',
+# >           sha256='f28d6638a74a09e147e9fa870930e54a82ff580d1c232add47a67c375e255ada',
+# 41,45d38
+# <     # Needs patch to make Lustre variant work
+# <     # See https://github.com/hpc/ior/issues/353
+# <     patch('https://github.com/glennklockwood/ior/commit/e49476be64d4100c2da662ea415f327348b3d11d.patch?full_index=1',
+# <           sha256='ee3527023ef70ea9aee2e6208f8be7126d5a48f26c587deed3d6238b4f848a06', 
+# <           when='+lustre')
+# 67,71d59
+# < 
+# <         if '+lustre' in spec:
+# <             config_args.append('--with-lustre')
+# <         else:
+# <             config_args.append('--without-lustre')
+# CONTRIBUTE Lustre additions
 from spack.package import *
 
 

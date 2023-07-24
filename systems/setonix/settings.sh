@@ -38,13 +38,19 @@ USER_PERMANENT_FILES_PREFIX='/software/projects'
 USER_TEMP_FILES_PREFIX='/scratch'
 SPACK_USER_CONFIG_PATH="$MYSOFTWARE/setonix/$DATE_TAG/.spack_user_config"
 BOOTSTRAP_PATH='$MYSOFTWARE/setonix/'$DATE_TAG/.spack_user_config/bootstrap
+# Set a new mirror where to fetch prebuilt binaries, if any.
+SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
+# When SPACK_POPULATE_CACHE=1, spack will push binaries in the above cache location for later use.
+# The operation will be executed after having installed the environments.
+# Useful when building the stack on the test system.
+SPACK_POPULATE_CACHE=0
 
 pawseyenv_version="${DATE_TAG}"
 
 archs="zen2 zen3"
 # compiler versions (needed for module trees with compiler dependency)
-gcc_version="12.1.0"
-cce_version="14.0.3"
+gcc_version="12.2.0"
+cce_version="15.0.1"
 aocc_version="3.2.0"
 
 # architecture of login/compute nodes (needed by Singularity symlink module)
@@ -52,16 +58,16 @@ cpu_arch="zen3"
 
 # tool versions
 spack_version="0.19.0" # the prefix "v" is added in setup_spack.sh
-singularity_version="3.8.7-nompi" # has to match the version in the Spack env yaml + nompi tag
-singularity_mpi_version="3.8.7-mpi" # has to match the version in the Spack env yaml + mpi tag
-shpc_version="0.1.2"
-shpc_registry_version="5033baa6570ca8e4881dd3e7900051f84bc9886b"
+singularity_version="3.11.4-nompi" # has to match the version in the Spack env yaml + nompi tag
+singularity_mpi_version="3.11.4-mpi" # has to match the version in the Spack env yaml + mpi tag
+shpc_version="0.1.23"
+shpc_registry_version="61a74214fb6d3b7667103cbaa022746fa931438d"
 
 # python (and py tools) versions
 python_name="python"
 python_version="3.10.10" # has to match the version in the Spack env yaml
-setuptools_version="65.5.0" # has to match the version in the Spack env yaml
-pip_version="22.2.2" # has to match the version in the Spack env yaml
+setuptools_version="59.4.0" # has to match the version in the Spack env yaml
+pip_version="23.1.2" # has to match the version in the Spack env yaml
 # r major minor version
 r_version_majorminor="4.2.2"
 
@@ -98,6 +104,8 @@ env_wrf
 "
 
 container_list="
+amdih/pytorch:rocm5.0_ubuntu18.04_py3.7_pytorch_1.10.0
+rocm/tensorflow:rocm5.5-tf2.11-dev
 quay.io/biocontainers/bamtools:2.5.2--hd03093a_0
 quay.io/biocontainers/bbmap:38.96--h5c4e2a8_0
 quay.io/biocontainers/bcftools:1.15--haf5b3da_0
@@ -129,10 +137,11 @@ quay.io/sarahbeecroft9/interproscan:5.56-89.0
 container_list_mpi="
 quay.io/pawsey/hpc-python:2022.03
 quay.io/pawsey/hpc-python:2022.03-hdf5mpi
+quay.io/pawsey/openfoam:v2212
+quay.io/pawsey/openfoam:v2206
 quay.io/pawsey/openfoam:v2012
-quay.io/pawsey/openfoam:v2006
-quay.io/pawsey/openfoam:v1912
-quay.io/pawsey/openfoam:v1812
+quay.io/pawsey/openfoam-org:10
+quay.io/pawsey/openfoam-org:9
 quay.io/pawsey/openfoam-org:8
 quay.io/pawsey/openfoam-org:7
 "
@@ -154,6 +163,7 @@ shpc_name="shpc"
 
 # name of Singularity module (Spack has singularity and singularityce)
 singularity_name="singularity"
+singularity_name_general="singularityce"
 
 # NOTE: the following are ALL RELATIVE to root_dir above
 # root location for Pawsey custom builds
@@ -198,13 +208,11 @@ spack_module_dir="${utilities_modules_dir}/spack"
 # Use the Cray provided ROCm until we have a stable custom build.
 
 ROCM_VERSIONS=(
-"5.0.2"
-"5.4.3"
+"5.2.3"
 )
 
 ROCM_PATHS=(
-"/opt/rocm-5.0.2"
-"/software/setonix/2022.11/pawsey/software/rocm/rocm-5.4.3rev1"
+"/opt/rocm-5.2.3"
 )
 
 fi # end include guard

@@ -21,7 +21,7 @@ PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /d
 if [ -e $SPACK_USER_CONFIG_PATH ]; then
   mv $SPACK_USER_CONFIG_PATH $SPACK_USER_CONFIG_PATH.old.$( date -Iminutes | sed 's/+.*//' | tr ':' '.' )
 fi
-  mkdir -p $SPACK_USER_CONFIG_PATH
+mkdir -p ${SPACK_USER_CONFIG_PATH}
 
 # We will use the Pawsey spack mirror, to which several patches will be applied.
 if ! [ -e ${INSTALL_PREFIX}/spack ]; then
@@ -29,9 +29,6 @@ if ! [ -e ${INSTALL_PREFIX}/spack ]; then
   cd "${INSTALL_PREFIX}/spack"
   git checkout v${spack_version}
 
-  sed -i -e "s|DATE_TAG|$DATE_TAG|g"\
-    -e "s|PAWSEY_SYSTEM|$SYSTEM|g"\
-    ${PAWSEY_SPACK_CONFIG_REPO}/fixes/dot_spack.patch
   # apply Marco's LMOD fixes into spack tree
   patch ${INSTALL_PREFIX}/spack/lib/spack/spack/modules/lmod.py \
     ${PAWSEY_SPACK_CONFIG_REPO}/fixes/lmod_arch_family.patch
@@ -42,6 +39,10 @@ if ! [ -e ${INSTALL_PREFIX}/spack ]; then
     ${PAWSEY_SPACK_CONFIG_REPO}/fixes/modulenames_plus_init.patch
   patch ${INSTALL_PREFIX}/spack/lib/spack/spack/paths.py \
     ${PAWSEY_SPACK_CONFIG_REPO}/fixes/dot_spack.patch
+  sed -i -e "s|DATE_TAG|$DATE_TAG|g"\
+    -e "s|PAWSEY_SYSTEM|$SYSTEM|g"\
+    ${INSTALL_PREFIX}/spack/lib/spack/spack/paths.py
+  
   rm "${INSTALL_PREFIX}/spack/.git" -rf
   cd -
 fi
@@ -50,7 +51,7 @@ fi
 # process for both the Pawsey staff installations (spack user), and the user and 
 # project-wide ones.
 cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/site/*.yaml ${INSTALL_PREFIX}/spack/etc/spack/
-cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/spackuser/*.yaml $SPACK_USER_CONFIG_PATH/
+cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/spackuser/*.yaml ${SPACK_USER_CONFIG_PATH}/
 
 # copy project-wide configs into spack tree, too
 mkdir -p ${INSTALL_PREFIX}/spack/etc/spack/project
@@ -64,10 +65,6 @@ cp -r ${PAWSEY_SPACK_CONFIG_REPO}/repo/* "${INSTALL_PREFIX}/spack/var/spack/repo
 [ -e "${INSTALL_PREFIX}/spack/templates" ] || mkdir -p "${INSTALL_PREFIX}/spack/templates"
 cp -r ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/templates/* "${INSTALL_PREFIX}/spack/templates/"
 
-# Generate ROCm externals if on Setonix
-if [ "${SYSTEM}" = "setonix" ]; then
-  "${PAWSEY_SPACK_CONFIG_REPO}/scripts/generate_rocm_externals.sh" >>  ${INSTALL_PREFIX}/spack/etc/spack/packages.yaml
-fi
 # and finally customise them with the actual software stack installation path.
 sed -i \
   -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g" \

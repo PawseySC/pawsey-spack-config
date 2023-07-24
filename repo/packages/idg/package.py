@@ -2,7 +2,7 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-
+# Contribute back the recipe
 from spack.package import *
 
 
@@ -25,11 +25,4 @@ class Idg(CMakePackage):
 
     def url_for_version(self, version):
         return ("https://git.astron.nl/RD/idg/-/archive/{0}/idg-{0}.tar.gz".format(version))
-
-    # def cmake_args(self):
-    #     args = []
-    #     spec = self.spec
-    #     args.append(self.define_from_variant('ENABLE_SHARED', 'shared'))
-
-    #     return args
 

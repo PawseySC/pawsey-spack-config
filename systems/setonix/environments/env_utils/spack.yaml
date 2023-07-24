@@ -12,13 +12,13 @@ spack:
     - parallel@20220522
     - reframe@3.12.0 ^python@3.10.10 +optimizations+zlib
     - reframe@3.10.1 ^python@3.10.10 +optimizations+zlib
-    - singularity@3.8.7
+    # now moving to singularityce rather than older singularity
+    - singularityce@3.11.4~conmon ^go@1.19.10
     - mpifileutils@0.11.1+lustre
-
+    - feh@3.3
 # utilities for Nextflow Tower
     - tower-agent@0.4.5
     - tower-cli@0.7.0
-    
 # add nano here for now
     - nano@6.3
   - licensed:
@@ -26,15 +26,15 @@ spack:
   specs:
   - matrix:
     - [cmake@3.24.3]
-    - ['%gcc@12.1.0', '%cce@14.0.3', '%aocc@3.2.0']
+    - ['%gcc@12.2.0', '%cce@15.0.1']
     - [target=zen3, target=zen2]
   - matrix:
     - [$packages]
-    - ['%gcc@12.1.0']
+    - ['%gcc@12.2.0']
     - [target=zen3, target=zen2]
 # TODO: build licensed software
   # - matrix:
   #   - [$licensed]
-  #   - ['%gcc@12.1.0']
+  #   - ['%gcc@12.2.0']
   #   - [target=zen3]
   view: false

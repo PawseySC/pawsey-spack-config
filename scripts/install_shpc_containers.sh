@@ -13,6 +13,19 @@ fi
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
+module use "${INSTALL_PREFIX}/staff_modulefiles"
+# we need the python module to be available in order to run spack
+module --ignore-cache load pawseyenv/${pawseyenv_version}
+# swap is needed for the pawsey_temp module to work
+module swap PrgEnv-gnu PrgEnv-cray
+module swap PrgEnv-cray PrgEnv-gnu
+
+# assumes using PrgEnv-gnu
+# load needed python toolkit
+module load ${python_name}/${python_version}
+module load py-setuptools/${setuptools_version}-py${python_version}
+module load py-pip/${pip_version}-py${python_version}
+module load singularity/${singularity_version}
 # load shpc module
 module load ${shpc_name}/${shpc_version}
 

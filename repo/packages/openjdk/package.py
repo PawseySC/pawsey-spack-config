@@ -2,7 +2,15 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-
+# Probably can remove
+    # def install(self, spec, prefix):
+    #     top_dir = "Contents/Home/" if platform.system() == "Darwin" else "."
+    #     for root, dirs, files in os.walk(top_dir):
+    #         for momo in dirs:
+    #           chmod(os.path.join(root, momo), 0o755)
+    #         for momo in files:
+    #           chmod(os.path.join(root, momo), 0o755)
+    #     install_tree(top_dir, prefix)
 import os
 import platform
 import re
