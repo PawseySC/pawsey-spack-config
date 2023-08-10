@@ -3,6 +3,8 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
+# spack install namdhip@2.15a2+rocm amdgpu_target=gfx90a  ^charmpp@7.0.0 backend=mpi ^ncurses@6.3+symlinks arch=linux-sles15-zen3
+
 import os
 import platform
 import sys
