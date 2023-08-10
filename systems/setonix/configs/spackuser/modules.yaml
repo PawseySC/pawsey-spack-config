@@ -134,6 +134,7 @@ modules:
         openfoam: 'applications/{name}/{version}'
         # This other flavour of openfoam will be kept blocked until bare-metal install is tested
         #openfoam-org: 'applications/{name}/{version}'
+        ncl: 'applications/{name}/{version}' 
         quantum-espresso: 'applications/{name}/{version}'
         "vasp@6": 'applications/{name}6/{version}'
         vasp: 'applications/{name}/{version}'

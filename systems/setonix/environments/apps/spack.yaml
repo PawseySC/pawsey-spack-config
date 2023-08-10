@@ -39,7 +39,7 @@ spack:
 # Failing:    - openfoam-org@8 #Alexis still working on it
 # Current alternative:
     - openfoam@2206
-
+    - ncl@6.6.2 ^esmf ~mpi
   - packages-with-oldpython:
     - nwchem@7.2.0 +fftw3 +openmp ^python@3.9.15
 
