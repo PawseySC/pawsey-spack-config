@@ -243,7 +243,8 @@ modules:
         tower-agent: 'utilities/{name}/{version}'
         tower-cli: 'utilities/{name}/{version}'
         mpifileutils: 'utilities/{name}/{version}'
-
+        feh: 'utilities/{name}/{version}'
+             
         # S3 clients 
         awscli: 'utilities/{name}/{version}'
         py-boto3: 'utilities/{name}/{version}'
