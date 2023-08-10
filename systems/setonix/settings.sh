@@ -88,19 +88,19 @@ dependencies
 
 # list of spack build environments - missing env_vis
 env_list="
-env_utils
-env_num_libs
-env_python
-env_io_libs
-env_langs
-env_apps
-env_devel
-env_bench
-env_s3_clients
-env_astro
-env_bio
-env_roms
-env_wrf
+utils
+num_libs
+python
+io_libs
+langs
+apps
+devel
+bench
+s3_clients
+astro
+bio
+roms
+wrf
 "
 
 container_list="
