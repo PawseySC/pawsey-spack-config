@@ -310,8 +310,8 @@ class Namd(MakefilePackage, CudaPackage, ROCmPackage):
             # module would not be better.
             install('charmrun', prefix.bin)
 
-    def url_for_spec(self):
-        if self.spec.statisfies("+rocm"):
+    def url_for_version(self,version):
+        if self.spec.satisfies("+rocm"):
             return "file://{0}/namdhip-2.15a2.tar.gz".format(os.getcwd()) 
         else:
             return "file://{0}/NAMD_2.12_Source.tar.gz".format(os.getcwd())
