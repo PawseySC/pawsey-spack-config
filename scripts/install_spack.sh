@@ -98,17 +98,18 @@ cp ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_refresh_modules.sh \
    ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_rm_modules.sh \
    ${INSTALL_PREFIX}/spack/bin/
 
-# spack_project.sh: install a software for the entire project.
+# Install a spack wrapper to handle project installations
+mv ${INSTALL_PREFIX}/spack/bin/spack ${INSTALL_PREFIX}/spack/bin/realspack
 sed \
   -e "s;INSTALL_PREFIX;${INSTALL_PREFIX};g" \
-  ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_project.sh \
-  >${INSTALL_PREFIX}/spack/bin/spack_project.sh
+  ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack \
+  >${INSTALL_PREFIX}/spack/bin/spack
 
 chmod a+rx \
   ${INSTALL_PREFIX}/spack/bin/spack_create_user_moduletree.sh \
   ${INSTALL_PREFIX}/spack/bin/spack_refresh_modules.sh \
   ${INSTALL_PREFIX}/spack/bin/spack_rm_modules.sh \
-  ${INSTALL_PREFIX}/spack/bin/spack_project.sh
+  ${INSTALL_PREFIX}/spack/bin/spack
 
 # edit and copy over Spack modulefile
 mkdir -p ${INSTALL_PREFIX}/${spack_module_dir}
