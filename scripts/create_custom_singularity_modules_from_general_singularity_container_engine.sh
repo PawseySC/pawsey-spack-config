@@ -38,6 +38,7 @@ PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /d
 # define source (Spack) and destination (Pawsey) directories for Singularity
 src_old_dir="${INSTALL_PREFIX}/modules/${cpu_arch}/gcc/${gcc_version}/utilities/${singularity_name_general}"
 src_dir="${INSTALL_PREFIX}/modules/${cpu_arch}/gcc/${gcc_version}/utilities/${singularity_name}"
+sed -i '/^load("/d' ${src_dir}/*.lua
 dst_dir="${INSTALL_PREFIX}/${singularity_symlink_module_dir}"
 echo "Using module files in ${src_old_dir}"
 echo "Copying them to ${src_dir}"
