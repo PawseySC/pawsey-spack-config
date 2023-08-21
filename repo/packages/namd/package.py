@@ -76,7 +76,10 @@ class Namd(MakefilePackage, CudaPackage):
     patch('inherited-member-2.13.patch', when='@2.13')
     patch('inherited-member-2.14.patch', when='@2.14')
     patch('charmpp-shasta-2.14.patch', when='@2.14')
-    patch('lpython-2.14.patch.2')
+
+    # From python 3.8 python3-config requires --embed to report lpython linkage.
+    # See https://docs.python.org/3/whatsnew/3.8.html#debug-build-uses-the-same-abi-as-release-build
+    patch('lpython-for-3.8+.patch')
 
     # error: 'struct BaseLB::LDStats' has no member named 'n_objs'
     patch('nobjs.patch', when='@2.14')
