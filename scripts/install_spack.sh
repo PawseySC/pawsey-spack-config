@@ -96,7 +96,7 @@ sed \
 
 cp ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_refresh_modules.sh \
    ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_rm_modules.sh \
-   ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_generate_migration_scripts.sh \
+   ${PAWSEY_SPACK_CONFIG_REPO}/scripts/spack_generate_migration_scripts.sh \
    ${INSTALL_PREFIX}/spack/bin/
 
 # spack_project.sh: install a software for the entire project.
