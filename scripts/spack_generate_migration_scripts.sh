@@ -47,7 +47,7 @@ OLD_SPACK_VERSION=$(module --redirect -t -d avail spack | tail -n 1 | cut -d/ -f
 module load spack/${OLD_SPACK_VERSION}
 
 # look for modules within your $MYSOFTWARE installation
-hashlist=($(lfs find ${MYSOFTWARE}/setonix/modules/ -name *.lua | sed "s/.lua//g" | sed "s/-/ /g" | awk '{print $2}'))
+hashlist=($(lfs find ${MYSOFTWARE}/setonix/modules/ -name *.lua | sed "s/.lua//g" | sed "s/-/ /g" | awk '{print $NF}'))
 # query spack for these user built packages to get the build information and store it so that it can be used to generate an installation with
 # the new spack
 echo "#!/bin/bash" > spack.specs.sh
