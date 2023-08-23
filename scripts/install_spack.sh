@@ -96,6 +96,7 @@ sed \
 
 cp ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_refresh_modules.sh \
    ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_rm_modules.sh \
+   ${PAWSEY_SPACK_CONFIG_REPO}/scripts/spack_generate_migration_scripts.sh \
    ${INSTALL_PREFIX}/spack/bin/
 
 # Install a spack wrapper to handle project installations
@@ -109,6 +110,7 @@ chmod a+rx \
   ${INSTALL_PREFIX}/spack/bin/spack_create_user_moduletree.sh \
   ${INSTALL_PREFIX}/spack/bin/spack_refresh_modules.sh \
   ${INSTALL_PREFIX}/spack/bin/spack_rm_modules.sh \
+  ${INSTALL_PREFIX}/spack/bin/spack_generate_migration_scripts.sh \ 
   ${INSTALL_PREFIX}/spack/bin/spack
 
 # edit and copy over Spack modulefile
