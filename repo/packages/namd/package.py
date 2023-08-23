@@ -36,6 +36,10 @@
 # <             self.spec['plumed'].package.apply_patch(self, force=True)
 
 # Contribute cray additions
+
+# To install Namd with hip support use the following command:
+# spack install namd@2.15a2+rocm amdgpu_target=gfx90a  ^charmpp@7.0.0 backend=mpi ^ncurses@6.3+symlinks arch=linux-sles15-zen3
+
 import os
 import platform
 import sys
@@ -45,18 +49,19 @@ import llnl.util.tty as tty
 from spack.package import *
 
 
-class Namd(MakefilePackage, CudaPackage):
-    """NAMDis a parallel molecular dynamics code designed for
+class Namd(MakefilePackage, CudaPackage, ROCmPackage):
+    """NAMD is a parallel molecular dynamics code designed for
     high-performance simulation of large biomolecular systems."""
 
     homepage = "https://www.ks.uiuc.edu/Research/namd/"
-    url      = "file://{0}/NAMD_2.12_Source.tar.gz".format(os.getcwd())
+#    url      = "file://{0}/NAMD_2.12_Source.tar.gz".format(os.getcwd())
     git      = "https://charm.cs.illinois.edu/gerrit/namd.git"
     manual_download = True
 
     version("master", branch="master")
     version('2.15a1', branch="master", tag='release-2-15-alpha-1')
-    version('2.15a2', sha256='b7ba66c0599254aec265470b477f5c51bf6fccedaeab810132b567cafbd854b7')
+#    version('2.15a2', sha256='b7ba66c0599254aec265470b477f5c51bf6fccedaeab810132b567cafbd854b7')
+    version("2.15a2", md5="2431366620afa868468320777871ea5c")
     version('2.14', sha256='34044d85d9b4ae61650ccdba5cda4794088c3a9075932392dd0752ef8c049235',
             preferred=True)
     version('2.13', '9e3323ed856e36e34d5c17a7b0341e38')
@@ -84,6 +89,7 @@ class Namd(MakefilePackage, CudaPackage):
     # error: 'struct BaseLB::LDStats' has no member named 'n_objs'
     patch('nobjs.patch', when='@2.14')
 
+    depends_on('charmpp@7.0.0', when="+rocm")
     depends_on('charmpp@6.10.1:', when="@2.14:")
     depends_on('charmpp@6.8.2', when="@2.13")
     depends_on('charmpp@6.7.1', when="@2.12")
@@ -306,3 +312,9 @@ class Namd(MakefilePackage, CudaPackage):
             # I'm not sure this is a good idea or if an autoload of the charm
             # module would not be better.
             install('charmrun', prefix.bin)
+
+    def url_for_version(self,version):
+        if self.spec.satisfies("+rocm"):
+            return "file://{0}/namdhip-2.15a2.tar.gz".format(os.getcwd()) 
+        else:
+            return "file://{0}/NAMD_2.12_Source.tar.gz".format(os.getcwd())
