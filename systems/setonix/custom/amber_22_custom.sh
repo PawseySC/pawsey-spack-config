@@ -1,16 +1,24 @@
+# Copyright: Pawsey Supercomputing Research Centre
+# Author: Cristian Di Pietrantonio, Pascal Jahan Elahi
 
 # define the installation path 
-if [ ! -z ${AMBER_INSTALL_DIR} ]
+if [ -z ${AMBER_INSTALL_DIR} ]
 then 
   export AMBER_INSTALL_DIR="/software/setonix/${DATE_TAG}/custom/software/zen3/gcc/12.1.0/amber/2022"
+  if [ ! -z ${AMBER_GPU_BUILD} ]
+  then 
+    export AMBER_INSTALL_DIR="/software/setonix/${DATE_TAG}/custom/software/zen3/gcc/12.1.0/amber/2022-amd-gfx90a"
+  fi
   export AMBER_SOURCE_DIR="/tmp/amber-build"
 fi
+
 
 echo "This script should not be run as it requires an interactive ccmake session."
 echo "Instead source this to define bash functions that will help with the installation."
 echo "These might need updates depending on the modules that are available on the system"
 echo "Installation to these macros will install stuff to ${AMBER_INSTALL_DIR}" 
 echo "tarball will be unpacked to ${AMBER_SOURCE_DIR}" 
+echo "To try building the GPU (HIP) build define AMBER_GPU_BUILD"
 echo "If that is not desired, please change AMBER_INSTALL_DIR"
 echo "COMMANDS to run in order"
 echo "amber_unpack_tarball <path/to/amber.tgz>"
@@ -25,13 +33,36 @@ echo "amber_install_module"
 function amber_report_paths
 {
   echo "Paths are ${AMBER_SOURCE_DIR} and ${AMBER_INSTALL_DIR}"
+  if [ ! -z ${AMBER_GPU_BUILD} ]
+  then
+    echo "GPU build enabled"
+  fi
 }
 
 # now unpack the source in /tmp on the node and build it, installing it to the appropriate path 
 function amber_unpack_tarball 
 {
-  amber_tarball=$1
-  tar xf ${amber_tarball} -C ${AMBER_SOURCE_DIR}
+  # local amber_tarball=$1
+  # tar xf ${amber_tarball} -C ${AMBER_SOURCE_DIR}
+  if [ ! -z ${AMBER_GPU_BUILD} ]
+  then 
+    echo "Unpack gpu patch"
+    cd ${AMBER_SOURCE_DIR}
+    local rocm_patch=$2
+    tar xf $rocm_patch
+    # Fix No. 1 - Force the use of external boost
+    sed -i -e '204d' -e '203 aset(SUSPICIOUS_3RDPARTY_TOOLS mkl)' CMakeLists.txt 
+    # Fix No. 2 - Removes dependency on libopen-pal, an OpenMPI related library. We do not have it on Cray Shasta,
+    # and I am not sure why it is needed.
+    sed -i '80d' src/pmemd/src/cuda/CMakeLists.txt
+    # Fix No. 3 - Seems like CMake is not able to properly configure/find Cray MPICH. Hence I have to set the value
+    # for MPI_CXX_LIBRARIES and MPI_Fortran_LIBRARIES manually.
+    sed -i -e '8 aset(MPI_CXX_LIBRARIES "${MPI_C_LIBRARIES}")' \
+        -e '9 aset(MPI_Fortran_LIBRARIES "libmpifort.so")' cmake/MPIConfig.cmake 
+    # Fix No. 4 - Add gfx90a support
+    sed -i -e '894 s/ CACHE STRING/;gfx90a:xnack- CACHE STRING/g'\
+          -e '896 s/ CACHE STRING/;gfx90a CACHE STRING/g' cmake/FindHipCUDA.cmake
+  fi 
 }
 
 
@@ -39,7 +70,7 @@ function amber_unpack_tarball
 # note that this list might require updates as modules change 
 function amber_load_dependences
 {
-  modlist=(\
+  local modlist=(\
   "py-setuptools/59.4.0-py3.10.10" \
   "py-numpy/1.23.4" \
   "py-scipy/1.8.1" \
@@ -54,7 +85,21 @@ function amber_load_dependences
   "plumed/2.9.0" \
   )
   # load the modules 
-  for m in ${modlist[@]}; do module load ${m}; done 
+  for m in ${modlist[@]}
+  do 
+    module load ${m}
+  done 
+  # if building hip/rocm gpu version 
+  if [ ! -z ${AMBER_GPU_BUILD} ]
+  then 
+    local gpumodlist=(\
+      "rocm/5.2.3" \
+    )
+    for m in ${gpumodlist[@]}
+    do 
+      module load ${m}
+    done 
+  fi 
 }
 
 # now to a pip install of tk in a virtual environment as this is the easiest option
@@ -75,7 +120,7 @@ function amber_run_initial_cmake
   mkdir -p build2
   cd build2
   source ${AMBER_INSTALL_DIR}/py-for-amber/bin/activate
-  cmakeargs="\
+  local cmakeargs="\
   -DCMAKE_CXX_COMPILER=CC \
   -DCMAKE_C_COMPILER=cc \
   -DCMAKE_Fortran_COMPILER=ftn \
@@ -87,8 +132,24 @@ function amber_run_initial_cmake
   -DMPI=ON \
   -DOPENMP=ON \
   -DHAVE_TKINTER=ON \
+  -DUSE_FFT=ON \
+  -DBUILD_QUICK=OFF\
   -DCMAKE_INSTALL_PREFIX=${AMBER_INSTALL_DIR} \
   "
+  if [ ! -z ${AMBER_GPU_BUILD} ]
+  then 
+    cmakeargs+=" \
+    -DHIP=ON \
+    -DCUDA=OFF\
+    -DGTI=TRUE \
+    -DVKFFT=ON \
+    -DHIP_RDC=ON \
+    -DHIP_TOOLKIT_ROOT_DIR=$ROCM_PATH \
+    -DHIPCUDA_EMULATE_VERSION="10.1" \
+    -DBUILD_HOST_TOOLS=ON \
+    "
+  fi 
+  echo ${cmakeargs}
   cmake ../ ${cmakeargs}
   deactivate
 }
@@ -107,7 +168,12 @@ function amber_install
 {
   source ${AMBER_INSTALL_DIR}/py-for-amber/bin/activate
   cd ${AMBER_SOURCE_DIR}/build2
-  make -j64
+  local makeargs=""
+  if [ ! -z ${AMBER_GPU_BUILD} ]
+  then
+    makeargs+=" --target xblas_build"
+  fi
+  make -j64 ${makeargs}
   make -j16 install
   deactivate
 }
@@ -115,7 +181,7 @@ function amber_install
 # since amber builds lots of packages, here is a list of what should be expected 
 function amber_check_install
 {
-  execlist=(\
+  local execlist=(\
   addles \
   add_pdb \
   AddToBox \
