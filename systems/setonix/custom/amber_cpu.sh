@@ -1,12 +1,16 @@
 
 # define the installation path 
-export AMBER_INSTALL_DIR="/software/setonix/${DATE_TAG}/custom/software/zen3/gcc/12.1.0/amber/2022"
-export AMBER_SOURCE_DIR="/tmp/amber-build"
+if [ ! -z ${AMBER_INSTALL_DIR} ]
+then 
+  export AMBER_INSTALL_DIR="/software/setonix/${DATE_TAG}/custom/software/zen3/gcc/12.1.0/amber/2022"
+  export AMBER_SOURCE_DIR="/tmp/amber-build"
+fi
 
 echo "This script should not be run as it requires an interactive ccmake session."
 echo "Instead source this to define bash functions that will help with the installation."
 echo "These might need updates depending on the modules that are available on the system"
 echo "Installation to these macros will install stuff to ${AMBER_INSTALL_DIR}" 
+echo "tarball will be unpacked to ${AMBER_SOURCE_DIR}" 
 echo "If that is not desired, please change AMBER_INSTALL_DIR"
 echo "COMMANDS to run in order"
 echo "amber_unpack_tarball <path/to/amber.tgz>"
@@ -17,6 +21,11 @@ echo "amber_run_ccmake"
 echo "amber_install"
 echo "amber_check_install"
 echo "amber_install_module"
+
+function amber_report_paths
+{
+  echo "Paths are ${AMBER_SOURCE_DIR} and ${AMBER_INSTALL_DIR}"
+}
 
 # now unpack the source in /tmp on the node and build it, installing it to the appropriate path 
 function amber_unpack_tarball 
@@ -36,9 +45,9 @@ function amber_load_dependences
   "py-scipy/1.8.1" \
   "py-matplotlib/3.6.2" \
   "perl/5.36.0" \
-  "cmake/3.21.4" \
+  "cmake/3.24.3" \
   "netcdf-fortran/4.6.0" \
-  "openblas/0.3.15" \
+  "openblas/0.3.21" \
   "boost/1.80.0-c++98-python" \
   "fftw/3.3.10" \
   "arpack-ng/3.8.0" \
@@ -54,6 +63,7 @@ function amber_generate_pyvenv
 {
   python -m venv ${AMBER_INSTALL_DIR}/py-for-amber
   source ${AMBER_INSTALL_DIR}/py-for-amber/bin/activate
+  pip install --upgrade pip
   pip install tk
   deactivate
 }
@@ -88,7 +98,7 @@ function amber_run_ccmake
 {
   source ${AMBER_INSTALL_DIR}/py-for-amber/bin/activate
   cd ${AMBER_SOURCE_DIR}/build2
-  ccmake . 
+  ccmake -DHAVE_TKINTER=ON . 
   deactivate
 }
 
@@ -270,4 +280,10 @@ function amber_check_install
     then
       echo "Installation warning, missing ${f}"
     fi 
+  done
+}
+
+function amber_install_module
+{
+  echo "Still in progress ..."
 }
