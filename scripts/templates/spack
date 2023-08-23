@@ -1,0 +1,13 @@
+#!/bin/bash
+
+SPACK_DIR=INSTALL_PREFIX/spack
+REALSPACK="${SPACK_DIR}/bin/realspack"
+
+if (( $# > 0 )) && [ "$1" = "project" ]; then
+    # enable group access and writing to the stack
+    umask g+rwx
+    ${REALSPACK} -C "${SPACK_DIR}/etc/spack/project" ${@:2}
+else
+    ${REALSPACK} ${@}
+fi
+
