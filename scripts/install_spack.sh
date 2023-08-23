@@ -100,17 +100,19 @@ cp ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_refresh_modules.sh \
    ${INSTALL_PREFIX}/spack/bin/
 
 # Install a spack wrapper to handle project installations
-mv ${INSTALL_PREFIX}/spack/bin/spack ${INSTALL_PREFIX}/spack/bin/realspack
-sed \
-  -e "s;INSTALL_PREFIX;${INSTALL_PREFIX};g" \
-  ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack \
-  >${INSTALL_PREFIX}/spack/bin/spack
+if ! [ -e ${INSTALL_PREFIX}/spack/bin/realspack ]; then
+  mv ${INSTALL_PREFIX}/spack/bin/spack ${INSTALL_PREFIX}/spack/bin/realspack
+  sed \
+    -e "s;INSTALL_PREFIX;${INSTALL_PREFIX};g" \
+    ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack \
+    >${INSTALL_PREFIX}/spack/bin/spack
+fi
 
 chmod a+rx \
   ${INSTALL_PREFIX}/spack/bin/spack_create_user_moduletree.sh \
   ${INSTALL_PREFIX}/spack/bin/spack_refresh_modules.sh \
   ${INSTALL_PREFIX}/spack/bin/spack_rm_modules.sh \
-  ${INSTALL_PREFIX}/spack/bin/spack_generate_migration_scripts.sh \ 
+  ${INSTALL_PREFIX}/spack/bin/spack_generate_migration_scripts.sh \
   ${INSTALL_PREFIX}/spack/bin/spack
 
 # edit and copy over Spack modulefile
