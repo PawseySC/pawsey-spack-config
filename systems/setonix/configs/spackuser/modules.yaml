@@ -125,6 +125,7 @@ modules:
         cp2k: 'applications/{name}/{version}'
         gromacs: 'applications/{name}/{version}'
         lammps: 'applications/{name}/{version}'
+        "namd +rocm": 'applications/{name}-amd-gfx90a/{version}'
         namd: 'applications/{name}/{version}'
         nektar: 'applications/{name}/{version}'
         nwchem: 'applications/{name}/{version}'
