@@ -49,7 +49,7 @@ for env in $env_list; do
   cd ${envdir}/${env}
   spack env activate ${envdir}/${env} 
   spack concretize -f
-  if [ "${env}" == "env_roms" ] || [ "${env}" == "env_wrf" ] ; then
+  if [ "${env}" == "roms" ] || [ "${env}" == "wrf" ] ; then
     sg $INSTALL_GROUP -c "spack install --no-checksum -j${nprocs} --only dependencies"
   else
     sg $INSTALL_GROUP -c "spack install --no-checksum -j${nprocs}"
