@@ -60,8 +60,8 @@ class Namd(MakefilePackage, CudaPackage, ROCmPackage):
 
     version("master", branch="master")
     version('2.15a1', branch="master", tag='release-2-15-alpha-1')
-#    version('2.15a2', sha256='b7ba66c0599254aec265470b477f5c51bf6fccedaeab810132b567cafbd854b7')
-    version("2.15a2", md5="2431366620afa868468320777871ea5c")
+    version('2.15a2', sha256='b7ba66c0599254aec265470b477f5c51bf6fccedaeab810132b567cafbd854b7')
+#    version("2.15a2", md5="2431366620afa868468320777871ea5c")
     version('2.14', sha256='34044d85d9b4ae61650ccdba5cda4794088c3a9075932392dd0752ef8c049235',
             preferred=True)
     version('2.13', '9e3323ed856e36e34d5c17a7b0341e38')
@@ -315,6 +315,6 @@ class Namd(MakefilePackage, CudaPackage, ROCmPackage):
 
     def url_for_version(self,version):
         if self.spec.satisfies("+rocm"):
-            return "file://{0}/namdhip-2.15a2.tar.gz".format(os.getcwd()) 
+            return "file://{0}/NAMD_2.15a2_Source.tar.gz".format(os.getcwd()) 
         else:
             return "file://{0}/NAMD_2.12_Source.tar.gz".format(os.getcwd())
