@@ -11,6 +11,30 @@
 
 ]]--
 
+--[[
+-- There has been issues where the module just fails on first assert and it is unclear
+-- from the error message what that issue is. Thus the module also checks for the 
+-- definition of HOME, USER, PAWSEY_PROJECT etc. 
+--]]
+
+local function check_envs() 
+  local envvars = {"HOME", "USER", "PAWSEY_PROJECT"}
+  for ind,var in ipairs(envvars) do 
+    local env = os.getenv(var)
+    if env == nil or env == "" then 
+      nid = os.getenv("HOSTNAME")
+      io.stderr:write("Issue with environment variable used to set module paths:" .. var .. "not set.\n")
+      io.stderr:write("This could be a result of issues with authentication and LDAP.\n")
+      io.stderr:write("This occurred on " .. nid .. " node\n")
+      return 
+    end
+  end
+end
+
+
+-- check that environment is okay
+check_envs()
+
 -- Service variables for this module
 -- 
 --
