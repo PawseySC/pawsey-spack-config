@@ -39,7 +39,7 @@ class Nekrs(CMakePackage, ROCmPackage):
         env.set("OCCA_CXX", self.compiler.cxx)
         cxxflags = spec.compiler_flags["cxxflags"]
         env.set("OCCA_CXXFLAGS", " ".join(cxxflags))
-
+        env.set("NEKRS_HOME", self.prefix)
 
 
     def setup_build_environment(self, env):
@@ -58,16 +58,4 @@ class Nekrs(CMakePackage, ROCmPackage):
         env.set("NEKRS_CXX", spec["mpi"].mpicxx)
         env.set("NEKRS_FC", spec["mpi"].mpifc)
         env.set("TRAVIS", "true")
-
-
-
-
-
-
-
-
-
-
-
-   
 
