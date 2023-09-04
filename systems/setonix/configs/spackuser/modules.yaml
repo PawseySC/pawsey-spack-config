@@ -128,6 +128,7 @@ modules:
         "namd +rocm": 'applications/{name}-amd-gfx90a/{version}'
         "namd ~rocm": 'applications/{name}/{version}'
         nektar: 'applications/{name}/{version}'
+        "nekrs +rocm": 'applications/{name}-amd-gfx90a/{version}'
         nwchem: 'applications/{name}/{version}'
         # Previously, no openfoam modules were generated for bare-metal installs
         # But after issues with singularity in Nov2022, now openfoam bare metal
