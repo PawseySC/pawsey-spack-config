@@ -25,10 +25,16 @@ of_dir="${INSTALL_PREFIX}/${containers_root_dir}/openfoam-sif"
 mkdir -p "${of_dir}"
 
 
-# Pawsey only - add -container suffix to tool directories
+# Pawsey only - move module files in ${tool} dirs to a directory with name ${tool}-container
+#  Contents are moved instead of renaming ${tool} dir in order to avoid nesting of directories when
+#   the ${tool}-container directory already exists
 for tool in "${short_dir}/openfoam" "${short_dir}/openfoam-org" "${short_dir}/hpc-python" ; do
   if [ -d ${tool} ] ; then
-    mv ${tool} ${tool}${shpc_spackuser_container_tag}
+    mkdir -p ${tool}${shpc_spackuser_container_tag}
+    for module in ${tool}/*.lua ; do
+      mv ${module} ${tool}${shpc_spackuser_container_tag}
+    done
+    rmdir $tool
   fi
 done
 
