@@ -61,7 +61,7 @@ spack_version="0.19.0" # the prefix "v" is added in setup_spack.sh
 singularity_version="3.11.4-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="3.11.4-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.23"
-shpc_registry_version="61a74214fb6d3b7667103cbaa022746fa931438d"
+shpc_registry_version="29f8f38f2afe562786ec0300c12d41c40f0efe97" #Hash for: Merge pull request #149 from PawseySC/alexis-dev
 
 # python (and py tools) versions
 python_name="python"
@@ -140,6 +140,8 @@ quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 quay.io/pawsey/openfoam:v2212
 quay.io/pawsey/openfoam:v2206
 quay.io/pawsey/openfoam:v2012
+quay.io/pawsey/openfoam:v2006
+quay.io/pawsey/openfoam:v1912
 quay.io/pawsey/openfoam-org:10
 quay.io/pawsey/openfoam-org:9
 quay.io/pawsey/openfoam-org:8
