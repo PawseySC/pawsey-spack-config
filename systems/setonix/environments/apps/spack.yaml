@@ -57,7 +57,7 @@ spack:
 
 # weather utilities  
   - weather_utils:
-    #    - cdo@2.1.0 #eccodes compilation issue on Joey
+    - cdo@2.1.0 #eccodes compilation issue on Joey but compiles fine on Setonix
     - nco@5.1.6 ^pocl@4.0
     - ncview@2.1.9
 
