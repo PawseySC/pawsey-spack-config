@@ -147,7 +147,7 @@ modules:
         #roms: 'applications/{name}/{version}'
         #wrf: 'applications/{name}/{version}'
 
-        #cdo: 'applications/{name}/{version}'
+        cdo: 'applications/{name}/{version}'
         nco: 'applications/{name}/{version}'
         ncview: 'applications/{name}/{version}'
 
