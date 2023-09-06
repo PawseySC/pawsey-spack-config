@@ -38,7 +38,6 @@ PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /d
 # define source (Spack) and destination (Pawsey) directories for Singularity
 src_old_dir="${INSTALL_PREFIX}/modules/${cpu_arch}/gcc/${gcc_version}/utilities/${singularity_name_general}"
 src_dir="${INSTALL_PREFIX}/modules/${cpu_arch}/gcc/${gcc_version}/utilities/${singularity_name}"
-sed -i '/^load("/d' ${src_dir}/*.lua
 dst_dir="${INSTALL_PREFIX}/${singularity_symlink_module_dir}"
 echo "Using module files in ${src_old_dir}"
 echo "Copying them to ${src_dir}"
@@ -105,5 +104,6 @@ for version in $( ls ${src_dir}/*.lua 2>/dev/null ) ; do
     -e '/^-- add MPI START/,/^-- add MPI END/{/^-- add MPI START/!{/^-- add MPI END/!d}}' \
     -e '/^-- add GPUMPI START/,/^-- add GPUMPI END/{/^-- add GPUMPI START/!{/^-- add GPUMPI END/!d}}' \
     ${src_dir}/.${version} > ${dst_dir}/${version}-slurm.lua
+  sed -i '/^load("/d' ${dst_dir}/${version}-*.lua
   echo "Finished generating modules for ${version}"
 done

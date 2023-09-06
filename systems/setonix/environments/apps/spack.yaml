@@ -37,6 +37,7 @@ spack:
     - namd@2.14 interface=python fftw=3 +plumed ^charmpp@7.0.0 backend=ofi
     - namd@2.15a2 interface=python fftw=3  ^charmpp@7.0.0 backend=ofi
     - namd@2.15a2 +rocm amdgpu_target=gfx90a ^charmpp@7.0.0 backend=mpi ^ncurses@6.3+symlinks
+    - amdgromacs@2023 amdgpu_target=gfx90a +rocm
 # Failing:    - openfoam-org@8 #Alexis still working on it
 # Current alternative:
     - openfoam@2206
@@ -56,7 +57,7 @@ spack:
 
 # weather utilities  
   - weather_utils:
-    #    - cdo@2.1.0 #eccodes compilation issue on Joey
+    - cdo@2.1.0 #eccodes compilation issue on Joey but compiles fine on Setonix
     - nco@5.1.6 ^pocl@4.0
     - ncview@2.1.9
 

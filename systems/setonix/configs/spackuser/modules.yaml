@@ -124,6 +124,7 @@ modules:
         cpmd: 'applications/{name}/{version}'
         cp2k: 'applications/{name}/{version}'
         gromacs: 'applications/{name}/{version}'
+        amdgromacs: 'applications/gromacs-amd-gfx90a/{version}'
         lammps: 'applications/{name}/{version}'
         "namd +rocm": 'applications/{name}-amd-gfx90a/{version}'
         "namd ~rocm": 'applications/{name}/{version}'
@@ -147,7 +148,7 @@ modules:
         #roms: 'applications/{name}/{version}'
         #wrf: 'applications/{name}/{version}'
 
-        #cdo: 'applications/{name}/{version}'
+        cdo: 'applications/{name}/{version}'
         nco: 'applications/{name}/{version}'
         ncview: 'applications/{name}/{version}'
 
