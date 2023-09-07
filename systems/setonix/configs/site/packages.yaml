@@ -32,7 +32,7 @@ packages:
 #  scalapack:
 #    buildable: false
 # FFTW non buildable, to avoid proliferation of variants, 
-# that are ultimately a subset of the system-wide one (env_num_libs)
+# that are ultimately a subset of the system-wide one (num_libs)
 # Edit: FFTW buildable, otherwise in Spack 0.17.0 the concretiser crashes
 #  fftw-api:
 #    buildable: false
@@ -58,7 +58,7 @@ packages:
   #TODO for next stack builds: consider adding more +pic as default variant
 
   # preferred versions and variants, dependencies
-  # required by env_devel/hpctoolkit, but good to have for everything
+  # required by devel/hpctoolkit, but good to have for everything
   libunwind:
     variants: '+pic'
   mbedtls:
