@@ -1,0 +1,83 @@
+[+] /usr (external curl-7.79.1-zote7kxcotuaq2zoisi7ih7jnffdfvjz)
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/libmd-1.0.4-3m462etkptryuxndmjqymbgmdoyzesh6
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/libiconv-1.16-xgkdevpghvs3jyf5ttbjs3frg5uloawf
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/lz4-1.9.4-lvdwj6silkwa6m2fql3id4emeouihslh
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/lzo-2.10-p3ks5utirysvdszyfxfkxwu6jwhw7u2x
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/mbedtls-2.28.0-ge6emai4rkwdirmxmhcmgkscvcotlqsl
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/xz-5.2.7-yvt4er3bhdxw4yygm7yclwso5d3cr3l3
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/zlib-1.2.13-2icbpr5hiuoko5i26mg6n25q2z25g4w3
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/zstd-1.5.0-2xiug4hjezpi7eoz3gc2veairjtxcomo
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/libuv-1.44.1-4ggapk3ysamu7rgstr7ubydhzwhx54st
+[+] /usr (external pkg-config-0.29.2-ru66hccasahp5r2xlfrh4vroglvul2tx)
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/rhash-1.4.2-mr4mnuy3pjqbsfhjzbfsxtd7syjz5ado
+==> cray-mpich@8.1.25 : has external module in ['cray-mpich/8.1.25', 'craype-network-ofi']
+[+] /opt/cray/pe/mpich/8.1.25/ofi/gnu/9.1 (external cray-mpich-8.1.25-hxe3lldg3glyfbnixhcis6spfjcqeyko)
+[+] /opt/rocm-5.2.3 (external hip-5.2.3-o75h44efehszfmewkxjrjshjmwvuxvme)
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/berkeley-db-18.1.40-b7hqnneok7yl2ozmy6ezki3zmdrwmvm4
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/libffi-3.4.2-em7ni4dcabcx6c3mmxmegbdw767dvi6b
+[+] /opt/rocm-5.2.3 (external hsa-rocr-dev-5.2.3-3mf5xysdmtxnhzto4umhtcaztkbckki7)
+[+] /opt/rocm-5.2.3 (external llvm-amdgpu-5.2.3-sborskomedrrhh6jgappgjwohw6twolm)
+[+] /usr (external hwloc-2.8.0-5a44oejauy3zfiqnautohykxtvzkdoos)
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/libbsd-0.11.5-haqmz4xoiz43gm6hg47mqxmjnprjxdrs
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/diffutils-3.8-p7vz276mvkpq47fp4eogt5jasrxhcmp5
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/pigz-2.7-2usmga526lknqxxjv5xj5flufej3q7g6
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/libxml2-2.10.1-ksi4kzjxeariijiwnttqrz6u2v4z3mda
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/util-linux-uuid-2.38.1-mvepyq3pwfimvgk62ktsalwfpmf75se5
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/ncurses-6.3-fmtnawi52rwnn6sbie5slkkbc7jky3p7
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/fftw-3.3.10-o2l6h6k4aujjws3btuuc2uvll7tr25k5
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/expat-2.4.8-kbl32lex4nuoguujo626q3pyiubqbdue
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/bzip2-1.0.8-a3u5xsxxwmlbjvtrhxf7fsoll3hh37ye
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/readline-8.1.2-4kkkszrayt6canrdz4ao6bd5oh5e2cwv
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/libarchive-3.5.2-o4dal4d3ubm3mohatlo2xpgchjylqtxn
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/tar-1.34-k7j675a6lqu5b46lun7stc7q7elb4pn7
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/sqlite-3.39.4-ez7bb2uj6zksk62kal4g5x4icqiiembf
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/gdbm-1.23-3t2phjnt4fgjekis6yxkkrnxx2x7hkag
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/cmake-3.24.3-tjyqjksfhinofxml2vrskm2xae3qq2na
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/gettext-0.21.1-y45vkxv67f3x2ao6f4jkpx2wtvxgjjbw
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/perl-5.36.0-wvzyt6ahvr43dymdwedh2oyyppkqcohr
+[+] /software/projects/pawsey0001/cdipietrantonio/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/python-3.10.8-n4pwnrdip5zqnykdjuxejfssbnxfbwoo
+[+] /software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/openblas-0.3.21-jtpvfctd4evk6b3t6wzzf3kfocnjgert
+[+] /software/projects/pawsey0001/cdipietrantonio/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/py-pip-23.1.2-qs3yfbwxr6qjomkws5n7oxicf6h7dhsq
+[+] /software/projects/pawsey0001/cdipietrantonio/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/py-setuptools-59.4.0-paqia6dr2eauojcusjeo7t44fwt2zc2t
+[+] /software/projects/pawsey0001/cdipietrantonio/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/py-wheel-0.37.1-i7rdn4wfig45d4re2nwi5g4xtpapuhjp
+[+] /software/projects/pawsey0001/cdipietrantonio/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/py-cython-0.29.30-acvcsajq5ct5whb2bjwlnvmy4jfnlpbl
+[+] /software/projects/pawsey0001/cdipietrantonio/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/py-numpy-1.23.4-c5pzrg3clro3pndqsqopyhsptxalhzbp
+[+] /software/projects/pawsey0001/cdipietrantonio/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/boost-1.80.0-ssygsdmk434gknphkwifjs6epumbdzig
+==> Installing hipsycl-0.9.4-i6ao64dn5gdx2ldbqdniyglesfvgo34m
+==> No binary for hipsycl-0.9.4-i6ao64dn5gdx2ldbqdniyglesfvgo34m found: installing from source
+==> Warning: Fetching from mirror without a checksum!
+  This package is normally checked out from a version control system, but it has been archived on a spack mirror.  This means we cannot know a checksum for the tarball in advance. Be sure that your connection to this mirror is secure!
+==> Using cached archive: /scratch/pawsey0001/cdipietrantonio/setonix/2023.07/software/cdipietrantonio/source_cache/_source-cache/git//OpenSYCL/OpenSYCL.git/99d9e24d462b35e815e0e59c1b611936c70464ae.tar.gz
+==> No patches needed for hipsycl
+==> hipsycl: Executing phase: 'cmake'
+==> hipsycl: Executing phase: 'build'
+==> hipsycl: Executing phase: 'install'
+==> hipsycl: Successfully installed hipsycl-0.9.4-i6ao64dn5gdx2ldbqdniyglesfvgo34m
+  Fetch: 0.00s.  Build: 45.32s.  Total: 45.32s.
+[+] /software/projects/pawsey0001/cdipietrantonio/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/hipsycl-0.9.4-i6ao64dn5gdx2ldbqdniyglesfvgo34m
+==> Installing syclgromacs-2023.1-oljlnxh7dxfbuxllogjmgrxvz3kjxuyt
+==> No binary for syclgromacs-2023.1-oljlnxh7dxfbuxllogjmgrxvz3kjxuyt found: installing from source
+==> Using cached archive: /scratch/pawsey0001/cdipietrantonio/setonix/2023.07/software/cdipietrantonio/source_cache/_source-cache/archive/ee/eef2bb4a6cb6314cf9da47f26df2a0d27af4bf7b3099723d43601073ab0a42f4.tar.gz
+==> Ran patch() for syclgromacs
+==> syclgromacs: Executing phase: 'cmake'
+==> Error: ProcessError: Command exited with status 1:
+    '/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/cmake-3.24.3-tjyqjksfhinofxml2vrskm2xae3qq2na/bin/cmake' '-G' 'Unix Makefiles' '-DCMAKE_INSTALL_PREFIX:STRING=/software/projects/pawsey0001/cdipietrantonio/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/syclgromacs-2023.1-oljlnxh7dxfbuxllogjmgrxvz3kjxuyt' '-DCMAKE_BUILD_TYPE:STRING=Release' '-DBUILD_TESTING:BOOL=OFF' '-DCMAKE_INTERPROCEDURAL_OPTIMIZATION:BOOL=OFF' '-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON' '-DCMAKE_INSTALL_RPATH_USE_LINK_PATH:BOOL=ON' '-DCMAKE_INSTALL_RPATH:STRING=/software/projects/pawsey0001/cdipietrantonio/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/syclgromacs-2023.1-oljlnxh7dxfbuxllogjmgrxvz3kjxuyt/lib;/software/projects/pawsey0001/cdipietrantonio/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/syclgromacs-2023.1-oljlnxh7dxfbuxllogjmgrxvz3kjxuyt/lib64;/opt/cray/pe/mpich/8.1.25/ofi/gnu/9.1/lib;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/fftw-3.3.10-o2l6h6k4aujjws3btuuc2uvll7tr25k5/lib;/opt/rocm-5.2.3/lib;/software/projects/pawsey0001/cdipietrantonio/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/hipsycl-0.9.4-i6ao64dn5gdx2ldbqdniyglesfvgo34m/lib;/software/projects/pawsey0001/cdipietrantonio/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/boost-1.80.0-ssygsdmk434gknphkwifjs6epumbdzig/lib;/software/projects/pawsey0001/cdipietrantonio/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/python-3.10.8-n4pwnrdip5zqnykdjuxejfssbnxfbwoo/lib;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/bzip2-1.0.8-a3u5xsxxwmlbjvtrhxf7fsoll3hh37ye/lib;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/expat-2.4.8-kbl32lex4nuoguujo626q3pyiubqbdue/lib;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/libbsd-0.11.5-haqmz4xoiz43gm6hg47mqxmjnprjxdrs/lib;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/libmd-1.0.4-3m462etkptryuxndmjqymbgmdoyzesh6/lib;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/gdbm-1.23-3t2phjnt4fgjekis6yxkkrnxx2x7hkag/lib;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/readline-8.1.2-4kkkszrayt6canrdz4ao6bd5oh5e2cwv/lib;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/ncurses-6.3-fmtnawi52rwnn6sbie5slkkbc7jky3p7/lib;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/gettext-0.21.1-y45vkxv67f3x2ao6f4jkpx2wtvxgjjbw/lib;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/libiconv-1.16-xgkdevpghvs3jyf5ttbjs3frg5uloawf/lib;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/libxml2-2.10.1-ksi4kzjxeariijiwnttqrz6u2v4z3mda/lib;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/xz-5.2.7-yvt4er3bhdxw4yygm7yclwso5d3cr3l3/lib;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/zlib-1.2.13-2icbpr5hiuoko5i26mg6n25q2z25g4w3/lib;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/libffi-3.4.2-em7ni4dcabcx6c3mmxmegbdw767dvi6b/lib;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/sqlite-3.39.4-ez7bb2uj6zksk62kal4g5x4icqiiembf/lib;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/util-linux-uuid-2.38.1-mvepyq3pwfimvgk62ktsalwfpmf75se5/lib;/opt/rocm-5.2.3/lib64;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/libffi-3.4.2-em7ni4dcabcx6c3mmxmegbdw767dvi6b/lib64;/opt/cray/pe/gcc/12.2.0/snos' '-DCMAKE_PREFIX_PATH:STRING=/software/projects/pawsey0001/cdipietrantonio/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/hipsycl-0.9.4-i6ao64dn5gdx2ldbqdniyglesfvgo34m;/software/projects/pawsey0001/cdipietrantonio/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/boost-1.80.0-ssygsdmk434gknphkwifjs6epumbdzig;/software/projects/pawsey0001/cdipietrantonio/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/python-3.10.8-n4pwnrdip5zqnykdjuxejfssbnxfbwoo;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/util-linux-uuid-2.38.1-mvepyq3pwfimvgk62ktsalwfpmf75se5;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/sqlite-3.39.4-ez7bb2uj6zksk62kal4g5x4icqiiembf;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/libffi-3.4.2-em7ni4dcabcx6c3mmxmegbdw767dvi6b;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/gettext-0.21.1-y45vkxv67f3x2ao6f4jkpx2wtvxgjjbw;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/tar-1.34-k7j675a6lqu5b46lun7stc7q7elb4pn7;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/libxml2-2.10.1-ksi4kzjxeariijiwnttqrz6u2v4z3mda;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/gdbm-1.23-3t2phjnt4fgjekis6yxkkrnxx2x7hkag;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/readline-8.1.2-4kkkszrayt6canrdz4ao6bd5oh5e2cwv;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/fftw-3.3.10-o2l6h6k4aujjws3btuuc2uvll7tr25k5;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/cmake-3.24.3-tjyqjksfhinofxml2vrskm2xae3qq2na;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/ncurses-6.3-fmtnawi52rwnn6sbie5slkkbc7jky3p7;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/zlib-1.2.13-2icbpr5hiuoko5i26mg6n25q2z25g4w3;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/xz-5.2.7-yvt4er3bhdxw4yygm7yclwso5d3cr3l3;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/bzip2-1.0.8-a3u5xsxxwmlbjvtrhxf7fsoll3hh37ye;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/libiconv-1.16-xgkdevpghvs3jyf5ttbjs3frg5uloawf;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/expat-2.4.8-kbl32lex4nuoguujo626q3pyiubqbdue;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/libbsd-0.11.5-haqmz4xoiz43gm6hg47mqxmjnprjxdrs;/software/setonix/2023.07/software/linux-sles15-zen3/gcc-12.2.0/libmd-1.0.4-3m462etkptryuxndmjqymbgmdoyzesh6;/opt/rocm-5.2.3;/opt/rocm-5.2.3;/opt/rocm-5.2.3;/opt/cray/pe/mpich/8.1.25/ofi/gnu/9.1' '-DGMX_GPU=SYCL' '-DGMX_SYCL_HIPSYCL=ON' '-DHIPSYCL_TARGETS='"'"'hip:gfx90a'"'"'' '-DGMX_MPI:BOOL=ON' '-DCMAKE_C_COMPILER=/opt/rocm-5.2.3/bin/hipcc' '-DCMAKE_CXX_COMPILER=/opt/rocm-5.2.3/bin/hipcc' '-DMPI_C_COMPILER=/opt/cray/pe/mpich/8.1.25/ofi/gnu/9.1/bin/mpicc' '-DMPI_CXX_COMPILER=/opt/cray/pe/mpich/8.1.25/ofi/gnu/9.1/bin/mpicxx' '-DGMX_INSTALL_LEGACY_API=ON' '-DGMX_HWLOC:BOOL=ON' '-DGMX_GPU:STRING=OFF' '-DGMX_EXTERNAL_LAPACK:BOOL=OFF' '-DGMX_EXTERNAL_BLAS:BOOL=OFF' '-DGMX_SIMD=AVX2_256' '-DGMX_USE_RDTSCP:BOOL=ON' '-DGMX_OPENMP:BOOL=ON' '-DGMX_CYCLE_SUBCOUNTERS:BOOL=OFF' '-DGMX_FFT_LIBRARY=fftw3' '-DGMX_VERSION_STRING_OF_FORK=spack' '/scratch/pawsey0001/cdipietrantonio/setonix/2023.07/software/cdipietrantonio/build_stage/spack-stage-syclgromacs-2023.1-oljlnxh7dxfbuxllogjmgrxvz3kjxuyt/spack-src'
+
+1 error found in build log:
+     15    -- Detecting CXX compile features
+     16    -- Detecting CXX compile features - done
+     17    -- Performing Test CXX17_COMPILES_SIMPLY
+     18    -- Performing Test CXX17_COMPILES_SIMPLY - Failed
+     19    -- Performing Test USING_LIBSTDCXX
+     20    -- Performing Test USING_LIBSTDCXX - Success
+  >> 21    CMake Error at cmake/FindLibStdCpp.cmake:156 (message):
+     22      Directory /lus/joey/software/setonix/2023.07/spack/lib/spack/include/c++
+     23      found via /lus/joey/software/setonix/2023.07/spack/lib/spack/env/gcc/g++
+     24      doesn't exist even though it should.  Please report this to the GROMACS
+     25      developers.
+     26    Call Stack (most recent call first):
+     27      CMakeLists.txt:91 (find_package)
+
+See build log for details:
+  /scratch/pawsey0001/cdipietrantonio/setonix/2023.07/software/cdipietrantonio/build_stage/spack-stage-syclgromacs-2023.1-oljlnxh7dxfbuxllogjmgrxvz3kjxuyt/spack-build-out.txt
+
