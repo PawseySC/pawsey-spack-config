@@ -4,10 +4,10 @@
 # define the installation path 
 if [ -z ${AMBER_INSTALL_DIR} ]
 then 
-  export AMBER_INSTALL_DIR="/software/setonix/${DATE_TAG}/custom/software/zen3/gcc/12.1.0/amber/2022"
+  export AMBER_INSTALL_DIR="/software/setonix/${DATE_TAG}/custom/software/zen3/gcc/12.2.0/amber/2022"
   if [ ! -z ${AMBER_GPU_BUILD} ]
   then 
-    export AMBER_INSTALL_DIR="/software/setonix/${DATE_TAG}/custom/software/zen3/gcc/12.1.0/amber/2022-amd-gfx90a"
+    export AMBER_INSTALL_DIR="/software/setonix/${DATE_TAG}/custom/software/zen3/gcc/12.2.0/amber/2022-amd-gfx90a"
   fi
   export AMBER_SOURCE_DIR="/tmp/amber-build"
 fi
