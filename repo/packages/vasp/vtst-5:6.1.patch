@@ -1,0 +1,45 @@
+diff -r -c vasp.5.4.4/src/.objects vasp.5.4.4+vtst/src/.objects
+*** vasp.5.4.4/src/.objects	2017-04-20 17:04:05.000000000 +0800
+--- vasp.5.4.4+vtst/src/.objects	2023-04-14 23:33:39.000000000 +0800
+***************
+*** 69,74 ****
+--- 69,76 ----
+  	tet.o \
+  	tetweight.o \
+  	hamil_rot.o \
++ 	bfgs.o dynmat.o instanton.o lbfgs.o sd.o cg.o dimer.o bbm.o \
++ 	fire.o lanczos.o neb.o qm.o opt.o \
+  	chain.o \
+  	dyna.o \
+  	k-proj.o \
+***************
+*** 268,273 ****
+--- 270,277 ----
+  	tet.o \
+  	tetweight.o \
+  	hamil_rot.o \
++ 	bfgs.o dynmat.o instanton.o lbfgs.o sd.o cg.o dimer.o bbm.o \
++ 	fire.o lanczos.o neb.o qm.o opt.o \
+  	chain.o \
+  	dyna.o \
+  	k-proj.o \
+diff -r -c vasp.5.4.4/src/main.F vasp.5.4.4+vtst/src/main.F
+*** vasp.5.4.4/src/main.F	2017-04-20 17:03:58.000000000 +0800
+--- vasp.5.4.4+vtst/src/main.F	2023-04-14 23:29:17.000000000 +0800
+***************
+*** 3144,3150 ****
+        ENDIF
+  
+        CALL CHAIN_FORCE(T_INFO%NIONS,DYN%POSION,TOTEN,TIFOR, &
+!            LATT_CUR%A,LATT_CUR%B,IO%IU6)
+  
+        CALL PARALLEL_TEMPERING(NSTEP,T_INFO%NIONS,DYN%POSION,DYN%VEL,TOTEN,TIFOR,DYN%TEBEG,DYN%TEEND, &
+             LATT_CUR%A,LATT_CUR%B,IO%IU6)
+--- 3144,3150 ----
+        ENDIF
+  
+        CALL CHAIN_FORCE(T_INFO%NIONS,DYN%POSION,TOTEN,TIFOR, &
+!            TSIF, LATT_CUR%A,LATT_CUR%B,IO%IU6)
+  
+        CALL PARALLEL_TEMPERING(NSTEP,T_INFO%NIONS,DYN%POSION,DYN%VEL,TOTEN,TIFOR,DYN%TEBEG,DYN%TEEND, &
+             LATT_CUR%A,LATT_CUR%B,IO%IU6)
