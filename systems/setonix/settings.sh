@@ -104,6 +104,7 @@ wrf
 "
 
 container_list="
+amazon/aws-cli:2.13.0
 amdih/pytorch:rocm5.0_ubuntu18.04_py3.7_pytorch_1.10.0
 rocm/tensorflow:rocm5.5-tf2.11-dev
 quay.io/biocontainers/bamtools:2.5.2--hd03093a_0
