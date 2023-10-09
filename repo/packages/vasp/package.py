@@ -33,6 +33,11 @@ class Vasp(MakefilePackage):
              tag='V1.0',
              when='+vaspsol')
 
+    resource(name='vtst',
+             url='http://theory.cm.utexas.edu/code/vtstcode-197.tgz',
+             sha256='2017f5129a10e48ef2d928932eb48156dde7b8a9a26e6d0f5c086eae3ee0cb5a',
+             when='+vtst')
+
     variant('scalapack', default=False,
             description='Enables build with SCALAPACK')
 
@@ -42,6 +47,10 @@ class Vasp(MakefilePackage):
     variant('vaspsol', default=False,
             description='Enable VASPsol implicit solvation model\n'
             'https://github.com/henniggroup/VASPsol')
+
+    variant('vtst', default=False,
+            description='Incorporate VTST extensions\n'
+            'https://theory.cm.utexas.edu/vtsttools/index.html')
 
     depends_on('rsync', type='build')
     depends_on('openblas')
@@ -64,9 +73,36 @@ class Vasp(MakefilePackage):
     # which in turn will be copied into the vasp source in the edit stage below.
     patch('vaspsol-6.2.1.patch.1', when='@6.0:+vaspsol')
 
+    # VTST patches for src/main.F src/makefile and src/.objects
+    patch('vtst-5:6.1.patch', when='@5:6.1+vtst')
+    patch('vtst-6.3:.patch', when='@6.3:+vtst')
+    conflicts('+vtst', when='@6.2', msg='missing correct VTST patch/sources for VASP 6.2')
+
     parallel = False
 
+    # Copy/overwrite vasp sources from vtst or vapsol extensions.
+    def patch(self):
+        if self.spec.satisfies('+vaspsol'):
+            shutil.copy('VASPsol/src/solvation.F', 'src/')
+
+        vtst_pfx = 'vtstcode-197/vtstcode'
+        vtst_sfx = None
+
+        if self.spec.satisfies('@5+vtst'):
+            vtst_sfx = '5'
+        elif self.spec.satisfies('@6.1+vtst'):
+            vtst_sfx = '6.1'
+        elif self.spec.satisfies('@6.3+vtst'):
+            vtst_sfx = '6.3'
+        elif self.spec.satisfies('@6.4+vtst'):
+            vtst_sfx = '6.4'
+
+        if vtst_sfx:
+            shutil.copytree(vtst_pfx+vtst_sfx, 'src/', dirs_exist_ok=True)
+
     def edit(self, spec, prefix):
+        # Modify the platform specific arch/makefile.include.xxx file, then
+        # copy to makefile.include in the top level directory.
 
         # Following has been adapted from spack development branch, and special casing
         # 6.3.0 for gcc as we're not needing nvhpc support for setonix and aocc is currently
@@ -172,9 +208,6 @@ class Vasp(MakefilePackage):
             filter_file('^CFLAGS[ ]{0,}=.*$',
                         'CFLAGS ?=',
                         'makefile.include')
-
-        if '+vaspsol' in spec:
-            copy('VASPsol/src/solvation.F', 'src/')
 
     def setup_build_environment(self, spack_env):
         spec = self.spec
