@@ -22,7 +22,7 @@ ENVS_DIR="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 # wrf dependency module
 for pkg in wrf roms;
 do
-    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_dependencies_metamodule.sh" ${pkg} "${ENVS_DIR}/env_${pkg}" "${custom_full_modules_dir_zen3_gcc}"
+    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_dependencies_metamodule.sh" ${pkg} "${ENVS_DIR}/${pkg}" "${custom_full_modules_dir_zen3_gcc}"
     # hiding wrf/roms dependency modules for now
     mv "${custom_full_modules_dir_zen3_gcc}/${pkg}-dependency-set.lua" "${custom_full_modules_dir_zen3_gcc}/.${pkg}-dependency-set.lua"
 done

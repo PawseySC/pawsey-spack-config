@@ -9,7 +9,7 @@ spack:
   definitions:
   - packages-with-python:
     #    - amber@20 +openmp ^hdf@4.2.15 +external-xdr
-    - gromacs@2023 +double +lapack +plumed build_type=Release ^plumed@2.9.0
+    - gromacs@=2023 +double +lapack +plumed build_type=Release ^plumed@2.9.0
     - gromacs@2022.5 +double +lapack +plumed build_type=Release ^plumed@2.8.2
     - cp2k@2023.1 +plumed ^plumed@2.9.0
     - lammps@20230615 +adios +asphere +atc +awpmd +bocs +body +brownian +cg-sdk +class2
@@ -44,7 +44,7 @@ spack:
     - openfoam@2206
     - ncl@6.6.2 ^esmf ~mpi
   - packages-with-oldpython:
-    - nwchem@7.2.0 +fftw3 +openmp ^python@3.9.15
+    - nwchem@7.2.0 +fftw3 +openmp ^python@3.9.15 ^netlib-scalapack@2.2.0
 
   - packages:
     - cpmd@4.3 +mpi +omp

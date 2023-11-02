@@ -6,7 +6,7 @@
 spack:
   definitions:
   - s3-python-set:
-    - awscli@1.16.308 ^py-botocore@1.21.12 ^py-docutils@0.19
+    - awscli@1.27.84 
     - py-boto3@1.18.12
   - s3-go-set:
     - rclone@1.62.2

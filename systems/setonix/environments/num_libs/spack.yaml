@@ -54,7 +54,7 @@ spack:
     # for the moment trilinos disabled 
     #- petsc@3.15.5 +fftw +trilinos +hwloc +openmp +complex ~cuda
     - petsc@3.18.1 
-    - petsc@3.9.15  
+    - petsc@3.19.5  
   - numerical:
     
     # - openblas@0.3.21 threads=openmp # PLACEHOLDER - please look at scripts/install_environments.sh
@@ -86,7 +86,7 @@ spack:
   - matrix:
     - [$petsc-set]
     - ['%gcc@12.2.0']
-    - [^python@3.10.10]
+    - [^python@3.10.10 ^fftw@3.3.10]
     - [+complex, ~complex]
     - [+fftw ~trilinos +hwloc +openmp ~cuda]
     - [target=zen3]      

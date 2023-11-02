@@ -24,7 +24,7 @@ module load spack/${spack_version}
 
 
 # original environment yaml
-original_env_yaml="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments/env_python/spack.yaml"
+original_env_yaml="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments/python/spack.yaml"
 # directory to create derivative yaml for the view
 view_env_dir="${PAWSEY_SPACK_CONFIG_REPO}/view_python"
 # name for the view

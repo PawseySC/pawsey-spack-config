@@ -25,7 +25,8 @@ mkdir -p ${SPACK_USER_CONFIG_PATH}
 
 # We will use the Pawsey spack mirror, to which several patches will be applied.
 if ! [ -e ${INSTALL_PREFIX}/spack ]; then
-  git clone https://github.com/pawseysc/spack ${INSTALL_PREFIX}/spack
+  git clone https://github.com/spack/spack.git ${INSTALL_PREFIX}/spack
+#  git clone https://github.com/pawseysc/spack ${INSTALL_PREFIX}/spack
   cd "${INSTALL_PREFIX}/spack"
   git checkout v${spack_version}
 
