@@ -31,3 +31,5 @@ python ./setup.py bdist_wheel -- \
 
 pip install --prefix=$install_dir dist/qiskit_aer*.whl
 cd -
+
+rm -rf ${source_dir}
