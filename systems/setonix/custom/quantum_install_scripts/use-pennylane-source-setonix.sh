@@ -2,12 +2,11 @@
 
 # essential for reproducibility of installation
 # pennylane versions
-tool_name="pennylane-lightning-amd-gfx90a"
-tool_ver="0.32.0"
+tool_name="pennylane"
+tool_ver="0.33.0"
 # host versions
 py_ver="3.10.10"
 pip_ver="23.1.2-py3.10.10"
-# why this very new setuptools version? 
 st_ver="68.0.0-py3.10.10"
 # lets try the older version that is compatible with numpy 
 st_ver="59.4.0-py3.10.10"
@@ -19,9 +18,6 @@ cython_ver="0.29.32"
 h5py_ver="3.7.0"
 mpi4py_ver="3.1.4-py3.10.10"
 
-# gpu
-rocm_ver="5.2.3"
-
 
 # load modules
 module load python/$py_ver
@@ -31,8 +27,6 @@ module load py-numpy/$numpy_ver
 module load py-scipy/$scipy_ver
 module load py-mpi4py/$mpi4py_ver
 module load py-scikit-learn/$scikit_ver
-module load rocm/$rocm_ver
-module load craype-accel-amd-gfx90a
 
 export MODULE_DIR=/software/setonix/2023.08/custom/modules/zen3/gcc/12.2.0/custom
 export MODULE_DIR_CCE=/software/setonix/2023.08/custom/modules/zen3/cce/15.0.1/custom
@@ -45,9 +39,7 @@ install_dir="$base_dir/$tool_name/${tool_ver}"
 source_dir="$MYSCRATCH/$tool_name-src/${tool_ver}"
 lib_dir="$install_dir/lib/python${python_ver}/site-packages"
 bin_dir="$install_dir/bin"
+
 #
 export PYTHONPATH="$lib_dir:$PYTHONPATH"
 export PATH="$bin_dir:$PATH"
-
-# for patching files
-source patch_gcc_12.sh

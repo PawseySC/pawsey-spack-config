@@ -11,20 +11,12 @@
 
 script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 . $script_dir/use-pennylane-source-hip-setonix.sh
-export base_dir=/scratch/pawsey0001/pelahi/quantum-tests
 
 # install from source
 git clone https://github.com/PennyLaneAI/pennylane-lightning-kokkos $source_dir
 cd $source_dir
 git fetch --tags 
 git checkout v$tool_ver
-
-#CMAKE_ARGS="-DCMAKE_CXX_COMPILER=hipcc \
-#  -DCMAKE_BUILD_TYPE=Release \
-#  -DKokkos_ENABLE_HIP=ON \
-#  -DKokkos_ARCH_VEGA90A=ON \
-#  -DPLKOKKOS_ENABLE_NATIVE=ON" \
-#  pip install --prefix=$install_dir .
 
 cmake -B build . \
   -DCMAKE_CXX_COMPILER=hipcc \
@@ -57,6 +49,7 @@ cmake --build build
 pip install --prefix=$install_dir .
 
 # bugfix - why on earth?
+# currently commenting out and testing 
 # filename=$( basename $( ls $lib_dir/pennylane_lightning_kokkos/lightning_kokkos_qubit_ops.cpython* ) )
 # cp -p build/lightning_kokkos_qubit_ops.cpython* $lib_dir/pennylane_lightning_kokkos/$filename
 

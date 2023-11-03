@@ -33,6 +33,10 @@ module load py-scikit-learn/$scikit_ver
 module load openblas/$blas_ver
 module load cmake/$cmake_ver
 
+export MODULE_DIR=/software/setonix/2023.08/custom/modules/zen3/gcc/12.2.0/custom
+export MODULE_DIR_CCE=/software/setonix/2023.08/custom/modules/zen3/cce/15.0.1/custom
+export base_dir=/software/setonix/2023.08/custom/software/linux-sles15-zen3/gcc-12.2.0/
+
 # internal variables - do not edit
 python_ver="$( python3 -V | cut -d ' ' -f 2 | cut -d . -f 1,2 )"
 script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"

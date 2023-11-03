@@ -2,8 +2,8 @@
 
 # essential for reproducibility of installation
 # pennylane versions
-tool_name="pennylane"
-tool_ver="0.33.0"
+tool_name="pennylane-lightning"
+tool_ver="0.33.1"
 # host versions
 py_ver="3.10.10"
 pip_ver="23.1.2-py3.10.10"
