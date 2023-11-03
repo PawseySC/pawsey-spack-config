@@ -40,7 +40,6 @@ export base_dir=/software/setonix/2023.08/custom/software/linux-sles15-zen3/gcc-
 # internal variables - do not edit
 python_ver="$( python3 -V | cut -d ' ' -f 2 | cut -d . -f 1,2 )"
 script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-base_dir=/scratch/pawsey0001/pelahi/quantum-tests/
 install_dir="$base_dir/$tool_name/${tool_ver}"
 source_dir="$MYSCRATCH/$tool_name-src/${tool_ver}"
 lib_dir="$install_dir/lib/python${python_ver}/site-packages"
