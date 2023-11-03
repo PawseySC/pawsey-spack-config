@@ -2,8 +2,8 @@
 
 # essential for reproducibility of installation
 # pennylane versions
-tool_name="pennylane-hip"
-pl_ver="0.33.0"
+tool_name="pennylane-amd-gfx90a"
+tool_ver="0.33.0"
 # host versions
 py_ver="3.10.10"
 pip_ver="23.1.2-py3.10.10"
@@ -20,7 +20,7 @@ h5py_ver="3.7.0"
 mpi4py_ver="3.1.4-py3.10.10"
 
 # gpu
-rocm_ver="5.4.3"
+rocm_ver="5.2.3"
 
 
 # load modules
@@ -34,11 +34,15 @@ module load py-scikit-learn/$scikit_ver
 module load rocm/$rocm_ver
 module load craype-accel-amd-gfx90a
 
+export MODULE_DIR=/software/setonix/2023.08/custom/modules/zen3/gcc/12.2.0/custom
+export MODULE_DIR_CCE=/software/setonix/2023.08/custom/modules/zen3/cce/15.0.1/custom
+export base_dir=/software/setonix/2023.08/custom/software/linux-sles15-zen3/gcc-12.2.0/
+
 # internal variables - do not edit
 python_ver="$( python3 -V | cut -d ' ' -f 2 | cut -d . -f 1,2 )"
 script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-install_dir="$base_dir/$tool_name"
-source_dir="${install_dir}-src"
+install_dir="$base_dir/$tool_name/${tool_ver}"
+source_dir="$MYSCRATCH/$tool_name-src/${tool_ver}"
 lib_dir="$install_dir/lib/python${python_ver}/site-packages"
 bin_dir="$install_dir/bin"
 #

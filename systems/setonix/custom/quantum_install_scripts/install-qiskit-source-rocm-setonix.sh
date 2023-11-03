@@ -14,9 +14,9 @@ script_dir=/scratch/pawsey0001/pelahi/quantum-play/install_scripts/
 . $script_dir/use-qiskit-source-rocm-setonix.sh
 
 # install
-git clone https://github.com/Qiskit/qiskit-aer $source_dir/qiskit-aer
-cd $source_dir/qiskit-aer
-git checkout $aer_ver
+git clone https://github.com/Qiskit/qiskit-aer $source_dir
+cd $source_dir
+git checkout $tool_ver
 pip install --prefix=$install_dir -r requirements-dev.txt
 pip install --prefix=$install_dir pybind11[global]
 

@@ -5,9 +5,9 @@ script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 . $script_dir/use-qiskit-source-mpi-omp-setonix.sh
 
 # install
-git clone https://github.com/Qiskit/qiskit-aer $source_dir/qiskit-aer
-cd $source_dir/qiskit-aer
-git checkout $aer_ver
+git clone https://github.com/Qiskit/qiskit-aer $source_dir
+cd $source_dir
+git checkout $tool_ver
 pip install --prefix=$install_dir -r requirements-dev.txt
 pip install --prefix=$install_dir pybind11[global]
 

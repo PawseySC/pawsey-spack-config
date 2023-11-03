@@ -14,10 +14,10 @@ script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 export base_dir=/scratch/pawsey0001/pelahi/quantum-tests
 
 # install from source
-git clone https://github.com/PennyLaneAI/pennylane-lightning-kokkos $source_dir/pennylane-lightning-kokkos
-cd $source_dir/pennylane-lightning-kokkos
+git clone https://github.com/PennyLaneAI/pennylane-lightning-kokkos $source_dir
+cd $source_dir
 git fetch --tags 
-git checkout v$pl_ver
+git checkout v$tool_ver
 
 #CMAKE_ARGS="-DCMAKE_CXX_COMPILER=hipcc \
 #  -DCMAKE_BUILD_TYPE=Release \
@@ -57,7 +57,8 @@ cmake --build build
 pip install --prefix=$install_dir .
 
 # bugfix - why on earth?
-filename=$( basename $( ls $lib_dir/pennylane_lightning_kokkos/lightning_kokkos_qubit_ops.cpython* ) )
-cp -p build/lightning_kokkos_qubit_ops.cpython* $lib_dir/pennylane_lightning_kokkos/$filename
+# filename=$( basename $( ls $lib_dir/pennylane_lightning_kokkos/lightning_kokkos_qubit_ops.cpython* ) )
+# cp -p build/lightning_kokkos_qubit_ops.cpython* $lib_dir/pennylane_lightning_kokkos/$filename
 
-cd -
+cd ${script_dir}
+rm -rf ${source_dir}

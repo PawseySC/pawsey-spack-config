@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # essential for reproducibility of installation
-tool_name="qiskit-rocm"
-#qk_ver="0.44.1"
+tool_name="qiskit-amd-gfx90a"
 # ROCm support is super new, requires `main` branch future to version 0.12.2
-aer_ver="39487dbf8cfe002dbf50cbadd923609c933a4a30"
-aer_ver="0.13.0"
+tool_ver="39487dbf8cfe002dbf50cbadd923609c933a4a30"
+# now should be in new released 0.13.0
+tool_ver="0.13.0"
 
 # host versions
 py_ver="3.10.10"
@@ -43,8 +43,8 @@ module load craype-accel-amd-gfx90a
 python_ver="$( python3 -V | cut -d ' ' -f 2 | cut -d . -f 1,2 )"
 script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 base_dir=/scratch/pawsey0001/pelahi/quantum-tests/
-install_dir="$base_dir/$tool_name"
-source_dir="${install_dir}-src"
+install_dir="$base_dir/$tool_name/${tool_ver}"
+source_dir="$MYSCRATCH/$tool_name-src/${tool_ver}"
 lib_dir="$install_dir/lib/python${python_ver}/site-packages"
 bin_dir="$install_dir/bin"
 #
