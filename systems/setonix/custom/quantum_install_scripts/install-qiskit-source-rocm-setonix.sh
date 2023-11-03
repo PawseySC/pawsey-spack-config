@@ -9,8 +9,7 @@
 #SBATCH --time=00:30:00
 #SBATCH --output=out-%x
 
-#script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-script_dir=/scratch/pawsey0001/pelahi/quantum-play/install_scripts/
+script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 . $script_dir/use-qiskit-source-rocm-setonix.sh
 
 # install

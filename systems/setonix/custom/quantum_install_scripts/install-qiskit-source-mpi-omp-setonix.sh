@@ -1,6 +1,5 @@
 #!/bin/bash
 
-export base_dir=/scratch/pawsey0001/pelahi/quantum-tests
 script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 . $script_dir/use-qiskit-source-mpi-omp-setonix.sh
 
