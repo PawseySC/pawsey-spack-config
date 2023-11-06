@@ -1,7 +1,9 @@
 #!/bin/bash
 
-script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+export script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 . $script_dir/use-qiskit-source-mpi-omp-setonix.sh
+. $script_dir/utils.sh
+
 
 # install
 if [ -z $1 ]; then 

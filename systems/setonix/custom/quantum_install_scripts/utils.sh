@@ -11,7 +11,7 @@ function install_module()
     echo "${MODULE_DIR}/${NAME}/"
     mkdir -p ${MODULE_DIR}/${NAME}/
     local modname=${MODULE_DIR}/${NAME}/${VERSION}.lua
-    cp sample.lua ${modname}
+    cp ${script_dir}/sample.lua ${modname}
 
     # update lua module
     local fields=(INSTALL_PATH NAME VERSION BRIEF DESCRIP)

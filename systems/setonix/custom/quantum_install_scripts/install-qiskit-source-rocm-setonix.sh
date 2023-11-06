@@ -1,16 +1,9 @@
 #!/bin/bash -l
-#SBATCH --job-name=install-qiskit-source-rocm-setonix
-#SBATCH --account=pawsey0001-gpu
-#SBATCH --partition=gpu-dev
-#SBATCH --exclusive
-#SBATCH --ntasks=1
-#SBATCH --threads-per-core=1
-#SBATCH --gpus-per-node=8
-#SBATCH --time=00:30:00
-#SBATCH --output=out-%x
 
-script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+export script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 . $script_dir/use-qiskit-source-rocm-setonix.sh
+. $script_dir/utils.sh
+
 
 # install
 if [ -z $1 ]; then 
