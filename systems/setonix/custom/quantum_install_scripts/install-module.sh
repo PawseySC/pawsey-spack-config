@@ -5,12 +5,10 @@ NAME=$2
 VERSION=$3
 BRIEF=$4
 DESCRIP=$5
-# might need to update the path 
-MOD_PATH=/software/setonix/2023.08/modules/zen3/gcc/12.2.0/custom/
 
-echo "${MOD_PATH}/${NAME}/"
-mkdir -p ${MOD_PATH}/${NAME}/
-modname=${MOD_PATH}/${NAME}/${VERSION}.lua
+echo "${MODULE_DIR}/${NAME}/"
+mkdir -p ${MODULE_DIR}/${NAME}/
+modname=${MODULE_DIR}/${NAME}/${VERSION}.lua
 cp sample.lua ${modname}
 
 fields=(INSTALL_PATH NAME VERSION BRIEF DESCRIP)
