@@ -35,6 +35,21 @@ blas_ver="0.3.21"
 cmake_ver="3.24.3"
 
 # load modules
+export dependencies=(\
+cmake/$cmake_ver \
+openblas/$blas_ver \
+python/$py_ver \
+py-pip/$pip_ver \
+py-setuptools/$st_ver \
+py-numpy/$numpy_ver \
+py-scipy/$scipy_ver \
+py-scikit-learn/$scikit_ver \
+py-cython/$cython_ver \
+py-h5py/$h5py_ver \
+py-mpi4py/$mpi4py_ver \
+)
+
+
 module load python/$py_ver
 module load py-pip/$pip_ver
 module load py-setuptools/$st_ver

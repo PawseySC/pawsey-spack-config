@@ -39,18 +39,21 @@ cmake_ver="3.24.3"
 rocm_ver="5.2.3"
 
 # load modules
-module load python/$py_ver
-module load py-pip/$pip_ver
-module load py-setuptools/$st_ver
-module load py-numpy/$numpy_ver
-module load py-scipy/$scipy_ver
-module load py-mpi4py/$mpi4py_ver
-module load py-scikit-learn/$scikit_ver
-
-module load openblas/$blas_ver
-module load cmake/$cmake_ver
-module load rocm/$rocm_ver
-module load craype-accel-amd-gfx90a
+export dependencies=(\
+cmake/$cmake_ver \
+openblas/$blas_ver \
+python/$py_ver \
+py-pip/$pip_ver \
+py-setuptools/$st_ver \
+py-numpy/$numpy_ver \
+py-scipy/$scipy_ver \
+py-scikit-learn/$scikit_ver \
+py-cython/$cython_ver \
+py-h5py/$h5py_ver \
+py-mpi4py/$mpi4py_ver \
+rocm/$rocm_ver \
+craype-accel-amd-gfx90a \
+)
 
 export MODULE_DIR=/software/setonix/2023.08/custom/modules/zen3/gcc/12.2.0/custom
 export MODULE_DIR_CCE=/software/setonix/2023.08/custom/modules/zen3/cce/15.0.1/custom

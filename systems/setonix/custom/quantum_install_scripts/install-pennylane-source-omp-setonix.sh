@@ -2,10 +2,12 @@
 
 script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 . $script_dir/use-pennylane-source-omp-setonix.sh
+. $script_dir/utils.sh
 
 # if no argument is passed then assuming a build is required
 if [ -z $1 ]; then 
     echo "Building ${tool_name}/${tool_ver}"
+    set_dependencies
     # install from source
     # note that this repo is deprecated and now should use pennylane-lightning
     # but I cannot get that version to compile
@@ -34,6 +36,6 @@ if [ -z $1 ]; then
 fi
 
 # install module 
-${script_dir}/install-module.sh ${install_dir} \
+install_module ${install_dir} \
 ${tool_name} ${tool_ver} \
 "${brief}" "${descrip}"

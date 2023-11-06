@@ -11,10 +11,12 @@
 
 script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 . $script_dir/use-pennylane-source-hip-setonix.sh
+. $script_dir/utils.sh
 
 
 if [ -z $1 ]; then 
     echo "Building ${tool_name}/${tool_ver}"
+    set_dependencies
     # install from source
     git clone https://github.com/PennyLaneAI/pennylane-lightning-kokkos $source_dir
     cd $source_dir
@@ -61,6 +63,6 @@ if [ -z $1 ]; then
 fi
 
 # install module 
-${script_dir}/install-module.sh ${install_dir} \
+install_module ${install_dir} \
 ${tool_name} ${tool_ver} \
 "${brief}" "${descrip}"

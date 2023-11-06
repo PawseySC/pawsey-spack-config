@@ -25,15 +25,19 @@ cython_ver="0.29.32"
 h5py_ver="3.7.0"
 mpi4py_ver="3.1.4-py3.10.10"
 
+cmake_ver="3.24.3"
 
 # load modules
-module load python/$py_ver
-module load py-pip/$pip_ver
-module load py-setuptools/$st_ver
-module load py-numpy/$numpy_ver
-module load py-scipy/$scipy_ver
-module load py-mpi4py/$mpi4py_ver
-module load py-scikit-learn/$scikit_ver
+# load modules
+export dependencies=(\
+cmake/$cmake_ver \
+python/$py_ver \
+py-pip/$pip_ver \
+py-setuptools/$st_ver \
+py-numpy/$numpy_ver \
+py-scipy/$scipy_ver \
+py-scikit-learn/$scikit_ver \
+)
 
 export MODULE_DIR=/software/setonix/2023.08/custom/modules/zen3/gcc/12.2.0/custom
 export MODULE_DIR_CCE=/software/setonix/2023.08/custom/modules/zen3/cce/15.0.1/custom

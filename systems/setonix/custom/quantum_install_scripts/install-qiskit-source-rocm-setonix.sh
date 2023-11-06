@@ -15,6 +15,7 @@ script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # install
 if [ -z $1 ]; then 
     echo "Building ${tool_name}/${tool_ver}"
+    set_dependencies
     git clone https://github.com/Qiskit/qiskit-aer $source_dir
     cd $source_dir
     git checkout $tool_ver
@@ -36,6 +37,6 @@ if [ -z $1 ]; then
 fi
 
 # install module 
-${script_dir}/install-module.sh ${install_dir} \
+install_module ${install_dir} \
 ${tool_name} ${tool_ver} \
 "${brief}" "${descrip}"
