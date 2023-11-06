@@ -4,6 +4,19 @@
 tool_name="qiskit"
 tool_ver="0.13.0"
 
+# description
+brief="Qiskit is open-source software for working with quantum computers at the level of circuits, pulses, and algorithms."
+descrip="Qiskit is open-source software for working with quantum computers at the level of circuits, pulses, and algorithms. \
+The central goal of Qiskit is to build a software stack \
+that makes it easy for anyone to use quantum computers, \
+regardless of their skill level or area of interest; \
+Qiskit allows one to easily design experiments and applications \
+and run them on real quantum computers or classical simulators. \
+Qiskit is already in use around the world by beginners, hobbyists, \
+educators, researchers, and commercial companies. \
+Qiskit-AER is a high performance simulator for quantum circuits that includes noise models."
+
+
 # host versions
 py_ver="3.10.10"
 pip_ver="23.1.2-py3.10.10"

@@ -4,6 +4,13 @@
 # pennylane versions
 tool_name="pennylane"
 tool_ver="0.33.0"
+
+# description
+brief="PennyLane Python library for quantum computers."
+descrip="PennyLane is a cross-platform Python library for \
+differentiable programming of quantum computers. \
+Train a quantum computer the same way as a neural network." 
+
 # host versions
 py_ver="3.10.10"
 pip_ver="23.1.2-py3.10.10"

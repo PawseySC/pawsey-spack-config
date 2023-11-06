@@ -4,6 +4,14 @@
 # pennylane versions
 tool_name="pennylane-lightning-amd-gfx90a"
 tool_ver="0.32.0"
+
+# description
+brief="PennyLane Python library for quantum computers."
+descrip="PennyLane is a cross-platform Python library for \
+differentiable programming of quantum computers. \
+Train a quantum computer the same way as a neural network. \
+This is the GPU-enabled version" 
+
 # host versions
 py_ver="3.10.10"
 pip_ver="23.1.2-py3.10.10"
@@ -21,6 +29,7 @@ mpi4py_ver="3.1.4-py3.10.10"
 
 # gpu
 rocm_ver="5.2.3"
+
 
 
 # load modules
@@ -45,7 +54,7 @@ install_dir="$base_dir/$tool_name/${tool_ver}"
 source_dir="$MYSCRATCH/$tool_name-src/${tool_ver}"
 lib_dir="$install_dir/lib/python${python_ver}/site-packages"
 bin_dir="$install_dir/bin"
-#
+
 export PYTHONPATH="$lib_dir:$PYTHONPATH"
 export PATH="$bin_dir:$PATH"
 
