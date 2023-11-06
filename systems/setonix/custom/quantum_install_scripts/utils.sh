@@ -18,7 +18,6 @@ function install_module()
     local values=("${INSTALL_DIR}" "${NAME}" "${VERSION}" "${BRIEF}" "${DESCRIP}")
     for ((i=0;i<5;i++))
     do
-        echo "${fields[${i}]} ${values[${i}]}"
         sed -i "s:${fields[${i}]}:${values[${i}]}:g" ${modname}
     done
 
