@@ -26,7 +26,7 @@ function install_module()
     local dstring=""
     for d in ${dependencies[@]}
     do
-        dstring+="load(${d})\n"
+        dstring+="load(\"${d}\")\n"
     done
 
     sed -i "s:-- dependencies:${dstring}:g" ${modname}
