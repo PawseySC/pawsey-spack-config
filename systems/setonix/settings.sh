@@ -3,7 +3,7 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2023.10"
+DATE_TAG="2023.11"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
     INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
@@ -90,8 +90,10 @@ dependencies
 env_list="
 utils
 num_libs
+cray_num_libs
 python
 io_libs
+cray_io_libs
 langs
 apps
 devel
