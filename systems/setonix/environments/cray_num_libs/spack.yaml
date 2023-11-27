@@ -12,7 +12,7 @@ spack:
     - boost@1.80.0 +mpi +numpy +python cxxstd=14
     - boost@1.80.0 +mpi +numpy +python cxxstd=98
     - hpx@1.8.1 +async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi 
-      build_type=Release ^boost 
+      build_type=Release ^boost ^netlib-lapack@3.10.1 
     
     # rather silly kokkos has std=98,11, etc setting cxxstd. BUT all other packages 
     # use the flag cxxstd ... Update in recipes might fix this but for the moment, we fix 
@@ -73,7 +73,7 @@ spack:
     - [$petsc-set]
     - ['%cce@15.0.1']
     - [^python@3.10.10 ^fftw@3.3.10 ^netlib-lapack@3.10.1]
-    - [+complex, ~complex]
+    - [~complex] #+complex is throwing this error: unknown type name '__complex128'
     - [+fftw ~trilinos +hwloc +openmp ~cuda]
     - [target=zen3]      
   - matrix:

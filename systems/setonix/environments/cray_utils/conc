@@ -1,0 +1,909 @@
+==> Warning: Failed to initialize repository: '/software/projects/$PAWSEY_PROJECT/$USER/setonix/2023.11/spack_repo'.
+  No repo.yaml found in '/software/projects/$PAWSEY_PROJECT/$USER/setonix/2023.11/spack_repo'
+  To remove the bad repository, run this command:
+      spack repo rm /software/projects/$PAWSEY_PROJECT/$USER/setonix/2023.11/spack_repo
+==> Warning: using "openssl@1.1.1" which is a deprecated version
+==> Warning: using "curl@7.79.1" which is a deprecated version
+==> Warning: using "openssl@1.1.1" which is a deprecated version
+==> Warning: using "curl@7.79.1" which is a deprecated version
+==> Concretized cmake@3.24.3%cce@15.0.1 arch=None-None-zen2
+[+]  vcmkmin  cmake@3.24.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~doc+ncurses+ownlibs~qt build_system=generic build_type=Release arch=linux-sles15-zen2
+[+]  rwzo5l5      ^ncurses@6.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~symlinks+termlib abi=none build_system=autotools arch=linux-sles15-zen2
+[+]  hezphlo          ^pkg-config@0.29.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +internal_glib build_system=autotools arch=linux-sles15-zen2
+[+]  mnmwtss      ^openssl@1.1.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~docs~shared build_system=generic certs=mozilla arch=linux-sles15-zen2
+
+==> Concretized cmake@3.24.3%cce@15.0.1 arch=None-None-zen3
+[+]  dnokv5u  cmake@3.24.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~doc+ncurses+ownlibs~qt build_system=generic build_type=Release arch=linux-sles15-zen3
+[+]  rg2xkx4      ^ncurses@6.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~symlinks+termlib abi=none build_system=autotools arch=linux-sles15-zen3
+[+]  kdu2tar          ^pkg-config@0.29.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +internal_glib build_system=autotools arch=linux-sles15-zen3
+[+]  kyxab3d      ^openssl@1.1.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~docs~shared build_system=generic certs=mozilla arch=linux-sles15-zen3
+
+==> Concretized feh@3.3%cce@15.0.1 arch=None-None-zen2
+ -   zivudf3  feh@3.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile arch=linux-sles15-zen2
+[+]  byyme26      ^curl@7.79.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~gssapi~ldap~libidn2~librtmp~libssh~libssh2~nghttp2 build_system=autotools libs=shared,static tls=openssl arch=linux-sles15-zen2
+[+]  ef2irrt      ^imlib2@1.7.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  tirnnzj          ^bzip2@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~debug~pic+shared build_system=generic arch=linux-sles15-zen2
+[+]  w7e5aae              ^diffutils@3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  pfcpkxt          ^freetype@2.11.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  iicnxe2          ^giflib@5.2.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile patches=5cc0447 arch=linux-sles15-zen2
+[+]  7nruvx5          ^libid3tag@0.15.1b%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=33464d8,43ea3e0,8aa2ef2,f58b782 arch=linux-sles15-zen2
+[+]  jlancum              ^gperf@3.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  gm7yops              ^zlib@1.2.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +optimize+pic+shared build_system=makefile arch=linux-sles15-zen2
+[+]  nil6o62          ^libjpeg-turbo@2.1.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~ipo~jpeg8+shared+static build_system=cmake build_type=Release generator=make arch=linux-sles15-zen2
+[+]  vcmkmin              ^cmake@3.24.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~doc+ncurses+ownlibs~qt build_system=generic build_type=Release arch=linux-sles15-zen2
+[+]  rwzo5l5                  ^ncurses@6.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~symlinks+termlib abi=none build_system=autotools arch=linux-sles15-zen2
+[+]  mnmwtss                  ^openssl@1.1.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~docs~shared build_system=generic certs=mozilla arch=linux-sles15-zen2
+[+]  2tgrwpg              ^gmake@4.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~guile build_system=autotools arch=linux-sles15-zen2
+[+]  lrbitih              ^nasm@2.15.05%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  uwxyyse          ^libpng@1.6.39%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~ipo build_system=cmake build_type=Release generator=make libs=shared,static arch=linux-sles15-zen2
+[+]  wrk4mab          ^libtiff@4.5.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +ccitt~ipo~jbig+jpeg~jpeg12~lerc~libdeflate+logluv~lzma+lzw+next~old-jpeg+packbits~pixarlog+thunder~webp+zlib~zstd build_system=cmake build_type=Release generator=make arch=linux-sles15-zen2
+[+]  nchooih          ^libxext@1.3.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  hezphlo          ^pkg-config@0.29.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +internal_glib build_system=autotools arch=linux-sles15-zen2
+ -   6qyuxh3      ^libexif@0.6.21%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  k47n6eu          ^glib@2.76.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~libmount build_system=generic patches=fa31180 tracing=none arch=linux-sles15-zen2
+[+]  ueuwwe3              ^elfutils@0.189%gcc@12.2.0 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3 -fallow-argument-mismatch" ~debuginfod+nls build_system=autotools arch=linux-sles15-zen2
+[+]  qfa6rfg                  ^m4@1.4.19%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +sigsegv build_system=autotools patches=9dc5fbd,bfdffa7 arch=linux-sles15-zen2
+[+]  nozoodt                      ^libsigsegv@2.14%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  l4ltfjz                  ^xz@5.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~pic build_system=autotools libs=shared,static arch=linux-sles15-zen2
+[+]  ahsren6                  ^zstd@1.5.0%gcc@12.2.0 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3 -fallow-argument-mismatch" ~programs build_system=makefile libs=shared,static arch=linux-sles15-zen2
+[+]  fyanapb              ^gettext@0.21.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bzip2+curses+git~libunistring+libxml2+tar+xz build_system=autotools arch=linux-sles15-zen2
+[+]  eggbxcm                  ^libxml2@2.10.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~python build_system=autotools arch=linux-sles15-zen2
+[+]  y2yzozw                  ^tar@1.30%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools zip=pigz arch=linux-sles15-zen2
+[+]  qjq2fb2                      ^pigz@2.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile arch=linux-sles15-zen2
+[+]  j6iuqtj              ^libffi@3.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=26f26c6 arch=linux-sles15-zen2
+[+]  7gy2yhs              ^libiconv@1.17%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen2
+[+]  nvqumvb              ^meson@1.1.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip patches=0f0b1bd arch=linux-sles15-zen2
+[+]  ri7vmcw                  ^py-pip@23.1.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  3i74w4h                  ^py-setuptools@59.4.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  addoh6t                  ^py-wheel@0.37.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  kmnyqum              ^ninja@1.11.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +re2c build_system=generic arch=linux-sles15-zen2
+[+]  e7ra73r                  ^re2c@2.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  srn5zr7              ^pcre2@10.42%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~jit+multibyte build_system=autotools arch=linux-sles15-zen2
+[+]  ha6ece6              ^perl@5.36.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cpanm+open+shared+threads build_system=generic arch=linux-sles15-zen2
+[+]  z4nlfof                  ^berkeley-db@18.1.40%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx~docs+stl build_system=autotools patches=26090f4,b231fcc arch=linux-sles15-zen2
+[+]  wjqzlz5                  ^gdbm@1.23%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  qz5bwpz              ^python@3.10.10%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bz2+crypt+ctypes+dbm~debug+libxml2+lzma~nis+optimizations+pic+pyexpat+pythoncmd+readline+shared+sqlite3~ssl~tkinter+uuid+zlib build_system=generic patches=0d98e93,7d40923,f2fd060 arch=linux-sles15-zen2
+[+]  jlus2po                  ^expat@2.5.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +libbsd build_system=autotools arch=linux-sles15-zen2
+[+]  qmapfqp                      ^libbsd@0.11.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  ymy4lon                          ^libmd@1.0.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  qdhepl6                  ^libxcrypt@4.4.33%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~obsolete_api build_system=autotools arch=linux-sles15-zen2
+[+]  alaqvlj                  ^readline@8.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=bbf97f1 arch=linux-sles15-zen2
+[+]  wo53cwv                  ^sqlite@3.40.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +column_metadata+dynamic_extensions+fts~functions+rtree build_system=autotools arch=linux-sles15-zen2
+[+]  pmyco3b      ^libxinerama@1.1.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  gcu4oo4          ^libx11@1.8.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  3kftm4x              ^inputproto@2.3.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  ryeq6yj              ^libxcb@1.14%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  aarmnig                  ^libpthread-stubs@0.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  ze24xld                  ^libxau@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  53423p4                  ^libxdmcp@1.1.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  v5avepq                  ^xcb-proto@1.15.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  bibrgns              ^xtrans@1.4.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  i7auxow          ^util-macros@1.19.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  jcqpxpc          ^xextproto@7.3.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  in2xwij          ^xineramaproto@1.2.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  6lbdqjw      ^libxt@1.1.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  mkdz3rb          ^kbproto@1.0.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  w5kl4e5          ^libice@1.0.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  he5goib          ^libsm@1.2.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  bnna6ob              ^util-linux-uuid@2.38.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  cmzwbqr          ^xproto@7.0.31%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+
+==> Concretized feh@3.3%cce@15.0.1 arch=None-None-zen3
+ -   5hg4b7q  feh@3.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile arch=linux-sles15-zen3
+[+]  eg3gd3h      ^curl@7.79.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~gssapi~ldap~libidn2~librtmp~libssh~libssh2~nghttp2 build_system=autotools libs=shared,static tls=openssl arch=linux-sles15-zen3
+[+]  a7bmphj      ^imlib2@1.7.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  rsnymdg          ^bzip2@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~debug~pic+shared build_system=generic arch=linux-sles15-zen3
+[+]  skr73jz              ^diffutils@3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  mwlm2jc          ^freetype@2.11.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  i6lghob          ^giflib@5.2.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile patches=5cc0447 arch=linux-sles15-zen3
+[+]  6wls2ro          ^libid3tag@0.15.1b%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=33464d8,43ea3e0,8aa2ef2,f58b782 arch=linux-sles15-zen3
+[+]  u4i2gyv              ^gperf@3.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  oe7apic              ^zlib@1.2.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +optimize+pic+shared build_system=makefile arch=linux-sles15-zen3
+[+]  zmkzacr          ^libjpeg-turbo@2.1.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~ipo~jpeg8+shared+static build_system=cmake build_type=Release generator=make arch=linux-sles15-zen3
+[+]  dnokv5u              ^cmake@3.24.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~doc+ncurses+ownlibs~qt build_system=generic build_type=Release arch=linux-sles15-zen3
+[+]  rg2xkx4                  ^ncurses@6.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~symlinks+termlib abi=none build_system=autotools arch=linux-sles15-zen3
+[+]  kyxab3d                  ^openssl@1.1.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~docs~shared build_system=generic certs=mozilla arch=linux-sles15-zen3
+[+]  cryipdn              ^gmake@4.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~guile build_system=autotools arch=linux-sles15-zen3
+[+]  qsgfk52              ^nasm@2.15.05%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  3qjan56          ^libpng@1.6.39%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~ipo build_system=cmake build_type=Release generator=make libs=shared,static arch=linux-sles15-zen3
+[+]  kuwdbbu          ^libtiff@4.5.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +ccitt~ipo~jbig+jpeg~jpeg12~lerc~libdeflate+logluv~lzma+lzw+next~old-jpeg+packbits~pixarlog+thunder~webp+zlib~zstd build_system=cmake build_type=Release generator=make arch=linux-sles15-zen3
+[+]  ggtetwk          ^libxext@1.3.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  kdu2tar          ^pkg-config@0.29.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +internal_glib build_system=autotools arch=linux-sles15-zen3
+ -   o2ltrfp      ^libexif@0.6.21%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  k42vutu          ^glib@2.76.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~libmount build_system=generic patches=fa31180 tracing=none arch=linux-sles15-zen3
+[+]  ibn7xkb              ^elfutils@0.189%gcc@12.2.0 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3 -fallow-argument-mismatch" ~debuginfod+nls build_system=autotools arch=linux-sles15-zen3
+[+]  e6enhs5                  ^m4@1.4.19%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +sigsegv build_system=autotools patches=9dc5fbd,bfdffa7 arch=linux-sles15-zen3
+[+]  pzldgd5                      ^libsigsegv@2.14%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  ndwsof4                  ^xz@5.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~pic build_system=autotools libs=shared,static arch=linux-sles15-zen3
+[+]  4ygto32                  ^zstd@1.5.0%gcc@12.2.0 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3 -fallow-argument-mismatch" ~programs build_system=makefile libs=shared,static arch=linux-sles15-zen3
+[+]  zdqdj74              ^gettext@0.21.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bzip2+curses+git~libunistring+libxml2+tar+xz build_system=autotools arch=linux-sles15-zen3
+[+]  erldqy7                  ^libxml2@2.10.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~python build_system=autotools arch=linux-sles15-zen3
+[+]  mh5vjer                  ^tar@1.30%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools zip=pigz arch=linux-sles15-zen3
+[+]  qotilbp                      ^pigz@2.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile arch=linux-sles15-zen3
+[+]  7dqtizk              ^libffi@3.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=26f26c6 arch=linux-sles15-zen3
+[+]  2s5rwge              ^libiconv@1.17%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen3
+[+]  tt6hy5b              ^meson@1.1.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip patches=0f0b1bd arch=linux-sles15-zen3
+[+]  zvzvx6y                  ^py-pip@23.1.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  xuvrcav                  ^py-setuptools@59.4.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  ygjurbr                  ^py-wheel@0.37.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  7zvf3z2              ^ninja@1.11.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +re2c build_system=generic arch=linux-sles15-zen3
+[+]  fec6bkc                  ^re2c@2.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  v3qov67              ^pcre2@10.42%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~jit+multibyte build_system=autotools arch=linux-sles15-zen3
+[+]  frq4tot              ^perl@5.36.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cpanm+open+shared+threads build_system=generic arch=linux-sles15-zen3
+[+]  ynrxrs6                  ^berkeley-db@18.1.40%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx~docs+stl build_system=autotools patches=26090f4,b231fcc arch=linux-sles15-zen3
+[+]  hzryjbm                  ^gdbm@1.23%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  ixw2tfy              ^python@3.10.10%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bz2+crypt+ctypes+dbm~debug+libxml2+lzma~nis+optimizations+pic+pyexpat+pythoncmd+readline+shared+sqlite3~ssl~tkinter+uuid+zlib build_system=generic patches=0d98e93,7d40923,f2fd060 arch=linux-sles15-zen3
+[+]  aepw6pv                  ^expat@2.5.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +libbsd build_system=autotools arch=linux-sles15-zen3
+[+]  5mmqbf7                      ^libbsd@0.11.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  jv432ky                          ^libmd@1.0.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  l23r7k2                  ^libxcrypt@4.4.33%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~obsolete_api build_system=autotools arch=linux-sles15-zen3
+[+]  bbkcams                  ^readline@8.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=bbf97f1 arch=linux-sles15-zen3
+[+]  bbwoqq3                  ^sqlite@3.40.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +column_metadata+dynamic_extensions+fts~functions+rtree build_system=autotools arch=linux-sles15-zen3
+[+]  mtnricd      ^libxinerama@1.1.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  tvjjh64          ^libx11@1.8.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  klkrc3h              ^inputproto@2.3.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  jtbzxbl              ^libxcb@1.14%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  t2azphl                  ^libpthread-stubs@0.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  o5gwsk3                  ^libxau@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  wpdofsi                  ^libxdmcp@1.1.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  vlndv2i                  ^xcb-proto@1.15.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  wrjwcsv              ^xtrans@1.4.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  xqqor6y          ^util-macros@1.19.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  xyzrxwe          ^xextproto@7.3.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  4au27rx          ^xineramaproto@1.2.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  svfmtxt      ^libxt@1.1.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  uskhtqi          ^kbproto@1.0.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  bmmprmf          ^libice@1.0.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  s3s7k7e          ^libsm@1.2.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  sfrrsmf              ^util-linux-uuid@2.38.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  yfeuqjg          ^xproto@7.0.31%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+
+==> Concretized ffmpeg@4.4%cce@15.0.1+avresample arch=None-None-zen2
+[+]  udbv7i4  ffmpeg@4.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~X+avresample+bzlib~drawtext+gpl~libaom~libmp3lame~libopenjpeg~libopus~libsnappy~libspeex~libssh~libvorbis~libvpx~libwebp~libx264~libxml2~libzmq~lzma~nonfree~openssl~sdl2+shared+version3 build_system=autotools arch=linux-sles15-zen2
+[+]  7rstcru      ^alsa-lib@1.2.3.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~python build_system=autotools arch=linux-sles15-zen2
+[+]  tirnnzj      ^bzip2@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~debug~pic+shared build_system=generic arch=linux-sles15-zen2
+[+]  w7e5aae          ^diffutils@3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  7gy2yhs      ^libiconv@1.17%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen2
+[+]  crxdhlt      ^yasm@1.3.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  gm7yops      ^zlib@1.2.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +optimize+pic+shared build_system=makefile arch=linux-sles15-zen2
+
+==> Concretized ffmpeg@4.4%cce@15.0.1+avresample arch=None-None-zen3
+[+]  3fx76rc  ffmpeg@4.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~X+avresample+bzlib~drawtext+gpl~libaom~libmp3lame~libopenjpeg~libopus~libsnappy~libspeex~libssh~libvorbis~libvpx~libwebp~libx264~libxml2~libzmq~lzma~nonfree~openssl~sdl2+shared+version3 build_system=autotools arch=linux-sles15-zen3
+[+]  hbztszt      ^alsa-lib@1.2.3.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~python build_system=autotools arch=linux-sles15-zen3
+[+]  rsnymdg      ^bzip2@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~debug~pic+shared build_system=generic arch=linux-sles15-zen3
+[+]  skr73jz          ^diffutils@3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  2s5rwge      ^libiconv@1.17%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen3
+[+]  5mgvbph      ^yasm@1.3.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  oe7apic      ^zlib@1.2.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +optimize+pic+shared build_system=makefile arch=linux-sles15-zen3
+
+==> Concretized gnuplot@5.4.2%cce@15.0.1+X arch=None-None-zen2 ^python@3.10.10+optimizations+zlib
+ -   xdrpxo4  gnuplot@5.4.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +X+cairo+gd+libcerf~pbm~qt+readline~wx build_system=autotools patches=ad89f23 arch=linux-sles15-zen2
+ -   i356gzx      ^cairo@1.16.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~X+fc+ft+gobject+pdf~png~svg build_system=autotools patches=7c4da77 arch=linux-sles15-zen2
+[+]  iuvnmyt          ^autoconf@2.69%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=35c4492,7793209,a49dd5b arch=linux-sles15-zen2
+[+]  ucv3hqe          ^automake@1.16.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  qmul4go          ^fontconfig@2.14.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  m2qzm36              ^font-util@1.4.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools fonts=encodings,font-adobe-100dpi,font-adobe-75dpi,font-adobe-utopia-100dpi,font-adobe-utopia-75dpi,font-adobe-utopia-type1,font-alias,font-arabic-misc,font-bh-100dpi,font-bh-75dpi,font-bh-lucidatypewriter-100dpi,font-bh-lucidatypewriter-75dpi,font-bh-type1,font-bitstream-100dpi,font-bitstream-75dpi,font-bitstream-speedo,font-bitstream-type1,font-cronyx-cyrillic,font-cursor-misc,font-daewoo-misc,font-dec-misc,font-ibm-type1,font-isas-misc,font-jis-misc,font-micro-misc,font-misc-cyrillic,font-misc-ethiopic,font-misc-meltho,font-misc-misc,font-mutt-misc,font-schumacher-misc,font-screen-cyrillic,font-sun-misc,font-winitzki-cyrillic,font-xfree86-type1 arch=linux-sles15-zen2
+[+]  wmfzmdo                  ^bdftopcf@1.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  7qfqhvw                      ^fontsproto@2.1.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  ct3qss5                      ^libxfont@1.5.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  6xytzq6                  ^mkfontdir@1.0.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  blodu7w                  ^mkfontscale@1.2.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  fynwsih                      ^libfontenc@1.1.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  jlancum              ^gperf@3.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  eggbxcm              ^libxml2@2.10.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~python build_system=autotools arch=linux-sles15-zen2
+[+]  qz5bwpz              ^python@3.10.10%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bz2+crypt+ctypes+dbm~debug+libxml2+lzma~nis+optimizations+pic+pyexpat+pythoncmd+readline+shared+sqlite3~ssl~tkinter+uuid+zlib build_system=generic patches=0d98e93,7d40923,f2fd060 arch=linux-sles15-zen2
+[+]  jlus2po                  ^expat@2.5.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +libbsd build_system=autotools arch=linux-sles15-zen2
+[+]  qdhepl6                  ^libxcrypt@4.4.33%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~obsolete_api build_system=autotools arch=linux-sles15-zen2
+[+]  wo53cwv                  ^sqlite@3.40.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +column_metadata+dynamic_extensions+fts~functions+rtree build_system=autotools arch=linux-sles15-zen2
+[+]  bnna6ob              ^util-linux-uuid@2.38.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  pfcpkxt          ^freetype@2.11.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  tirnnzj              ^bzip2@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~debug~pic+shared build_system=generic arch=linux-sles15-zen2
+[+]  k47n6eu          ^glib@2.76.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~libmount build_system=generic patches=fa31180 tracing=none arch=linux-sles15-zen2
+[+]  ueuwwe3              ^elfutils@0.189%gcc@12.2.0 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3 -fallow-argument-mismatch" ~debuginfod+nls build_system=autotools arch=linux-sles15-zen2
+[+]  ahsren6                  ^zstd@1.5.0%gcc@12.2.0 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3 -fallow-argument-mismatch" ~programs build_system=makefile libs=shared,static arch=linux-sles15-zen2
+[+]  srn5zr7              ^pcre2@10.42%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~jit+multibyte build_system=autotools arch=linux-sles15-zen2
+[+]  gm7yops              ^zlib@1.2.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +optimize+pic+shared build_system=makefile arch=linux-sles15-zen2
+[+]  ax2z2pn          ^libtool@2.4.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  qfa6rfg          ^m4@1.4.19%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +sigsegv build_system=autotools patches=9dc5fbd,bfdffa7 arch=linux-sles15-zen2
+[+]  w7e5aae              ^diffutils@3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  nozoodt              ^libsigsegv@2.14%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  3pxkwqr          ^pixman@0.42.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  eop3vjs              ^bison@3.8.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  cxptce6              ^flex@2.6.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +lex~nls build_system=autotools arch=linux-sles15-zen2
+[+]  ffmoprx                  ^findutils@4.9.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=440b954 arch=linux-sles15-zen2
+[+]  uq7cvhw          ^which@2.21%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  vmutsct      ^libcerf@1.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  jzqwhba      ^libgd@2.2.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  fyanapb          ^gettext@0.21.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bzip2+curses+git~libunistring+libxml2+tar+xz build_system=autotools arch=linux-sles15-zen2
+[+]  y2yzozw              ^tar@1.30%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools zip=pigz arch=linux-sles15-zen2
+[+]  qjq2fb2                  ^pigz@2.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile arch=linux-sles15-zen2
+[+]  l4ltfjz              ^xz@5.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~pic build_system=autotools libs=shared,static arch=linux-sles15-zen2
+[+]  nil6o62          ^libjpeg-turbo@2.1.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~ipo~jpeg8+shared+static build_system=cmake build_type=Release generator=make arch=linux-sles15-zen2
+[+]  vcmkmin              ^cmake@3.24.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~doc+ncurses+ownlibs~qt build_system=generic build_type=Release arch=linux-sles15-zen2
+[+]  mnmwtss                  ^openssl@1.1.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~docs~shared build_system=generic certs=mozilla arch=linux-sles15-zen2
+[+]  2tgrwpg              ^gmake@4.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~guile build_system=autotools arch=linux-sles15-zen2
+[+]  lrbitih              ^nasm@2.15.05%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  uwxyyse          ^libpng@1.6.39%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~ipo build_system=cmake build_type=Release generator=make libs=shared,static arch=linux-sles15-zen2
+[+]  wrk4mab          ^libtiff@4.5.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +ccitt~ipo~jbig+jpeg~jpeg12~lerc~libdeflate+logluv~lzma+lzw+next~old-jpeg+packbits~pixarlog+thunder~webp+zlib~zstd build_system=cmake build_type=Release generator=make arch=linux-sles15-zen2
+[+]  7gy2yhs      ^libiconv@1.17%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen2
+[+]  gcu4oo4      ^libx11@1.8.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  3kftm4x          ^inputproto@2.3.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  mkdz3rb          ^kbproto@1.0.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  ryeq6yj          ^libxcb@1.14%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  aarmnig              ^libpthread-stubs@0.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  ze24xld              ^libxau@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  53423p4              ^libxdmcp@1.1.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  qmapfqp                  ^libbsd@0.11.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  ymy4lon                      ^libmd@1.0.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  v5avepq              ^xcb-proto@1.15.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  ha6ece6          ^perl@5.36.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cpanm+open+shared+threads build_system=generic arch=linux-sles15-zen2
+[+]  z4nlfof              ^berkeley-db@18.1.40%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx~docs+stl build_system=autotools patches=26090f4,b231fcc arch=linux-sles15-zen2
+[+]  wjqzlz5              ^gdbm@1.23%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  i7auxow          ^util-macros@1.19.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  jcqpxpc          ^xextproto@7.3.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  cmzwbqr          ^xproto@7.0.31%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  bibrgns          ^xtrans@1.4.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  4psf64s      ^libxpm@3.5.12%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+ -   lllv5ug      ^pango@1.50.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~X~strip build_system=meson buildtype=release default_library=shared arch=linux-sles15-zen2
+[+]  opwekss          ^fribidi@1.0.12%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+ -   llnr3xt          ^gobject-introspection@1.72.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~strip build_system=meson buildtype=release default_library=shared arch=linux-sles15-zen2
+ -   opuxv2z          ^harfbuzz@5.3.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~graphite2~strip build_system=meson buildtype=release default_library=shared arch=linux-sles15-zen2
+[+]  r3aejoq              ^icu4c@67.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools cxxstd=11 arch=linux-sles15-zen2
+ -   yrl223k          ^json-glib@1.6.6%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~strip build_system=meson buildtype=release default_library=shared arch=linux-sles15-zen2
+[+]  j6iuqtj          ^libffi@3.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=26f26c6 arch=linux-sles15-zen2
+[+]  nvqumvb          ^meson@1.1.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip patches=0f0b1bd arch=linux-sles15-zen2
+[+]  ri7vmcw              ^py-pip@23.1.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  3i74w4h              ^py-setuptools@59.4.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  addoh6t              ^py-wheel@0.37.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  kmnyqum          ^ninja@1.11.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +re2c build_system=generic arch=linux-sles15-zen2
+[+]  e7ra73r              ^re2c@2.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  hezphlo      ^pkg-config@0.29.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +internal_glib build_system=autotools arch=linux-sles15-zen2
+[+]  alaqvlj      ^readline@8.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=bbf97f1 arch=linux-sles15-zen2
+[+]  rwzo5l5          ^ncurses@6.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~symlinks+termlib abi=none build_system=autotools arch=linux-sles15-zen2
+
+==> Concretized gnuplot@5.4.2%cce@15.0.1+X arch=None-None-zen3 ^python@3.10.10+optimizations+zlib
+ -   7bowoa2  gnuplot@5.4.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +X+cairo+gd+libcerf~pbm~qt+readline~wx build_system=autotools patches=ad89f23 arch=linux-sles15-zen3
+ -   neer6ro      ^cairo@1.16.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~X+fc+ft+gobject+pdf~png~svg build_system=autotools patches=7c4da77 arch=linux-sles15-zen3
+[+]  dyovaou          ^autoconf@2.69%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=35c4492,7793209,a49dd5b arch=linux-sles15-zen3
+[+]  x3gsbet          ^automake@1.16.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  373y3z3          ^fontconfig@2.14.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  zpbzmmd              ^font-util@1.4.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools fonts=encodings,font-adobe-100dpi,font-adobe-75dpi,font-adobe-utopia-100dpi,font-adobe-utopia-75dpi,font-adobe-utopia-type1,font-alias,font-arabic-misc,font-bh-100dpi,font-bh-75dpi,font-bh-lucidatypewriter-100dpi,font-bh-lucidatypewriter-75dpi,font-bh-type1,font-bitstream-100dpi,font-bitstream-75dpi,font-bitstream-speedo,font-bitstream-type1,font-cronyx-cyrillic,font-cursor-misc,font-daewoo-misc,font-dec-misc,font-ibm-type1,font-isas-misc,font-jis-misc,font-micro-misc,font-misc-cyrillic,font-misc-ethiopic,font-misc-meltho,font-misc-misc,font-mutt-misc,font-schumacher-misc,font-screen-cyrillic,font-sun-misc,font-winitzki-cyrillic,font-xfree86-type1 arch=linux-sles15-zen3
+[+]  z5plwpc                  ^bdftopcf@1.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  y5lnae7                      ^fontsproto@2.1.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  udaze6h                      ^libxfont@1.5.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  ydlqeoo                  ^mkfontdir@1.0.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  bnm2jfl                  ^mkfontscale@1.2.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  mzzxtzj                      ^libfontenc@1.1.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  u4i2gyv              ^gperf@3.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  erldqy7              ^libxml2@2.10.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~python build_system=autotools arch=linux-sles15-zen3
+[+]  ixw2tfy              ^python@3.10.10%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bz2+crypt+ctypes+dbm~debug+libxml2+lzma~nis+optimizations+pic+pyexpat+pythoncmd+readline+shared+sqlite3~ssl~tkinter+uuid+zlib build_system=generic patches=0d98e93,7d40923,f2fd060 arch=linux-sles15-zen3
+[+]  aepw6pv                  ^expat@2.5.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +libbsd build_system=autotools arch=linux-sles15-zen3
+[+]  l23r7k2                  ^libxcrypt@4.4.33%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~obsolete_api build_system=autotools arch=linux-sles15-zen3
+[+]  bbwoqq3                  ^sqlite@3.40.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +column_metadata+dynamic_extensions+fts~functions+rtree build_system=autotools arch=linux-sles15-zen3
+[+]  sfrrsmf              ^util-linux-uuid@2.38.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  mwlm2jc          ^freetype@2.11.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  rsnymdg              ^bzip2@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~debug~pic+shared build_system=generic arch=linux-sles15-zen3
+[+]  k42vutu          ^glib@2.76.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~libmount build_system=generic patches=fa31180 tracing=none arch=linux-sles15-zen3
+[+]  ibn7xkb              ^elfutils@0.189%gcc@12.2.0 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3 -fallow-argument-mismatch" ~debuginfod+nls build_system=autotools arch=linux-sles15-zen3
+[+]  4ygto32                  ^zstd@1.5.0%gcc@12.2.0 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3 -fallow-argument-mismatch" ~programs build_system=makefile libs=shared,static arch=linux-sles15-zen3
+[+]  v3qov67              ^pcre2@10.42%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~jit+multibyte build_system=autotools arch=linux-sles15-zen3
+[+]  oe7apic              ^zlib@1.2.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +optimize+pic+shared build_system=makefile arch=linux-sles15-zen3
+[+]  qsnsiaq          ^libtool@2.4.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  e6enhs5          ^m4@1.4.19%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +sigsegv build_system=autotools patches=9dc5fbd,bfdffa7 arch=linux-sles15-zen3
+[+]  skr73jz              ^diffutils@3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  pzldgd5              ^libsigsegv@2.14%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  ma6xmkm          ^pixman@0.42.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  ov4cqeu              ^bison@3.8.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  ht5b4kz              ^flex@2.6.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +lex~nls build_system=autotools arch=linux-sles15-zen3
+[+]  fjx6cr6                  ^findutils@4.9.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=440b954 arch=linux-sles15-zen3
+[+]  zb2toay          ^which@2.21%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  n73uvxf      ^libcerf@1.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  d2zg72d      ^libgd@2.2.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  zdqdj74          ^gettext@0.21.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bzip2+curses+git~libunistring+libxml2+tar+xz build_system=autotools arch=linux-sles15-zen3
+[+]  mh5vjer              ^tar@1.30%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools zip=pigz arch=linux-sles15-zen3
+[+]  qotilbp                  ^pigz@2.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile arch=linux-sles15-zen3
+[+]  ndwsof4              ^xz@5.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~pic build_system=autotools libs=shared,static arch=linux-sles15-zen3
+[+]  zmkzacr          ^libjpeg-turbo@2.1.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~ipo~jpeg8+shared+static build_system=cmake build_type=Release generator=make arch=linux-sles15-zen3
+[+]  dnokv5u              ^cmake@3.24.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~doc+ncurses+ownlibs~qt build_system=generic build_type=Release arch=linux-sles15-zen3
+[+]  kyxab3d                  ^openssl@1.1.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~docs~shared build_system=generic certs=mozilla arch=linux-sles15-zen3
+[+]  cryipdn              ^gmake@4.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~guile build_system=autotools arch=linux-sles15-zen3
+[+]  qsgfk52              ^nasm@2.15.05%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  3qjan56          ^libpng@1.6.39%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~ipo build_system=cmake build_type=Release generator=make libs=shared,static arch=linux-sles15-zen3
+[+]  kuwdbbu          ^libtiff@4.5.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +ccitt~ipo~jbig+jpeg~jpeg12~lerc~libdeflate+logluv~lzma+lzw+next~old-jpeg+packbits~pixarlog+thunder~webp+zlib~zstd build_system=cmake build_type=Release generator=make arch=linux-sles15-zen3
+[+]  2s5rwge      ^libiconv@1.17%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen3
+[+]  tvjjh64      ^libx11@1.8.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  klkrc3h          ^inputproto@2.3.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  uskhtqi          ^kbproto@1.0.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  jtbzxbl          ^libxcb@1.14%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  t2azphl              ^libpthread-stubs@0.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  o5gwsk3              ^libxau@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  wpdofsi              ^libxdmcp@1.1.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  5mmqbf7                  ^libbsd@0.11.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  jv432ky                      ^libmd@1.0.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  vlndv2i              ^xcb-proto@1.15.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  frq4tot          ^perl@5.36.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cpanm+open+shared+threads build_system=generic arch=linux-sles15-zen3
+[+]  ynrxrs6              ^berkeley-db@18.1.40%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx~docs+stl build_system=autotools patches=26090f4,b231fcc arch=linux-sles15-zen3
+[+]  hzryjbm              ^gdbm@1.23%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  xqqor6y          ^util-macros@1.19.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  xyzrxwe          ^xextproto@7.3.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  yfeuqjg          ^xproto@7.0.31%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  wrjwcsv          ^xtrans@1.4.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  j2aqx45      ^libxpm@3.5.12%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+ -   3uhqj7a      ^pango@1.50.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~X~strip build_system=meson buildtype=release default_library=shared arch=linux-sles15-zen3
+[+]  vpinlww          ^fribidi@1.0.12%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+ -   gebdsvw          ^gobject-introspection@1.72.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~strip build_system=meson buildtype=release default_library=shared arch=linux-sles15-zen3
+ -   ol4yiyt          ^harfbuzz@5.3.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~graphite2~strip build_system=meson buildtype=release default_library=shared arch=linux-sles15-zen3
+[+]  jheaaj3              ^icu4c@67.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools cxxstd=11 arch=linux-sles15-zen3
+ -   gaxnayx          ^json-glib@1.6.6%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~strip build_system=meson buildtype=release default_library=shared arch=linux-sles15-zen3
+[+]  7dqtizk          ^libffi@3.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=26f26c6 arch=linux-sles15-zen3
+[+]  tt6hy5b          ^meson@1.1.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip patches=0f0b1bd arch=linux-sles15-zen3
+[+]  zvzvx6y              ^py-pip@23.1.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  xuvrcav              ^py-setuptools@59.4.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  ygjurbr              ^py-wheel@0.37.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  7zvf3z2          ^ninja@1.11.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +re2c build_system=generic arch=linux-sles15-zen3
+[+]  fec6bkc              ^re2c@2.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  kdu2tar      ^pkg-config@0.29.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +internal_glib build_system=autotools arch=linux-sles15-zen3
+[+]  bbkcams      ^readline@8.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=bbf97f1 arch=linux-sles15-zen3
+[+]  rg2xkx4          ^ncurses@6.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~symlinks+termlib abi=none build_system=autotools arch=linux-sles15-zen3
+
+==> Concretized mpifileutils@0.11.1%cce@15.0.1+lustre arch=None-None-zen2
+[+]  6soby74  mpifileutils@0.11.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~experimental~gpfs+lustre+xattr build_system=generic arch=linux-sles15-zen2
+[+]  pm7bhpm      ^attr@2.4.48%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  tirnnzj      ^bzip2@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~debug~pic+shared build_system=generic arch=linux-sles15-zen2
+[+]  w7e5aae          ^diffutils@3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  vcmkmin      ^cmake@3.24.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~doc+ncurses+ownlibs~qt build_system=generic build_type=Release arch=linux-sles15-zen2
+[+]  rwzo5l5          ^ncurses@6.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~symlinks+termlib abi=none build_system=autotools arch=linux-sles15-zen2
+[+]  w5tb6gt      ^cray-mpich@8.1.25%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +wrappers build_system=generic arch=linux-sles15-zen2
+[+]  7uvw5hp      ^dtcmp@1.1.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +shared build_system=autotools arch=linux-sles15-zen2
+[+]  yci4bor          ^lwgrp@1.0.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +shared build_system=autotools arch=linux-sles15-zen2
+[+]  mczbs2j      ^libarchive@3.6.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +iconv build_system=autotools compression=bz2lib,lz4,lzma,lzo2,zlib crypto=mbedtls libs=shared,static programs=none xar=libxml2 arch=linux-sles15-zen2
+[+]  7gy2yhs          ^libiconv@1.17%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen2
+[+]  eggbxcm          ^libxml2@2.10.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~python build_system=autotools arch=linux-sles15-zen2
+[+]  45qjy5g          ^lz4@1.9.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile libs=shared,static arch=linux-sles15-zen2
+[+]  2es2joc          ^lzo@2.10%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen2
+[+]  r2efjv6          ^mbedtls@2.28.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +pic build_system=makefile build_type=Release libs=static arch=linux-sles15-zen2
+[+]  l4ltfjz          ^xz@5.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~pic build_system=autotools libs=shared,static arch=linux-sles15-zen2
+[+]  gm7yops          ^zlib@1.2.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +optimize+pic+shared build_system=makefile arch=linux-sles15-zen2
+[+]  qgzx3ln      ^libcap@2.68%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile arch=linux-sles15-zen2
+[+]  3h6uy2d      ^libcircle@0.3.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=fd725f5 arch=linux-sles15-zen2
+[+]  iuvnmyt          ^autoconf@2.69%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=35c4492,7793209,a49dd5b arch=linux-sles15-zen2
+[+]  qfa6rfg              ^m4@1.4.19%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +sigsegv build_system=autotools patches=9dc5fbd,bfdffa7 arch=linux-sles15-zen2
+[+]  nozoodt                  ^libsigsegv@2.14%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  ha6ece6              ^perl@5.36.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cpanm+open+shared+threads build_system=generic arch=linux-sles15-zen2
+[+]  z4nlfof                  ^berkeley-db@18.1.40%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx~docs+stl build_system=autotools patches=26090f4,b231fcc arch=linux-sles15-zen2
+[+]  wjqzlz5                  ^gdbm@1.23%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  alaqvlj                      ^readline@8.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=bbf97f1 arch=linux-sles15-zen2
+[+]  ucv3hqe          ^automake@1.16.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  ublny3y          ^libpciaccess@0.17%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  i7auxow              ^util-macros@1.19.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  ax2z2pn          ^libtool@2.4.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  hezphlo          ^pkg-config@0.29.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +internal_glib build_system=autotools arch=linux-sles15-zen2
+[+]  mnmwtss      ^openssl@1.1.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~docs~shared build_system=generic certs=mozilla arch=linux-sles15-zen2
+
+==> Concretized mpifileutils@0.11.1%cce@15.0.1+lustre arch=None-None-zen3
+[+]  ipuxbbd  mpifileutils@0.11.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~experimental~gpfs+lustre+xattr build_system=generic arch=linux-sles15-zen3
+[+]  byfmd72      ^attr@2.4.48%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  rsnymdg      ^bzip2@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~debug~pic+shared build_system=generic arch=linux-sles15-zen3
+[+]  skr73jz          ^diffutils@3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  dnokv5u      ^cmake@3.24.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~doc+ncurses+ownlibs~qt build_system=generic build_type=Release arch=linux-sles15-zen3
+[+]  rg2xkx4          ^ncurses@6.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~symlinks+termlib abi=none build_system=autotools arch=linux-sles15-zen3
+[+]  jfzv6s6      ^cray-mpich@8.1.25%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +wrappers build_system=generic arch=linux-sles15-zen3
+[+]  azv2ypn      ^dtcmp@1.1.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +shared build_system=autotools arch=linux-sles15-zen3
+[+]  2uop67r          ^lwgrp@1.0.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +shared build_system=autotools arch=linux-sles15-zen3
+[+]  ynsrpwd      ^libarchive@3.6.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +iconv build_system=autotools compression=bz2lib,lz4,lzma,lzo2,zlib crypto=mbedtls libs=shared,static programs=none xar=libxml2 arch=linux-sles15-zen3
+[+]  2s5rwge          ^libiconv@1.17%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen3
+[+]  erldqy7          ^libxml2@2.10.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~python build_system=autotools arch=linux-sles15-zen3
+[+]  sn2pe6i          ^lz4@1.9.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile libs=shared,static arch=linux-sles15-zen3
+[+]  xjph37b          ^lzo@2.10%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen3
+[+]  yvjh77t          ^mbedtls@2.28.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +pic build_system=makefile build_type=Release libs=static arch=linux-sles15-zen3
+[+]  ndwsof4          ^xz@5.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~pic build_system=autotools libs=shared,static arch=linux-sles15-zen3
+[+]  oe7apic          ^zlib@1.2.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +optimize+pic+shared build_system=makefile arch=linux-sles15-zen3
+[+]  vffcqip      ^libcap@2.68%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile arch=linux-sles15-zen3
+[+]  iaaqhpy      ^libcircle@0.3.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=fd725f5 arch=linux-sles15-zen3
+[+]  dyovaou          ^autoconf@2.69%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=35c4492,7793209,a49dd5b arch=linux-sles15-zen3
+[+]  e6enhs5              ^m4@1.4.19%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +sigsegv build_system=autotools patches=9dc5fbd,bfdffa7 arch=linux-sles15-zen3
+[+]  pzldgd5                  ^libsigsegv@2.14%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  frq4tot              ^perl@5.36.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cpanm+open+shared+threads build_system=generic arch=linux-sles15-zen3
+[+]  ynrxrs6                  ^berkeley-db@18.1.40%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx~docs+stl build_system=autotools patches=26090f4,b231fcc arch=linux-sles15-zen3
+[+]  hzryjbm                  ^gdbm@1.23%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  bbkcams                      ^readline@8.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=bbf97f1 arch=linux-sles15-zen3
+[+]  x3gsbet          ^automake@1.16.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  633dgvr          ^libpciaccess@0.17%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  xqqor6y              ^util-macros@1.19.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  qsnsiaq          ^libtool@2.4.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  kdu2tar          ^pkg-config@0.29.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +internal_glib build_system=autotools arch=linux-sles15-zen3
+[+]  kyxab3d      ^openssl@1.1.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~docs~shared build_system=generic certs=mozilla arch=linux-sles15-zen3
+
+==> Concretized nano@6.3%cce@15.0.1 arch=None-None-zen2
+[+]  kique3j  nano@6.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  rwzo5l5      ^ncurses@6.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~symlinks+termlib abi=none build_system=autotools arch=linux-sles15-zen2
+[+]  hezphlo          ^pkg-config@0.29.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +internal_glib build_system=autotools arch=linux-sles15-zen2
+
+==> Concretized nano@6.3%cce@15.0.1 arch=None-None-zen3
+[+]  yehid26  nano@6.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  rg2xkx4      ^ncurses@6.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~symlinks+termlib abi=none build_system=autotools arch=linux-sles15-zen3
+[+]  kdu2tar          ^pkg-config@0.29.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +internal_glib build_system=autotools arch=linux-sles15-zen3
+
+==> Concretized nextflow@22.10.0%cce@15.0.1 arch=None-None-zen2
+[+]  z6dtnme  nextflow@22.10.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  uxa33iu      ^openjdk@17.0.5_8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+
+==> Concretized nextflow@22.10.0%cce@15.0.1 arch=None-None-zen3
+[+]  l6srvg2  nextflow@22.10.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  qplbvos      ^openjdk@17.0.5_8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+
+==> Concretized nextflow@23.04.3%cce@15.0.1 arch=None-None-zen2
+[+]  h7nwapm  nextflow@23.04.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  uxa33iu      ^openjdk@17.0.5_8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+
+==> Concretized nextflow@23.04.3%cce@15.0.1 arch=None-None-zen3
+[+]  vezarog  nextflow@23.04.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  qplbvos      ^openjdk@17.0.5_8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+
+==> Concretized parallel@20220522%cce@15.0.1 arch=None-None-zen2
+[+]  nr67taq  parallel@20220522%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  ha6ece6      ^perl@5.36.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cpanm+open+shared+threads build_system=generic arch=linux-sles15-zen2
+[+]  z4nlfof          ^berkeley-db@18.1.40%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx~docs+stl build_system=autotools patches=26090f4,b231fcc arch=linux-sles15-zen2
+[+]  tirnnzj          ^bzip2@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~debug~pic+shared build_system=generic arch=linux-sles15-zen2
+[+]  w7e5aae              ^diffutils@3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  7gy2yhs                  ^libiconv@1.17%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen2
+[+]  wjqzlz5          ^gdbm@1.23%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  alaqvlj              ^readline@8.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=bbf97f1 arch=linux-sles15-zen2
+[+]  rwzo5l5                  ^ncurses@6.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~symlinks+termlib abi=none build_system=autotools arch=linux-sles15-zen2
+[+]  hezphlo                      ^pkg-config@0.29.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +internal_glib build_system=autotools arch=linux-sles15-zen2
+[+]  gm7yops          ^zlib@1.2.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +optimize+pic+shared build_system=makefile arch=linux-sles15-zen2
+
+==> Concretized parallel@20220522%cce@15.0.1 arch=None-None-zen3
+[+]  m7rzwgf  parallel@20220522%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  frq4tot      ^perl@5.36.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cpanm+open+shared+threads build_system=generic arch=linux-sles15-zen3
+[+]  ynrxrs6          ^berkeley-db@18.1.40%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx~docs+stl build_system=autotools patches=26090f4,b231fcc arch=linux-sles15-zen3
+[+]  rsnymdg          ^bzip2@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~debug~pic+shared build_system=generic arch=linux-sles15-zen3
+[+]  skr73jz              ^diffutils@3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  2s5rwge                  ^libiconv@1.17%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen3
+[+]  hzryjbm          ^gdbm@1.23%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  bbkcams              ^readline@8.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=bbf97f1 arch=linux-sles15-zen3
+[+]  rg2xkx4                  ^ncurses@6.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~symlinks+termlib abi=none build_system=autotools arch=linux-sles15-zen3
+[+]  kdu2tar                      ^pkg-config@0.29.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +internal_glib build_system=autotools arch=linux-sles15-zen3
+[+]  oe7apic          ^zlib@1.2.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +optimize+pic+shared build_system=makefile arch=linux-sles15-zen3
+
+==> Concretized reframe@3.10.1%cce@15.0.1 arch=None-None-zen2 ^python@3.10.10+optimizations+zlib
+ -   spp2bzl  reframe@3.10.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~docs~gelf build_system=generic arch=linux-sles15-zen2
+[+]  ciac5ve      ^py-archspec@0.1.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  bprfz27          ^py-click@7.1.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  ri7vmcw          ^py-pip@23.1.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  znktedk          ^py-poetry-core@1.2.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  poeljzb          ^py-six@1.16.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  addoh6t          ^py-wheel@0.37.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  4mrrmum      ^py-argcomplete@2.0.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+ -   wfp5y3l      ^py-jsonschema@4.17.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  xyqcblv          ^py-attrs@22.2.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+ -   pohezax          ^py-hatch-fancy-pypi-readme@22.7.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  cncv6rp              ^py-tomli@2.0.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+ -   3irmjq3          ^py-hatch-vcs@0.3.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  3q326nu              ^py-setuptools-scm@7.0.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +toml build_system=python_pip arch=linux-sles15-zen2
+[+]  pa7dm6h                  ^py-typing-extensions@4.5.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+ -   f4ln657          ^py-hatchling@1.14.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  tmgyh77              ^py-editables@0.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  jsli3a7              ^py-packaging@23.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  6luacwc              ^py-pathspec@0.11.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+ -   zsh5rui              ^py-pluggy@1.0.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  wojvrf3              ^py-trove-classifiers@2023.3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  t2htuw5                  ^py-calver@2022.6.26%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  gm3r5w5          ^py-pyrsistent@0.19.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+ -   e6phhs4      ^py-lxml@4.9.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~cssselect~html5~htmlsoup build_system=python_pip arch=linux-sles15-zen2
+[+]  eggbxcm          ^libxml2@2.10.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~python build_system=autotools arch=linux-sles15-zen2
+[+]  7gy2yhs              ^libiconv@1.17%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen2
+[+]  xo22273          ^libxslt@1.1.33%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +crypto~python build_system=autotools arch=linux-sles15-zen2
+[+]  aum4v5v              ^libgcrypt@1.10.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  edb7g6t                  ^libgpg-error@1.47%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  cs5c6at                      ^gawk@5.2.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~nls build_system=autotools arch=linux-sles15-zen2
+[+]  qan4eiq                          ^gmp@6.2.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx build_system=autotools libs=shared,static patches=69ad2e2 arch=linux-sles15-zen2
+[+]  iuvnmyt                              ^autoconf@2.69%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=35c4492,7793209,a49dd5b arch=linux-sles15-zen2
+[+]  ucv3hqe                              ^automake@1.16.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  ax2z2pn                              ^libtool@2.4.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  qfa6rfg                              ^m4@1.4.19%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +sigsegv build_system=autotools patches=9dc5fbd,bfdffa7 arch=linux-sles15-zen2
+[+]  nozoodt                          ^libsigsegv@2.14%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  37vh774                          ^mpfr@4.2.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen2
+[+]  ifgzcnk                              ^autoconf-archive@2023.02.20%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  4d7wgew                              ^texinfo@7.0.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  zyqt6vj      ^py-pyyaml@6.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +libyaml build_system=python_pip arch=linux-sles15-zen2
+[+]  ysl4avo          ^libyaml@0.1.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  cu55eye          ^py-cython@0.29.30%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip patches=71de066 arch=linux-sles15-zen2
+[+]  xa57auh      ^py-requests@2.28.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~socks build_system=python_pip arch=linux-sles15-zen2
+[+]  qur32nd          ^py-certifi@2022.12.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  vtjfjtc          ^py-charset-normalizer@2.0.12%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  nxronvz          ^py-idna@3.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  xaadlxi              ^py-flit-core@3.7.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  ejjt7lt          ^py-urllib3@1.26.12%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~brotli~secure~socks build_system=python_pip arch=linux-sles15-zen2
+[+]  62zxkgb      ^py-semver@2.8.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  3i74w4h      ^py-setuptools@59.4.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  qz5bwpz      ^python@3.10.10%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bz2+crypt+ctypes+dbm~debug+libxml2+lzma~nis+optimizations+pic+pyexpat+pythoncmd+readline+shared+sqlite3~ssl~tkinter+uuid+zlib build_system=generic patches=0d98e93,7d40923,f2fd060 arch=linux-sles15-zen2
+[+]  tirnnzj          ^bzip2@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~debug~pic+shared build_system=generic arch=linux-sles15-zen2
+[+]  w7e5aae              ^diffutils@3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  jlus2po          ^expat@2.5.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +libbsd build_system=autotools arch=linux-sles15-zen2
+[+]  qmapfqp              ^libbsd@0.11.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  ymy4lon                  ^libmd@1.0.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  wjqzlz5          ^gdbm@1.23%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  fyanapb          ^gettext@0.21.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bzip2+curses+git~libunistring+libxml2+tar+xz build_system=autotools arch=linux-sles15-zen2
+[+]  y2yzozw              ^tar@1.30%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools zip=pigz arch=linux-sles15-zen2
+[+]  qjq2fb2                  ^pigz@2.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile arch=linux-sles15-zen2
+[+]  j6iuqtj          ^libffi@3.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=26f26c6 arch=linux-sles15-zen2
+[+]  qdhepl6          ^libxcrypt@4.4.33%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~obsolete_api build_system=autotools arch=linux-sles15-zen2
+[+]  ha6ece6              ^perl@5.36.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cpanm+open+shared+threads build_system=generic arch=linux-sles15-zen2
+[+]  z4nlfof                  ^berkeley-db@18.1.40%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx~docs+stl build_system=autotools patches=26090f4,b231fcc arch=linux-sles15-zen2
+[+]  rwzo5l5          ^ncurses@6.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~symlinks+termlib abi=none build_system=autotools arch=linux-sles15-zen2
+[+]  hezphlo          ^pkg-config@0.29.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +internal_glib build_system=autotools arch=linux-sles15-zen2
+[+]  alaqvlj          ^readline@8.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=bbf97f1 arch=linux-sles15-zen2
+[+]  wo53cwv          ^sqlite@3.40.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +column_metadata+dynamic_extensions+fts~functions+rtree build_system=autotools arch=linux-sles15-zen2
+[+]  bnna6ob          ^util-linux-uuid@2.38.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  l4ltfjz          ^xz@5.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~pic build_system=autotools libs=shared,static arch=linux-sles15-zen2
+[+]  gm7yops          ^zlib@1.2.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +optimize+pic+shared build_system=makefile arch=linux-sles15-zen2
+
+==> Concretized reframe@3.10.1%cce@15.0.1 arch=None-None-zen3 ^python@3.10.10+optimizations+zlib
+ -   uazyxye  reframe@3.10.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~docs~gelf build_system=generic arch=linux-sles15-zen3
+[+]  3zrvgcs      ^py-archspec@0.1.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  omrbqaf          ^py-click@7.1.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  5cukagm          ^py-pip@23.1.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  csh7dc6          ^py-poetry-core@1.2.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  4mzu2vu          ^py-six@1.16.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  dhjvedf          ^py-wheel@0.37.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  jrb765r      ^py-argcomplete@2.0.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+ -   fw4shvp      ^py-jsonschema@4.17.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  7xbzapn          ^py-attrs@22.2.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+ -   spkp7i3          ^py-hatch-fancy-pypi-readme@22.7.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  sewth5q              ^py-tomli@2.0.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+ -   etea3oz          ^py-hatch-vcs@0.3.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  46wtf4x              ^py-setuptools-scm@7.0.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +toml build_system=python_pip arch=linux-sles15-zen3
+[+]  75j6sg7                  ^py-typing-extensions@4.5.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+ -   5ybzy6u          ^py-hatchling@1.14.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  ti6ulmw              ^py-editables@0.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  7ypgncf              ^py-packaging@23.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  l5az5ee              ^py-pathspec@0.11.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+ -   bh3tdr2              ^py-pluggy@1.0.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  hcxal4z              ^py-trove-classifiers@2023.3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  pnweggm                  ^py-calver@2022.6.26%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  djodtsj          ^py-pyrsistent@0.19.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+ -   gjviqsl      ^py-lxml@4.9.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~cssselect~html5~htmlsoup build_system=python_pip arch=linux-sles15-zen3
+[+]  erldqy7          ^libxml2@2.10.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~python build_system=autotools arch=linux-sles15-zen3
+[+]  2s5rwge              ^libiconv@1.17%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen3
+ -   xvp2sr3          ^libxslt@1.1.33%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +crypto~python build_system=autotools arch=linux-sles15-zen3
+ -   5rugpkb              ^libgcrypt@1.10.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+ -   mzwt3bq                  ^libgpg-error@1.47%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  w3lv2bl                      ^gawk@5.2.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~nls build_system=autotools arch=linux-sles15-zen3
+[+]  ed2d34t                          ^gmp@6.2.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx build_system=autotools libs=shared,static patches=69ad2e2 arch=linux-sles15-zen3
+[+]  dyovaou                              ^autoconf@2.69%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=35c4492,7793209,a49dd5b arch=linux-sles15-zen3
+[+]  x3gsbet                              ^automake@1.16.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  qsnsiaq                              ^libtool@2.4.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  e6enhs5                              ^m4@1.4.19%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +sigsegv build_system=autotools patches=9dc5fbd,bfdffa7 arch=linux-sles15-zen3
+[+]  pzldgd5                          ^libsigsegv@2.14%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  zpqjbgp                          ^mpfr@4.2.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen3
+[+]  qvocuet                              ^autoconf-archive@2023.02.20%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  cf4cb4j                              ^texinfo@7.0.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  5i377lc      ^py-pyyaml@6.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +libyaml build_system=python_pip arch=linux-sles15-zen3
+[+]  fnzq6dg          ^libyaml@0.1.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  axl2age          ^py-cython@0.29.30%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip patches=71de066 arch=linux-sles15-zen3
+[+]  bojhcq2      ^py-requests@2.28.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~socks build_system=python_pip arch=linux-sles15-zen3
+[+]  3tnwdox          ^py-certifi@2022.12.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  nu46yoz          ^py-charset-normalizer@2.0.12%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  s5rwnjw          ^py-idna@3.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  acdiuuu              ^py-flit-core@3.7.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  we2n2l2          ^py-urllib3@1.26.12%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~brotli~secure~socks build_system=python_pip arch=linux-sles15-zen3
+[+]  452f4bt      ^py-semver@2.8.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  razy6wy      ^py-setuptools@59.4.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  hcb7rda      ^python@3.10.10%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bz2+crypt+ctypes+dbm~debug+libxml2+lzma~nis+optimizations+pic+pyexpat+pythoncmd+readline+shared+sqlite3~ssl~tkinter+uuid+zlib build_system=generic patches=0d98e93,7d40923,f2fd060 arch=linux-sles15-zen3
+[+]  rsnymdg          ^bzip2@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~debug~pic+shared build_system=generic arch=linux-sles15-zen3
+[+]  skr73jz              ^diffutils@3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  aepw6pv          ^expat@2.5.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +libbsd build_system=autotools arch=linux-sles15-zen3
+[+]  5mmqbf7              ^libbsd@0.11.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  jv432ky                  ^libmd@1.0.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  hzryjbm          ^gdbm@1.23%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  uujkp3q          ^gettext@0.21.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bzip2+curses+git~libunistring+libxml2+tar+xz build_system=autotools arch=linux-sles15-zen3
+[+]  nte27bn              ^tar@1.34%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools zip=pigz arch=linux-sles15-zen3
+[+]  qotilbp                  ^pigz@2.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile arch=linux-sles15-zen3
+[+]  in445qe                  ^zstd@1.5.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +programs build_system=makefile compression=none libs=shared,static arch=linux-sles15-zen3
+[+]  ytjexr5          ^libffi@3.4.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  l23r7k2          ^libxcrypt@4.4.33%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~obsolete_api build_system=autotools arch=linux-sles15-zen3
+[+]  frq4tot              ^perl@5.36.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cpanm+open+shared+threads build_system=generic arch=linux-sles15-zen3
+[+]  ynrxrs6                  ^berkeley-db@18.1.40%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx~docs+stl build_system=autotools patches=26090f4,b231fcc arch=linux-sles15-zen3
+[+]  rg2xkx4          ^ncurses@6.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~symlinks+termlib abi=none build_system=autotools arch=linux-sles15-zen3
+[+]  kdu2tar          ^pkg-config@0.29.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +internal_glib build_system=autotools arch=linux-sles15-zen3
+[+]  bbkcams          ^readline@8.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=bbf97f1 arch=linux-sles15-zen3
+[+]  bbwoqq3          ^sqlite@3.40.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +column_metadata+dynamic_extensions+fts~functions+rtree build_system=autotools arch=linux-sles15-zen3
+[+]  sfrrsmf          ^util-linux-uuid@2.38.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  ndwsof4          ^xz@5.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~pic build_system=autotools libs=shared,static arch=linux-sles15-zen3
+[+]  oe7apic          ^zlib@1.2.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +optimize+pic+shared build_system=makefile arch=linux-sles15-zen3
+
+==> Concretized reframe@3.12.0%cce@15.0.1 arch=None-None-zen2 ^python@3.10.10+optimizations+zlib
+ -   c7qq6ub  reframe@3.12.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~docs~gelf build_system=generic arch=linux-sles15-zen2
+[+]  ciac5ve      ^py-archspec@0.1.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  bprfz27          ^py-click@7.1.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  ri7vmcw          ^py-pip@23.1.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  znktedk          ^py-poetry-core@1.2.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  poeljzb          ^py-six@1.16.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  addoh6t          ^py-wheel@0.37.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  4mrrmum      ^py-argcomplete@2.0.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+ -   wfp5y3l      ^py-jsonschema@4.17.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  xyqcblv          ^py-attrs@22.2.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+ -   pohezax          ^py-hatch-fancy-pypi-readme@22.7.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  cncv6rp              ^py-tomli@2.0.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+ -   3irmjq3          ^py-hatch-vcs@0.3.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  3q326nu              ^py-setuptools-scm@7.0.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +toml build_system=python_pip arch=linux-sles15-zen2
+[+]  pa7dm6h                  ^py-typing-extensions@4.5.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+ -   f4ln657          ^py-hatchling@1.14.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  tmgyh77              ^py-editables@0.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  jsli3a7              ^py-packaging@23.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  6luacwc              ^py-pathspec@0.11.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+ -   zsh5rui              ^py-pluggy@1.0.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  wojvrf3              ^py-trove-classifiers@2023.3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  t2htuw5                  ^py-calver@2022.6.26%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  gm3r5w5          ^py-pyrsistent@0.19.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+ -   e6phhs4      ^py-lxml@4.9.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~cssselect~html5~htmlsoup build_system=python_pip arch=linux-sles15-zen2
+[+]  eggbxcm          ^libxml2@2.10.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~python build_system=autotools arch=linux-sles15-zen2
+[+]  7gy2yhs              ^libiconv@1.17%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen2
+[+]  xo22273          ^libxslt@1.1.33%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +crypto~python build_system=autotools arch=linux-sles15-zen2
+[+]  aum4v5v              ^libgcrypt@1.10.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  edb7g6t                  ^libgpg-error@1.47%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  cs5c6at                      ^gawk@5.2.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~nls build_system=autotools arch=linux-sles15-zen2
+[+]  qan4eiq                          ^gmp@6.2.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx build_system=autotools libs=shared,static patches=69ad2e2 arch=linux-sles15-zen2
+[+]  iuvnmyt                              ^autoconf@2.69%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=35c4492,7793209,a49dd5b arch=linux-sles15-zen2
+[+]  ucv3hqe                              ^automake@1.16.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  ax2z2pn                              ^libtool@2.4.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  qfa6rfg                              ^m4@1.4.19%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +sigsegv build_system=autotools patches=9dc5fbd,bfdffa7 arch=linux-sles15-zen2
+[+]  nozoodt                          ^libsigsegv@2.14%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  37vh774                          ^mpfr@4.2.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen2
+[+]  ifgzcnk                              ^autoconf-archive@2023.02.20%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  4d7wgew                              ^texinfo@7.0.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  zyqt6vj      ^py-pyyaml@6.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +libyaml build_system=python_pip arch=linux-sles15-zen2
+[+]  ysl4avo          ^libyaml@0.1.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  cu55eye          ^py-cython@0.29.30%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip patches=71de066 arch=linux-sles15-zen2
+[+]  xa57auh      ^py-requests@2.28.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~socks build_system=python_pip arch=linux-sles15-zen2
+[+]  qur32nd          ^py-certifi@2022.12.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  vtjfjtc          ^py-charset-normalizer@2.0.12%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  nxronvz          ^py-idna@3.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  xaadlxi              ^py-flit-core@3.7.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  ejjt7lt          ^py-urllib3@1.26.12%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~brotli~secure~socks build_system=python_pip arch=linux-sles15-zen2
+[+]  62zxkgb      ^py-semver@2.8.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen2
+[+]  3i74w4h      ^py-setuptools@59.4.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  qz5bwpz      ^python@3.10.10%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bz2+crypt+ctypes+dbm~debug+libxml2+lzma~nis+optimizations+pic+pyexpat+pythoncmd+readline+shared+sqlite3~ssl~tkinter+uuid+zlib build_system=generic patches=0d98e93,7d40923,f2fd060 arch=linux-sles15-zen2
+[+]  tirnnzj          ^bzip2@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~debug~pic+shared build_system=generic arch=linux-sles15-zen2
+[+]  w7e5aae              ^diffutils@3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  jlus2po          ^expat@2.5.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +libbsd build_system=autotools arch=linux-sles15-zen2
+[+]  qmapfqp              ^libbsd@0.11.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  ymy4lon                  ^libmd@1.0.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  wjqzlz5          ^gdbm@1.23%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  fyanapb          ^gettext@0.21.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bzip2+curses+git~libunistring+libxml2+tar+xz build_system=autotools arch=linux-sles15-zen2
+[+]  y2yzozw              ^tar@1.30%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools zip=pigz arch=linux-sles15-zen2
+[+]  qjq2fb2                  ^pigz@2.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile arch=linux-sles15-zen2
+[+]  j6iuqtj          ^libffi@3.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=26f26c6 arch=linux-sles15-zen2
+[+]  qdhepl6          ^libxcrypt@4.4.33%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~obsolete_api build_system=autotools arch=linux-sles15-zen2
+[+]  ha6ece6              ^perl@5.36.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cpanm+open+shared+threads build_system=generic arch=linux-sles15-zen2
+[+]  z4nlfof                  ^berkeley-db@18.1.40%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx~docs+stl build_system=autotools patches=26090f4,b231fcc arch=linux-sles15-zen2
+[+]  rwzo5l5          ^ncurses@6.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~symlinks+termlib abi=none build_system=autotools arch=linux-sles15-zen2
+[+]  hezphlo          ^pkg-config@0.29.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +internal_glib build_system=autotools arch=linux-sles15-zen2
+[+]  alaqvlj          ^readline@8.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=bbf97f1 arch=linux-sles15-zen2
+[+]  wo53cwv          ^sqlite@3.40.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +column_metadata+dynamic_extensions+fts~functions+rtree build_system=autotools arch=linux-sles15-zen2
+[+]  bnna6ob          ^util-linux-uuid@2.38.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  l4ltfjz          ^xz@5.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~pic build_system=autotools libs=shared,static arch=linux-sles15-zen2
+[+]  gm7yops          ^zlib@1.2.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +optimize+pic+shared build_system=makefile arch=linux-sles15-zen2
+
+==> Concretized reframe@3.12.0%cce@15.0.1 arch=None-None-zen3 ^python@3.10.10+optimizations+zlib
+ -   obqxzv2  reframe@3.12.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~docs~gelf build_system=generic arch=linux-sles15-zen3
+[+]  vqyce4c      ^py-archspec@0.1.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  55zd5ed          ^py-click@7.1.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  zvzvx6y          ^py-pip@23.1.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  tkyliuq          ^py-poetry-core@1.2.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  zvmvgof          ^py-six@1.16.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  ygjurbr          ^py-wheel@0.37.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  da6tw3f      ^py-argcomplete@2.0.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+ -   nl3awoz      ^py-jsonschema@4.17.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  mxdsn64          ^py-attrs@22.2.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+ -   sr7eiwg          ^py-hatch-fancy-pypi-readme@22.7.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  2b3w27i              ^py-tomli@2.0.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+ -   3eirsyv          ^py-hatch-vcs@0.3.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+ -   k3qzlch              ^py-setuptools-scm@7.0.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +toml build_system=python_pip arch=linux-sles15-zen3
+[+]  ncta2hz                  ^py-typing-extensions@4.5.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+ -   w3625yk          ^py-hatchling@1.14.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  hedn6ob              ^py-editables@0.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  cdmmko6              ^py-packaging@23.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  rdahjaz              ^py-pathspec@0.11.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+ -   fygpnoz              ^py-pluggy@1.0.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  eka6ug7              ^py-trove-classifiers@2023.3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  d2wxhdr                  ^py-calver@2022.6.26%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  lqswou3          ^py-pyrsistent@0.19.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+ -   zyaivro      ^py-lxml@4.9.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~cssselect~html5~htmlsoup build_system=python_pip arch=linux-sles15-zen3
+[+]  erldqy7          ^libxml2@2.10.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~python build_system=autotools arch=linux-sles15-zen3
+[+]  2s5rwge              ^libiconv@1.17%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen3
+ -   mohuej6          ^libxslt@1.1.33%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +crypto~python build_system=autotools arch=linux-sles15-zen3
+ -   5z7geuf              ^libgcrypt@1.10.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+ -   z2roquw                  ^libgpg-error@1.47%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  fgd2ffc                      ^gawk@5.2.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~nls build_system=autotools arch=linux-sles15-zen3
+[+]  ed2d34t                          ^gmp@6.2.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx build_system=autotools libs=shared,static patches=69ad2e2 arch=linux-sles15-zen3
+[+]  dyovaou                              ^autoconf@2.69%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=35c4492,7793209,a49dd5b arch=linux-sles15-zen3
+[+]  x3gsbet                              ^automake@1.16.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  qsnsiaq                              ^libtool@2.4.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  e6enhs5                              ^m4@1.4.19%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +sigsegv build_system=autotools patches=9dc5fbd,bfdffa7 arch=linux-sles15-zen3
+[+]  pzldgd5                          ^libsigsegv@2.14%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  5vpvpyc                          ^mpfr@4.2.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen3
+[+]  qvocuet                              ^autoconf-archive@2023.02.20%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  yaq2xag                              ^texinfo@7.0.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  ncwtehq      ^py-pyyaml@6.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +libyaml build_system=python_pip arch=linux-sles15-zen3
+[+]  fnzq6dg          ^libyaml@0.1.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  e22mhxa          ^py-cython@0.29.30%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip patches=71de066 arch=linux-sles15-zen3
+ -   m6lwhae      ^py-requests@2.28.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~socks build_system=python_pip arch=linux-sles15-zen3
+[+]  lc76jjc          ^py-certifi@2022.12.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  l6vfgbo          ^py-charset-normalizer@2.0.12%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  qkhjhim          ^py-idna@3.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  vsgj4uj              ^py-flit-core@3.7.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  dcctq3b          ^py-urllib3@1.26.12%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~brotli~secure~socks build_system=python_pip arch=linux-sles15-zen3
+[+]  sfw3ldh      ^py-semver@2.8.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip arch=linux-sles15-zen3
+[+]  xuvrcav      ^py-setuptools@59.4.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  ixw2tfy      ^python@3.10.10%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bz2+crypt+ctypes+dbm~debug+libxml2+lzma~nis+optimizations+pic+pyexpat+pythoncmd+readline+shared+sqlite3~ssl~tkinter+uuid+zlib build_system=generic patches=0d98e93,7d40923,f2fd060 arch=linux-sles15-zen3
+[+]  rsnymdg          ^bzip2@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~debug~pic+shared build_system=generic arch=linux-sles15-zen3
+[+]  skr73jz              ^diffutils@3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  aepw6pv          ^expat@2.5.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +libbsd build_system=autotools arch=linux-sles15-zen3
+[+]  5mmqbf7              ^libbsd@0.11.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  jv432ky                  ^libmd@1.0.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  hzryjbm          ^gdbm@1.23%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  zdqdj74          ^gettext@0.21.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bzip2+curses+git~libunistring+libxml2+tar+xz build_system=autotools arch=linux-sles15-zen3
+[+]  mh5vjer              ^tar@1.30%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools zip=pigz arch=linux-sles15-zen3
+[+]  qotilbp                  ^pigz@2.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile arch=linux-sles15-zen3
+[+]  7dqtizk          ^libffi@3.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=26f26c6 arch=linux-sles15-zen3
+[+]  l23r7k2          ^libxcrypt@4.4.33%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~obsolete_api build_system=autotools arch=linux-sles15-zen3
+[+]  frq4tot              ^perl@5.36.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cpanm+open+shared+threads build_system=generic arch=linux-sles15-zen3
+[+]  ynrxrs6                  ^berkeley-db@18.1.40%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx~docs+stl build_system=autotools patches=26090f4,b231fcc arch=linux-sles15-zen3
+[+]  rg2xkx4          ^ncurses@6.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~symlinks+termlib abi=none build_system=autotools arch=linux-sles15-zen3
+[+]  kdu2tar          ^pkg-config@0.29.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +internal_glib build_system=autotools arch=linux-sles15-zen3
+[+]  bbkcams          ^readline@8.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=bbf97f1 arch=linux-sles15-zen3
+[+]  bbwoqq3          ^sqlite@3.40.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +column_metadata+dynamic_extensions+fts~functions+rtree build_system=autotools arch=linux-sles15-zen3
+[+]  sfrrsmf          ^util-linux-uuid@2.38.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  ndwsof4          ^xz@5.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~pic build_system=autotools libs=shared,static arch=linux-sles15-zen3
+[+]  oe7apic          ^zlib@1.2.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +optimize+pic+shared build_system=makefile arch=linux-sles15-zen3
+
+==> Concretized singularityce@3.11.4%cce@15.0.1~conmon arch=None-None-zen2 ^go@1.19.10
+ -   tpaubvg  singularityce@3.11.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~conmon+network+suid build_system=makefile arch=linux-sles15-zen2
+ -   cyh3wdf      ^conmon@2.1.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile arch=linux-sles15-zen2
+[+]  k47n6eu          ^glib@2.76.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~libmount build_system=generic patches=fa31180 tracing=none arch=linux-sles15-zen2
+[+]  ueuwwe3              ^elfutils@0.189%gcc@12.2.0 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3 -fallow-argument-mismatch" ~debuginfod+nls build_system=autotools arch=linux-sles15-zen2
+[+]  ahsren6                  ^zstd@1.5.0%gcc@12.2.0 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3 -fallow-argument-mismatch" ~programs build_system=makefile libs=shared,static arch=linux-sles15-zen2
+[+]  j6iuqtj              ^libffi@3.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=26f26c6 arch=linux-sles15-zen2
+[+]  7gy2yhs              ^libiconv@1.17%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen2
+[+]  nvqumvb              ^meson@1.1.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip patches=0f0b1bd arch=linux-sles15-zen2
+[+]  kmnyqum              ^ninja@1.11.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +re2c build_system=generic arch=linux-sles15-zen2
+[+]  e7ra73r                  ^re2c@2.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  srn5zr7              ^pcre2@10.42%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~jit+multibyte build_system=autotools arch=linux-sles15-zen2
+[+]  ha6ece6              ^perl@5.36.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cpanm+open+shared+threads build_system=generic arch=linux-sles15-zen2
+[+]  z4nlfof                  ^berkeley-db@18.1.40%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx~docs+stl build_system=autotools patches=26090f4,b231fcc arch=linux-sles15-zen2
+[+]  wjqzlz5                  ^gdbm@1.23%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  qz5bwpz              ^python@3.10.10%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bz2+crypt+ctypes+dbm~debug+libxml2+lzma~nis+optimizations+pic+pyexpat+pythoncmd+readline+shared+sqlite3~ssl~tkinter+uuid+zlib build_system=generic patches=0d98e93,7d40923,f2fd060 arch=linux-sles15-zen2
+[+]  wo53cwv                  ^sqlite@3.40.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +column_metadata+dynamic_extensions+fts~functions+rtree build_system=autotools arch=linux-sles15-zen2
+ -   5yidpq2          ^go-md2man@2.0.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+ -   ajj2tse      ^cryptsetup@2.3.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  iuvnmyt          ^autoconf@2.69%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=35c4492,7793209,a49dd5b arch=linux-sles15-zen2
+[+]  ucv3hqe          ^automake@1.16.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  fyanapb          ^gettext@0.21.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bzip2+curses+git~libunistring+libxml2+tar+xz build_system=autotools arch=linux-sles15-zen2
+[+]  tirnnzj              ^bzip2@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~debug~pic+shared build_system=generic arch=linux-sles15-zen2
+[+]  eggbxcm              ^libxml2@2.10.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~python build_system=autotools arch=linux-sles15-zen2
+[+]  rwzo5l5              ^ncurses@6.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~symlinks+termlib abi=none build_system=autotools arch=linux-sles15-zen2
+[+]  y2yzozw              ^tar@1.30%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools zip=pigz arch=linux-sles15-zen2
+[+]  qjq2fb2                  ^pigz@2.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile arch=linux-sles15-zen2
+[+]  l4ltfjz              ^xz@5.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~pic build_system=autotools libs=shared,static arch=linux-sles15-zen2
+[+]  rmrytdv          ^json-c@0.16%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~ipo build_system=cmake build_type=Release generator=make arch=linux-sles15-zen2
+[+]  vcmkmin              ^cmake@3.24.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~doc+ncurses+ownlibs~qt build_system=generic build_type=Release arch=linux-sles15-zen2
+[+]  2tgrwpg              ^gmake@4.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~guile build_system=autotools arch=linux-sles15-zen2
+[+]  ax2z2pn          ^libtool@2.4.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+ -   dobgwy3          ^lvm2@2.03.14%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +pkgconfig build_system=autotools arch=linux-sles15-zen2
+[+]  nkxp57s              ^libaio@0.3.113%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile arch=linux-sles15-zen2
+[+]  qfa6rfg          ^m4@1.4.19%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +sigsegv build_system=autotools patches=9dc5fbd,bfdffa7 arch=linux-sles15-zen2
+[+]  w7e5aae              ^diffutils@3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  nozoodt              ^libsigsegv@2.14%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  mnmwtss          ^openssl@1.1.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~docs~shared build_system=generic certs=mozilla arch=linux-sles15-zen2
+[+]  tdyffn3          ^popt@1.16%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  znzqtyf          ^util-linux@2.38.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~bash build_system=autotools arch=linux-sles15-zen2
+[+]  qdhepl6              ^libxcrypt@4.4.33%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~obsolete_api build_system=autotools arch=linux-sles15-zen2
+[+]  edgrsmb      ^go@1.19.10%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  ermqcef          ^git@2.40.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +man+nls+perl+subtree~svn~tcltk build_system=autotools arch=linux-sles15-zen2
+[+]  byyme26              ^curl@7.79.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~gssapi~ldap~libidn2~librtmp~libssh~libssh2~nghttp2 build_system=autotools libs=shared,static tls=openssl arch=linux-sles15-zen2
+[+]  jlus2po              ^expat@2.5.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +libbsd build_system=autotools arch=linux-sles15-zen2
+[+]  qmapfqp                  ^libbsd@0.11.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  ymy4lon                      ^libmd@1.0.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  gaqh2t2              ^libidn2@2.2.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  vvkkbc7              ^openssh@8.4p1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +gssapi build_system=autotools arch=linux-sles15-zen2
+[+]  c4uocbm          ^go-bootstrap@1.17.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  edb7g6t      ^libgpg-error@1.47%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  cs5c6at          ^gawk@5.2.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~nls build_system=autotools arch=linux-sles15-zen2
+[+]  qan4eiq              ^gmp@6.2.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx build_system=autotools libs=shared,static patches=69ad2e2 arch=linux-sles15-zen2
+[+]  37vh774              ^mpfr@4.2.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen2
+[+]  ifgzcnk                  ^autoconf-archive@2023.02.20%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  4d7wgew                  ^texinfo@7.0.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  alaqvlj              ^readline@8.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=bbf97f1 arch=linux-sles15-zen2
+[+]  43q4ez7      ^libseccomp@2.3.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +python build_system=autotools arch=linux-sles15-zen2
+[+]  cu55eye          ^py-cython@0.29.30%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip patches=71de066 arch=linux-sles15-zen2
+[+]  ri7vmcw              ^py-pip@23.1.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  3i74w4h              ^py-setuptools@59.4.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  addoh6t              ^py-wheel@0.37.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+[+]  hezphlo      ^pkg-config@0.29.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +internal_glib build_system=autotools arch=linux-sles15-zen2
+[+]  iw52vju      ^shadow@4.8.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+[+]  vawc4xt      ^squashfs@4.5.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +gzip~lz4~lzo~xz~zstd build_system=makefile default_compression=gzip arch=linux-sles15-zen2
+[+]  gm7yops          ^zlib@1.2.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +optimize+pic+shared build_system=makefile arch=linux-sles15-zen2
+[+]  bnna6ob      ^util-linux-uuid@2.38.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen2
+
+==> Concretized singularityce@3.11.4%cce@15.0.1~conmon arch=None-None-zen3 ^go@1.19.10
+ -   gwavcs3  singularityce@3.11.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~conmon+network+suid build_system=makefile arch=linux-sles15-zen3
+ -   mqn7j26      ^conmon@2.1.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile arch=linux-sles15-zen3
+[+]  k42vutu          ^glib@2.76.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~libmount build_system=generic patches=fa31180 tracing=none arch=linux-sles15-zen3
+[+]  ibn7xkb              ^elfutils@0.189%gcc@12.2.0 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3 -fallow-argument-mismatch" ~debuginfod+nls build_system=autotools arch=linux-sles15-zen3
+[+]  4ygto32                  ^zstd@1.5.0%gcc@12.2.0 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3 -fallow-argument-mismatch" ~programs build_system=makefile libs=shared,static arch=linux-sles15-zen3
+[+]  7dqtizk              ^libffi@3.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=26f26c6 arch=linux-sles15-zen3
+[+]  2s5rwge              ^libiconv@1.17%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen3
+[+]  tt6hy5b              ^meson@1.1.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip patches=0f0b1bd arch=linux-sles15-zen3
+[+]  7zvf3z2              ^ninja@1.11.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +re2c build_system=generic arch=linux-sles15-zen3
+[+]  fec6bkc                  ^re2c@2.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  v3qov67              ^pcre2@10.42%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~jit+multibyte build_system=autotools arch=linux-sles15-zen3
+[+]  frq4tot              ^perl@5.36.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cpanm+open+shared+threads build_system=generic arch=linux-sles15-zen3
+[+]  ynrxrs6                  ^berkeley-db@18.1.40%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx~docs+stl build_system=autotools patches=26090f4,b231fcc arch=linux-sles15-zen3
+[+]  hzryjbm                  ^gdbm@1.23%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  ixw2tfy              ^python@3.10.10%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bz2+crypt+ctypes+dbm~debug+libxml2+lzma~nis+optimizations+pic+pyexpat+pythoncmd+readline+shared+sqlite3~ssl~tkinter+uuid+zlib build_system=generic patches=0d98e93,7d40923,f2fd060 arch=linux-sles15-zen3
+[+]  bbwoqq3                  ^sqlite@3.40.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +column_metadata+dynamic_extensions+fts~functions+rtree build_system=autotools arch=linux-sles15-zen3
+[+]  uzyt4wr          ^go-md2man@2.0.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+ -   uaiiks5      ^cryptsetup@2.3.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  dyovaou          ^autoconf@2.69%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=35c4492,7793209,a49dd5b arch=linux-sles15-zen3
+[+]  x3gsbet          ^automake@1.16.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  zdqdj74          ^gettext@0.21.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +bzip2+curses+git~libunistring+libxml2+tar+xz build_system=autotools arch=linux-sles15-zen3
+[+]  rsnymdg              ^bzip2@1.0.8%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~debug~pic+shared build_system=generic arch=linux-sles15-zen3
+[+]  erldqy7              ^libxml2@2.10.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~python build_system=autotools arch=linux-sles15-zen3
+[+]  rg2xkx4              ^ncurses@6.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~symlinks+termlib abi=none build_system=autotools arch=linux-sles15-zen3
+[+]  mh5vjer              ^tar@1.30%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools zip=pigz arch=linux-sles15-zen3
+[+]  qotilbp                  ^pigz@2.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile arch=linux-sles15-zen3
+[+]  ndwsof4              ^xz@5.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~pic build_system=autotools libs=shared,static arch=linux-sles15-zen3
+[+]  4aqks7o          ^json-c@0.16%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~ipo build_system=cmake build_type=Release generator=make arch=linux-sles15-zen3
+[+]  dnokv5u              ^cmake@3.24.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~doc+ncurses+ownlibs~qt build_system=generic build_type=Release arch=linux-sles15-zen3
+[+]  cryipdn              ^gmake@4.4.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~guile build_system=autotools arch=linux-sles15-zen3
+[+]  qsnsiaq          ^libtool@2.4.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+ -   2ajscpn          ^lvm2@2.03.14%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +pkgconfig build_system=autotools arch=linux-sles15-zen3
+[+]  3qvprkb              ^libaio@0.3.113%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=makefile arch=linux-sles15-zen3
+[+]  e6enhs5          ^m4@1.4.19%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +sigsegv build_system=autotools patches=9dc5fbd,bfdffa7 arch=linux-sles15-zen3
+[+]  skr73jz              ^diffutils@3.9%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  pzldgd5              ^libsigsegv@2.14%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  kyxab3d          ^openssl@1.1.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~docs~shared build_system=generic certs=mozilla arch=linux-sles15-zen3
+[+]  2gb577p          ^popt@1.16%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  ngc25rs          ^util-linux@2.38.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~bash build_system=autotools arch=linux-sles15-zen3
+[+]  l23r7k2              ^libxcrypt@4.4.33%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~obsolete_api build_system=autotools arch=linux-sles15-zen3
+[+]  ejp5aei      ^go@1.19.10%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  gxmr5l7          ^git@2.40.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +man+nls+perl+subtree~svn~tcltk build_system=autotools arch=linux-sles15-zen3
+[+]  eg3gd3h              ^curl@7.79.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~gssapi~ldap~libidn2~librtmp~libssh~libssh2~nghttp2 build_system=autotools libs=shared,static tls=openssl arch=linux-sles15-zen3
+[+]  aepw6pv              ^expat@2.5.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +libbsd build_system=autotools arch=linux-sles15-zen3
+[+]  5mmqbf7                  ^libbsd@0.11.7%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  jv432ky                      ^libmd@1.0.4%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  rrniq4f              ^libidn2@2.2.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  qkqpkry              ^openssh@8.4p1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +gssapi build_system=autotools arch=linux-sles15-zen3
+[+]  okwakxd          ^go-bootstrap@1.17.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+ -   z2roquw      ^libgpg-error@1.47%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  fgd2ffc          ^gawk@5.2.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" ~nls build_system=autotools arch=linux-sles15-zen3
+[+]  ed2d34t              ^gmp@6.2.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +cxx build_system=autotools libs=shared,static patches=69ad2e2 arch=linux-sles15-zen3
+[+]  5vpvpyc              ^mpfr@4.2.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools libs=shared,static arch=linux-sles15-zen3
+[+]  qvocuet                  ^autoconf-archive@2023.02.20%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  yaq2xag                  ^texinfo@7.0.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  bbkcams              ^readline@8.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools patches=bbf97f1 arch=linux-sles15-zen3
+[+]  rp67smu      ^libseccomp@2.3.3%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +python build_system=autotools arch=linux-sles15-zen3
+[+]  e22mhxa          ^py-cython@0.29.30%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=python_pip patches=71de066 arch=linux-sles15-zen3
+[+]  zvzvx6y              ^py-pip@23.1.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  xuvrcav              ^py-setuptools@59.4.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  ygjurbr              ^py-wheel@0.37.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+[+]  kdu2tar      ^pkg-config@0.29.2%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +internal_glib build_system=autotools arch=linux-sles15-zen3
+[+]  zxqencx      ^shadow@4.8.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+[+]  5vrsveb      ^squashfs@4.5.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +gzip~lz4~lzo~xz~zstd build_system=makefile default_compression=gzip arch=linux-sles15-zen3
+[+]  oe7apic          ^zlib@1.2.13%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3" +optimize+pic+shared build_system=makefile arch=linux-sles15-zen3
+[+]  sfrrsmf      ^util-linux-uuid@2.38.1%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=autotools arch=linux-sles15-zen3
+
+==> Concretized tower-agent@0.4.5%cce@15.0.1 arch=None-None-zen2
+[+]  2jbtmxm  tower-agent@0.4.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+
+==> Concretized tower-agent@0.4.5%cce@15.0.1 arch=None-None-zen3
+[+]  ke3evzp  tower-agent@0.4.5%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+
+==> Concretized tower-cli@0.7.0%cce@15.0.1 arch=None-None-zen2
+[+]  h43cf6e  tower-cli@0.7.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen2
+
+==> Concretized tower-cli@0.7.0%cce@15.0.1 arch=None-None-zen3
+[+]  526zqls  tower-cli@0.7.0%cce@15.0.1 cflags="-O3" cppflags="-O3" cxxflags="-O3" fflags="-O3"  build_system=generic arch=linux-sles15-zen3
+
