@@ -52,6 +52,8 @@ class Vasp(MakefilePackage):
             description='Incorporate VTST extensions\n'
             'https://theory.cm.utexas.edu/vtsttools/index.html')
 
+    variant('dftd4', default=False)
+
     depends_on('rsync', type='build')
     depends_on('openblas')
     depends_on('lapack')
@@ -60,6 +62,7 @@ class Vasp(MakefilePackage):
     depends_on('netlib-scalapack', when='+scalapack')
     depends_on('cuda', when='+cuda')
     depends_on('qd', when='%nvhpc')
+    depends_on('dftd4', when='+dftd4')
 
     conflicts('%gcc@:8', msg='GFortran before 9.x does not support all features needed to build VASP')
     conflicts('+vaspsol', when='+cuda', msg='+vaspsol only available for CPU')
@@ -195,6 +198,12 @@ class Vasp(MakefilePackage):
         filter_file('-DscaLAPACK.*$\n', '', 'makefile.include')
         filter_file('^SCALAPACK.*$', '', 'makefile.include')
         filter_file('^OBJECTS_LIB *= *', 'OBJECTS_LIB = getshmem.o ', 'makefile.include')
+
+        if "+dftd4" in spec:
+            sed = which('sed') #-lmctc-lib  -lmstore  -lmulticharge",
+            sed("-i", f"66i LLIBS += -L{self.spec['dftd4'].prefix.lib} -ldftd4",
+                "makefile.include")
+            sed("-i", f"67i INCS        += -I{self.spec['dftd4'].prefix.include}", "makefile.include")
 
         if '+cuda' in spec:
             filter_file('^OBJECTS_GPU[ ]{0,}=.*$',
