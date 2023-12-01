@@ -200,11 +200,10 @@ class Vasp(MakefilePackage):
         filter_file('^OBJECTS_LIB *= *', 'OBJECTS_LIB = getshmem.o ', 'makefile.include')
 
         if "+dftd4" in spec:
-            sed = which('sed')
-            sed("-i", f"66i LLIBS += -L{self.spec['dftd4'].prefix.lib} -ldftd4",
-                "makefile.include")
-            sed("-i", f"67i INCS        += -I{self.spec['dftd4'].prefix.include}", "makefile.include")
-            sed("-i", f"67i INCS        += -I{self.spec['dftd4'].prefix.include}/dftd4/{self.compiler.name}-{self.compiler.version}", "makefile.include")
+            with open("makefile.include", "a") as fp:
+                fp.write(f"LLIBS += -L{self.spec['dftd4'].prefix.lib} -ldftd4\n")
+                fp.write(f"INCS  += -I{self.spec['dftd4'].prefix.include}\n")
+                fp.write(f"INCS  += -I{self.spec['dftd4'].prefix.include}/dftd4/{self.compiler.name}-{self.compiler.version}\n")
 
         if '+cuda' in spec:
             filter_file('^OBJECTS_GPU[ ]{0,}=.*$',
