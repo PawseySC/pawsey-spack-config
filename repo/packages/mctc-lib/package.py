@@ -2,7 +2,8 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-
+#
+# Pawsey addition: just grabbed the latest recipe from spack/develop
 from spack.package import *
 
 
@@ -27,6 +28,5 @@ class MctcLib(MesonPackage):
 
     def meson_args(self):
         return [
-            # "--wrap-mode=nodownload",
             "-Djson={0}".format("enabled" if "+json" in self.spec else "disabled"),
         ]

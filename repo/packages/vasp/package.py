@@ -200,10 +200,12 @@ class Vasp(MakefilePackage):
         filter_file('^OBJECTS_LIB *= *', 'OBJECTS_LIB = getshmem.o ', 'makefile.include')
 
         if "+dftd4" in spec:
-            sed = which('sed') #-lmctc-lib  -lmstore  -lmulticharge",
+            sed = which('sed')
             sed("-i", f"66i LLIBS += -L{self.spec['dftd4'].prefix.lib} -ldftd4",
                 "makefile.include")
             sed("-i", f"67i INCS        += -I{self.spec['dftd4'].prefix.include}", "makefile.include")
+            # sed("-i", f"67i INCS        += -I{self.spec['dftd4'].prefix.include}/dftd4/{self.compiler.name}-{self.compiler.version}", "makefile.include")
+            sed("-i", f"67i INCS        += -I{self.spec['dftd4'].prefix.include}/dftd4/gcc-12.2.0", "makefile.include")
 
         if '+cuda' in spec:
             filter_file('^OBJECTS_GPU[ ]{0,}=.*$',
@@ -232,6 +234,8 @@ class Vasp(MakefilePackage):
             cpp_options.append('-DHOST=\\"LinuxGNU\\"')
         if self.spec.satisfies('@6:'):
             cpp_options.append('-Dvasp6')
+        if self.spec.satisfies('+dftd4'):
+            cpp_options.append('-DDFTD4')
 
         cflags = ['-fPIC', '-DADD_']
         fflags = []
