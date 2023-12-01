@@ -2,7 +2,7 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-
+# Pawsey additions: vaspsol, vtst and dftd4 support.
 import os
 import grp
 import shutil
