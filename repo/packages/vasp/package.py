@@ -204,8 +204,7 @@ class Vasp(MakefilePackage):
             sed("-i", f"66i LLIBS += -L{self.spec['dftd4'].prefix.lib} -ldftd4",
                 "makefile.include")
             sed("-i", f"67i INCS        += -I{self.spec['dftd4'].prefix.include}", "makefile.include")
-            # sed("-i", f"67i INCS        += -I{self.spec['dftd4'].prefix.include}/dftd4/{self.compiler.name}-{self.compiler.version}", "makefile.include")
-            sed("-i", f"67i INCS        += -I{self.spec['dftd4'].prefix.include}/dftd4/gcc-12.2.0", "makefile.include")
+            sed("-i", f"67i INCS        += -I{self.spec['dftd4'].prefix.include}/dftd4/{self.compiler.name}-{self.compiler.version}", "makefile.include")
 
         if '+cuda' in spec:
             filter_file('^OBJECTS_GPU[ ]{0,}=.*$',
