@@ -61,7 +61,7 @@ spack_version="0.19.0" # the prefix "v" is added in setup_spack.sh
 singularity_version="3.11.4-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="3.11.4-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.23"
-shpc_registry_version="29f8f38f2afe562786ec0300c12d41c40f0efe97" #Hash for: Merge pull request #149 from PawseySC/alexis-dev
+shpc_registry_version="e6d023e7eae3f293e5482f41b1499743df384826"
 
 # python (and py tools) versions
 python_name="python"
