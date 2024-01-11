@@ -87,6 +87,8 @@ modules:
         autoload: direct
       petsc:
         autoload: direct
+      arpack-ng:
+        autoload: direct
 
       # i/o libraries
       hdf5:
