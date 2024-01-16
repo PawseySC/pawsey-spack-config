@@ -175,9 +175,9 @@ setenv("SINGULARITYENV_MPICH_GPU_SUPPORT_ENABLED","1")
 -- add GPUMPI END
 
 {% endif %}
-{% if spec.name == 'r' %}setenv("R_LIBS_USER", os.getenv("MYSOFTWARE").."/setonix/r/%v")
+{% if spec.name == 'r' %}setenv("R_LIBS_USER", os.getenv("MYSOFTWARE").."/setonix/DATE_TAG/r/%v")
 {% endif %}
-{% if spec.name == 'python' %}setenv("PYTHONUSERBASE", os.getenv("MYSOFTWARE").."/setonix/python")
+{% if spec.name == 'python' %}setenv("PYTHONUSERBASE", os.getenv("MYSOFTWARE").."/setonix/DATE_TAG/python")
 prepend_path("PATH", os.getenv("PYTHONUSERBASE").."/bin")
 {% endif %}
 
