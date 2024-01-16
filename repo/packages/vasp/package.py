@@ -2,7 +2,7 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-
+# Pawsey additions: vaspsol, vtst and dftd4 support.
 import os
 import grp
 import shutil
@@ -52,6 +52,8 @@ class Vasp(MakefilePackage):
             description='Incorporate VTST extensions\n'
             'https://theory.cm.utexas.edu/vtsttools/index.html')
 
+    variant('dftd4', default=False)
+
     depends_on('rsync', type='build')
     depends_on('openblas')
     depends_on('lapack')
@@ -60,6 +62,7 @@ class Vasp(MakefilePackage):
     depends_on('netlib-scalapack', when='+scalapack')
     depends_on('cuda', when='+cuda')
     depends_on('qd', when='%nvhpc')
+    depends_on('dftd4', when='+dftd4')
 
     conflicts('%gcc@:8', msg='GFortran before 9.x does not support all features needed to build VASP')
     conflicts('+vaspsol', when='+cuda', msg='+vaspsol only available for CPU')
@@ -196,6 +199,12 @@ class Vasp(MakefilePackage):
         filter_file('^SCALAPACK.*$', '', 'makefile.include')
         filter_file('^OBJECTS_LIB *= *', 'OBJECTS_LIB = getshmem.o ', 'makefile.include')
 
+        if "+dftd4" in spec:
+            with open("makefile.include", "a") as fp:
+                fp.write(f"LLIBS += -L{self.spec['dftd4'].prefix.lib} -ldftd4\n")
+                fp.write(f"INCS  += -I{self.spec['dftd4'].prefix.include}\n")
+                fp.write(f"INCS  += -I{self.spec['dftd4'].prefix.include}/dftd4/{self.compiler.name}-{self.compiler.version}\n")
+
         if '+cuda' in spec:
             filter_file('^OBJECTS_GPU[ ]{0,}=.*$',
                         'OBJECTS_GPU ?=',
@@ -223,6 +232,8 @@ class Vasp(MakefilePackage):
             cpp_options.append('-DHOST=\\"LinuxGNU\\"')
         if self.spec.satisfies('@6:'):
             cpp_options.append('-Dvasp6')
+        if self.spec.satisfies('+dftd4'):
+            cpp_options.append('-DDFTD4')
 
         cflags = ['-fPIC', '-DADD_']
         fflags = []

@@ -51,6 +51,7 @@ spack:
   - packages:
     - cpmd@4.3 +mpi +omp
     - ansys-fluids@2022R1
+    - ansys-fluids@2023R1
 
 #lapack and blas path not set, error in cmake file "SET(NATIVE_BLAS_LAPACK_SEARCH_PATHS /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 )
 # look into this file nektar/cmake/FindNativeBlasLapack.cmake
