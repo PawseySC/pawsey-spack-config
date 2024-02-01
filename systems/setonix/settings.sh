@@ -3,7 +3,7 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2023.11"
+DATE_TAG="2024.01"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
     INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
@@ -89,16 +89,21 @@ dependencies
 # list of spack build environments - missing vis
 env_list="
 utils
+cray_utils
 num_libs
 cray_num_libs
 python
+cray_python
 io_libs
 cray_io_libs
 langs
+cray_langs
 apps
 devel
+cray_devel
 bench
 s3_clients
+cray_s3_clients
 astro
 bio
 roms
@@ -136,8 +141,6 @@ quay.io/sarahbeecroft9/alphafold:2.2.3
 quay.io/sarahbeecroft9/interproscan:5.56-89.0
 "
 container_list_mpi="
-quay.io/pawsey/hpc-python:2022.03
-quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 quay.io/pawsey/openfoam:v2212
 quay.io/pawsey/openfoam:v2206
 quay.io/pawsey/openfoam:v2012
@@ -149,7 +152,14 @@ quay.io/pawsey/openfoam-org:8
 quay.io/pawsey/openfoam-org:7
 quay.io/pawsey/pytorch:2.1.0-rocm5.6.0
 quay.io/pawsey/tensorflow:2.12.1.570-rocm5.6.0
+amdih/cp2k
+amdih/namd
+amdih/namd3
+quay.io/pawsey/hpc-python:2022.03						
+quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 "
+
+#hpc-python containers need to be rebuild due to security bugs
 
 ### TYPICALLY NO EDIT NEEDED PAST THIS POIINT
 

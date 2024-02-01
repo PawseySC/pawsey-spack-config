@@ -44,6 +44,7 @@ class AnsysFluids(Package):
     
 
     version('2022R1',sha256='cb61c6e48ad1272a9cf9d70afc228c0e5c0deef0ba8264a9b40fbef6ceedf351')
+    version('2023R1',sha256='f2b0214d5af743c53a2f915720357a75772463d68b3bdb1a61943d66f55d5827')
     ansysversion = {
             "2022R1": "v221",
             "2023R1": "v231"

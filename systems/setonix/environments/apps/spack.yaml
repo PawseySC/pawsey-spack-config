@@ -14,11 +14,12 @@ spack:
     - gromacs@=2023 +lapack +plumed build_type=Release ^plumed@2.9.0
     - gromacs@2022.5 +lapack +plumed build_type=Release ^plumed@2.8.2
     - cp2k@2023.1 +plumed ^plumed@2.9.0
-    - lammps@20230802 +adios +asphere +atc +awpmd +bocs +body +brownian +cg-sdk +class2
+    # +latte and +cg-sdk is removed from the cpu build as well so we can use the same recipe for cpu and gpu lammps builds
+    - lammps@20230802 +adios +asphere +atc +awpmd +bocs +body +brownian +class2
       +colloid +colvars +compress +coreshell +dielectric +diffraction +dipole +dpd-basic
       +dpd-meso +dpd-react +dpd-smooth +drude +eff +extra-compute +extra-dump +extra-fix
       +extra-molecule +extra-pair +fep +ffmpeg +granular +h5md +interlayer +jpeg +kim
-      +kokkos +kspace +latboltz +latte +machdyn +manifold +manybody +mc +meam +mesont
+      +kokkos +kspace +latboltz +machdyn +manifold +manybody +mc +meam +mesont
       +mgpt +misc +ml-iap +ml-snap +mofff +molecule +molfile +mpiio +netcdf +openmp-package
       +opt +orient +peri +phonon +plugin +plumed +png +poems +ptm +python +qeq +qtb
       +reaction +reaxff +replica +rigid +shock +smtbq +sph +spin +srd +tally +uef

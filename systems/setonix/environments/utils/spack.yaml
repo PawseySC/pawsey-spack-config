@@ -5,7 +5,7 @@ spack:
     
 # py-pip and py-setuptools: installed in env_langs
 # snakemake: docs recommend to install with conda
-    - ffmpeg@4.4 +avresample
+    - ffmpeg@4.4.1 +avresample
     - gnuplot@5.4.2 +X  ^python@3.10.10 +optimizations+zlib
     - llvm@15.0.4 ~omp_as_runtime ~polly ~gold
     - nextflow@22.10.0 #supports DSL-1

@@ -207,7 +207,7 @@ modules:
         netlib-scalapack: 'libraries/{name}/{version}'
         slate: 'libraries/{name}/{version}'
         "trilinos ~rocm": 'libraries/{name}/{version}'
-        "trilinos +rocm: 'libraries/{name}-amd-gfx90a/{version}'
+        "trilinos +rocm": 'libraries/{name}-amd-gfx90a/{version}'
         "scotch ~metis": 'libraries/{name}/{version}'
         "scotch +metis": 'libraries/{name}/{version}-metis'
         "metis ~int64~real64": 'libraries/{name}/{version}'
