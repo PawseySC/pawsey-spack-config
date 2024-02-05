@@ -112,6 +112,8 @@ modules:
         autoload: direct
       parallel-netcdf:
         autoload: direct
+      squashfs:
+        autoload: none
 
 
       projections:
@@ -272,8 +274,9 @@ modules:
         mpifileutils: 'utilities/{name}/{version}'
         feh: 'utilities/{name}/{version}'
         lz4: 'utilities/{name}/{version}'
-             
-        # S3 clients 
+        squashfs: 'utilities/{name}/{version}'
+
+        # S3 clients
         awscli: 'utilities/{name}/{version}'
         py-boto3: 'utilities/{name}/{version}'
         rclone: 'utilities/{name}/{version}'
