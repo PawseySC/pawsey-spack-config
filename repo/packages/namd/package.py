@@ -54,8 +54,8 @@ class Namd(MakefilePackage, CudaPackage, ROCmPackage):
     high-performance simulation of large biomolecular systems."""
 
     homepage = "https://www.ks.uiuc.edu/Research/namd/"
-#    url      = "file://{0}/NAMD_2.12_Source.tar.gz".format(os.getcwd())
-    git      = "https://charm.cs.illinois.edu/gerrit/namd.git"
+    url      = "file://{0}/NAMD_2.14_Source.tar.gz".format(os.getcwd())
+#    git      = "https://charm.cs.illinois.edu/gerrit/namd.git"
     manual_download = True
 
     version("master", branch="master")

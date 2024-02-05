@@ -33,26 +33,30 @@ spack:
   specs:
   - matrix:
     - [$hdf5-set]
-    - ['%gcc@12.2.0']
+    - ['%cce@15.0.1']
     - [api=v110, api=v18, api=v16]
     - [+mpi, ~mpi+cxx]
-    - [+hl +fortran +szip ^libszip build_type=Release]
+    - [+hl +fortran +szip build_type=Release]
+    - [generator=make]
+    - [^libaec generator=make]
   - matrix:
     - [hdf5@1.12.2]
-    - ['%gcc@12.2.0']
+    - ['%cce@15.0.1']
     - [api=v112]
     - [+mpi, ~mpi+cxx]
-    - [+hl +fortran +szip ^libszip build_type=Release]
+    - [+hl +fortran +szip build_type=Release]
+    - [generator=make]
   - matrix:
     - [$adios-set]
-    - ['%gcc@12.2.0']
+    - ['%cce@15.0.1']
     - [+python ^python@3.10.10 +optimizations+zlib, ~python]
+    - [^netlib-lapack@3.10.1]
     - [+hdf5]
     - [^hdf5@1.12.2 +hl +fortran +szip api=v112 build_type=Release]
     #- [^hdf5@1.12.1 +hl +fortran +szip api=v112 build_type=Release, ^hdf5@1.12.1 +hl +fortran +szip api=v110 build_type=Release,
     #  ^hdf5@1.12.1 +hl +fortran +szip api=v18 build_type=Release]
   - matrix:
     - [$netcdf-set]
-    - ['%gcc@12.2.0']
+    - ['%cce@15.0.1']
     - [target=zen3]
   view: false

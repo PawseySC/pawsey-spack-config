@@ -44,8 +44,9 @@ echo "Creating all missing module directories.."
 
 
 # step 3. update singularity modules
-echo "Updating Singularity modules.."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_custom_singularity_modules.sh"
+#echo "Updating Singularity modules.."
+#this is now performed in install_software_stack.sh script
+#"${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_custom_singularity_modules.sh"
 
 
 # step 4. refresh wrf/roms dependency modules

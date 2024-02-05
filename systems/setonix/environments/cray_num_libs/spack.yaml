@@ -12,7 +12,7 @@ spack:
     - boost@1.80.0 +mpi +numpy +python cxxstd=14
     - boost@1.80.0 +mpi +numpy +python cxxstd=98
     - hpx@1.8.1 +async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi 
-      build_type=Release ^boost
+      build_type=Release ^boost ^netlib-lapack@3.10.1 
     
     # rather silly kokkos has std=98,11, etc setting cxxstd. BUT all other packages 
     # use the flag cxxstd ... Update in recipes might fix this but for the moment, we fix 
@@ -28,17 +28,8 @@ spack:
   # version specified in the packages.yaml, separate packages between those with python dep and those without
   - numerical-with-python:
     
-    # updates to lapack/blas for new hardware like GPUs  
-    # TODO: no need for magma in phase 1 as it is GPU only 
-    #- magma@2.5.4 
-    # for plasma@ setting blas and lapack buildable to true in spack.yaml file
-    # issue with building with blas and lapack using cray-libsci. 
-    # Moving to openblas as default address this issue 
-    - plasma@22.9.29 build_type=Release ^openblas
+    #- plasma@22.9.29 build_type=Release ^openblas  #plasma conflicts with cce compiler
     
-    # slate: unable to patch source commits
-    # however, patch only required for cray-libsci builds
-    # builds OK with openblas
     - slate@2023.08.25 +rocm amdgpu_target=gfx90a build_type=Release 
     - plumed@2.9.0
     
@@ -49,19 +40,13 @@ spack:
     - trilinos@13.4.0 +adios2 +openmp +python ~cuda ^adios2@2.9.0 build_type=Release
       ^hdf5@1.12.2 build_type=Release
   - petsc-set:    
-    # TODO: currently unable to configure petsc with trilinos. 
-    # not clear if issue is with petsc or the version of trilinos
-    # for the moment trilinos disabled 
-    #- petsc@3.15.5 +fftw +trilinos +hwloc +openmp +complex ~cuda
-    - petsc@3.18.1 
-    - petsc@3.19.5  
+    - petsc@3.18.1
+    - petsc@3.19.5
   - numerical:
     
-    # - openblas@0.3.21 threads=openmp # PLACEHOLDER - please look at scripts/install_environments.sh
     - netlib-lapack@3.10.1 build_type=Release
     - netlib-scalapack@2.2.0
-    - blaspp@2022.07.00 ~cuda build_type=Release ^openblas
-    - blaspp@2023.08.25 ~cuda build_type=Release ^openblas
+    - blaspp@2022.07.00 ~cuda build_type=Release #^openblas  # openblas fails with cce compiler
     - eigen@3.4.0 build_type=Release # charris: build ok on Joey 2021-12-16
     - fftw@2.1.5 +openmp precision=float,double # fftw 2 does not support long doubles
     - fftw@3.3.10 +openmp precision=float,double,long_double
@@ -81,23 +66,23 @@ spack:
   specs:
   - matrix:
     - [$parallel]
-    - ['%gcc@12.2.0']
+    - ['%cce@15.0.1']
     - [^python@3.10.10]
     - [target=zen3]
   - matrix:
     - [$petsc-set]
-    - ['%gcc@12.2.0']
-    - [^python@3.10.10 ^fftw@3.3.10]
-    - [+complex, ~complex]
+    - ['%cce@15.0.1']
+    - [^python@3.10.10 ^fftw@3.3.10 ^netlib-lapack@3.10.1]
+    - [~complex] #+complex is throwing this error: unknown type name '__complex128'
     - [+fftw ~trilinos +hwloc +openmp ~cuda]
     - [target=zen3]      
   - matrix:
     - [$numerical]
-    - ['%gcc@12.2.0']
+    - ['%cce@15.0.1']
     - [target=zen3]
   - matrix:
     - [$numerical-with-python]
-    - ['%gcc@12.2.0']
+    - ['%cce@15.0.1']
     - [^python@3.10.10 +optimizations+zlib]
     - [target=zen3]
 # for now don't build amd math libraries
