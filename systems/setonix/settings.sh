@@ -61,7 +61,7 @@ spack_version="0.20.0" # the prefix "v" is added in setup_spack.sh
 singularity_version="3.11.4-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="3.11.4-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.23"
-shpc_registry_version="e6d023e7eae3f293e5482f41b1499743df384826"
+shpc_registry_version="c4ed9b0094075ce22043be35160ca623ee2a22b6"
 
 # python (and py tools) versions
 python_name="python"
@@ -150,7 +150,7 @@ quay.io/pawsey/openfoam-org:10
 quay.io/pawsey/openfoam-org:9
 quay.io/pawsey/openfoam-org:8
 quay.io/pawsey/openfoam-org:7
-quay.io/pawsey/pytorch:2.1.0-rocm5.6.0
+quay.io/pawsey/pytorch:2.1.2-rocm5.6.0
 quay.io/pawsey/tensorflow:2.12.1.570-rocm5.6.0
 amdih/cp2k
 amdih/namd
