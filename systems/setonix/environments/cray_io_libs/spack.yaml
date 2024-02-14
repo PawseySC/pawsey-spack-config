@@ -36,7 +36,7 @@ spack:
     - ['%cce@15.0.1']
     - [api=v110, api=v18, api=v16]
     - [+mpi, ~mpi+cxx]
-    - [+hl +fortran +szip build_type=Release]
+    - [+hl +fortran +szip build_type=Release ^libszip]
     - [generator=make]
     - [^libaec generator=make]
   - matrix:
@@ -44,7 +44,7 @@ spack:
     - ['%cce@15.0.1']
     - [api=v112]
     - [+mpi, ~mpi+cxx]
-    - [+hl +fortran +szip build_type=Release]
+    - [+hl +fortran +szip build_type=Release ^libszip]
     - [generator=make]
   - matrix:
     - [$adios-set]
