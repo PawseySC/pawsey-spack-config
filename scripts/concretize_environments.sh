@@ -30,3 +30,10 @@ for env in $env_list ; do
   spack concretize -f
   spack env deactivate
 done 
+
+for env in $cray_env_list ; do
+  echo "Concretizing env $env.."
+  spack env activate ${envdir}/${env}
+  spack concretize -f
+  spack env deactivate
+done

@@ -27,7 +27,7 @@ spack:
   specs:
   - matrix:
     - [cmake@3.24.3]
-    - ['%gcc@12.2.0', '%cce@15.0.1']
+    - ['%gcc@12.2.0']
     - [target=zen3, target=zen2]
   - matrix:
     - [$packages]

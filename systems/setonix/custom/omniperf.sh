@@ -11,7 +11,7 @@ sed -i 's/15.3/15.4/g' common.py
 cd ..
 export INSTALL_DIR=/software/setonix/2023.08/custom/software/linux-sles15-zen3/gcc-12.2.0/omniperf/1.0.6
 export MODULE_DIR=/software/setonix/2023.08/custom/modules/zen3/gcc/12.2.0/custom
-export MODULE_DIR_CCE=/software/setonix/2023.08/custom/modules/zen3/cce/15.0.1/custom
+export MODULE_DIR_CCE=/software/setonix/2023.08/custom/modules/zen3/cce/16.0.1/custom
 python3 -m pip install -t ${INSTALL_DIR}/python-libs -r requirements.txt
 mkdir build
 cd build/

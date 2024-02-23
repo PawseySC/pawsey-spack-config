@@ -1,7 +1,7 @@
 #!/bin/bash
 module load rocm/5.2.3
 module load craype-accel-amd-gfx90a 
-module load PrgEnv-gnu/8.3.3
+module load PrgEnv-gnu/8.4.0
 module load gcc/11.2.0
 module load python/3.10.10
 module load cmake/3.24.3
@@ -9,7 +9,7 @@ module load libtool/2.4.7
 git clone https://github.com/AMDResearch/omnitrace.git omnitrace-source
 export INSTALL_DIR=/software/setonix/2023.08/custom/software/linux-sles15-zen3/gcc-12.2.0/omnitrace/1.10.2
 export MODULE_DIR=/software/setonix/2023.08/custom/modules/zen3/gcc/12.2.0/custom
-export MODULE_DIR_CCE=/software/setonix/2023.08/custom/modules/zen3/cce/15.0.1/custom
+export MODULE_DIR_CCE=/software/setonix/2023.08/custom/modules/zen3/cce/16.0.1/custom
 cmake                                       \
     -B omnitrace-build                      \
     -D CMAKE_INSTALL_PREFIX=${INSTALL_DIR}  \
