@@ -29,9 +29,11 @@ for env in $env_list ; do
   spack env activate ${envdir}/${env} 
   spack concretize -f
   spack env deactivate
-  export SPACK_ENV=${env}
-  reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_conc_report_${env}.json -t concretisation -r
-  unset SPACK_ENV
-  mv reframe.out ${RFM_STORAGE_DIR}/reframe_${env}_conc.out
-  mv reframe.log ${RFM_STORAGE_DIR}/reframe_${env}_conc.log
+done 
+
+for env in $cray_env_list ; do
+  echo "Concretizing env $env.."
+  spack env activate ${envdir}/${env}
+  spack concretize -f
+  spack env deactivate
 done

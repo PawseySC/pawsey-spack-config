@@ -50,7 +50,7 @@ pawseyenv_version="${DATE_TAG}"
 archs="zen2 zen3"
 # compiler versions (needed for module trees with compiler dependency)
 gcc_version="12.2.0"
-cce_version="15.0.1"
+cce_version="16.0.1"
 aocc_version="3.2.0"
 
 # architecture of login/compute nodes (needed by Singularity symlink module)
@@ -89,28 +89,29 @@ dependencies
 # list of spack build environments - missing vis
 env_list="
 utils
-cray_utils
 num_libs
-cray_num_libs
 python
-cray_python
 io_libs
-cray_io_libs
 langs
-cray_langs
 apps
 devel
-cray_devel
 bench
 s3_clients
-cray_s3_clients
 astro
 bio
 roms
 wrf
 "
-
-
+# list of cray build environments - can run in parallel with the above gcc env_list
+cray_env_list="
+cray_utils
+cray_num_libs
+cray_python
+cray_io_libs
+cray_langs
+cray_devel
+cray_s3_clients
+"
 container_list="
 amazon/aws-cli:2.13.0
 quay.io/biocontainers/bamtools:2.5.2--hd03093a_0
@@ -156,9 +157,10 @@ quay.io/pawsey/tensorflow:2.12.1.570-rocm5.6.0
 amdih/cp2k
 amdih/namd
 amdih/namd3
-quay.io/pawsey/hpc-python:2022.03						
-quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 "
+#hpc-python containers are not working
+#quay.io/pawsey/hpc-python:2022.03						
+#quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 
 #hpc-python containers need to be rebuild due to security bugs
 
@@ -224,11 +226,11 @@ spack_module_dir="${utilities_modules_dir}/spack"
 # Use the Cray provided ROCm until we have a stable custom build.
 
 ROCM_VERSIONS=(
-"5.2.3"
+"5.7.1"
 )
 
 ROCM_PATHS=(
-"/opt/rocm-5.2.3"
+"/software/setonix/rocm/5.7.1"
 )
 
 fi # end include guard
