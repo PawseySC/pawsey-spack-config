@@ -11,11 +11,11 @@ spack:
     #    - amber@20 +openmp ^hdf@4.2.15 +external-xdr
     - gromacs@=2023 +double +lapack +plumed build_type=Release ^plumed@2.9.0
     - gromacs@2022.5 +double +lapack +plumed build_type=Release ^plumed@2.8.2
-    - gromacs@=2023 +lapack +plumed build_type=Release ^plumed@2.9.0
-    - gromacs@2022.5 +lapack +plumed build_type=Release ^plumed@2.8.2
+    - gromacs@=2023 ~double +lapack +plumed build_type=Release ^plumed@2.9.0
+    - gromacs@2022.5 ~double +lapack +plumed build_type=Release ^plumed@2.8.2
     - cp2k@2023.1 +plumed ^plumed@2.9.0
     # +latte and +cg-sdk is removed from the cpu build as well so we can use the same recipe for cpu and gpu lammps builds
-    - lammps@20230802 +adios +asphere +atc +awpmd +bocs +body +brownian +class2
+    - lammps@20230802 ~rocm +adios +asphere +atc +awpmd +bocs +body +brownian +class2
       +colloid +colvars +compress +coreshell +dielectric +diffraction +dipole +dpd-basic
       +dpd-meso +dpd-react +dpd-smooth +drude +eff +extra-compute +extra-dump +extra-fix
       +extra-molecule +extra-pair +fep +ffmpeg +granular +h5md +interlayer +jpeg +kim
@@ -49,8 +49,8 @@ spack:
 
     - namd@2.14 interface=python fftw=3 +plumed ^charmpp@7.0.0 backend=ofi
     - namd@2.15a2 interface=python fftw=3  ^charmpp@7.0.0 backend=ofi
-    - namd@2.15a2 +rocm amdgpu_target=gfx90a ^charmpp@7.0.0 backend=mpi ^ncurses@6.3+symlinks
-    - nekrs@23.0 amdgpu_target=gfx90a:xnack+ +rocm
+  # - namd@2.15a2 +rocm amdgpu_target=gfx90a ^charmpp@7.0.0 backend=mpi ^ncurses@6.3+symlinks #using namd AMD gpu containers
+    - nekrs@22.0 amdgpu_target=gfx90a:xnack+ +rocm #23.0 doesn't work
     - amdgromacs@2023 amdgpu_target=gfx90a +rocm
 # Failing:    - openfoam-org@8 #Alexis still working on it
 # Current alternative:
@@ -95,9 +95,9 @@ spack:
     - ['%gcc@12.2.0']
     - [target=zen3]
   - matrix:
-    - [$vasp_packages]
-    - ['%gcc@12.2.0']
-    - [target=zen3]
+      - [$vasp_packages]
+      - ['%gcc@12.2.0']
+      - [target=zen3]
   - matrix:
     - [$weather_utils]
     - ['%gcc@12.2.0']

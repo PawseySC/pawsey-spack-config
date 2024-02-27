@@ -24,12 +24,12 @@ spack:
   specs:
   - matrix:
     - [python@3.10.10 +optimizations]
-    - ['%gcc@12.2.0', '%cce@15.0.1']
+    - ['%gcc@12.2.0']
     - [target=zen3]
   - matrix:
     - [$py-utilities]
     - [^python@3.10.10 +optimizations+zlib]
-    - ['%gcc@12.2.0', '%cce@15.0.1']
+    - ['%gcc@12.2.0']
     - [target=zen3]
   - matrix:
     - [$packages]

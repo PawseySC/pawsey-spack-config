@@ -5,7 +5,10 @@
 
 # Differences for the 'trilinos' package
 # Commneted 950-958 lines - filter_python function which was a workaround in the previous versions
-
+#updated flag_handler to handle cce/16.0.1
+#        if name == "cflags":
+#            if spec.satisfies("%cce"):
+#                flags.append("-Wno-error=implicit-function-declaration")
 
 import os
 import sys
@@ -455,6 +458,10 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
 
     def flag_handler(self, name, flags):
         spec = self.spec
+        if name == "cflags":
+            if spec.satisfies("%cce"):     
+                flags.append("-Wno-error=implicit-function-declaration")
+
         is_cce = spec.satisfies("%cce")
 
         if name == "cxxflags":

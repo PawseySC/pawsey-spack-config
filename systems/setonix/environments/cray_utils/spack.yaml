@@ -6,7 +6,7 @@ spack:
 # py-pip and py-setuptools: installed in env_langs
 # snakemake: docs recommend to install with conda
     - ffmpeg@4.4 +avresample
-    - gnuplot@5.4.2 +X  ^python@3.10.10 +optimizations+zlib
+      #- gnuplot@5.4.2 +X  ^python@3.10.10 +optimizations+zlib #harfbuzz dependency fails
       #- llvm@15.0.4 ~omp_as_runtime ~polly ~gold #fails with cce
     - nextflow@22.10.0 #supports DSL-1
     - nextflow@23.04.3 #supports DSL-2
@@ -28,11 +28,11 @@ spack:
   specs:
   - matrix:
     - [cmake@3.24.3]
-    - ['%cce@15.0.1']
+    - ['%cce@16.0.1']
     - [target=zen3, target=zen2]
   - matrix:
     - [$packages]
-    - ['%cce@15.0.1']
+    - ['%cce@16.0.1']
     - [target=zen3, target=zen2]
 # TODO: build licensed software
   # - matrix:

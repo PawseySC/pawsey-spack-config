@@ -12,6 +12,7 @@ import os.path
 from llnl.util import tty
 
 from spack.package import *
+from spack.util.prefix import Prefix
 
 
 class Kokkos(CMakePackage, CudaPackage, ROCmPackage):
@@ -312,7 +313,6 @@ class Kokkos(CMakePackage, CudaPackage, ROCmPackage):
                         # Note that conflict declarations should prevent
                         # choosing an unsupported AMD GPU target
                         raise SpackError("Unsupported target: {0}".format(amdgpu_target))
-
         if self.spec.variants["intel_gpu_arch"].value != "none":
             spack_microarches.append(self.spec.variants["intel_gpu_arch"].value)
 
@@ -329,6 +329,7 @@ class Kokkos(CMakePackage, CudaPackage, ROCmPackage):
 
         if "+rocm" in self.spec:
             options.append(self.define("CMAKE_CXX_COMPILER", self.spec["hip"].hipcc))
+
         elif "+wrapper" in self.spec:
             options.append(
                 self.define("CMAKE_CXX_COMPILER", self.spec["kokkos-nvcc-wrapper"].kokkos_cxx)
@@ -408,3 +409,48 @@ class Kokkos(CMakePackage, CudaPackage, ROCmPackage):
 
         self.build_tests(cmake_path)
         self.run_tests(cmake_path)
+
+    def get_paths(self):
+        rocm_spec = self.spec["hip"]
+        rocm_prefix = Prefix(rocm_spec.prefix)
+            
+        paths = {
+            "hip-path": rocm_spec.prefix,
+            "rocm-path": rocm_spec.prefix,
+            "rocm-device-libs": rocm_spec.prefix, #rocm_prefix, #elf.spec["llvm-amdgpu"].prefix,
+            "llvm-amdgpu": rocm_prefix.llvm,
+            "hsa-rocr-dev": rocm_prefix.hsa,                
+        }
+        paths["bitcode"] = paths["rocm-device-libs"].amdgcn.bitcode
+
+        return paths
+
+    def set_variables(self, env):
+        if self.spec.satisfies("+rocm"):
+            # Note: do not use self.spec[name] here, since not all dependencies
+            # have defined prefixes when hip is marked as external.
+            paths = self.get_paths()
+    
+            # Used in hipcc, but only useful when hip is external, since only then
+            # there is a common prefix /opt/rocm-x.y.z.
+            env.set("ROCM_PATH", paths["rocm-path"])
+            # Just the prefix of hip (used in hipcc)
+            env.set("HIP_PATH", paths["hip-path"])
+            env.set("HIP_DEVICE_LIB_PATH", paths["bitcode"])
+            env.set("HIP_CLANG_PATH", paths["llvm-amdgpu"].bin)
+            env.set("HSA_PATH", paths["hsa-rocr-dev"])
+            env.set("DEVICE_LIB_PATH", paths["bitcode"])
+            env.set("LLVM_PATH", paths["llvm-amdgpu"])
+    
+            env.append_path(
+                "HIPCC_COMPILE_FLAGS_APPEND",
+                "--rocm-path={0}".format(paths["rocm-path"]),
+                separator=" ",
+            )            
+    
+    
+    def setup_build_environment(self, env):
+        self.set_variables(env)
+    
+    def setup_run_environment(self, env):
+        self.set_variables(env)        

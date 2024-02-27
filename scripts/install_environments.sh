@@ -58,6 +58,16 @@ for env in $env_list; do
   cd -
 done
 
+for env in $cray_env_list; do
+  echo "Installing environment $env..."
+  cd ${envdir}/${env}
+  spack env activate ${envdir}/${env}
+  spack concretize -f
+  sg $INSTALL_GROUP -c "spack install --no-checksum -j${nprocs}"
+  spack env deactivate
+  cd -
+done
+
 # Create binary cache
 if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
   for hash in `spack find -x --format "{hash}"`; do spack buildcache create -a -m systemwide_buildcache  /$hash; done;
