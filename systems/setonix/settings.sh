@@ -3,10 +3,10 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2024.01"
+DATE_TAG="2024.02"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
-    INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
+    INSTALL_PREFIX="$MYSCRATCH/setonix/${DATE_TAG}" # Edited for my own testing
 fi
 
 if [ "${INSTALL_PREFIX%$DATE_TAG}" = "${INSTALL_PREFIX}" ]; then
@@ -37,7 +37,7 @@ fi
 USER_PERMANENT_FILES_PREFIX='/software/projects'
 USER_TEMP_FILES_PREFIX='/scratch'
 SPACK_USER_CONFIG_PATH="$MYSOFTWARE/setonix/$DATE_TAG/.spack_user_config"
-BOOTSTRAP_PATH='$MYSOFTWARE/setonix/'$DATE_TAG/.spack_user_config/bootstrap
+BOOTSTRAP_PATH="$MYSOFTWARE/setonix/$DATE_TAG/.spack_user_config/bootstrap"
 # Set a new mirror where to fetch prebuilt binaries, if any.
 SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
 # When SPACK_POPULATE_CACHE=1, spack will push binaries in the above cache location for later use.
@@ -61,7 +61,7 @@ spack_version="0.20.0" # the prefix "v" is added in setup_spack.sh
 singularity_version="3.11.4-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="3.11.4-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.23"
-shpc_registry_version="6daa16631460b9a93db2b9580dae360397d00aa7"
+shpc_registry_version="c4ed9b0094075ce22043be35160ca623ee2a22b6"
 
 # python (and py tools) versions
 python_name="python"
@@ -110,6 +110,7 @@ roms
 wrf
 "
 
+
 container_list="
 amazon/aws-cli:2.13.0
 quay.io/biocontainers/bamtools:2.5.2--hd03093a_0
@@ -150,7 +151,7 @@ quay.io/pawsey/openfoam-org:10
 quay.io/pawsey/openfoam-org:9
 quay.io/pawsey/openfoam-org:8
 quay.io/pawsey/openfoam-org:7
-quay.io/pawsey/pytorch:2.2.0-rocm5.6.0
+quay.io/pawsey/pytorch:2.1.2-rocm5.6.0
 quay.io/pawsey/tensorflow:2.12.1.570-rocm5.6.0
 amdih/cp2k
 amdih/namd
