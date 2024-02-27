@@ -12,7 +12,7 @@ spack:
     - boost@1.80.0 +mpi +numpy +python cxxstd=14
     - boost@1.80.0 +mpi +numpy +python cxxstd=98
     - hpx@1.8.1 +async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi 
-      build_type=Release ^boost
+      build_type=Release ^boost ^py-numpy ^openblas
     
     # rather silly kokkos has std=98,11, etc setting cxxstd. BUT all other packages 
     # use the flag cxxstd ... Update in recipes might fix this but for the moment, we fix 
