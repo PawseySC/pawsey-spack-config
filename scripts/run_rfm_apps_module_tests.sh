@@ -19,10 +19,19 @@ fi
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
+module use ${INSTALL_PREFIX}/staff_modulefiles
+# we need the python module to be available in order to run spack
+module --ignore-cache load pawseyenv/${pawseyenv_version}
+# swap is needed for the pawsey_temp module to work
+module swap PrgEnv-gnu PrgEnv-cray
+module swap PrgEnv-cray PrgEnv-gnu
+module load spack/${spack_version}
+
 # Add node this job is running on to host list of ReFrame, allowing it to run from this node
 sed -i "s/\(hostnames.*setonix-01.*\).*\(\]\)/\1,'${SLURM_JOB_NODELIST}'\2/" ${RFM_SETTINGS_FILE}
 
 # Run the Reframe module tests for the apps environment
+module load reframe/${reframe_version}
 echo "Running ReFrame tests for modules in env apps"
 export SPACK_ENV=apps
 reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_install_report_apps.json -t installation -r

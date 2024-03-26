@@ -19,10 +19,7 @@ PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /d
 sed -i "s/\(hostnames.*setonix-01.*\).*\(\]\)/\1,'${SLURM_JOB_NODELIST}'\2/" ${RFM_SETTINGS_FILE}
 
 # Reframe testing for modules
-# Three tests for each module
-#  1. Check that the module was created
-#  2. Check that the module can be loaded
-#  3. Basic sanity check for module (usually a --help or --version for software and ldd for libraries)
+module load reframe/${reframe_version}
 for env in $env_list; do
   echo "Running ReFrame tests for modules in env $env"
   export SPACK_ENV=${env}
