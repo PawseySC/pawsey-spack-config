@@ -20,16 +20,21 @@ fi
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
+module use ${INSTALL_PREFIX}/staff_modulefiles
+# we need the python module to be available in order to run spack
+module --ignore-cache load pawseyenv/${pawseyenv_version}
+# swap is needed for the pawsey_temp module to work
+module swap PrgEnv-gnu PrgEnv-cray
+module swap PrgEnv-cray PrgEnv-gnu
+module load spack/${spack_version}
+
 # Add node this job is running on to host list of ReFrame, allowing it to run from this node
 sed -i "s/\(hostnames.*setonix-01.*\).*\(\]\)/\1,'${SLURM_JOB_NODELIST}'\2/" ${RFM_SETTINGS_FILE}
 
 # Reframe testing for modules
-# Three tests for each module
-#  1. Check that the module was created
-#  2. Check that the module can be loaded
-#  3. Basic sanity check for module (usually a --help or --version for software and ldd for libraries)
+module load reframe/${reframe_version}
 for env in $env_list; do
-  if [ "$env" != "apps"]; then
+  if [ "$env" != "apps" -a "$env" != "wrf" -a "$env" != "roms" ]; then
     echo "Running ReFrame tests for modules in env $env"
     export SPACK_ENV=${env}
     reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_install_report_${env}.json -t installation -r
