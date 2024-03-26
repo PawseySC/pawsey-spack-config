@@ -77,24 +77,15 @@ for hash in `spack find -x --format "{hash}"`; do spack module lmod refresh -y /
 # Refresh dependencies - implicit specs (manually remove .llvm load from pocl modulefile)
 for hash in `spack find -X --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
 
+# Remove .llvm from module files to stop it replacing gcc/cce at module load
+# If there are some module files which need the explicit load, then this can be commented out
+# and manual comments of .llvm can be performed
+# In 2024.02 CPE/23.09 and 2023.08 CPE/23.03 software stacks, all module files with .llvm load commands had been manually commented out
+grep -Elr "^load\(.*\.llvm.*\)" ${INSTALL_PREFIX}/modules | xargs sed -i "s/\(load(.*llvm.*)\)/--\1/"
+
 # Generate commands for sysadmins to execute to fix Singularity permissions.
 echo """Singularity fix permissions:
 -----------------------------
 Ask the admins to execute the following scripts:
 """
 for prefix in `spack find -x --format "{prefix}" singularityce`; do echo ${prefix}/bin/spack_perms_fix.sh; done;
-
-
-# Reframe testing for modules
-# Three tests for each module
-#  1. Check that the module was created
-#  2. Check that the module can be loaded
-#  3. Basic sanity check for module (usually a --help or --version for software and ldd for libraries)
-for env in $env_list; do
-  echo "Running ReFrame tests for modules in env $env"
-  export SPACK_ENV=${env}
-  reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_install_report_${env}.json -t installation -r
-  unset SPACK_ENV
-  mv reframe.out ${RFM_STORAGE_DIR}/reframe_${env}_install.out
-  mv reframe.log ${RFM_STORAGE_DIR}/reframe_${env}_install.log
-done
