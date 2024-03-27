@@ -19,11 +19,20 @@ echo "Setting up spack.."
 echo "Running first python install"
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_python.sh"
 
+echo "Running first reframe install"
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_reframe.sh"
+
 echo "Run concretization.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/concretize_environments.sh"
 
+echo "Run reframe concretization tests.."
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_rfm_concretization_tests.sh"
+
 echo "Install environments.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_environments.sh"
+
+echo "Run reframe package installation tests.."
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_rfm_module_tests.sh"
 
 echo "Update singularity modules.."
 # note that moving forward using the singularityce recipes. Comment out the singularity_modules, kept for reference
