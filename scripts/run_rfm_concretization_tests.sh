@@ -38,19 +38,19 @@ module load reframe/${reframe_version}
 for env in $env_list; do
   echo "Running ReFrame tests for concretization in env $env"
   export SPACK_ENV=${env}
-  reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} -t concretization -r #--prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_install_report_${env}.json -t concretization -r
+  reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_install_report_${env}.json -t concretization -r
   unset SPACK_ENV
-  #mv reframe.out ${RFM_STORAGE_DIR}/reframe_${env}_conc.out
-  #mv reframe.log ${RFM_STORAGE_DIR}/reframe_${env}_conc.log
+  mv reframe.out ${RFM_STORAGE_DIR}/reframe_${env}_conc.out
+  mv reframe.log ${RFM_STORAGE_DIR}/reframe_${env}_conc.log
 done
 
 for env in $cray_env_list; do
   echo "Running ReFrame tests for concretization in env $env"
   export SPACK_ENV=${env}
-  reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} -t concretization -r #--prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_install_report_${env}.json -t concretization -r
+  reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_install_report_${env}.json -t concretization -r
   unset SPACK_ENV   
-  #mv reframe.out ${RFM_STORAGE_DIR}/reframe_${env}_conc.out
-  #mv reframe.log ${RFM_STORAGE_DIR}/reframe_${env}_conc.log
+  mv reframe.out ${RFM_STORAGE_DIR}/reframe_${env}_conc.out
+  mv reframe.log ${RFM_STORAGE_DIR}/reframe_${env}_conc.log
 done
 
 # Reset valid setonix hostnames to original entries (i.e. remove the node this job runs on) for future runs

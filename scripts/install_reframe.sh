@@ -41,20 +41,3 @@ for arch in $archs; do
     sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %gcc@${gcc_version} target=$arch"
     sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %cce@${cce_version} target=$arch"
 done
-
-#echo "Installing Python with default compilers.."
-#for arch in $archs; do
-#    sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %gcc@${gcc_version} target=$arch"
-#    sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %cce@${cce_version} target=$arch"
-#done
-
-# # Generate module file(s) for Reframe
-# # Create binary cache
-# if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
-#   for hash in `spack find -x --format "{hash}"`; do spack buildcache create -a -m systemwide_buildcache  /$hash; done;
-# fi
-# # Refresh module files - explicit specs
-# for hash in `spack find -x --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
-
-# # Refresh dependencies - implicit specs (manually remove .llvm load from pocl modulefile)
-# for hash in `spack find -X --format "{hash}"`; do spack module lmod refresh -y /$hash; done;

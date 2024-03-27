@@ -6,7 +6,7 @@ __PSC_SETTINGS__=1
 DATE_TAG="2024.02"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
-    INSTALL_PREFIX="$MYSCRATCH/setonix/${DATE_TAG}" # Edited for my own testing
+    INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
 fi
 
 if [ "${INSTALL_PREFIX%$DATE_TAG}" = "${INSTALL_PREFIX}" ]; then
@@ -47,6 +47,11 @@ SPACK_POPULATE_CACHE=0
 
 pawseyenv_version="${DATE_TAG}"
 
+# Reframe files
+RFM_SETTINGS_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_settings.py
+RFM_STORAGE_DIR=${INSTALL_PREFIX}/rfm_results
+RFM_TEST_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_checks.py
+
 archs="zen2 zen3"
 # compiler versions (needed for module trees with compiler dependency)
 gcc_version="12.2.0"
@@ -70,6 +75,8 @@ setuptools_version="59.4.0" # has to match the version in the Spack env yaml
 pip_version="23.1.2" # has to match the version in the Spack env yaml
 # r major minor version
 r_version_majorminor="4.2.2"
+# reframe major minor version
+reframe_version="3.12.0"
 
 # list of module categories
 module_cat_list="
