@@ -9,9 +9,16 @@ import reframe.utility.udeps as udeps
 
 import re
 import os
+import sys
 import yaml
 import json
 
+# curr_dir = os.path.dirname(__file__).replace('\\','/')
+# parent_dir = os.path.abspath(os.path.join(curr_dir, os.pardir))
+# root_dir = os.path.abspath(os.path.join(parent_dir, os.pardir))
+# sys.path.append(root_dir)
+
+# from systems.setonix.rfm_helper_methods import *
 
 # Each entry of dictionary is list containing command and regex pattern to check for that package
 # Format of list is [command, command option/argument, output]
