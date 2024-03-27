@@ -30,6 +30,12 @@ module load spack/${spack_version}
 # Add node this job is running on to host list of ReFrame, allowing it to run from this node
 sed -i "s/\(hostnames.*setonix-01.*\).*\(\]\)/\1,'${SLURM_JOB_NODELIST}'\2/" ${RFM_SETTINGS_FILE}
 
+# These need to be exported to be visible within Reframe
+export PAWSEY_SPACK_CONFIG_REPO=${PAWSEY_SPACK_CONFIG_REPO}
+export cce_version=${cce_version}
+export gcc_version=${gcc_version}
+export python_version=${python_version}
+
 # Run the Reframe module tests for the apps environment
 module load reframe/${reframe_version}
 echo "Running ReFrame tests for modules in env apps"
