@@ -39,7 +39,8 @@ spack:
     # slate: unable to patch source commits
     # however, patch only required for cray-libsci builds
     # builds OK with openblas
-    - slate@2023.08.25 +rocm amdgpu_target=gfx90a build_type=Release 
+    #- slate@2023.08.25 +rocm amdgpu_target=gfx90a build_type=Release 
+    - slate@2023.11.05 +rocm amdgpu_target=gfx90a build_type=Release 
     - plumed@2.9.0
     
     # some heavier numerical library builds 

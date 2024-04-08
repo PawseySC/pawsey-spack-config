@@ -66,9 +66,9 @@ modules:
 
       # needed by bug in cray-mpich logic,
       # see https://github.com/spack/spack/issues/21696
-      cray-mpich:
-        filter:
-          environment_blacklist: ['CPATH']
+      #cray-mpich:
+      #  filter:
+      #    environment_blacklist: ['CPATH']
 
       projections:
         # we want to keep these simple for user-specific installations

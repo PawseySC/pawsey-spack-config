@@ -10,9 +10,9 @@ spack:
   - packages-with-python:
     #    - amber@20 +openmp ^hdf@4.2.15 +external-xdr
     - gromacs@=2023 +double +lapack +plumed build_type=Release ^plumed@2.9.0
-    - gromacs@2022.5 +double +lapack +plumed build_type=Release ^plumed@2.8.2
-    - gromacs@=2023 +lapack +plumed build_type=Release ^plumed@2.9.0
-    - gromacs@2022.5 +lapack +plumed build_type=Release ^plumed@2.8.2
+    - gromacs@2022.5 +double +lapack +plumed build_type=Release ^plumed@2.8.2 
+    - gromacs@=2023 ~double +lapack +plumed build_type=Release ^plumed@2.9.0
+    - gromacs@2022.5 ~double +lapack +plumed build_type=Release ^plumed@2.8.2
     - cp2k@2023.1 +plumed ^plumed@2.9.0
     # +latte and +cg-sdk is removed from the cpu build as well so we can use the same recipe for cpu and gpu lammps builds
     - lammps@20230802 +adios +asphere +atc +awpmd +bocs +body +brownian +class2
@@ -61,8 +61,8 @@ spack:
 
   - packages:
     - cpmd@4.3 +mpi +omp
-    - ansys-fluids@2022R1
-    - ansys-fluids@2023R1
+#    - ansys-fluids@2022R1
+#    - ansys-fluids@2023R1
 
 #lapack and blas path not set, error in cmake file "SET(NATIVE_BLAS_LAPACK_SEARCH_PATHS /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 )
 # look into this file nektar/cmake/FindNativeBlasLapack.cmake

@@ -2,8 +2,12 @@
 #SBATCH --nodes=1
 #SBATCH --exclusive
 #SBATCH --time=1-00:00:00
+#SBATCH --reservation=PAWSEY_GPU_TESTING
+#SBATCH -p gpu
+#SBATCH -A pawsey0001-gpu 
+#SBATCH --gpus-per-node=8
 
 export SYSTEM=setonix
 export INSTALL_GROUP=pawsey0001
-export INSTALL_PREFIX=/scratch/pawsey0001/spack/2023.10
+export INSTALL_PREFIX=/scratch/pawsey0012/ilkhom/2024.03
 ./install_software_stack.sh

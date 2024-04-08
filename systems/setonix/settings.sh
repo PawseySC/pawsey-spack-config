@@ -3,7 +3,7 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2024.01"
+DATE_TAG="2024.03"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
     INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
@@ -50,18 +50,18 @@ pawseyenv_version="${DATE_TAG}"
 archs="zen2 zen3"
 # compiler versions (needed for module trees with compiler dependency)
 gcc_version="12.2.0"
-cce_version="15.0.1"
+cce_version="16.0.1"
 aocc_version="3.2.0"
 
 # architecture of login/compute nodes (needed by Singularity symlink module)
 cpu_arch="zen3"
 
 # tool versions
-spack_version="0.20.0" # the prefix "v" is added in setup_spack.sh
+spack_version="0.21.0" # the prefix "v" is added in setup_spack.sh
 singularity_version="3.11.4-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="3.11.4-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.23"
-shpc_registry_version="6daa16631460b9a93db2b9580dae360397d00aa7"
+shpc_registry_version="c4ed9b0094075ce22043be35160ca623ee2a22b6"
 
 # python (and py tools) versions
 python_name="python"
@@ -89,21 +89,14 @@ dependencies
 # list of spack build environments - missing vis
 env_list="
 utils
-cray_utils
 num_libs
-cray_num_libs
 python
-cray_python
 io_libs
-cray_io_libs
 langs
-cray_langs
 apps
 devel
-cray_devel
 bench
 s3_clients
-cray_s3_clients
 astro
 bio
 roms
@@ -150,7 +143,7 @@ quay.io/pawsey/openfoam-org:10
 quay.io/pawsey/openfoam-org:9
 quay.io/pawsey/openfoam-org:8
 quay.io/pawsey/openfoam-org:7
-quay.io/pawsey/pytorch:2.2.0-rocm5.6.0
+quay.io/pawsey/pytorch:2.1.2-rocm5.6.0
 quay.io/pawsey/tensorflow:2.12.1.570-rocm5.6.0
 amdih/cp2k
 amdih/namd
@@ -223,11 +216,11 @@ spack_module_dir="${utilities_modules_dir}/spack"
 # Use the Cray provided ROCm until we have a stable custom build.
 
 ROCM_VERSIONS=(
-"5.2.3"
+"5.7.0"
 )
 
 ROCM_PATHS=(
-"/opt/rocm-5.2.3"
+"/software/setonix/rocm/5.7.0"
 )
 
 fi # end include guard
