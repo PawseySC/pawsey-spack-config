@@ -55,7 +55,9 @@ compilers:
     - craype-x86-milan
     - craype-network-ofi
     - xpmem
-    environment: {}
+    environment:
+      set:
+        PE_ENV: "GNU"
     extra_rpaths: []
 
 # - compiler:
@@ -183,7 +185,9 @@ compilers:
     - craype-x86-milan
     - craype-network-ofi
     - xpmem
-    environment: {}
+    environment:
+      set:
+        PE_ENV: "CRAY"
     extra_rpaths: []
 
 # - compiler:

@@ -24,15 +24,15 @@ spack:
   specs:
   - matrix:
     - [python@3.10.10 +optimizations]
-    - ['%cce@15.0.1']
+    - ['%cce@16.0.1']
     - [target=zen3]
   - matrix:
     - [$py-utilities]
     - [^python@3.10.10 +optimizations+zlib]
-    - ['%cce@15.0.1']
+    - ['%cce@16.0.1']
     - [target=zen3]
   - matrix:
     - [$packages]
-    - ['%cce@15.0.1']
+    - ['%cce@16.0.1']
     - [target=zen3]
   view: false
