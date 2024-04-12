@@ -8,8 +8,8 @@ spack:
   - parallel:
     
     # boost: might need several boosts with different stadards
-    - boost@1.83.0 +mpi +numpy +python cxxstd=14 ^py-numpy@1.26.1@
-    - boost@1.83.0 +mpi +numpy +python cxxstd=98 ^py-numpy@1.26.1@
+    - boost@1.83.0 +mpi +numpy +python cxxstd=14 ^py-numpy@1.26.1
+    - boost@1.83.0 +mpi +numpy +python cxxstd=98 ^py-numpy@1.26.1
     - hpx@1.9.1 +async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi 
       build_type=Release ^boost
     
