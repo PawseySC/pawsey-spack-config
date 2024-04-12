@@ -12,7 +12,7 @@ spack:
   - math-tests:
     - hpl@2.3
   - mpi-tests:
-    - osu-micro-benchmarks@5.7.1
+    - osu-micro-benchmarks@7.3
   - io-tests:
     - ior@3.3.0 +hdf5 +lustre
 

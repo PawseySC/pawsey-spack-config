@@ -15,7 +15,7 @@ spack:
   # casacore variants
   # try running spack install --no-checksum 
   - casacore-legacy:
-    - casacore@3.2.1 +python build_type=Release ^python@3.10.10 # no checksum for this release 
+    - casacore@3.2.1 +python build_type=Release ^python@3.11.6 # no checksum for this release 
   - casacore-set:
     - casacore@3.3.0
     - casacore@3.4.0
@@ -34,7 +34,7 @@ spack:
     - gsl
     - cppunit
     - log4cxx cxxstd=17
-    - log4cxx cxxstd=11 ^python@3.10.10
+    - log4cxx cxxstd=11 ^python@3.11.6
     - mcpp
     - xerces-c
     - subversion
@@ -60,9 +60,9 @@ spack:
     - [$casacore-set]
     - ['%gcc@12.2.0']
     - [target=zen3]
-    - [+python build_type=Release ^python@3.10.10]
+    - [+python build_type=Release ^python@3.11.6]
     - [+openmp, ~openmp]
-    - [~adios2 ~hdf5, +adios2 +hdf5 ^adios2@2.8.3 +hdf5 ^hdf5@1.12.2 +hl +fortran
+    - [~adios2 ~hdf5, +adios2 +hdf5 ^adios2@2.9.1 +hdf5 ^hdf5@1.14.3 +hl +fortran
         build_type=Release +szip api=v112]
   - matrix:
     - [$casacore-legacy]
@@ -74,7 +74,7 @@ spack:
     - [target=zen3]
       #- matrix:
       #  - [$mwa-util-set-with-python]
-      #  - [^python@3.10.10]
+      #  - [^python@3.11.6]
       #  - ['%gcc@12.2.0']
       #  - [target=zen3]
   - matrix:
@@ -83,12 +83,12 @@ spack:
     - [target=zen3]
   - matrix:
     - [$python-astro-set]
-    - [^python@3.10.10]
+    - [^python@3.11.6]
     - ['%gcc@12.2.0']
     - [target=zen3]
   - matrix:
     - [$casacore-new-set]
-    - [^python@3.10.10]
+    - [^python@3.11.6]
     - ['%gcc@12.2.0']
     - [target=zen3]
   view: false

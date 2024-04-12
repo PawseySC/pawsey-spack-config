@@ -9,12 +9,13 @@ spack:
   definitions:
   - packages-with-python:
     #    - amber@20 +openmp ^hdf@4.2.15 +external-xdr
-    - gromacs@=2023 +double +lapack +plumed build_type=Release ^plumed@2.9.0
+    - gromacs@=2023.3 +double +lapack +plumed build_type=Release ^plumed@2.9.0
     - gromacs@2022.5 +double +lapack +plumed build_type=Release ^plumed@2.8.2 
-    - gromacs@=2023 ~double +lapack +plumed build_type=Release ^plumed@2.9.0
+    - gromacs@=2023.3 ~double +lapack +plumed build_type=Release ^plumed@2.9.0
     - gromacs@2022.5 ~double +lapack +plumed build_type=Release ^plumed@2.8.2
-    - cp2k@2023.1 +plumed ^plumed@2.9.0
+    - cp2k@2023.2 +plumed ^plumed@2.9.0
     # +latte and +cg-sdk is removed from the cpu build as well so we can use the same recipe for cpu and gpu lammps builds
+    # lammps: LAMMPS is incompatible with Kokkos 4.x until @20230802 so reverting to kokkos@3.7.02
     - lammps@20230802 +adios +asphere +atc +awpmd +bocs +body +brownian +class2
       +colloid +colvars +compress +coreshell +dielectric +diffraction +dipole +dpd-basic
       +dpd-meso +dpd-react +dpd-smooth +drude +eff +extra-compute +extra-dump +extra-fix
@@ -24,7 +25,7 @@ spack:
       +opt +orient +peri +phonon +plugin +plumed +png +poems +ptm +python +qeq +qtb
       +reaction +reaxff +replica +rigid +shock +smtbq +sph +spin +srd +tally +uef
       +voronoi +yaff build_type=Release ^kokkos@3.7.02+hwloc+memkind+numactl+openmp+tuning
-      build_type=Release ^plumed@2.9.0 ^adios2@2.9.0
+      build_type=Release ^plumed@2.9.0 ^adios2@2.9.1
     - lammps@20230802 amdgpu_target=gfx90a +rocm +adios +asphere +atc +awpmd +bocs +body +brownian
       +class2 +colloid +colvars +compress +coreshell +dielectric +diffraction +dipole
       +dpd-basic +dpd-meso +dpd-react +dpd-smooth +drude +eff +extra-compute +extra-dump
@@ -33,8 +34,8 @@ spack:
       +meam +mesont +mgpt +misc +ml-iap +ml-snap +mofff +molecule +molfile +mpiio
       +netcdf +openmp-package +opt +orient +peri +phonon +plugin +plumed +png +poems
       +ptm +python +qeq +qtb +reaction +reaxff +replica +rigid +shock +smtbq +sph
-      +spin +srd +tally +uef +voronoi +yaff build_type=Release ^kokkos +hwloc+memkind+numactl+openmp+tuning+rocm
-      std=14 build_type=Release amdgpu_target=gfx90a ^plumed@2.9.0 ^adios2@2.9.0
+      +spin +srd +tally +uef +voronoi +yaff build_type=Release ^kokkos@3.7.02 +hwloc+memkind+numactl+openmp+tuning+rocm
+      build_type=Release amdgpu_target=gfx90a ^plumed@2.9.0 ^adios2@2.9.1 #No std variant in kokkos
  
       #    - lammps@20210929.3 +adios +asphere +atc +awpmd +bocs +body +brownian +cg-sdk
       #      +class2 +colloid +colvars +compress +coreshell +dielectric +diffraction +dipole
@@ -61,8 +62,8 @@ spack:
 
   - packages:
     - cpmd@4.3 +mpi +omp
-#    - ansys-fluids@2022R1
-#    - ansys-fluids@2023R1
+    - ansys-fluids@2022R1
+    - ansys-fluids@2023R1
 
 #lapack and blas path not set, error in cmake file "SET(NATIVE_BLAS_LAPACK_SEARCH_PATHS /usr/lib /usr/lib64 /usr/local/lib /usr/local/lib64 )
 # look into this file nektar/cmake/FindNativeBlasLapack.cmake
@@ -72,7 +73,7 @@ spack:
 
 # weather utilities  
   - weather_utils:
-    - cdo@2.1.0 #eccodes compilation issue on Joey but compiles fine on Setonix
+    - cdo@2.2.2 #eccodes compilation issue on Joey but compiles fine on Setonix
     - nco@5.1.6 ^pocl@4.0
     - ncview@2.1.9
 
@@ -83,7 +84,7 @@ spack:
   specs:
   - matrix:
     - [$packages-with-python]
-    - [^python@3.10.10 +optimizations+zlib~ssl]
+    - [^python@3.11.6 +optimizations+zlib~ssl]
     - ['%gcc@12.2.0']
     - [target=zen3]
   - matrix:

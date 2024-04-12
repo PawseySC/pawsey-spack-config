@@ -33,7 +33,7 @@ if (( counter > 5 )); then
 	echo "Tried to install openblas 5 times, and it didn't work. Stopping here.."
 	exit 1
 fi
-sg $INSTALL_GROUP -c "spack install openblas@0.3.21 threads=openmp"
+sg $INSTALL_GROUP -c "spack install openblas@0.3.24 threads=openmp"
 openblas_not_installed=$?
 (( counter = counter + 1 ))
 done

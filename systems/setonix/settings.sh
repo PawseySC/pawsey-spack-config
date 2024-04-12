@@ -60,16 +60,16 @@ cpu_arch="zen3"
 spack_version="0.21.0" # the prefix "v" is added in setup_spack.sh
 singularity_version="3.11.4-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="3.11.4-mpi" # has to match the version in the Spack env yaml + mpi tag
-shpc_version="0.1.23"
+shpc_version="0.1.28"
 shpc_registry_version="6daa16631460b9a93db2b9580dae360397d00aa7"
 
 # python (and py tools) versions
 python_name="python"
-python_version="3.10.10" # has to match the version in the Spack env yaml
+python_version="3.11.6" # has to match the version in the Spack env yaml
 setuptools_version="59.4.0" # has to match the version in the Spack env yaml
 pip_version="23.1.2" # has to match the version in the Spack env yaml
 # r major minor version
-r_version_majorminor="4.2.2"
+r_version_majorminor="4.3.0"
 
 # list of module categories
 module_cat_list="

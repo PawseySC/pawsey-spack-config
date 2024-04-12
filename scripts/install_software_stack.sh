@@ -24,6 +24,7 @@ echo "Run concretization.."
 
 echo "Install environments.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_environments.sh"
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_cray_environments.sh"
 
 echo "Update singularity modules.."
 # note that moving forward using the singularityce recipes. Comment out the singularity_modules, kept for reference

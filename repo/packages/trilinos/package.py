@@ -22,6 +22,11 @@ from spack.pkg.builtin.kokkos import Kokkos
 # relevant documentation/examples:
 # https://github.com/trilinos/Trilinos/issues/175
 
+#updated flag_handler to handle cce/16.0.1
+#        if name == "cflags":
+#            if spec.satisfies("%cce"):
+#                flags.append("-Wno-error=implicit-function-declaration")
+
 
 class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
     """The Trilinos Project is an effort to develop algorithms and enabling
@@ -493,6 +498,11 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
 
     def flag_handler(self, name, flags):
         spec = self.spec
+
+        if name == "cflags":
+            if spec.satisfies("%cce"):     
+                flags.append("-Wno-error=implicit-function-declaration")
+
         is_cce = spec.satisfies("%cce")
 
         if name == "cxxflags":
