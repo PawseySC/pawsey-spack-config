@@ -23,10 +23,6 @@ spack:
     - py-setuptools@68.0.0
   specs:
   - matrix:
-    - [python@3.11.6 +optimizations]
-    - ['%cce@16.0.1']
-    - [target=zen3]
-  - matrix:
     - [$py-utilities]
     - [^python@3.11.6 +optimizations+zlib]
     - ['%cce@16.0.1']
