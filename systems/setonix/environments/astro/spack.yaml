@@ -52,7 +52,7 @@ spack:
     - py-funcsigs #package not available in spack/0.20.0, using recipe from 0.19.0
     - py-astropy@4.2.1+extras
     - py-astropy@5.1+extras
-    - py-healpy ^py-astropy@4.2.1+extras
+      #    - py-healpy ^py-astropy@4.2.1+extras #No longintrepr.h in python/3.11
     - py-emcee
   # add package specs to the `specs` list
   specs:
@@ -62,8 +62,9 @@ spack:
     - [target=zen3]
     - [+python build_type=Release ^python@3.11.6]
     - [+openmp, ~openmp]
-    - [~adios2 ~hdf5, +adios2 +hdf5 ^adios2@2.9.1 +hdf5 ^hdf5@1.14.3 +hl +fortran
+    - [~adios2 ~hdf5, +adios2 +hdf5 ^adios2@2.8.3 +hdf5 ^hdf5@1.12.2 +hl +fortran 
         build_type=Release +szip api=v112]
+        # can't use hdf%@1.14.3 for casacore yet
   - matrix:
     - [$casacore-legacy]
     - ['%gcc@12.2.0']

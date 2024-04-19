@@ -99,7 +99,7 @@ packages:
   gdbm:
     version: [1.23]
   apr:
-    version: [1.7.4]
+    version: [1.5.2] #subversion needs older apr version
   gettext:
     version: [0.22.3]
   py-cython:
@@ -114,7 +114,7 @@ packages:
     version: [3.8.1]
     variants: '+movies'
   py-mpi4py:
-    version: [3.1.4]
+    version: [3.1.5]
   py-numba:
     version: [0.57.0]
   py-numpy:
@@ -225,7 +225,7 @@ packages:
     version: [4.2.15]
     variants: '+shared+external-xdr'
   adios2:
-    version: [2.9.1]
+    version: [2.9.2]
     variants: '+python +hdf5 build_type=Release'
   netcdf-c:
     version: [4.9.2]

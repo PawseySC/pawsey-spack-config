@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 # to handle cray environment
-#             if self.spec.satisfies("@2020-10-01 %oneapi@2023:") or self.spec.satisfies("@2020-10-01 %cce"):
+#             if self.spec.satisfies("@2020-10-01 %oneapi@2023:") or self.spec.satisfies("%cce"):
 #                flags.append("-Wno-error=c++11-narrowing")
 # is added
 
@@ -65,7 +65,7 @@ class Mgard(CMakePackage, CudaPackage):
 
     def flag_handler(self, name, flags):
         if name == "cxxflags":
-            if self.spec.satisfies("@2020-10-01 %oneapi@2023:") or self.spec.satisfies("@2020-10-01 %cce"):
+            if self.spec.satisfies("@2020-10-01 %oneapi@2023:") or self.spec.satisfies("%cce"):
                 flags.append("-Wno-error=c++11-narrowing")
         return (flags, None, None)
 

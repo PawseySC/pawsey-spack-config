@@ -13,11 +13,11 @@ spack:
     # NotReadyYet:    
     # - julia@1.6.1 #Default recipe is very weak. Faulty. Lots of needed dependencies are missing.
     - openjdk@17.0.8.1_1
-    - r@4.3.0        #failed with error: controlling expression type 'long double' not compatible with any generic association type 
-    - ruby@3.1.0     #failed with ld.lld: error: relocation R_X86_64_32 cannot be used against local symbol; recompile with -fPIC
+    #- r@4.3.0        
+    - ruby@3.1.0     
     
     # latest version of rust available may have issues but spack listed latest release is fine. 
-    - rust@1.70.0 ^python@3.11.6 +optimizations+zlib   #failed with ld.lld: error: relocation R_X86_64_32 cannot be used against local symbol; recompile with -fPIC
+    #- rust@1.70.0 ^python@3.11.6 +optimizations+zlib   
   - py-utilities:
     - py-pip@23.1.2
     - py-setuptools@68.0.0

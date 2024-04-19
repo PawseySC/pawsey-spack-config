@@ -37,7 +37,7 @@ spack:
     - opencv@4.8.0 build_type=Release
     
       #    - opencv@3.4.18 build_type=Release
-    - trilinos@14.4.0 +adios2 +openmp +python ~cuda ^adios2@2.9.1 build_type=Release
+    - trilinos@15.0.0 +adios2 +openmp +python ~cuda ^adios2@2.9.2 build_type=Release
       ^hdf5@1.14.3 build_type=Release
   - petsc-set:    
     - petsc@3.20.1

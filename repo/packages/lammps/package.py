@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 # PAWSEY MODIFICATIONS
-
+# added 20230802.3 version
 # Had to comment all versions except the last one vecause of weird conflicts due to maybe the older version of spack we are using
 # Had to add a ROCM LLVM LIB path to the LD_LIBRARY_PATH as it is not added by the compiler in the RPATH somehow.
 
@@ -34,6 +34,11 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage):
     #   marked deprecated=True
     # * patch releases older than a stable release should be marked deprecated=True
     version("develop", branch="develop")
+    version(
+        "20230802.3",
+        sha256="6666e28cb90d3ff01cbbda6c81bdb85cf436bbb41604a87f2ab2fa559caa8510",
+        preferred=True,
+    )
     version(
         "20230802",
         sha256="48dc8b0b0583689e80ea2052275acbc3e3fce89707ac557e120db5564257f7df",
