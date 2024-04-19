@@ -126,7 +126,7 @@ def get_all_root_specs():
 # Function to process specs where part of the module path is not present in the
 # concretised spec identifier, but instead is only present in the `paramaters` dictinoary 
 # entry of the full dictionary of the spec in the spack.lock file
-# NOTE: As of 2024.02, this is needed for xerces-c and wcslib
+# NOTE: As of 2024.02, this is needed for xerces-c, wcslib, and boost
 def special_case(pkg_name, base_spec, conc_data, pkg_hash):
 
     # For xerces-c the module path includes the transcoder, which is not specified in the base spec
@@ -141,6 +141,8 @@ def special_case(pkg_name, base_spec, conc_data, pkg_hash):
         else:
             if '~cfitsio' not in base_spec:
                 new_spec = base_spec + (' ' + '~cfitsio')
+    elif pkg_name == 'boost':
+        new_spec = base_spec + (' ' + 'visibility=' + conc_data['concrete_specs'][pkg_hash]['parameters']['visibility'])
     
     return new_spec
 
@@ -263,7 +265,7 @@ def build_root_spec(conc_spec, param_dict):
 # NOTE: This is used primarily for dependencies, which are not root packages of any of the environments
 def get_dependency_module_path(pkg_info, conc_data, pkg_spec):
     # List of specs which need extra hardcoded work to match conretsied spec to full module path
-    special_cases = ['xerces-c', 'wcslib']
+    special_cases = ['xerces-c', 'wcslib', 'boost']
 
     # Get required environment variables
     env_dict = get_env_vars()
@@ -453,7 +455,7 @@ def get_module_dependencies(pkg_module_path):
 # Get full absolute module paths for every package in an environment
 def get_module_paths():
     # List of specs which need extra hardcoded work to match conretsied spec to full module path
-    special_cases = ['xerces-c', 'wcslib']
+    special_cases = ['xerces-c', 'wcslib', 'boost']
 
     # Get required environment variables
     env_dict = get_env_vars()
@@ -532,6 +534,7 @@ def get_module_paths():
                 # If all specifiers of a projection are present in the spec, it matches
                 if all(s in updated_c_spec for s in updated_specifiers):
                     matching_projections[c_idx].append(p)
+
 
     # Multiple projections can match a single spec, we need to pick the one true match
     # Example: A spec with "gromacs +double" can be matched by both "gromacs" and "gromacs +double" projections

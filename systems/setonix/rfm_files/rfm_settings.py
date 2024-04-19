@@ -14,7 +14,7 @@ site_configuration = {
         {
             'name': 'setonix',
             'descr': 'Setonix',
-            'hostnames': ['setonix-01', 'setonix-02', 'setonix-03','setonix-04','setonix-09','','','nid001000','nid001000','nid001000','nid001000','nid001000','nid001000','nid001000','nid001000','nid001000','nid001000','nid001000','nid001000','nid001000'],
+            'hostnames': ['setonix-01', 'setonix-02', 'setonix-03','setonix-04','setonix-09'],
             'modules_system': 'lmod',
             'partitions': [
                 {
