@@ -65,5 +65,5 @@ echo "Apply licensing permissions.."
 
 # step 7. customise shpc container modules
 echo "Customising shpc container modules.."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/patch_shpc_pawsey_modules.sh
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/patch_shpc_pawsey_modules.sh"
 

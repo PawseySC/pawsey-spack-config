@@ -61,7 +61,7 @@ spack:
 
     - namd@2.14 interface=python fftw=3 +plumed ^charmpp@7.0.0 backend=ofi
     - namd@2.15a2 interface=python fftw=3  ^charmpp@7.0.0 backend=ofi
-    - namd@2.15a2 +rocm amdgpu_target=gfx90a ^charmpp@7.0.0 backend=ofi ^ncurses@6.3+symlinks
+      #    - namd@2.15a2 +rocm amdgpu_target=gfx90a ^charmpp@7.0.0 backend=ofi ^ncurses@6.3+symlinks #broken - providing only through containers
     - nekrs@23.0 amdgpu_target=gfx90a:xnack+ +rocm
     - amdgromacs@2023 amdgpu_target=gfx90a +rocm
 # Failing:    - openfoam-org@8 #Alexis still working on it

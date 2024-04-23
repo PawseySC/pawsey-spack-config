@@ -470,8 +470,8 @@ packages:
   rocm-bandwidth-test:
       buildable: false
       externals:
-      - spec: rocm-bandwidth-test@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocm-bandwidth-test@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocm-bandwidth-test@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -479,8 +479,8 @@ packages:
   rocm-opencl:
       buildable: false
       externals:
-      - spec: rocm-opencl@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocm-opencl@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocm-opencl@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -488,8 +488,8 @@ packages:
   hipsparse:
       buildable: false
       externals:
-      - spec: hipsparse@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: hipsparse@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: hipsparse@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -500,8 +500,8 @@ packages:
   rocm-clang-ocl:
       buildable: false
       externals:
-      - spec: rocm-clang-ocl@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocm-clang-ocl@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocm-clang-ocl@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -509,8 +509,8 @@ packages:
   llvm-amdgpu:
       buildable: false
       externals:
-      - spec: llvm-amdgpu@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: llvm-amdgpu@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: llvm-amdgpu@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -521,8 +521,8 @@ packages:
   hsa-rocr-dev:
       buildable: false
       externals:
-      - spec: hsa-rocr-dev@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: hsa-rocr-dev@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: hsa-rocr-dev@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -530,8 +530,8 @@ packages:
   hip-rocclr:
       buildable: false
       externals:
-      - spec: hip-rocclr@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: hip-rocclr@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: hip-rocclr@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -539,8 +539,8 @@ packages:
   roctracer-dev-api:
       buildable: false
       externals:
-      - spec: roctracer-dev-api@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: roctracer-dev-api@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: roctracer-dev-api@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -548,8 +548,8 @@ packages:
   rocm-smi:
       buildable: false
       externals:
-      - spec: rocm-smi@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocm-smi@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocm-smi@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -557,8 +557,8 @@ packages:
   rocrand:
       buildable: false
       externals:
-      - spec: rocrand@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocrand@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocrand@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -566,8 +566,8 @@ packages:
   rocm-cmake:
       buildable: false
       externals:
-      - spec: rocm-cmake@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocm-cmake@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocm-cmake@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -575,8 +575,8 @@ packages:
   rocfft:
       buildable: false
       externals:
-      - spec: rocfft@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocfft@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocfft@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -584,8 +584,8 @@ packages:
   rocm-device-libs:
       buildable: false
       externals:
-      - spec: rocm-device-libs@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocm-device-libs@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocm-device-libs@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -593,8 +593,8 @@ packages:
   hipfft:
       buildable: false
       externals:
-      - spec: hipfft@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: hipfft@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: hipfft@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -602,8 +602,8 @@ packages:
   rocthrust:
       buildable: false
       externals:
-      - spec: rocthrust@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocthrust@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocthrust@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -611,8 +611,8 @@ packages:
   rocprofiler-dev:
       buildable: false
       externals:
-      - spec: rocprofiler-dev@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocprofiler-dev@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocprofiler-dev@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -620,8 +620,8 @@ packages:
   rocalution:
       buildable: false
       externals:
-      - spec: rocalution@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocalution@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocalution@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -629,8 +629,8 @@ packages:
   rocm-debug-agent:
       buildable: false
       externals:
-      - spec: rocm-debug-agent@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocm-debug-agent@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocm-debug-agent@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -638,8 +638,8 @@ packages:
   hipblas:
       buildable: false
       externals:
-      - spec: hipblas@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: hipblas@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: hipblas@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -647,8 +647,8 @@ packages:
   rocm-gdb:
       buildable: false
       externals:
-      - spec: rocm-gdb@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocm-gdb@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocm-gdb@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -656,8 +656,8 @@ packages:
   hipify-clang:
       buildable: false
       externals:
-      - spec: hipify-clang@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: hipify-clang@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: hipify-clang@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -665,8 +665,8 @@ packages:
   rocprim:
       buildable: false
       externals:
-      - spec: rocprim@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocprim@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocprim@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -674,8 +674,8 @@ packages:
   hsakmt-roct:
       buildable: false
       externals:
-      - spec: hsakmt-roct@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: hsakmt-roct@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: hsakmt-roct@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -683,8 +683,8 @@ packages:
   roctracer-dev:
       buildable: false
       externals:
-      - spec: roctracer-dev@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: roctracer-dev@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: roctracer-dev@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -692,8 +692,8 @@ packages:
   hipcub:
       buildable: false
       externals:
-      - spec: hipcub@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: hipcub@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: hipcub@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -701,8 +701,8 @@ packages:
   rocm-smi-lib:
       buildable: false
       externals:
-      - spec: rocm-smi-lib@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocm-smi-lib@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocm-smi-lib@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -710,8 +710,8 @@ packages:
   rocwmma:
       buildable: false
       externals:
-      - spec: rocwmma@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocwmma@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocwmma@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -719,8 +719,8 @@ packages:
   rocm-openmp-extras:
       buildable: false
       externals:
-      - spec: rocm-openmp-extras@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocm-openmp-extras@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocm-openmp-extras@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -728,8 +728,8 @@ packages:
   comgr:
       buildable: false
       externals:
-      - spec: comgr@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: comgr@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: comgr@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -737,8 +737,8 @@ packages:
   rocblas:
       buildable: false
       externals:
-      - spec: rocblas@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocblas@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocblas@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -746,8 +746,8 @@ packages:
   rccl:
       buildable: false
       externals:
-      - spec: rccl@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rccl@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rccl@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -755,8 +755,8 @@ packages:
   rocminfo:
       buildable: false
       externals:
-      - spec: rocminfo@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocminfo@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocminfo@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -764,8 +764,8 @@ packages:
   hip:
       buildable: false
       externals:
-      - spec: hip@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: hip@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: hip@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -773,8 +773,8 @@ packages:
   rocsparse:
       buildable: false
       externals:
-      - spec: rocsparse@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocsparse@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocsparse@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -782,8 +782,8 @@ packages:
   rocsolver:
       buildable: false
       externals:
-      - spec: rocsolver@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocsolver@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocsolver@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -791,8 +791,8 @@ packages:
   rocm-dbgapi:
       buildable: false
       externals:
-      - spec: rocm-dbgapi@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: rocm-dbgapi@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: rocm-dbgapi@5.2.3
         prefix: /opt/rocm-5.2.3
 
@@ -800,8 +800,8 @@ packages:
   hipsolver:
       buildable: false
       externals:
-      - spec: hipsolver@5.7.0
-        prefix: /software/setonix/rocm/5.7.0
+      - spec: hipsolver@5.7.3
+        prefix: /software/setonix/rocm/5.7.3
       - spec: hipsolver@5.2.3
         prefix: /opt/rocm-5.2.3
 

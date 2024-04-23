@@ -114,6 +114,9 @@ cray_s3_clients
 "
 
 container_list="
+quay.io/sarahbeecroft9/alphafold:2.2.3
+"
+list="
 amazon/aws-cli:2.13.0
 quay.io/biocontainers/bamtools:2.5.2--hd03093a_0
 quay.io/biocontainers/bbmap:38.96--h5c4e2a8_0
@@ -142,9 +145,12 @@ quay.io/biocontainers/vcftools:0.1.16--pl5321hd03093a_7
 quay.io/biocontainers/velvet:1.2.10--h7132678_5
 quay.io/sarahbeecroft9/interproscan:5.56-89.0
 "
-#quay.io/sarahbeecroft9/alphafold:2.2.3
 
 container_list_mpi="
+quay.io/pawsey/hpc-python:2022.03						
+"
+
+list1="
 quay.io/pawsey/openfoam:v2212
 quay.io/pawsey/openfoam:v2206
 quay.io/pawsey/openfoam:v2012
@@ -159,7 +165,6 @@ quay.io/pawsey/tensorflow:2.12.1.570-rocm5.6.0
 amdih/cp2k
 amdih/namd
 amdih/namd3"
-#quay.io/pawsey/hpc-python:2022.03						
 #quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 
 #hpc-python containers need to be rebuild due to security bugs
@@ -226,11 +231,11 @@ spack_module_dir="${utilities_modules_dir}/spack"
 # Use the Cray provided ROCm until we have a stable custom build.
 
 ROCM_VERSIONS=(
-"5.7.0"
+"5.7.3"
 )
 
 ROCM_PATHS=(
-"/software/setonix/rocm/5.7.0"
+"/software/setonix/rocm/5.7.3"
 )
 
 fi # end include guard
