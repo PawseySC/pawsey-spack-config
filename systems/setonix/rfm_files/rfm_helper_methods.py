@@ -88,9 +88,7 @@ def get_root_specs():
     lock_file = f'{repo_path}/systems/{system}/environments/{env}/spack.lock'
     with open(lock_file) as json_data:
         data = json.load(json_data)
-    
-    # Regex pattern to extract spec name and version
-    pattern = r'^([\w-]+@*=*[\w.]+)'
+
     # Iterate over every package
     for entry in data['roots']:
         # Get full spec and hash for each package
@@ -103,37 +101,21 @@ def get_root_specs():
     return sorted(root_specs)
 
 
-# Get concrete spec for every root package across every environment
-def get_all_root_specs():
+# Get full concretised spec (plus full hash) for each spec from spack.lock file
+def get_concretised_specs():
 
-    env_list = [
-        'utils', 'num_libs', 'python', 'io_libs', 'langs', 'apps', 'devel', 'bench', 's3_clients', 'astro', 'bio', 'roms', 'wrf',
-        'cray_utils', 'cray_num_libs', 'cray_python', 'cray_io_libs', 'cray_langs', 'cray_devel', 'cray_s3_clients'
-    ]
+    # Get required environment variables
     env_dict = get_env_vars()
+    env = env_dict['env']
     repo_path = env_dict['spack_repo_path']
     system = env_dict['system']
 
-    # Regex pattern to extract spec name and version
-    pattern = r'^([\w-]+@*=*[\w.]+)'
-    # Extract specs from spack.lock files in every environment
-    root_specs = []
-    file_paths = [f'{repo_path}/systems/{system}/environments/{env}/spack.lock' for env in env_list]
-    for file_path in file_paths:
-        with open(file_path) as json_data:
-            data = json.load(json_data)
+    lock_file = f'{repo_path}/systems/{system}/environments/{env}/spack.lock'
+    with open(lock_file) as json_data:
+        data = json.load(json_data)
 
-            # Iterate over every root package in this file
-            specs = []
-            for entry in data['roots']:
-                # Get full spec and hash for each package
-                s = entry['spec']
-                h = entry['hash']
-                specs.append(s + ' ' + h)
-            root_specs.extend(specs)
-
-    return root_specs
-
+    return data['concrete_specs']
+    
 
 # Function to process specs where part of the module path is not present in the
 # concretised spec identifier, but instead is only present in the `paramaters` dictinoary 
@@ -275,7 +257,7 @@ def build_root_spec(conc_spec, param_dict):
 
 # Get full module path for this package
 # NOTE: This is used primarily for dependencies, which are not root packages of any of the environments
-def get_dependency_module_path(pkg_info, conc_data, pkg_spec):
+def get_dependency_module_path(pkg_info, conc_specs, pkg_spec):
     # List of specs which need extra hardcoded work to match conretsied spec to full module path
     special_cases = ['xerces-c', 'wcslib', 'boost']
 
@@ -308,7 +290,7 @@ def get_dependency_module_path(pkg_info, conc_data, pkg_spec):
     arch = pkg_info['arch']['target']['name']
 
     # Get index of this package in the set of all concretised specs by matching hashes
-    hashes = [c for c in conc_data['concrete_specs']]
+    hashes = [c for c in conc_specs]
     idx = [i for i, j in enumerate(hashes) if j == h][0]
 
     # Find mathching projection for the spec of this package
@@ -383,6 +365,7 @@ def get_module_dependencies(pkg_module_path):
 
     # Get root specs from the environment this package is in
     root_specs = get_root_specs()
+    conc_specs = get_concretised_specs()
 
     yaml_file = f'{repo_path}/systems/{system}/configs/spackuser/modules.yaml'
     with open(yaml_file, "r") as stream:
@@ -395,25 +378,6 @@ def get_module_dependencies(pkg_module_path):
     for proj in projections:
         paths.append(projections[proj])
         projs.append(proj)
-
-    # Process json .lock files for every environment to get every concrete spec in the stack
-    env_list = [
-        'utils', 'num_libs', 'python', 'io_libs', 'langs', 'apps', 'devel', 'bench', 's3_clients', 'astro', 'bio', 'roms', 'wrf',
-        'cray_utils', 'cray_num_libs', 'cray_python', 'cray_io_libs', 'cray_langs', 'cray_devel', 'cray_s3_clients'
-    ]
-    conc_data = []
-    file_paths = [f'{repo_path}/systems/{system}/environments/{env}/spack.lock' for env in env_list]
-    for file_path in file_paths:
-        with open(file_path) as json_data:
-            c = json.load(json_data)
-            conc_data.append(c)
-    # Format data to get all concretised specs for all packages in all environments
-    all_conc_data = {k: [d[k] for d in conc_data] for k in conc_data[0]}
-    tmp_specs = [c for d in all_conc_data['concrete_specs'] for c in d]
-    tmp_specs = {}
-    for d in all_conc_data['concrete_specs']:
-        tmp_specs.update(d)
-    all_conc_data['concrete_specs'] = tmp_specs
     
     # List to hold full absolute module paths for every dependency of this package
     dep_paths = []
@@ -428,7 +392,7 @@ def get_module_dependencies(pkg_module_path):
         # Hash is last entry in spec
         h = s.split(' ')[-1]
         # Get full concrete specs for this root spec
-        c = all_conc_data['concrete_specs'][h]
+        c = conc_specs[h]
         name = c['name']
         ver = c['version']
         comp_name = c['compiler']['name']
@@ -443,7 +407,7 @@ def get_module_dependencies(pkg_module_path):
                 # Iterate through dependencies
                 for d in deps:
                     dh = d['hash']
-                    dc = all_conc_data['concrete_specs'][dh]
+                    dc = conc_specs[dh]
                     d_comp = dc['compiler']['name'] + '/' + dc['compiler']['version']
                     d_arch = dc['arch']['target']['name']
                     # Treat git separately
@@ -456,7 +420,7 @@ def get_module_dependencies(pkg_module_path):
                         if any(proj_matches):
                             # Build a "root spec" for this dependency and get its full module path
                             built_spec = build_root_spec(dc, dc['parameters'])
-                            path = get_dependency_module_path(dc, all_conc_data, built_spec)
+                            path = get_dependency_module_path(dc, conc_specs, built_spec)
                         # There is not even a partial projection match, so it falls under the dependencies catch-all projection
                         else:
                             path = f'{install_prefix}/modules/{d_arch}/{d_comp}/' + paths[-1].replace('{name}', dc['name']).replace('{version}', dc['version']).replace('{hash:7}', dh[:7]) + '.lua'
