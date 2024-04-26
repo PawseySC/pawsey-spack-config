@@ -72,8 +72,19 @@ class AnsysFluids(Package):
         tmp_install_path = os.environ['MYSCRATCH']+'/tmp'
         mkdirp('{0}/{1}'.format(self.stage.source_path, 'fluids_tmpdir'))
         mkdirp('{0}/{1}'.format(tmp_install_path, 'fluids'))
-        run_install = Executable("./INSTALL -silent -install_dir {0}/{1} -usetempdir {2}/{3}".format(tmp_install_path, 'fluids', self.stage.source_path, 'fluids_tmpdir'))
-        run_install()
+#       run_install = Executable("./INSTALL -silent -install_dir {0}/{1} -usetempdir {2}/{3}".format(tmp_install_path, 'fluids', self.stage.source_path, 'fluids_tmpdir'))
+        run_install = Executable("./INSTALL") # -silent -install_dir {0}/{1} -usetempdir {2}/{3}".format(tmp_install_path, 'fluids', self.stage.source_path, 'fluids_tmpdir'))
+        config_options = [
+                "-silent",
+                ]
+        config_options.append("-install_dir")
+        config_options.append("%s" % join_path(tmp_install_path, "fluids"))
+#                "-install_dir {0}/{1}".format(tmp_install_path, 'fluids', self.stage.source_path, 'fluids_tmpdir'),
+                
+        config_options.append("-usetempdir")
+        config_options.append("%s" % join_path(self.stage.source_path, 'fluids_tmpdir'))
+
+        run_install(*config_options) 
         # change internal wrapper for launching fluent from mpirun to srun and also alter the platform using sed
         sed=which('sed')
         # find comments before start job and insert the new my_cdmline 
