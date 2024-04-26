@@ -17,135 +17,11 @@ import json
 curr_dir = os.path.dirname(__file__).replace('\\','/')
 parent_dir = os.path.abspath(os.path.join(curr_dir, os.pardir))
 sys.path.append(parent_dir)
-
 from rfm_files.rfm_helper_methods import *
 
-# Each entry of dictionary is list containing command and regex pattern to check for that package
-# Format of list is [command, command option/argument, output]
-# Some lists have an extra entry, STDERR, which denotes the output is found in stderr rather than stdout
-modules_dict = {
-        # applications (no ansys-fluids, openfoam, gromacs-amd-gfx90a, nekrs-amd-gfx90a)
-        'gromacs/2022.5-double': ['gmx_mpi_d', '--version', 'GROMACS version'],
-        'gromacs/2023-double': ['gmx_mpi_d', '--version', 'GROMACS version'],
-        'gromacs/2022.5-mixed': ['gmx_mpi', '--version', 'GROMACS version'],
-        'gromacs/2023-mixed': ['gmx_mpi', '--version', 'GROMACS version'],
-        'cdo': ['cdo', '--help', 'Usage : cdo', 'STDERR'],
-        'cp2k': ['cp2k.psmp', '--version', 'CP2K version'],
-        #'cpmd': ['cpmd.x', '-h', 'Usage: cpmd.x'], # NOTE: Crashing with MPICH error straightaway
-        'lammps': ['lmp', '-h', 'Large-scale Atomic/Molecular Massively Parallel Simulator'],
-        'lammps-amd-gfx90a': ['lmp', '-h', 'Large-scale Atomic/Molecular Massively Parallel Simulator'],
-        'namd': ['namd2', '-h', 'Info: NAMD'],
-        'ncl': ['ncargversion', '', 'NCAR Graphics Software Version'],
-        'nco': ['ncdiff', '--help', 'find more help on ncdiff'],
-        'ncview': ['ncview', '--help', 'Ncview comes with ABSOLUTELY NO WARRANTY', 'STDERR'],
-        'nekrs': ['nekrs', '--help', 'usage:'],
-        'nektar': ['IncNavierStokesSolver', '--version', 'Nektar+'],
-        'nwchem': ['nwchem', '--help', 'argument  1 = --help'],
-        'quantum-espresso': ['ldd', '$(whereis -b simple.x)'], # NOTE: Executing simple.x starts a job, so using ldd instead
-        'vasp': ['vasp_std', '--help', 'file INCAR.'],
-        'vasp6': ['vasp_std', '--help', 'No INCAR found, STOPPING'],
-        # bio-applications
-        'beast1': ['beast', '-help', 'Example: beast test.xml'],
-        'beast2': ['beast', '-help', 'Example: beast test.xml'],
-        'exabayes': ['exabayes', '-h', 'This is ExaBayes, version'],
-        'examl': ['examl', '-h', 'This is ExaML version'],
-        # astro-applications (no cppzmq)
-        'casacore': ['casahdf5support', '', 'HDF5 support'],
-        'apr': ['apr-1-config', '-h', 'Usage: apr-1-config'],
-        'apr-util': ['apu-1-config', '-h', 'Usage: apu-1-config'],
-        'subversion': ['svn', '-h', 'Subversion command-line client.'],
-        'cfitsio': ['ldd', 'lib/libcfitsio.so'],
-        'pgplot': ['pgbind', '-h', 'Usage: pgbind', 'STDERR'],
-        'mcpp': ['mcpp', '-h', 'Usage:  mcpp', 'STDERR'],
-        'wcslib': ['fitshdr', '-h', 'Usage: fitshdr', 'STDERR'],
-        'wcstools': ['wcshead', '-h', 'usage: wcshead', 'STDERR'],
-        'cppunit': ['DllPlugInTester', '-h', 'DllPlugInTester [-c -b -n -t -o -w]'],
-        'xerces-c': ['DOMPrint', '-h', 'This program invokes the DOM parser, and builds the DOM tree'],
-        #'chgcentre': ['chgcentre', '-h', 'A program to change the phase centre of a measurement set.'], # NOTE: This is crashing straightaway
-        'py-emcee': ['python3', '-c "import emcee; print(emcee)"', "module 'emcee'"],
-        'py-astropy': ['python3', '-c "import astropy; print(astropy)"', "module 'astropy'"],
-        'py-funcsigs': ['python3', '-c "import funcsigs; print(funcsigs)"', "module 'funcsigs'"],
-        'py-healpy': ['python3', '-c "import healpy; print(healpy)"', "module 'healpy'"], # NOTE: Not working currently, due to installation issue it seems
-        'log4cxx': ['ldd', 'lib64/liblog4cxx.so'],
-        'libzmq': ['ldd', 'lib/libzmq.so'],
-        # libraries (no eigen, no hpx)
-        'hdf5': ['h5dump', '-h', 'usage: h5dump'],
-        'petsc': ['ldd', 'lib/libpetsc.so'],
-        'netlib-scalapack': ['ldd', 'lib/libscalapack.so'],
-        'kokkos': ['hpcbind', '-h', 'Usage: hpcbind'],
-        'arpack-ng': ['ldd', 'lib64/libarpack.so'],
-        'plumed': ['plumed-config', '-h', 'Check if plumed as dlopen enabled'],
-        'fftw/3.3.10': ['fftw-wisdom', '-h', 'Usage: fftw-wisdom'],
-        'fftw/2.1.5': ['ldd', 'lib/.so'],
-        'slate': ['ldd', 'lib64/libslate.so'],
-        'adios2': ['adios2_iotest', '-h', 'Usage: adios_iotest -a appid -c config'],
-        'trilinos': ['hpcbind', '-h', 'Usage: hpcbind'],
-        'opencv': ['ldd', 'lib64/libopencv_core.so'],
-        'boost': ['ldd', 'lib/boost-python3.10/mpi.so'],
-        'openblas': ['ldd', 'lib/libopenblas.so'],
-        'netcdf-cxx': ['ldd', 'lib/libnetcdf_c++.so'],
-        'netlib-lapack': ['ldd', 'lib64/libblas.so'],
-        'plasma': ['plasmatest', '-h', 'Available routines:'],
-        'charmpp': ['charmrun', '-h', 'Parallel run options:'],
-        'parallel-netcdf': ['pnetcdf_version', '-v', 'PnetCDF Version:'],
-        'netcdf-fortran': ['nf-config', '--help', 'Usage: nf-config'],
-        'netcdf-cxx4': ['ncxx4-config', '--help', 'Usage: ncxx4-config'],
-        'blaspp': ['ldd', 'lib64/libblaspp.so'],
-        'gsl': ['gsl-config', '-h', 'The GSL CBLAS library is used by default.'],
-        'netcdf-c': ['nc-config', '-h', 'Usage: nc-config'],
-        # programming-languages
-        'r': ['R', '-h', 'R, a system for statistical computation and graphics'],
-        'rust': ['rustc', '-h', 'Usage: rustc'],
-        'python': ['python', '-h', 'usage: python'],
-        'perl': ['perl', '-h', 'Usage: perl'],
-        'go': ['go', '-h', 'Go is a tool for managing Go source code.', 'STDERR'],
-        'ruby': ['ruby', '-h', 'Usage: ruby'],
-        'openjdk': ['java', '--version', 'openjdk 17.0.5 2022-10-18'],
-        # utilities
-        'cmake': ['cmake', '--version', 'CMake suite maintained and supported by Kitware'],
-        'tower-agent': ['tw-agent', '-h', 'Nextflow Tower Agent'],
-        'rclone': ['rclone', '-h', 'Rclone syncs files'],
-        'ffmpeg': ['ffmpeg', '-h', 'Hyper fast Audio and Video encoder'],
-        'automake': ['automake', '--help', 'Generate Makefile.in for configure from Makefile.am.'],
-        'tower-cli': ['tw', '-h', 'Nextflow Tower CLI.'],
-        'gnuplot': ['gnuplot', '-h', 'Usage: gnuplot'],
-        'reframe': ['reframe', '-h', 'Options controlling the ReFrame environment:'],
-        'miniocli': ['mc', '-h', 'mc - MinIO Client for object storage and filesystems.'],
-        'mpifileutils': ['dcp', '-h', 'Usage: dcp'],
-        'parallel': ['parallel', '-h', 'GNU Parallel can do much more'],
-        'nano': ['nano', '-h', 'Usage: nano'],
-        'nextflow': ['nextflow', '-h', 'Print this help'],
-        'singularityce': ['singularity', '-h', 'Linux container platform optimized for High Performance Computing'],
-        'feh': ['feh', '-h', 'Usage : feh'],
-        'libtool': ['libtool', '-h', 'Provide generalized library-building support services.'],
-        'awscli': ['aws', 'help', 'The  AWS  Command  Line  Interface'],
-        'autoconf': ['autoconf', '-h', 'Generate a configuration script from a TEMPLATE-FILE if given'],
-        # visualisation (None)
-        # python-packages
-        'py-numpy': ['python3', '-c "import numpy as np; print(np.version)"', "module 'numpy.version'"],
-        'py-matplotlib': ['python3', '-c "import matplotlib; print(matplotlib)"', "module 'matplotlib'"],
-        'py-scipy': ['python3', '-c "import scipy; print(scipy)"', "module 'scipy'"],
-        'py-cython': ['python3', '-c "import cython; print(cython)"', "module 'cython'"],
-        'py-pandas': ['python3', '-c "import pandas; print(pandas)"', "module 'pandas'"],
-        'py-dask': ['python3', '-c "import dask; print(dask)"', "module 'dask'"],
-        'py-numba': ['python3', '-c "import numba; print(numba)"', "module 'numba'"],
-        'py-scikit-learn': ['python3', '-c "import sklearn; print(sklearn)"', "module 'sklearn'"],
-        'py-h5netcdf': ['python3', '-c "import h5netcdf; print(h5netcdf)"', "module 'h5netcdf'"],
-        'py-h5py': ['python3', '-c "import h5py; print(h5py)"', "module 'h5py"],
-        'py-netcdf4': ['python3', '-c "import netCDF4; print(netCDF4)"', "module 'netCDF4'"],
-        'py-mpi4py': ['python3', '-c "import mpi4py; print(mpi4py)"', "module 'mpi4py'"],
-        'py-plotly': ['python3', '-c "import plotly; print(plotly)"', "module 'plotly'"],
-        'py-ipython': ['python3', '-c "import IPython; print(IPython)"', "module 'IPython'"],
-        # benchmarking
-        'osu-micro-benchmarks': ['osu_init', '', '# OSU MPI Init Test'],
-        'hpl': ['xhpl', '', 'function HPL_pdinfo', 'STDERR'], # NOTE: Not happy with this one
-        'ior': ['ior', '-h', 'Synopsis ior'],
-        # developer-tools (no hpcviewer)
-        'py-hatchet': ['python3', '-c "import hatchet; print(hatchet)"', "module 'hatchet'"], # NOTE: Not working currently due to installation issue
-        'caliper': ['cali-stat', '-h', 'Collect and print statistics about data elements in Caliper streams', 'STDERR'],
-        # dependencies (should not be relevant)
-}
-
+# Dictionary holding commands for every package used in baseline sanity check
+pkg_cmds = get_pkg_cmds()
+full_mod_paths = get_module_paths()
 
 
 @rfm.simple_test
@@ -234,7 +110,8 @@ class module_existence_check(rfm.RunOnlyRegressionTest):
         self.tags = {'spack', 'installation', 'software_stack'}
     
     # Test parameter - list of full absolute paths for every module in the environment
-    mod = parameter(get_module_paths())
+    #mod = parameter(get_module_paths())
+    mod = parameter(full_mod_paths)
 
     @sanity_function
     def assert_module_exists(self):
@@ -279,7 +156,8 @@ class module_load_check(rfm.RunOnlyRegressionTest):
         self.tags = {'spack', 'installation', 'software_stack'}
 
     # Test parameter - list of full absolute paths for each module in the environment    
-    mod = parameter(get_module_paths())
+    #mod = parameter(get_module_paths())
+    mod = parameter(full_mod_paths)
     
     # Dependency - this test only runs if the corresponding `module_existence_check` test passes
     @run_after('init')
@@ -351,18 +229,22 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
 
         # Execution - call executable with `--help` or `--version` option
         self.base_name = self.mod.split('/')[-2] # Extract package/library name from full module path
+        self.mod_category = self.mod.split('/')[-3]
         # Set executable, accounting for packages which have different commands for different package versions
         version_cmds = ['fftw', 'gromacs']
         version_checks = [v in self.mod for v in version_cmds]
         if any(version_checks):
             self.base_name = self.name_ver
-        self.executable = modules_dict[self.base_name][0]
+        #self.executable = modules_dict[self.base_name][0]
+        self.executable = pkg_cmds[self.mod_category][self.base_name][0]
         # Set the executable options, which depends on if it's software or library
         if self.executable == 'ldd':
             lib_path = get_library_path(self.mod.split('/')[-2:])
-            self.executable_opts = [lib_path + '/' + modules_dict[self.base_name][1]]
+            #self.executable_opts = [lib_path + '/' + modules_dict[self.base_name][1]]
+            self.executable_opts = [lib_path + '/' + pkg_cmds[self.mod_category][self.base_name][1]]
         else:
-            self.executable_opts = [modules_dict[self.base_name][1]]
+            #self.executable_opts = [modules_dict[self.base_name][1] + ' 2>&1']
+            self.executable_opts = [pkg_cmds[self.mod_category][self.base_name][1] + ' 2>&1']
         
         self.tags = {'spack', 'installation', 'software_stack'}
 
@@ -376,7 +258,8 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
             testdep_name = testdep_name.replace(c, '_')
         self.depends_on(testdep_name, udeps.by_env)
 
-    mod = parameter(get_module_paths())
+    #mod = parameter(get_module_paths())
+    mod = parameter(full_mod_paths)
 
     @sanity_function
     def assert_functioning(self):
@@ -385,8 +268,4 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
             return sn.assert_not_found('not found', self.stdout)
         # For software we do a basic check (e.g. --help or --version)
         else:
-            # Command output is in either stderr or stdout depending on particular package
-            if len(modules_dict[self.base_name]) > 3:
-                return sn.assert_found(modules_dict[self.base_name][2], self.stderr)
-            else:
-                return sn.assert_found(modules_dict[self.base_name][2], self.stdout)
+            return sn.assert_found(modules_dict[self.base_name][2], self.stdout)

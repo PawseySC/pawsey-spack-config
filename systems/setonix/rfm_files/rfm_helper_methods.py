@@ -19,6 +19,18 @@ def get_env_vars():
 
     return env_dict
 
+def get_pkg_cmds():
+
+    env_dict = get_env_vars()
+    repo_path = env_dict['spack_repo_path']
+    system = env_dict['system']
+
+    yaml_file = f'{repo_path}/systems/{system}/rfm_files/pkg_cmds.yaml'
+    with open(yaml_file, "r") as stream:
+        data = yaml.safe_load(stream)
+    
+    return data
+
 # Get the full set of abstract specs for an environemtn from the spack.yaml file
 def get_abstract_specs():
 
