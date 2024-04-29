@@ -258,7 +258,7 @@ modules:
         libtool: 'utilities/{name}/{version}'
         ninja: 'utilities/{name}/{version}'
         # to avoid multiple cmake modules, picking a specific one
-        "cmake ~doc+ncurses+ownlibs~qt": 'utilities/{name}/{version}'
+        "cmake ~doc+ncurses+ownlibs": 'utilities/{name}/{version}'
         emacs: 'utilities/{name}/{version}'
         ffmpeg: 'utilities/{name}/{version}'
         gnuplot: 'utilities/{name}/{version}'

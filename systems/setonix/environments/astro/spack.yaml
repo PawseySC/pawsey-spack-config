@@ -23,7 +23,8 @@ spack:
     - casacore@3.5.0 +openmp+python+hdf5 build_type=Release
   - astro-util-set:
     - cfitsio
-    - wcslib
+    - wcslib +cfitsio
+    - wcslib ~cfitsio  
     - pgplot
     - wcstools
   - askap-util-set:
@@ -36,7 +37,8 @@ spack:
     - log4cxx cxxstd=17
     - log4cxx cxxstd=11 ^python@3.11.6
     - mcpp
-    - xerces-c
+    - xerces-c transcoder=gnuiconv
+    - xerces-c transcoder=iconv  
     - subversion
   - mwa-util-set:
     - chgcentre build_type=Release ^casacore ~python build_type=Release

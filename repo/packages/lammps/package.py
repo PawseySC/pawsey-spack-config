@@ -36,7 +36,7 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage):
     version("develop", branch="develop")
     version(
         "20230802.3",
-        sha256="6666e28cb90d3ff01cbbda6c81bdb85cf436bbb41604a87f2ab2fa559caa8510",
+        sha256="2713cd876b2e590725ab4c2b6506313cae9538e6f34c251ebc3215376fb60f98",
         preferred=True,
     )
     version(

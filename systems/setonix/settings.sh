@@ -3,7 +3,7 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2024.04"
+DATE_TAG="2024.05"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
     INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
@@ -112,11 +112,8 @@ cray_langs
 cray_devel
 cray_s3_clients
 "
-
+#quay.io/sarahbeecroft9/alphafold:2.2.3
 container_list="
-quay.io/sarahbeecroft9/alphafold:2.2.3
-"
-list="
 amazon/aws-cli:2.13.0
 quay.io/biocontainers/bamtools:2.5.2--hd03093a_0
 quay.io/biocontainers/bbmap:38.96--h5c4e2a8_0
@@ -147,10 +144,6 @@ quay.io/sarahbeecroft9/interproscan:5.56-89.0
 "
 
 container_list_mpi="
-quay.io/pawsey/hpc-python:2022.03						
-"
-
-list1="
 quay.io/pawsey/openfoam:v2212
 quay.io/pawsey/openfoam:v2206
 quay.io/pawsey/openfoam:v2012
@@ -165,6 +158,7 @@ quay.io/pawsey/tensorflow:2.12.1.570-rocm5.6.0
 amdih/cp2k
 amdih/namd
 amdih/namd3"
+#quay.io/pawsey/hpc-python:2022.03						
 #quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 
 #hpc-python containers need to be rebuild due to security bugs

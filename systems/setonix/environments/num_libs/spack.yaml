@@ -17,12 +17,17 @@ spack:
     # use the flag cxxstd ... Update in recipes might fix this but for the moment, we fix 
     # this in our repo
     # cxxstd=14 is not a variant in kokkos@3.7.02
-    - kokkos@4.1.00 +hwloc +memkind +numactl +openmp +tuning build_type=Release
+    - kokkos@4.1.00 ~rocm +hwloc +memkind +numactl +openmp +tuning build_type=Release
     
-    # - kokkos@3.4.01 +hwloc +memkind +numactl +openmp +rocm +tuning cxxstd=14 build_type=Release
     # for hpx must explicitly set openmp off 
     - kokkos@4.1.00 +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ~openmp
       build_type=Release ^hpx@1.9.1 +async_mpi max_cpu_count=128 networking=mpi build_type=Release
+    - metis@5.1.0 ~int64~real64
+    - metis@5.1.0 +int64+real64
+    - parmetis@4.0.3 ~int64
+    - parmetis@4.0.3 +int64
+    - scotch@7.0.4 ~metis
+    - scotch@7.0.4 +metis   
   # because of odd concretization of packages with python dependences defaulting to 3.9.9 and not the 
   # version specified in the packages.yaml, separate packages between those with python dep and those without
   - numerical-with-python:
@@ -35,17 +40,13 @@ spack:
     # Moving to openblas as default address this issue 
     - plasma@23.8.2 build_type=Release ^openblas
     
-    # slate: unable to patch source commits
-    # however, patch only required for cray-libsci builds
-    # builds OK with openblas
-    - slate@2023.11.05 +rocm amdgpu_target=gfx90a build_type=Release 
     - plumed@2.9.0
     
     # some heavier numerical library builds 
     - opencv@4.8.0 build_type=Release
     
       #    - opencv@3.4.18 build_type=Release
-    - trilinos@15.0.0 +adios2 +openmp +python ~cuda ^adios2@2.9.2 build_type=Release
+    - trilinos@15.0.0 ~rocm +adios2 +openmp +python ~cuda ^adios2@2.9.2 build_type=Release
       ^hdf5@1.14.3 build_type=Release
   - petsc-set:    
     # TODO: currently unable to configure petsc with trilinos. 
@@ -86,7 +87,8 @@ spack:
     - ['%gcc@12.2.0']
     - [^python@3.11.6 ^fftw@3.3.10]
     - [+complex, ~complex]
-    - [+fftw ~trilinos +hwloc +openmp ~cuda]
+    - [+fftw +hwloc +openmp ~cuda]
+    - [~trilinos]  # fails with +trilinos - Unable to generate list of Trilinos Libraries
     - [target=zen3]      
   - matrix:
     - [$numerical]

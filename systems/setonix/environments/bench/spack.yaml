@@ -10,7 +10,8 @@ spack:
   # sacore variants
   # try running spack install --no-checksum 
   - math-tests:
-    - hpl@2.3
+    - hpl@2.3 ~openmp
+    - hpl@2.3 +openmp  
   - mpi-tests:
     - osu-micro-benchmarks@7.3
   - io-tests:
