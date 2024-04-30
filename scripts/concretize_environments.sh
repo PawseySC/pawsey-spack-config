@@ -31,7 +31,7 @@ for env in $env_list ; do
   spack env deactivate
 done
 
-cd /scratch/pawsey0001/ddeeptimahanti/2024.04/pawsey-spack-config/systems/setonix/environments/rocm
+cd ${envdir}/rocm
 
 spack env activate .
 spack concretize -f
