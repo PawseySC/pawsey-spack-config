@@ -59,7 +59,7 @@ spack:
     # - openblas@0.3.21 threads=openmp # PLACEHOLDER - please look at scripts/install_environments.sh
     - netlib-lapack@3.11.0 build_type=Release
     - netlib-scalapack@2.2.0
-    - blaspp@2023.08.25 ~cuda build_type=Release ^openblas
+    - blaspp@2023.11.05 ~cuda build_type=Release ^openblas
     - eigen@3.4.0 build_type=Release # charris: build ok on Joey 2021-12-16
     - fftw@2.1.5 +openmp precision=float,double # fftw 2 does not support long doubles
     - fftw@3.3.10 +openmp precision=float,double,long_double

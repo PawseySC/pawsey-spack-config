@@ -150,7 +150,9 @@ class Amdgromacs(CMakePackage, ROCmPackage):
 
 
     def setup_build_environment(self, env):
-        self.set_variables(env)
+        if self.spec.satisfies("+rocm"):      
+            self.set_variables(env)
 
     def setup_run_environment(self, env):
-        self.set_variables(env)    
+        if self.spec.satisfies("+rocm"):
+            self.set_variables(env)    

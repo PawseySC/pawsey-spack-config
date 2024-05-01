@@ -31,9 +31,8 @@ for env in $env_list ; do
   spack env deactivate
 done
 
-cd ${envdir}/rocm
-
-spack env activate .
+echo "Concretizing env rocm.."
+spack env activate ${envdir}/rocm
 spack concretize -f
 spack env deactivate
 
