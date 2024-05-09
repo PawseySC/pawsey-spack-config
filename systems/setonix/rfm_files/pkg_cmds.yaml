@@ -4,10 +4,10 @@
 
 # No ansys-fluids, openfoam, gromacs-amd-gfx90a, nekrs-amd-gfx90a
 applications:
-  gromacs/2022.5-double': ['gmx_mpi_d', '--version', 'GROMACS version']
-  gromacs/2023-double': ['gmx_mpi_d', '--version', 'GROMACS version']
-  gromacs/2022.5-mixed': ['gmx_mpi', '--version', 'GROMACS version']
-  gromacs/2023-mixed': ['gmx_mpi', '--version', 'GROMACS version']
+  gromacs/2022.5-double: ['gmx_mpi_d', '--version', 'GROMACS version']
+  gromacs/2023-double: ['gmx_mpi_d', '--version', 'GROMACS version']
+  gromacs/2022.5-mixed: ['gmx_mpi', '--version', 'GROMACS version']
+  gromacs/2023-mixed: ['gmx_mpi', '--version', 'GROMACS version']
   cdo': ['cdo', '--help', 'Usage : cdo']
   cp2k': ['cp2k.psmp', '--version', 'CP2K version']
   # cpmd crashing with MPICh error straightaway
@@ -66,7 +66,7 @@ libraries:
   adios2: ['adios2_iotest', '-h', 'Usage: adios_iotest -a appid -c config']
   trilinos: ['hpcbind', '-h', 'Usage: hpcbind']
   opencv: ['ldd', 'lib64/libopencv_core.so']
-  boost: ['ldd', 'lib/boost-python3.10/mpi.so']
+  boost: ['ldd', 'lib/libboost_mpi.so']
   openblas: ['ldd', 'lib/libopenblas.so']
   netcdf-cxx: ['ldd', 'lib/libnetcdf_c++.so']
   netlib-lapack: ['ldd', 'lib64/libblas.so']
@@ -78,6 +78,9 @@ libraries:
   blaspp: ['ldd', 'lib64/libblaspp.so']
   gsl: ['gsl-config', '-h', 'The GSL CBLAS library is used by default.']
   netcdf-c: ['nc-config', '-h', 'Usage: nc-config']
+  scotch: ['mtst' ,'-V', 'mtst, version']
+  parmetis: ['ldd', 'lib/libparmetis.so']
+  metis: ['ldd', 'lib/libmetis.so']
 programming-languages:
   r: ['R', '-h', 'R, a system for statistical computation and graphics']
   rust: ['rustc', '-h', 'Usage: rustc']
@@ -85,7 +88,7 @@ programming-languages:
   perl: ['perl', '-h', 'Usage: perl']
   go: ['go', '-h', 'Go is a tool for managing Go source code.']
   ruby: ['ruby', '-h', 'Usage: ruby']
-  openjdk: ['java', '--version', 'openjdk 17.0.5 2022-10-18']
+  openjdk: ['java', '--help', 'Usage: java']
 utilities:
   cmake: ['cmake', '--version', 'CMake suite maintained and supported by Kitware']
   tower-agent: ['tw-agent', '-h', 'Nextflow Tower Agent']
