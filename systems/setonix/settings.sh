@@ -3,7 +3,7 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2024.02"
+DATE_TAG="2024.05"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
     INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
@@ -62,19 +62,19 @@ aocc_version="3.2.0"
 cpu_arch="zen3"
 
 # tool versions
-spack_version="0.20.0" # the prefix "v" is added in setup_spack.sh
-singularity_version="3.11.4-nompi" # has to match the version in the Spack env yaml + nompi tag
-singularity_mpi_version="3.11.4-mpi" # has to match the version in the Spack env yaml + mpi tag
-shpc_version="0.1.23"
-shpc_registry_version="c4ed9b0094075ce22043be35160ca623ee2a22b6"
+spack_version="0.21.0" # the prefix "v" is added in setup_spack.sh
+singularity_version="4.1.0-nompi" # has to match the version in the Spack env yaml + nompi tag
+singularity_mpi_version="4.1.0-mpi" # has to match the version in the Spack env yaml + mpi tag
+shpc_version="0.1.28"
+shpc_registry_version="6daa16631460b9a93db2b9580dae360397d00aa7"
 
 # python (and py tools) versions
 python_name="python"
-python_version="3.10.10" # has to match the version in the Spack env yaml
+python_version="3.11.6" # has to match the version in the Spack env yaml
 setuptools_version="59.4.0" # has to match the version in the Spack env yaml
 pip_version="23.1.2" # has to match the version in the Spack env yaml
 # r major minor version
-r_version_majorminor="4.2.2"
+r_version_majorminor="4.3.0"
 # reframe major minor version
 reframe_version="3.12.0"
 
@@ -119,6 +119,7 @@ cray_langs
 cray_devel
 cray_s3_clients
 "
+#quay.io/sarahbeecroft9/alphafold:2.2.3
 container_list="
 amazon/aws-cli:2.13.0
 quay.io/biocontainers/bamtools:2.5.2--hd03093a_0
@@ -146,9 +147,9 @@ quay.io/biocontainers/trimmomatic:0.39--hdfd78af_2
 quay.io/biocontainers/trinity:2.13.2--hea94271_3
 quay.io/biocontainers/vcftools:0.1.16--pl5321hd03093a_7
 quay.io/biocontainers/velvet:1.2.10--h7132678_5
-quay.io/sarahbeecroft9/alphafold:2.2.3
 quay.io/sarahbeecroft9/interproscan:5.56-89.0
 "
+
 container_list_mpi="
 quay.io/pawsey/openfoam:v2212
 quay.io/pawsey/openfoam:v2206
@@ -163,9 +164,7 @@ quay.io/pawsey/pytorch:2.1.2-rocm5.6.0
 quay.io/pawsey/tensorflow:2.12.1.570-rocm5.6.0
 amdih/cp2k
 amdih/namd
-amdih/namd3
-"
-#hpc-python containers are not working
+amdih/namd3"
 #quay.io/pawsey/hpc-python:2022.03						
 #quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 
@@ -233,11 +232,11 @@ spack_module_dir="${utilities_modules_dir}/spack"
 # Use the Cray provided ROCm until we have a stable custom build.
 
 ROCM_VERSIONS=(
-"5.7.1"
+"5.7.3"
 )
 
 ROCM_PATHS=(
-"/software/setonix/rocm/5.7.1"
+"/software/setonix/rocm/5.7.3"
 )
 
 fi # end include guard

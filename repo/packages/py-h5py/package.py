@@ -2,9 +2,7 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-#pawsey additions in flag_handler to handle cce/16.0.1.
-#Line 79:             if self.spec.satisfies("%oneapi@2023.0.0:") or self.spec.satisfies("%cce"):
-
+#PAWSEY Additions to handle cce compiler in flag_handler
 
 from spack.package import *
 

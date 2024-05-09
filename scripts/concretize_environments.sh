@@ -29,7 +29,13 @@ for env in $env_list ; do
   spack env activate ${envdir}/${env} 
   spack concretize -f
   spack env deactivate
-done 
+done
+
+echo "Concretizing env rocm.."
+spack env activate ${envdir}/rocm
+spack concretize -f
+spack env deactivate
+
 
 for env in $cray_env_list ; do
   echo "Concretizing env $env.."

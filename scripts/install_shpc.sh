@@ -23,7 +23,7 @@ module swap PrgEnv-cray PrgEnv-gnu
 # assumes using PrgEnv-gnu
 # load needed python toolkit
 module load ${python_name}/${python_version}
-module load py-setuptools/${setuptools_version}-py${python_version}
+#module load py-setuptools/${setuptools_version}-py${python_version}
 module load py-pip/${pip_version}-py${python_version}
 module load singularity/${singularity_version}
 

@@ -3,7 +3,6 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-#pawsey additions - flag_handler function to handle cce/16.0.1
 import sys
 
 from spack.package import *
@@ -42,14 +41,11 @@ class ScalapackBase(CMakePackage):
     patch("fix-build-macos.patch", when="@2.2.0")
 
     def flag_handler(self, name, flags):
-        spec = self.spec
+        iflags = []
         if name == "fflags":
-            if spec.satisfies("%cce"):
-                flags.append("-hnopattern")
-        if name == "cflags":
-            if spec.satisfies("%cce"):
-                flags.append("-Wno-error=implicit-function-declaration")
-        return (flags, None, None)
+            if self.spec.satisfies("%cce"):
+                iflags.append("-hnopattern")
+        return (iflags, None, None)
 
     @property
     def libs(self):
@@ -122,3 +118,8 @@ class NetlibScalapack(ScalapackBase):
     # versions before 2.0.0 are not using cmake and requires blacs as
     # a separated package
 
+    def flag_handler(self, name, flags):
+        if name == "cflags":
+            if self.spec.satisfies("%cce"):
+                flags.append("-Wno-error=implicit-function-declaration")
+        return (flags, None, None)

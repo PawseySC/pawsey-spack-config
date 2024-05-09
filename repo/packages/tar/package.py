@@ -2,7 +2,13 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-#pawsey additions - flag_handler function to handle cce/16.0.1
+
+#pawsey additions
+#    def flag_handler(self, name, flags):
+#        if name == "cflags":
+#            if self.spec.satisfies("%cce"):
+#                flags.append("-Wno-error=incompatible-function-pointer-types")
+#        return (flags, None, None)
 
 import re
 
@@ -63,6 +69,12 @@ class Tar(AutotoolsPackage, GNUMirrorPackage):
         match = re.search(r"tar \(GNU tar\) (\S+)", output)
         return match.group(1) if match else None
 
+    def flag_handler(self, name, flags):
+        if name == "cflags":
+            if self.spec.satisfies("%cce"):
+                flags.append("-Wno-error=incompatible-function-pointer-types")
+        return (flags, None, None)    
+
     def configure_args(self):
         spec = self.spec
         # Note: compression programs are passed by abs path,
@@ -89,10 +101,3 @@ class Tar(AutotoolsPackage, GNUMirrorPackage):
             gzip_path = spec["pigz"].prefix.bin.pigz
         args.append("--with-gzip={}".format(gzip_path))
         return args
-
-    def flag_handler(self, name, flags):
-        spec = self.spec
-        if name == "cflags":
-            if spec.satisfies("%cce"):
-                flags.append("-Wno-error=incompatible-function-pointer-types")
-        return (flags, None, None)       

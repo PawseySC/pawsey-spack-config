@@ -2,7 +2,12 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-#pawsey additions to handle cce/16 - added flag_handler function
+#pawsey additions
+#    def flag_handler(self, name, flags):
+#        if name == "cflags":
+#            if self.spec.satisfies("%cce"):
+#                iflags.append("-Wno-error=implicit-function-declaration")
+#        return (flags, None, None)
 
 from spack.package import *
 
@@ -38,8 +43,7 @@ class Feh(MakefilePackage):
         make("install", "PREFIX={0}".format(prefix))
 
     def flag_handler(self, name, flags):
-        spec = self.spec
         if name == "cflags":
-            if spec.satisfies("%cce"):
+            if self.spec.satisfies("%cce"):
                 flags.append("-Wno-error=implicit-function-declaration")
         return (flags, None, None)

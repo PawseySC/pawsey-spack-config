@@ -2,7 +2,7 @@ spack:
   definitions:
   - packages:
     - beast1@1.10.4
-    - beast2@2.6.7
+    - beast2@2.7.4
     - exabayes@1.5.1 +mpi
     - examl@3.0.22 +mpi
   specs:
