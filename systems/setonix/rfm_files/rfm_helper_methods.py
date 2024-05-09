@@ -120,23 +120,10 @@ def get_concretised_specs():
 # Function to process specs where part of the module path is not present in the
 # concretised spec identifier, but instead is only present in the `paramaters` dictinoary 
 # entry of the full dictionary of the spec in the spack.lock file
-# NOTE: As of 2024.02, this is needed for xerces-c, wcslib, and boost
-def special_case(pkg_name, base_spec, conc_data, pkg_hash):
+# NOTE: As of 2024.05, this is needed for boost only - in 2024.02, wcslib and xerces-c were also affected
+def mod_boost_spec(base_spec, conc_data, pkg_hash):
 
-    # For xerces-c the module path includes the transcoder, which is not specified in the base spec
-    if pkg_name == 'xerces-c':
-        new_spec = base_spec + (' ' + 'transcoder=' + conc_data['concrete_specs'][pkg_hash]['parameters']['transcoder'])
-    # For wcslib, the use (or lack thereof) of cfitsio is in the module path, but not in the base spec
-    elif pkg_name == 'wcslib':
-        icfits = conc_data['concrete_specs'][pkg_hash]['parameters']['cfitsio']
-        if icfits:
-            if '+cfitsio' not in base_spec:
-                new_spec = base_spec + (' ' + '+cfitsio')
-        else:
-            if '~cfitsio' not in base_spec:
-                new_spec = base_spec + (' ' + '~cfitsio')
-    elif pkg_name == 'boost':
-        new_spec = base_spec + (' ' + 'visibility=' + conc_data['concrete_specs'][pkg_hash]['parameters']['visibility'])
+    new_spec = base_spec + (' ' + 'visibility=' + conc_data['concrete_specs'][pkg_hash]['parameters']['visibility'])
     
     return new_spec
 
@@ -258,8 +245,6 @@ def build_root_spec(conc_spec, param_dict):
 # Get full module path for this package
 # NOTE: This is used primarily for dependencies, which are not root packages of any of the environments
 def get_dependency_module_path(pkg_info, conc_specs, pkg_spec):
-    # List of specs which need extra hardcoded work to match conretsied spec to full module path
-    special_cases = ['xerces-c', 'wcslib', 'boost']
 
     # Get required environment variables
     env_dict = get_env_vars()
@@ -430,8 +415,6 @@ def get_module_dependencies(pkg_module_path):
 
 # Get full absolute module paths for every package in an environment
 def get_module_paths():
-    # List of specs which need extra hardcoded work to match conretsied spec to full module path
-    special_cases = ['xerces-c', 'wcslib', 'boost']
 
     # Get required environment variables
     env_dict = get_env_vars()
@@ -498,8 +481,8 @@ def get_module_paths():
             # If the name of this concretised spec is within this projection
             if name in p:
                 # Handle special cases (part of module path is not in root spec, but is in concretised spec dict entry in .lock file)
-                if name in special_cases:
-                    updated_spec = special_case(name, c_spec, conc_data, hashes[c_idx])
+                if name == 'boost':
+                    updated_spec = mod_boost_spec(c_spec, conc_data, hashes[c_idx])
                     root_specs[c_idx] = updated_spec
                 # Update `c_spec` (will only differ from c_spec for special cases)
                 updated_c_spec = root_specs[c_idx]
