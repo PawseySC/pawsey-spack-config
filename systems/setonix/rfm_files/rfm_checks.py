@@ -21,6 +21,7 @@ from rfm_files.rfm_helper_methods import *
 
 # Dictionary holding commands for every package used in baseline sanity check
 pkg_cmds = get_pkg_cmds()
+# List of full absolute paths for every explicit module
 full_mod_paths = get_module_paths()
 
 
@@ -110,7 +111,6 @@ class module_existence_check(rfm.RunOnlyRegressionTest):
         self.tags = {'spack', 'installation', 'software_stack'}
     
     # Test parameter - list of full absolute paths for every module in the environment
-    #mod = parameter(get_module_paths())
     mod = parameter(full_mod_paths)
 
     @sanity_function
@@ -156,7 +156,6 @@ class module_load_check(rfm.RunOnlyRegressionTest):
         self.tags = {'spack', 'installation', 'software_stack'}
 
     # Test parameter - list of full absolute paths for each module in the environment    
-    #mod = parameter(get_module_paths())
     mod = parameter(full_mod_paths)
     
     # Dependency - this test only runs if the corresponding `module_existence_check` test passes
@@ -235,15 +234,12 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
         version_checks = [v in self.mod for v in version_cmds]
         if any(version_checks):
             self.base_name = self.name_ver
-        #self.executable = modules_dict[self.base_name][0]
         self.executable = pkg_cmds[self.mod_category][self.base_name][0]
         # Set the executable options, which depends on if it's software or library
         if self.executable == 'ldd':
             lib_path = get_library_path(self.mod.split('/')[-2:])
-            #self.executable_opts = [lib_path + '/' + modules_dict[self.base_name][1]]
             self.executable_opts = [lib_path + '/' + pkg_cmds[self.mod_category][self.base_name][1]]
         else:
-            #self.executable_opts = [modules_dict[self.base_name][1] + ' 2>&1']
             self.executable_opts = [pkg_cmds[self.mod_category][self.base_name][1] + ' 2>&1']
         
         self.tags = {'spack', 'installation', 'software_stack'}
@@ -258,7 +254,6 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
             testdep_name = testdep_name.replace(c, '_')
         self.depends_on(testdep_name, udeps.by_env)
 
-    #mod = parameter(get_module_paths())
     mod = parameter(full_mod_paths)
 
     @sanity_function
@@ -268,4 +263,4 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
             return sn.assert_not_found('not found', self.stdout)
         # For software we do a basic check (e.g. --help or --version)
         else:
-            return sn.assert_found(modules_dict[self.base_name][2], self.stdout)
+            return sn.assert_found(pkg_cmds[self.mod_category][self.base_name][2], self.stdout)
