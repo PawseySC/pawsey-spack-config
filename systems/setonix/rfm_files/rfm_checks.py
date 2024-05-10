@@ -236,7 +236,7 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
             self.base_name = self.name_ver
         self.executable = pkg_cmds[self.mod_category][self.base_name][0]
         # Set the executable options, which depends on if it's software or library
-        if self.executable == 'ldd':
+        if (self.executable == 'ldd') or (self.base_name == 'hpx'):
             lib_path = get_library_path(self.mod.split('/')[-2:])
             self.executable_opts = [lib_path + '/' + pkg_cmds[self.mod_category][self.base_name][1]]
         else:

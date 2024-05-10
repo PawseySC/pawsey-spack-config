@@ -2,15 +2,16 @@
 # Commands used for baseline_sanity_check test
 # Each entry is a list of the form [command name, command option(s), command output]
 
-# No ansys-fluids, openfoam, gromacs-amd-gfx90a, nekrs-amd-gfx90a
 applications:
+  ansys-fluids: ['runwb2', '--help', 'valid options are'] # Not happy with this
   gromacs/2022.5-double: ['gmx_mpi_d', '--version', 'GROMACS version']
   gromacs/2023-double: ['gmx_mpi_d', '--version', 'GROMACS version']
   gromacs/2022.5-mixed: ['gmx_mpi', '--version', 'GROMACS version']
   gromacs/2023-mixed: ['gmx_mpi', '--version', 'GROMACS version']
-  cdo': ['cdo', '--help', 'Usage : cdo']
-  cp2k': ['cp2k.psmp', '--version', 'CP2K version']
-  # cpmd crashing with MPICh error straightaway
+  gromacs-amd-gfx90a: ['gmx_mpi', '--version', 'GROMACS version']
+  cdo: ['cdo', '--help', 'Usage : cdo']
+  cp2k: ['cp2k.psmp', '--version', 'CP2K version']
+  # cpmd crashing with MPICH error straightaway
   #'cpmd': ['cpmd.x', '-h', 'Usage: cpmd.x']
   lammps: ['lmp', '-h', 'Large-scale Atomic/Molecular Massively Parallel Simulator']
   lammps-amd-gfx90a: ['lmp', '-h', 'Large-scale Atomic/Molecular Massively Parallel Simulator']
@@ -18,9 +19,10 @@ applications:
   ncl: ['ncargversion', '', 'NCAR Graphics Software Version']
   nco: ['ncdiff', '--help', 'find more help on ncdiff']
   ncview: ['ncview', '--help', 'Ncview comes with ABSOLUTELY NO WARRANTY']
-  nekrs: ['nekrs', '--help', 'usage:']
+  nekrs-amd-gfx90a: ['nekrs', '--help', 'usage:']
   nektar: ['IncNavierStokesSolver', '--version', 'Nektar+']
   nwchem: ['nwchem', '--help', 'argument  1 = --help']
+  openfoam: ['foamTestTutorial', '--help', 'Run foamRunTutorials with specified tutorial directories']
   # Execute simple.x starts a job, so using ldd instead
   quantum-espresso: ['ldd', '$(whereis -b simple.x)']
   vasp: ['vasp_std', '--help', 'file INCAR.']
@@ -30,7 +32,7 @@ bio-applications:
   beast2: ['beast', '-help', 'Example: beast test.xml']
   exabayes: ['exabayes', '-h', 'This is ExaBayes, version']
   examl: ['examl', '-h', 'This is ExaML version']
-# No cppzmq
+# No cppzmq (no suitable command found yet)
 astro-applications:
   casacore: ['casahdf5support', '', 'HDF5 support']
   apr: ['apr-1-config', '-h', 'Usage: apr-1-config']
@@ -48,12 +50,13 @@ astro-applications:
   py-emcee: ['python3', '-c "import emcee; print(emcee)"', "module 'emcee'"]
   py-astropy: ['python3', '-c "import astropy; print(astropy)"', "module 'astropy'"]
   py-funcsigs: ['python3', '-c "import funcsigs; print(funcsigs)"', "module 'funcsigs'"]
-  # Not working currently (2024.02) due to installation issue
-  py-healpy: ['python3', '-c "import healpy; print(healpy)"', "module 'healpy'"]
+  # Not working in 2024.02 due to installation issue - not a package in 2024.05
+  #py-healpy: ['python3', '-c "import healpy; print(healpy)"', "module 'healpy'"]
   log4cxx: ['ldd', 'lib64/liblog4cxx.so']
   libzmq: ['ldd', 'lib/libzmq.so']
-# No eigen, hpx
+# No eigen (no suitable binary or library found), hpx (python script can't be called easily)
 libraries:
+  hpx: ['python3', 'bin/hpxrun.py', 'This script is a simple startup script']
   hdf5: ['h5dump', '-h', 'usage: h5dump']
   petsc: ['ldd', 'lib/libpetsc.so']
   netlib-scalapack: ['ldd', 'lib/libscalapack.so']
@@ -89,6 +92,7 @@ programming-languages:
   go: ['go', '-h', 'Go is a tool for managing Go source code.']
   ruby: ['ruby', '-h', 'Usage: ruby']
   openjdk: ['java', '--help', 'Usage: java']
+# No py-setuptools or py-boto3 (no suitable command found yet for either one)
 utilities:
   cmake: ['cmake', '--version', 'CMake suite maintained and supported by Kitware']
   tower-agent: ['tw-agent', '-h', 'Nextflow Tower Agent']
@@ -108,6 +112,7 @@ utilities:
   libtool: ['libtool', '-h', 'Provide generalized library-building support services.']
   awscli: ['aws', 'help', 'The  AWS  Command  Line  Interface']
   autoconf: ['autoconf', '-h', 'Generate a configuration script from a TEMPLATE-FILE if given']
+  py-pip: ['pip', '-h', 'pip <command>']
 # no viz packages
 #visualisation:
 python-packages:
@@ -130,8 +135,8 @@ benchmarking:
   # Want alternative command for hpl
   hpl: ['xhpl', '', 'function HPL_pdinfo']
   ior: ['ior', '-h', 'Synopsis ior']
-# No hpcviewer
 developer-tools:
-# Not working currenrtly (2024.02) due to installation issue
+  hpcviewer: ['hpcviewer', '-h', 'hpcviewer ']
+# Not working in 2024.05 due to installation issue (no multiprocess python module)
   py-hatchet: ['python3', '-c "import hatchet; print(hatchet)"', "module 'hatchet'"]
   caliper: ['cali-stat', '-h', 'Collect and print statistics about data elements in Caliper streams']
