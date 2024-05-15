@@ -11,6 +11,7 @@ def get_env_vars():
 
     env_dict['env'] = os.getenv('SPACK_ENV')
     env_dict['spack_repo_path'] = os.getenv('PAWSEY_SPACK_CONFIG_REPO')
+    env_dict['test_repo_path'] = os.getenv('TEST_REPO_DIR')
     env_dict['install_prefix'] = os.getenv('INSTALL_PREFIX')
     env_dict['python_version'] = os.getenv('python_version')
     env_dict['gcc_version'] = os.getenv('gcc_version')
@@ -22,10 +23,10 @@ def get_env_vars():
 def get_pkg_cmds():
 
     env_dict = get_env_vars()
-    repo_path = env_dict['spack_repo_path']
+    test_repo_path = env_dict['test_repo_path']
     system = env_dict['system']
 
-    yaml_file = f'{repo_path}/systems/{system}/rfm_files/pkg_cmds.yaml'
+    yaml_file = f'{test_repo_path}/systems/{system}/rfm_files/pkg_cmds.yaml'
     with open(yaml_file, "r") as stream:
         data = yaml.safe_load(stream)
     
@@ -198,7 +199,8 @@ def get_library_path(pkg_name_ver):
                 lib_path = f'{install_prefix}/software/linux-sles15-{arch}/{comp}/{name}-{ver}-{h}'
                 break
         else:
-            if (name == pkg_name) and (ver == pkg_ver):
+            # Ensure name and version match - account for GPU packages with -amd-gfx90a suffix
+            if ((name == pkg_name) or (name + '-amd-gfx90a' == pkg_name)) and (ver == pkg_ver):
                 comp = conc_data['concrete_specs'][h]['compiler']['name'] + '-' + conc_data['concrete_specs'][h]['compiler']['version']
                 arch = conc_data['concrete_specs'][h]['arch']['target']['name']
                 lib_path = f'{install_prefix}/software/linux-sles15-{arch}/{comp}/{name}-{ver}-{h}'
