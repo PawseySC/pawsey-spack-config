@@ -4,11 +4,13 @@
 
 applications:
   ansys-fluids: ['runwb2', '--help', 'valid options are'] # Not happy with this
+  gromacs/2022.5: ['gmx_mpi_d', '--version', 'GROMACS version'] # 2023.08
+  gromacs/2023: ['gmx_mpi_d', '--version', GROMACS version] # 2023.08
   gromacs/2022.5-double: ['gmx_mpi_d', '--version', 'GROMACS version']
   gromacs/2023-double: ['gmx_mpi_d', '--version', 'GROMACS version']
   gromacs/2022.5-mixed: ['gmx_mpi', '--version', 'GROMACS version']
   gromacs/2023-mixed: ['gmx_mpi', '--version', 'GROMACS version']
-  gromacs-amd-gfx90a: ['gmx_mpi', '--version', 'GROMACS version']
+  gromacs-amd-gfx90a/2023: ['gmx_mpi', '--version', 'GROMACS version']
   cdo: ['cdo', '--help', 'Usage : cdo']
   cp2k: ['cp2k.psmp', '--version', 'CP2K version']
   # cpmd crashing with MPICH error straightaway
@@ -16,6 +18,7 @@ applications:
   lammps: ['lmp', '-h', 'Large-scale Atomic/Molecular Massively Parallel Simulator']
   lammps-amd-gfx90a: ['lmp', '-h', 'Large-scale Atomic/Molecular Massively Parallel Simulator']
   namd: ['namd2', '-h', 'Info: NAMD']
+  namd-amd-gfx90a: ['namd2', '-h', 'Info: NAMD'] # 2023.08
   ncl: ['ncargversion', '', 'NCAR Graphics Software Version']
   nco: ['ncdiff', '--help', 'find more help on ncdiff']
   ncview: ['ncview', '--help', 'Ncview comes with ABSOLUTELY NO WARRANTY']
@@ -51,7 +54,7 @@ astro-applications:
   py-astropy: ['python3', '-c "import astropy; print(astropy)"', "module 'astropy'"]
   py-funcsigs: ['python3', '-c "import funcsigs; print(funcsigs)"', "module 'funcsigs'"]
   # Not working in 2024.02 due to installation issue - not a package in 2024.05
-  #py-healpy: ['python3', '-c "import healpy; print(healpy)"', "module 'healpy'"]
+  py-healpy: ['python3', '-c "import healpy; print(healpy)"', "module 'healpy'"]
   log4cxx: ['ldd', 'lib64/liblog4cxx.so']
   libzmq: ['ldd', 'lib/libzmq.so']
 # No eigen (no suitable binary or library found), hpx (python script can't be called easily)
@@ -61,6 +64,8 @@ libraries:
   petsc: ['ldd', 'lib/libpetsc.so']
   netlib-scalapack: ['ldd', 'lib/libscalapack.so']
   kokkos: ['hpcbind', '-h', 'Usage: hpcbind']
+  kokkos-amd-gfx90a: ['hpcbind', '-h', 'Usage: hpcbind']
+  magma-amd-gfx90a: ['ldd', 'lib/libmagma.so']
   arpack-ng: ['ldd', 'lib64/libarpack.so']
   plumed: ['plumed-config', '-h', 'Check if plumed as dlopen enabled']
   fftw/3.3.10: ['fftw-wisdom', '-h', 'Usage: fftw-wisdom']
@@ -68,6 +73,7 @@ libraries:
   slate: ['ldd', 'lib64/libslate.so']
   adios2: ['adios2_iotest', '-h', 'Usage: adios_iotest -a appid -c config']
   trilinos: ['hpcbind', '-h', 'Usage: hpcbind']
+  trilinos-amd-gfx90a: ['hpcbind', '-h', 'Usage: hpcbind']
   opencv: ['ldd', 'lib64/libopencv_core.so']
   boost: ['ldd', 'lib/libboost_mpi.so']
   openblas: ['ldd', 'lib/libopenblas.so']
