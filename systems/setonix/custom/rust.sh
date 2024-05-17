@@ -12,7 +12,7 @@ PROGRAM_VERSION=1.78.0 # look up online which version corresponds to stable
 
 INSTALL_DIR_PREFIX=/software/setonix/$STACK_VERSION/software/$OSARCH/$COMPILER-$COMPILER_VERSION/$PROGRAM_NAME-$PROGRAM_VERSION
 INSTALL_DIR=$INSTALL_DIR_PREFIX/toolchains/stable-x86_64-unknown-linux-gnu
-MODULEFILE_DIR=/software/setonix/$STACK_VERSION/modules/$ARCH/$COMPILER/$COMPILER_VERSION/$PROGRAM_NAME
+MODULEFILE_DIR=/software/setonix/$STACK_VERSION/modules/$ARCH/$COMPILER/$COMPILER_VERSION/programming-languages/$PROGRAM_NAME
 
 mkdir -p $INSTALL_DIR_PREFIX
 mkdir -p $MODULEFILE_DIR
