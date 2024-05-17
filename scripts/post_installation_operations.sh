@@ -67,3 +67,6 @@ echo "Apply licensing permissions.."
 echo "Customising shpc container modules.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/patch_shpc_pawsey_modules.sh"
 
+# step 8, run reframe tests for module generation and functionality
+echo "Running spack reframe tests.."
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_all_rfm_module_tests.sh"
