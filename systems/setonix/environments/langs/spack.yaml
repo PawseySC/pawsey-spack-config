@@ -17,7 +17,8 @@ spack:
     - ruby@3.1.0
     
     # latest version of rust available may have issues but spack listed latest release is fine. 
-    - rust@1.70.0 ^python@3.11.6 +optimizations+zlib
+    # CRISTIAN: commenting it out because the installation causes issues https://github.com/spack/spack/issues/44201
+    # - rust@1.70.0 ^python@3.11.6 +optimizations+zlib
   - py-utilities:
     - py-pip@23.1.2
     - py-setuptools@68.0.0
