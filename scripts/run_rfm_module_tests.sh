@@ -50,8 +50,11 @@ RFM_SETTINGS_FILE=${test_repo_dir}/systems/${SYSTEM}/rfm_files/rfm_settings.py
 RFM_STORAGE_DIR=/scratch/pawsey0001/cmeyer/rfm_2023.08
 RFM_TEST_FILE=${test_repo_dir}/systems/${SYSTEM}/rfm_files/rfm_checks.py
 
-# Add node this job is running on to host list of ReFrame, allowing it to run from this node
-sed -i "s/\(hostnames.*setonix-01.*\).*\(\]\)/\1,'${SLURM_JOB_NODELIST}'\2/" ${RFM_SETTINGS_FILE}
+# If running on compute node, add node this job is running on to host list of ReFrame, allowing it to run from this node
+hn=$(hostname)
+if [[ $hn == *"nid"* ]]; then
+    sed -i "s/\(hostnames.*setonix-01.*\).*\(\]\)/\1,'${SLURM_JOB_NODELIST}'\2/" ${RFM_SETTINGS_FILE}
+fi
 
 # Reframe testing for modules
 module load reframe/${reframe_version}
@@ -78,4 +81,6 @@ for env in $cray_env_list; do
 done
 
 # Reset valid setonix hostnames to original entries (i.e. remove the node this job runs on) for future runs
-#sed -i "s/\(hostnames.*setonix-01.*\)\(,.*\]\)/\1]/" ${RFM_SETTINGS_FILE}
+if [[ $hn == *"nid"* ]]; then
+    sed -i "s/\(hostnames.*setonix-01.*\)\(,.*\]\)/\1]/" ${RFM_SETTINGS_FILE}
+fi
