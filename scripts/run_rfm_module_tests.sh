@@ -12,12 +12,9 @@ if [ -z ${SYSTEM+x} ]; then
     exit 1
 fi
 
-#PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
-#. "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
-#. /scratch/pawsey0001/cmeyer/pawsey-spack-config/systems/${SYSTEM}/settings.sh
-
 # Set to repo of deployed stack (otherwise hashes of some packages may not match)
-PAWSEY_SPACK_CONFIG_REPO=/software/projects/pawsey0001/spack/2024.05_deployment/pawsey-spack-config
+# This should most often be the repo where this script is located
+PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
 # Needed while 2023.08 stack is concurrent with 2024.05 due to ansys-fluids/2022R1
@@ -39,15 +36,14 @@ export gcc_version=${gcc_version}
 export python_version=${python_version}
 export reframe_version=3.12.0
 
-#RFM_SETTINGS_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_settings.py
-#RFM_STORAGE_DIR=${INSTALL_PREFIX}/rfm_results
-#RFM_TEST_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_checks.py
-
-# Get directory of this repo for reframe files
-test_repo_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
+# Set to base directory of repo containing the reframe test files
+# This should most often be the same as PAWSEY_SPACK_CONFIG_REPO defined above
+# It should only differ when running the tests from one repo on a deployment from another repo
+test_repo_dir=${PAWSEY_SPACK_CONFIG_REPO}
+#test_repo_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 export TEST_REPO_DIR=${test_repo_dir}
 RFM_SETTINGS_FILE=${test_repo_dir}/systems/${SYSTEM}/rfm_files/rfm_settings.py
-RFM_STORAGE_DIR=/scratch/pawsey0001/cmeyer/rfm_2023.08
+RFM_STORAGE_DIR=${INSTALL_PREFIX}/rfm_results # Location where reframe reports and logs are stored
 RFM_TEST_FILE=${test_repo_dir}/systems/${SYSTEM}/rfm_files/rfm_checks.py
 
 # If running on compute node, add node this job is running on to host list of ReFrame, allowing it to run from this node

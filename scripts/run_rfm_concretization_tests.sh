@@ -14,7 +14,8 @@ if [ -z ${SYSTEM+x} ]; then
 fi
 
 # Set to repo of deployed stack (otherwise hashes of some packages may not match)
-PAWSEY_SPACK_CONFIG_REPO=/software/projects/pawsey0001/spack/2024.05_deployment/pawsey-spack-config
+# This should most often be the repo where this script is located
+PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
 module use ${INSTALL_PREFIX}/staff_modulefiles
@@ -32,10 +33,14 @@ export gcc_version=${gcc_version}
 export python_version=${python_version}
 export reframe_version=3.12.0
 
-test_repo_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
+# Set to base directory of repo containing the reframe test files
+# This should most often be the same as PAWSEY_SPACK_CONFIG_REPO defined above
+# It should only differ when running the tests from one repo on a deployment from another repo
+test_repo_dir=${PAWSEY_SPACK_CONFIG_REPO}
+#test_repo_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd ) 
 export TEST_REPO_DIR=${test_repo_dir} # Needed for reframe test to access this env var
 RFM_SETTINGS_FILE=${test_repo_dir}/systems/${SYSTEM}/rfm_files/rfm_settings.py
-RFM_STORAGE_DIR=/scratch/pawsey0001/cmeyer/rfm_2024.05
+RFM_STORAGE_DIR=${INSTALL_PREFIX}/rfm_results # Directory where reframe logs and reports are stored
 RFM_TEST_FILE=${test_repo_dir}/systems/${SYSTEM}/rfm_files/rfm_checks.py
 
 # If running on compute node, Add node this job is running on to host list of ReFrame, allowing it to run from this node
@@ -49,7 +54,7 @@ module load reframe/${reframe_version}
 for env in $env_list; do
   echo "Running ReFrame tests for concretization in env $env"
   export SPACK_ENV=${env}
-  reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_conc_report_${env}.json -t concretization -l -v
+  reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_conc_report_${env}.json -t concretization -r
   unset SPACK_ENV
   mv reframe.out ${RFM_STORAGE_DIR}/reframe_${env}_conc.out
   mv reframe.log ${RFM_STORAGE_DIR}/reframe_${env}_conc.log
