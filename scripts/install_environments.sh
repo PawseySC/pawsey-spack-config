@@ -77,11 +77,9 @@ for hash in `spack find -x --format "{hash}"`; do spack module lmod refresh -y /
 # Refresh dependencies - implicit specs (manually remove .llvm load from pocl modulefile)
 for hash in `spack find -X --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
 
-# Remove .llvm from module files to stop it replacing gcc/cce at module load
-# If there are some module files which need the explicit load, then this can be commented out
-# and manual comments of .llvm can be performed
-# In 2024.02 CPE/23.09 and 2023.08 CPE/23.03 software stacks, all module files with .llvm load commands had been manually commented out
-grep -Elr "^load\(.*\.llvm.*\)" ${INSTALL_PREFIX}/modules | xargs sed -i "s/\(load(.*llvm.*)\)/--\1/"
+# Remove .llvm from module files to stop it replacing gcc/cce at module load which breaks reframe tests
+# Done post-installation, so commented out here
+#grep -Elr "^load\(.*\.llvm.*\)" ${INSTALL_PREFIX}/modules | xargs sed -i "s/\(load(.*llvm.*)\)/--\1/"
 
 # Generate commands for sysadmins to execute to fix Singularity permissions.
 echo """Singularity fix permissions:
