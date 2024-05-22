@@ -48,12 +48,9 @@ SPACK_POPULATE_CACHE=0
 pawseyenv_version="${DATE_TAG}"
 
 # Reframe files - moved to Reframe test scripts
-# RFM_SETTINGS_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_settings.py
-# RFM_SETTINGS_FILE=/scratch/pawsey0001/cmeyer/pawsey-spack-config/systems/${SYSTEM}/rfm_files/rfm_settings.py
-# RFM_STORAGE_DIR=${INSTALL_PREFIX}/rfm_results
-# RFM_STORAGE_DIR=/scratch/pawsey0001/cmeyer/rfm_2023.08
-# RFM_TEST_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_checks.py
-# RFM_TEST_FILE=/scratch/pawsey0001/cmeyer/pawsey-spack-config/systems/${SYSTEM}/rfm_files/rfm_checks.py
+RFM_SETTINGS_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_settings.py
+RFM_STORAGE_DIR=${INSTALL_PREFIX}/rfm_results
+RFM_TEST_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_checks.py
 
 archs="zen2 zen3"
 # compiler versions (needed for module trees with compiler dependency)
