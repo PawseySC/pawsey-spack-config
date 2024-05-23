@@ -31,6 +31,8 @@ make install
 
 echo "-- Modulefile for $PROGRAM_NAME.
 local root_dir = '$INSTALL_DIR_PREFIX'
+load(\"cfitsio/4.3.0\")
+load(\".hdf5/1.14.3-q2qmfcl\")
 if (mode() ~= 'whatis') then
     prepend_path('PATH', root_dir .. '/bin')
     setenv('FITS2IDIA_HOME', '$INSTALL_DIR_PREFIX')
