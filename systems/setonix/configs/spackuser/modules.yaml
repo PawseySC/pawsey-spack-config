@@ -362,6 +362,7 @@ modules:
         hpctoolkit: 'developer-tools/{name}/{version}'
         hpcviewer: 'developer-tools/{name}/{version}'
         py-hatchet: 'developer-tools/{name}/{version}'
+        omnitrace: 'developer-tools/{name}/{version}'
 
         # git needs special name, because `.git` is ignored by Lmod
         git: 'dependencies/.git-module/{version}-{hash:7}'
