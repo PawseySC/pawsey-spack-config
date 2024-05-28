@@ -1,0 +1,317 @@
+packages:
+  all:
+  # note the compiler and providers specifications
+  # only suggest a priority order, they do not exclude other options
+  # suggested priority for compilers.
+    compiler: [ gcc@12.3.0, gcc@11.4.1 ]
+    providers:
+      mpi: [ openmpi ]
+      blas: [ openblas ]
+      lapack: [ openblas, netlib-lapack ]
+      scalapack: [ netlib-scalapack ]
+      fftw-api: [ fftw ]
+      pkgconfig: [ pkg-config ]
+    permissions:
+      read: world
+      # this should be user, we do not want pawsey0001 users 
+      # to accidentally edit the system wide installation
+      write: user
+      # using default group
+      # fine, considering world readable and user writable
+      # could not use $PAWSEY_PROJECT, as variables are apparently not evaluated here
+
+# don't build virtuals with an external provider
+  mpi:
+    buildable: true
+  pkgconfig:
+    buildable: false
+  cce:
+    buildable: false
+  gcc:
+    buildable: false
+  aocc:
+    buildable: false
+  intel:
+    buildable: false
+  pgi:
+    buildable: false
+
+  # GENERAL NOTES:
+  # 1. for each package, only one entry must exist in this yaml
+  # otherwise only the last one is considered, and the previous ones are ingored
+  # 2. when externals are specified, the preferred version is respected only if it is one of the externals
+
+  #TODO for next stack builds: consider adding more +pic as default variant
+
+  # preferred versions and variants, dependencies
+  # required by devel/hpctoolkit, but good to have for everything
+  libunwind:
+    variants: '+pic'
+  mbedtls:
+    variants: '+pic'
+  libseccomp:
+    version: [2.5.3]
+  zlib:
+    version: [1.10.4]
+  zstd:
+    version: [1.4.8]
+  json-c:
+    version: [0.15.3]
+  krb5:
+    version: [1.19.2]
+  # cmake can have multiple entries so set default
+  cmake:
+    version: [3.26.3]
+    variants: ~doc+ncurses+ownlibs~qt
+  ffmpeg:
+    version: [4.4]
+    variants: '+avresample'
+  gnuplot:
+    version: [5.4.3]
+    variants: '+X'
+  llvm:
+    variants: '~omp_as_runtime ~clang ~compiler-rt ~polly ~gold'
+  # preferred versions and variants, python
+  python:
+    version: [3.11.6]
+    variants: '+optimizations +zlib +sqlite3 +tkinter ~ssl'
+  gdbm:
+    version: [1.23.1]
+  apr:
+    version: [1.7.4]
+  gettext:
+    version: [0.21.1]
+  py-cython:
+    version: [3.0.4]
+  py-dask:
+    version: [2023.4.1]
+  py-h5py:
+    version: [3.9.0]
+  py-ipython:
+    version: [8.14.0]
+  py-matplotlib:
+    version: [3.8.1]
+    variants: '+movies'
+  py-mpi4py:
+    version: [3.1.4]
+  py-numba:
+    version: [0.57.0]
+  py-numpy:
+    version: [1.26.1]
+  py-pandas:
+    version: [2.1.2]
+  py-pip:
+    version: [23.1.2]
+  py-plotly:
+    version: [5.14.1]
+  py-scikit-learn:
+    version: [1.3.2]
+  py-scipy:
+    version: [1.11.3]
+  py-setuptools:
+    version: [68.0.0]
+  #  version: [59.4.0]
+  # preferred versions and variants, compilers
+  go:
+    version: [1.19.10]
+  julia:
+     version: [1.8.2]
+  openjdk:
+    version: [17.0.5_8]
+  r:
+    version: [4.2.2]
+  perl:
+    version: [5.36.0]
+  ruby:
+    version: [3.1.0]
+  rust:
+    version: [1.70.0]
+  # preferred versions and variants, num_libs
+  blaspp:
+    version: [2023.08.25]
+    variants: '+cuda build_type=Release'
+  boost:
+    version: [1.83.0]
+    variants: '+mpi +numpy +python'
+  eigen:
+    version: [3.4.0]
+    variants: 'build_type=Release'
+  fftw:
+    version: [3.3.10,2.1.5]
+    variants: '+openmp precision=float,double,long_double'
+  gsl:
+    version: [2.7.1]
+  hpx:
+    version: [1.9.1]
+    variants: '+async_mpi +cuda malloc=jemalloc max_cpu_count=128 networking=mpi cxxstd=14 build_type=Release'
+  kokkos:
+    version: [4.1.00]
+    variants: '+hwloc +memkind +numactl +openmp +tuning +cuda cxxstd=14 build_type=Release'
+  netlib-lapack:
+    version: [3.10.1]
+    variants: 'build_type=Release'
+  openblas:
+    version: [0.3.21]
+    variants: 'threads=openmp'
+  opencv:
+     version: [4.8.0]
+     variants: '+cuda build_type=Release'
+  plasma:
+    version: [23.8.2]
+    variants: 'build_type=Release'
+  petsc:
+    version: [3.20.1]
+    variants: '+cuda +fftw' # commenting out trilinos as per environment note # +trilinos'
+  plumed:
+    version: [2.9.0]
+  netlib-scalapack:
+    version: [2.2.0]
+  slate:
+    version: [2023.08.25]
+    variants: '+cuda build_type=Release'
+  trilinos:
+    version: [14.4.0]
+    variants: '+cuda +adios2 +openmp +python build_type=Release'
+# preferred versions and variants, io_libs
+  hdf5:
+    version: [1.12.2]
+    variants: 'api=v112 +hl +fortran +szip build_type=Release'
+  hdf:
+    version: [4.2.15]
+    variants: '+shared+external-xdr'
+  adios2:
+    version: [2.9.2]
+    variants: '+cuda +python +hdf5 build_type=Release'
+  netcdf-c:
+    version: [4.9.0]
+    variants: '+hdf4 +parallel-netcdf'
+  netcdf-cxx:
+    version: [4.2]
+  netcdf-cxx4:
+    version: [4.3.1]
+  netcdf-fortran:
+    version: [4.6.0]
+  parallel-netcdf:
+    version: [1.12.3]
+  py-h5netcdf:
+    version: [0.10.0]
+  py-netcdf4:
+    version: [1.5.8]
+# for end users apps, prefer cmake variant build_type=Release
+  caliper:
+    variants: 'build_type=Release'
+  gromacs:
+    variants: 'build_type=Release'
+  lammps:
+    variants: 'build_type=Release'
+  nektar:
+    variants: 'build_type=Release'
+  visit:
+    variants: 'build_type=Release'
+
+  #for astro packages prefer release
+  casacore:
+    variants: 'build_type=Release'
+  everybeam:
+    variants: 'build_type=Release'
+  wsclean:
+    variants: 'build_type=Release'
+  idg:
+    variants: 'build_type=Release'
+  cghcentre:
+    variants: 'build_type=Release'
+
+  # ===========================================================================
+  #                                  EXTERNALS
+  # ===========================================================================
+  pkg-config:
+    externals:
+    - spec: pkg-config@0.29.2
+      prefix: /usr
+    buildable: false
+
+  hwloc:
+    externals:
+    - spec: hwloc@2.7.0
+      prefix: /usr
+    buildable: false
+
+  numactl:
+    externals:
+    - spec: numactl@2.0.14
+      prefix: /usr
+    buildable: false
+
+  pcre:
+    externals:
+    - spec: pcre@8.39
+      prefix: /usr
+    buildable: false
+
+  libssh:
+    externals:
+    - spec: libssh@0.9.6
+      prefix: /usr
+    buildable: false
+
+
+  openssl:
+    externals:
+    - spec: openssl@3.0.2
+      prefix: /usr
+    buildable: false
+
+  brotli:
+    externals:
+    - spec: brotli@1.0.9
+      prefix: /usr
+    buildable: false
+
+  curl:
+    externals:
+    - spec: curl@7.81.0
+      prefix: /usr
+    buildable: false
+
+  openssh:
+    externals:
+    - spec: openssh@8.9p1
+      prefix: /usr
+    buildable: false
+
+  keyutils:
+    externals:
+    - spec: keyutils@1.6.1
+      prefix: /usr
+    buildable: false
+
+  libpsl:
+    externals:
+    - spec: libpsl@0.21.0
+      prefix: /usr
+    buildable: false
+
+  nghttp2:
+    externals:
+    - spec: nghttp2@1.43.0
+      prefix: /usr
+    buildable: false
+
+  libidn2:
+    externals:
+    - spec: libidn2@2.3.2
+      prefix: /usr
+    buildable: false
+
+  libyaml:
+    externals:
+    - spec: libyaml@0.2.2
+      prefix: /usr
+    buildable: false
+
+  cuda:
+    externals:
+    - spec: cuda@12.3
+      prefix: /usr/local/cuda-12.3/
+    buildable: false
+
