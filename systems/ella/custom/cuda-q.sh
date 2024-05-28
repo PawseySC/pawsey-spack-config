@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# let's ask for installation of cutensor2 libcutensor-dev cuquantum-12 libcuquantum0-dev-cuda-12 cuquantum-dev
 # for cuda-q need cutensor llvm cuquantum
 
 # this will install cuda-q for c++
@@ -23,3 +24,6 @@ conda env config vars set -n cuda-quantum MPI_PATH=$CONDA_PREFIX/envs/cuda-quant
 conda run -n cuda-quantum pip install cuda-quantum
 conda activate cuda-quantum
 source $CONDA_PREFIX/lib/python3.11/site-packages/distributed_interfaces/activate_custom_mpi.sh
+# this will be needed to run openmpi 
+export OMPI_MCA_opal_cuda_support=true OMPI_MCA_btl='^openib'
+
