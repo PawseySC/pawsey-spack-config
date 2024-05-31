@@ -6,7 +6,7 @@ modules:
 
     lmod:
 
-      # select all packages that depend on python, or r, or java,
+      # Select all packages that depend on python, or r, or java,
       # and set these modules to autoload their dependencies
       ^python:
         autoload: direct
