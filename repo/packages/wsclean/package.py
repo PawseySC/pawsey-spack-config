@@ -34,13 +34,28 @@ class Wsclean(CMakePackage):
     version('2.10.1', git='https://gitlab.com/aroffringa/wsclean.git', tag='v2.10.1', submodules=True)
     version('2.9', git='https://gitlab.com/aroffringa/wsclean.git', tag='wsclean2.9', submodules=True)
 
+    variant('idg', default=False, description='To enable Image Domain Gridder (a fast GPU-enabled gridder)')
+    variant('everybeam', default=False, when="@3:", description='To apply primary beams for version >=3')
+    variant('mpi', default=False,when="@3:", description='To enable distributed mode')
+
     depends_on('casacore@3.2.1:')
-    depends_on('fftw@3.3.8:')
-    depends_on('hdf5@1.10.7 +cxx ~mpi api=v110')
+    depends_on('fftw-api@3')
+    depends_on('hdf5@1.10.7: +cxx ~mpi api=v110')
     depends_on('gsl@2.6:')
-    depends_on('cfitsio')
-    depends_on('boost@1.80.0 +date_time +filesystem +system +test +program_options')
+    depends_on('cfitsio@3.48:')
+    depends_on('boost@1.80.0: +date_time +filesystem +system +test +program_options')
+    depends_on('idg@0.8.1', when='@3.0 +idg')
+    depends_on('idg@1.0.0', when='@3.1 +idg')
+    depends_on('everybeam@0.2.0', when='@3.0 +everybeam')
+    depends_on('everybeam@0.3.1', when='@3.1 +everybeam')
+    depends_on('everybeam@0.5.2:0.5.8', when='@3.4 +everybeam')
+    depends_on('mpi', when='+mpi')
+    depends_on('blas', when='@3.0:')
+    depends_on('doxygen', when='@3.0:')
+    depends_on('python', when='@3.0:')
     patch("wsclean_2.10.1.patch", when="@2.10.1")
+    patch('mpi1.patch', when='@3.0:')
+    patch('mpi2.patch', when='@3.0:')
 
     @run_before("cmake")
     def change_source_dir(self):
@@ -52,4 +67,5 @@ class Wsclean(CMakePackage):
         args = [
             f"-DHDF5_LIBRARIES={self.spec['hdf5'].prefix.lib}/libhdf5_cpp.so"
         ]
+        args.append(self.define_from_variant('USE_MPI', 'mpi'))
         return args
