@@ -17,7 +17,7 @@ class GiantSquid(Package):
 
     version("1.0.3", tag="v1.0.3")
 
-    depends_on("rust@1.70.0", type="build")
+    depends_on("rust@1.70.0:", type="build")
     
     def setup_build_environment(self, env):
         build_dir = self.stage.source_path
