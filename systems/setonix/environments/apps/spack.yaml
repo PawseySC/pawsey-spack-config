@@ -67,9 +67,9 @@ spack:
     - ['%gcc@12.2.0']
     - [target=zen3]
   - matrix:
-      - [$vasp_packages]
-      - ['%gcc@12.2.0']
-      - [target=zen3]
+    - [$vasp_packages]
+    - ['%gcc@12.2.0']
+    - [target=zen3]
   - matrix:
     - [$weather_utils]
     - ['%gcc@12.2.0']

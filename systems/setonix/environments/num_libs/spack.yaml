@@ -102,7 +102,7 @@ spack:
 # for now don't build amd math libraries
   #- matrix:
   #  - [$amd]
-  #  - ['%gcc@12.2.0', '%cce@16.0.1', '%aocc@3.2.0']
+  #  - ['%gcc@12.2.0', '%cce@15.0.1', '%aocc@3.2.0']
   #  - [target=zen3]
   #- matrix:
   #  - [$amd-with-python]

@@ -160,7 +160,7 @@ quay.io/pawsey/openfoam-org:10
 quay.io/pawsey/openfoam-org:9
 quay.io/pawsey/openfoam-org:8
 quay.io/pawsey/openfoam-org:7
-quay.io/pawsey/pytorch:2.1.2-rocm5.6.0
+quay.io/pawsey/pytorch:2.2.0-rocm5.6.0
 quay.io/pawsey/tensorflow:2.12.1.570-rocm5.6.0
 amdih/cp2k
 amdih/namd

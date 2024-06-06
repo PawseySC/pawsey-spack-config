@@ -191,7 +191,7 @@ compilers:
     extra_rpaths: []
 
 # - compiler:
-#     spec: cce@16.0.1gpu
+#     spec: cce@15.0.1gpu
 #     paths:
 #       cc: cc
 #       cxx: CC
@@ -206,7 +206,7 @@ compilers:
 #     target: any
 #     modules:
 #     - PrgEnv-cray
-#     - cce/16.0.1
+#     - cce/15.0.1
 #     - craype
 #     - craype-accel-amd-gfx90a
 #     - craype-network-ofi
@@ -220,7 +220,7 @@ compilers:
 #     extra_rpaths: []
 
 # - compiler:
-#     spec: cce@16.0.1noflags
+#     spec: cce@15.0.1noflags
 #     paths:
 #       cc: cc
 #       cxx: CC
@@ -230,7 +230,7 @@ compilers:
 #     target: any
 #     modules:
 #     - PrgEnv-cray
-#     - cce/16.0.1
+#     - cce/15.0.1
 #     - craype
 #     - craype-x86-milan
 #     - craype-network-ofi
@@ -310,4 +310,3 @@ compilers:
 #     - xpmem
 #     environment: {}
 #     extra_rpaths: []
-

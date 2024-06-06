@@ -4,7 +4,7 @@ export MODULE_DIR=${INSTALL_PREFIX}/custom/modules/zen3/gcc/12.2.0/custom
 #export MODULE_DIR_CCE=${INSTALL_PREFIX}/custom/modules/zen3/cce/15.0.1/custom
 module load rocm/5.2.3
 module load craype-accel-amd-gfx90a 
-module load PrgEnv-gnu/8.4.0
+module load PrgEnv-gnu/8.3.3
 module load gcc/11.2.0
 module load python/3.11.6
 module load cmake/3.27.7
