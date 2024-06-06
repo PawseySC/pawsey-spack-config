@@ -6,7 +6,7 @@ modules:
 
     lmod:
 
-      # select all packages that depend on python, or r, or java,
+      # Select all packages that depend on python, or r, or java,
       # and set these modules to autoload their dependencies
       ^python:
         autoload: direct
@@ -364,6 +364,7 @@ modules:
         hpctoolkit: 'developer-tools/{name}/{version}'
         hpcviewer: 'developer-tools/{name}/{version}'
         py-hatchet: 'developer-tools/{name}/{version}'
+        omnitrace: 'developer-tools/{name}/{version}'
 
         # git needs special name, because `.git` is ignored by Lmod
         git: 'dependencies/.git-module/{version}-{hash:7}'
