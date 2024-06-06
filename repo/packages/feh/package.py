@@ -47,3 +47,4 @@ class Feh(MakefilePackage):
             if self.spec.satisfies("%cce"):
                 flags.append("-Wno-error=implicit-function-declaration")
         return (flags, None, None)
+
