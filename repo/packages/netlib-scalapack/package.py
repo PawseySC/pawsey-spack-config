@@ -123,3 +123,4 @@ class NetlibScalapack(ScalapackBase):
             if self.spec.satisfies("%cce"):
                 flags.append("-Wno-error=implicit-function-declaration")
         return (flags, None, None)
+
