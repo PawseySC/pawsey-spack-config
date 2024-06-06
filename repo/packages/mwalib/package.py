@@ -21,10 +21,16 @@ class Mwalib(Package):
     maintainers = ["d3v-null"]
 
     version("1.3.3", tag="v1.3.3")
+    variant("python", default=True, description="Build and install Python bindings.")
 
     depends_on("rust@1.64.0:", type="build")
     depends_on("cfitsio@3.49")
     depends_on("curl") # because cfitsio does not --disable-curl by default
+    depends_on("py-maturin", when="+python")
+    depends_on("py-numpy", type=("build", "run"), when="+python")
+    depends_on("python", type=("build", "run"), when="+python")
+    depends_on("py-pip", type="build", when="+python")
+
     sanity_check_is_file = [
         join_path("include", "mwalib.h"),
         join_path("lib", "libmwalib.a"),
@@ -49,6 +55,12 @@ class Mwalib(Package):
             for f in release.iterdir():
                 if f.name.startswith("libmwalib."):
                     shutil.copy2(f"{f}", f"{prefix}/lib/")
+            if '+python' in spec:
+                maturin = which("maturin")
+                pip = which("pip3")
+                maturin("build", "--release", "--features", "python,cfitsio-static", "--strip")
+                whl_file =list(os.listdir("target/wheels"))[0]
+                pip("install", f"--prefix={prefix}", f"target/wheels/{whl_file}")
                     
     @run_after("install")
     @on_package_attributes(run_tests=True)
@@ -71,4 +83,16 @@ class Mwalib(Package):
             "-o", exe,
         )
         cc_example = which(exe)
-        cc_example()
+        cc_example("test_files/1384808344/1384808344_metafits.fits")
+
+    def setup_run_environment(self, env):
+        python_version = self.spec["python"].version.string
+        python_version = python_version[:python_version.rfind(".")] 
+        env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
+
+    def setup_dependent_run_environment(self, env, dependent_spec):
+        if dependent_spec.package.extends(self.spec):
+            python_version = self.spec["python"].version.string
+            python_version = python_version[:python_version.rfind(".")] 
+            env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
+
