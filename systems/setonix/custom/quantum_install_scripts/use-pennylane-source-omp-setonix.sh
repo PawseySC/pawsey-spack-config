@@ -41,7 +41,7 @@ py-mpi4py/$mpi4py_ver\
 )
 
 export MODULE_DIR=/software/setonix/2023.08/custom/modules/zen3/gcc/12.2.0/custom
-export MODULE_DIR_CCE=/software/setonix/2023.08/custom/modules/zen3/cce/16.0.1/custom
+export MODULE_DIR_CCE=/software/setonix/2023.08/custom/modules/zen3/cce/15.0.1/custom
 export base_dir=/software/setonix/2023.08/custom/software/linux-sles15-zen3/gcc-12.2.0/
 
 # internal variables - do not edit

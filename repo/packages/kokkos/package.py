@@ -319,6 +319,7 @@ class Kokkos(CMakePackage, CudaPackage, ROCmPackage):
                         # Note that conflict declarations should prevent
                         # choosing an unsupported AMD GPU target
                         raise SpackError("Unsupported target: {0}".format(amdgpu_target))
+
         if self.spec.variants["intel_gpu_arch"].value != "none":
             spack_microarches.append(self.spec.variants["intel_gpu_arch"].value)
 
@@ -335,7 +336,6 @@ class Kokkos(CMakePackage, CudaPackage, ROCmPackage):
 
         if "+rocm" in self.spec:
             options.append(self.define("CMAKE_CXX_COMPILER", self.spec["hip"].hipcc))
-
         elif "+wrapper" in self.spec:
             options.append(
                 self.define("CMAKE_CXX_COMPILER", self.spec["kokkos-nvcc-wrapper"].kokkos_cxx)
