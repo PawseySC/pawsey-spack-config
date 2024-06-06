@@ -73,4 +73,4 @@ echo "Executing CRs"
 
 # step 8, run reframe tests for module generation and functionality
 echo "Running spack reframe tests.."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_all_rfm_module_tests.sh"
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_rfm_module_tests.sh"
