@@ -11,7 +11,7 @@ rocm_patch=$AMBER_SRC_DIR/amber_amd.3jan23.tar.bz2
 
 mkdir -p $BUILD_DIR
 cd $BUILD_DIR
- extract source code
+# extract source code
 tar xf $amber_tools_src
 tar xf $amber_src
 cd amber22_src
