@@ -43,7 +43,6 @@ envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 
 echo "Running installation with $nprocs cores.."
 
-
 for env in $env_list; do
   echo "Installing environment $env..."
   cd ${envdir}/${env}
@@ -58,6 +57,16 @@ for env in $env_list; do
   cd -
 done
 
+for env in $cray_env_list; do
+  echo "Installing environment $env..."
+  cd ${envdir}/${env}
+  spack env activate ${envdir}/${env}
+  spack concretize -f
+  sg $INSTALL_GROUP -c "spack install --no-checksum -j${nprocs}"
+  spack env deactivate
+  cd -
+done
+
 # Create binary cache
 if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
   for hash in `spack find -x --format "{hash}"`; do spack buildcache create -a -m systemwide_buildcache  /$hash; done;
@@ -67,6 +76,10 @@ for hash in `spack find -x --format "{hash}"`; do spack module lmod refresh -y /
 
 # Refresh dependencies - implicit specs (manually remove .llvm load from pocl modulefile)
 for hash in `spack find -X --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
+
+# Remove .llvm from module files to stop it replacing gcc/cce at module load which breaks reframe tests
+# Done post-installation, so commented out here
+#grep -Elr "^load\(.*\.llvm.*\)" ${INSTALL_PREFIX}/modules | xargs sed -i "s/\(load(.*llvm.*)\)/--\1/"
 
 # Generate commands for sysadmins to execute to fix Singularity permissions.
 echo """Singularity fix permissions:

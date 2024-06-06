@@ -37,7 +37,7 @@ fi
 USER_PERMANENT_FILES_PREFIX='/software/projects'
 USER_TEMP_FILES_PREFIX='/scratch'
 SPACK_USER_CONFIG_PATH="$MYSOFTWARE/setonix/$DATE_TAG/.spack_user_config"
-BOOTSTRAP_PATH='$MYSOFTWARE/setonix/'$DATE_TAG/.spack_user_config/bootstrap
+BOOTSTRAP_PATH="$MYSOFTWARE/setonix/$DATE_TAG/.spack_user_config/bootstrap"
 # Set a new mirror where to fetch prebuilt binaries, if any.
 SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
 # When SPACK_POPULATE_CACHE=1, spack will push binaries in the above cache location for later use.
@@ -46,6 +46,11 @@ SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
 SPACK_POPULATE_CACHE=0
 
 pawseyenv_version="${DATE_TAG}"
+
+# Reframe files - moved to Reframe test scripts
+RFM_SETTINGS_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_settings.py
+RFM_STORAGE_DIR=${INSTALL_PREFIX}/rfm_results
+RFM_TEST_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_checks.py
 
 archs="zen2 zen3"
 # compiler versions (needed for module trees with compiler dependency)
@@ -70,6 +75,8 @@ setuptools_version="59.4.0" # has to match the version in the Spack env yaml
 pip_version="23.1.2" # has to match the version in the Spack env yaml
 # r major minor version
 r_version_majorminor="4.3.0"
+# reframe major minor version
+reframe_version="3.12.0"
 
 # list of module categories
 module_cat_list="
