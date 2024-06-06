@@ -37,7 +37,7 @@ class Mwalib(Package):
         join_path("lib", "libmwalib.so"),
     ]
     test_requires_compiler = True
-    
+
     def setup_build_environment(self, env):
         env.set('MWALIB_LINK_STATIC_CFITSIO', 1)
         build_dir = self.stage.source_path
@@ -61,13 +61,13 @@ class Mwalib(Package):
                 maturin("build", "--release", "--features", "python,cfitsio-static", "--strip")
                 whl_file =list(os.listdir("target/wheels"))[0]
                 pip("install", f"--prefix={prefix}", f"target/wheels/{whl_file}")
-                    
+
     @run_after("install")
     @on_package_attributes(run_tests=True)
     def cargo_test(self):
         cargo = Executable("cargo")
         cargo("test", "--release", "--lib", "--features=cfitsio-static")
-        
+
     @run_after("install")
     @on_package_attributes(run_tests=True)
     def test_examples(self):
@@ -87,12 +87,12 @@ class Mwalib(Package):
 
     def setup_run_environment(self, env):
         python_version = self.spec["python"].version.string
-        python_version = python_version[:python_version.rfind(".")] 
+        python_version = python_version[:python_version.rfind(".")]
         env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
 
     def setup_dependent_run_environment(self, env, dependent_spec):
         if dependent_spec.package.extends(self.spec):
             python_version = self.spec["python"].version.string
-            python_version = python_version[:python_version.rfind(".")] 
+            python_version = python_version[:python_version.rfind(".")]
             env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
 

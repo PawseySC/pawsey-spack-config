@@ -18,7 +18,7 @@ class GiantSquid(Package):
     version("1.0.3", tag="v1.0.3")
 
     depends_on("rust@1.70.0:", type="build")
-    
+
     def setup_build_environment(self, env):
         build_dir = self.stage.source_path
         env.set('CARGO_HOME', f"{build_dir}/.cargo")
@@ -27,7 +27,7 @@ class GiantSquid(Package):
     def install(self, spec, prefix):
         cargo = Executable("cargo")
         cargo("install", "--path=.", f"--root={prefix}")
-        
+
     @run_after("install")
     @on_package_attributes(run_tests=True)
     def cargo_test(self):
