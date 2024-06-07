@@ -1,0 +1,769 @@
+packages:
+  all:
+  # note the compiler and providers specifications
+  # only suggest a priority order, they do not exclude other options
+  # suggested priority for compilers.
+    compiler: [ gcc@12.2.0, cce@16.0.1, aocc@3.2.0 ]
+    providers:
+      mpi: [ cray-mpich ]
+      blas: [ openblas, amdblis ] #, cray-libsci ] # commenting out cray-libsci as bug was identified
+      lapack: [ openblas, netlib-lapack, amdlibflame ] #, cray-libsci ]
+      scalapack: [ netlib-scalapack, amdscalapack ] #, cray-libsci ]
+      fftw-api: [ fftw, amdfftw ] #, cray-fftw ] # commenting out cray-fftw for now, similar to cray-libsci
+      pkgconfig: [ pkg-config ]
+    permissions:
+      read: world
+      # this should be user, we do not want pawsey0001 users 
+      # to accidentally edit the system wide installation
+      write: user
+      # using default group
+      # fine, considering world readable and user writable
+      # could not use $PAWSEY_PROJECT, as variables are apparently not evaluated here
+
+# don't build virtuals with an external provider
+  mpi:
+    buildable: false
+# Left buildable, as currently built by Spack, 
+# because cray-libsci and cray-fftw are not in use (see below)
+#  blas:
+#    buildable: false
+#  lapack:
+#    buildable: false
+#  scalapack:
+#    buildable: false
+# FFTW non buildable, to avoid proliferation of variants, 
+# that are ultimately a subset of the system-wide one (num_libs)
+# Edit: FFTW buildable, otherwise in Spack 0.17.0 the concretiser crashes
+#  fftw-api:
+#    buildable: false
+  pkgconfig:
+    buildable: false
+# don't build compilers neither
+  cce:
+    buildable: false
+  gcc:
+    buildable: false
+  aocc:
+    buildable: false
+  intel:
+    buildable: false
+  pgi:
+    buildable: false
+
+  # GENERAL NOTES:
+  # 1. for each package, only one entry must exist in this yaml
+  # otherwise only the last one is considered, and the previous ones are ingored
+  # 2. when externals are specified, the preferred version is respected only if it is one of the externals
+
+  #TODO for next stack builds: consider adding more +pic as default variant
+
+  # preferred versions and variants, dependencies
+  # required by devel/hpctoolkit, but good to have for everything
+  libunwind:
+    variants: '+pic'
+  mbedtls:
+    variants: '+pic'
+  libseccomp:
+    version: [2.5.3]
+  zlib:
+    version: [1.2.13]
+  zstd:
+    version: [1.5.0]
+  json-c:
+    version: [0.13.1]
+  krb5:
+    version: [1.19.2]
+  # cmake can have multiple entries so set default
+  cmake:
+    version: [3.24.3]
+    variants: ~doc+ncurses+ownlibs~qt
+# Commented out - see GENERAL NOTES above
+#    externals:
+#  # manual addition with the latest version
+#    - spec: cmake@3.21.4
+#      prefix: /lus/joey/home/mdelapierre/Spack-sprints/v0.17.0_new/spack/opt/spack/cray-sles15-zen2/gcc-10.3.0/cmake-3.21.4-dgyicf6mmctyfw2fdzeja2jt5jf5gzl5
+#    - spec: cmake@3.10.2
+#      prefix: /usr
+  ffmpeg:
+    version: [4.4]
+    variants: '+avresample'
+  gnuplot:
+    version: [5.4.3]
+    variants: '+X'
+  llvm:
+    variants: '~omp_as_runtime ~clang ~compiler-rt ~polly ~gold'
+  # preferred versions and variants, python
+  python:
+    version: [3.10.10]
+    variants: '+optimizations +zlib ~ssl'
+  gdbm:
+    version: [1.23]
+  apr:
+    version: [1.5.2]
+  gettext:
+    version: [0.21.1]
+  py-cython:
+    version: [0.29.30]
+  py-dask:
+    version: [2021.6.2]
+  py-h5py:
+    version: [3.7.0]
+  py-ipython:
+    version: [8.5.0]
+  py-matplotlib:
+    version: [3.6.2]
+    variants: '+movies'
+  py-mpi4py:
+    version: [3.1.4]
+  py-numba:
+    version: [0.56.0]
+  py-numpy:
+    version: [1.23.4]
+  py-pandas:
+    version: [1.5.1]
+  py-pip:
+    version: [23.1.2]
+  py-plotly:
+    version: [5.2.2]
+  py-scikit-learn:
+    version: [1.1.3]
+  py-scipy:
+    version: [1.8.1]
+  py-setuptools:
+    version: [59.4.0]
+  # preferred versions and variants, compilers
+  go:
+    version: [1.19.10]
+  julia:
+     version: [1.8.2]
+  openjdk:
+    version: [17.0.5_8]
+  r:
+    version: [4.2.2]
+# Commented out - see GENERAL NOTES above
+#    externals:
+#    - spec: r@4.0.5.1
+#      prefix: /opt/cray/pe/R/4.0.5.1
+  perl:
+    version: [5.36.0]
+# Commented out - see GENERAL NOTES above
+#    externals:
+#    - spec: perl@5.26.1~cpanm
+#      prefix: /usr
+  ruby:
+    version: [3.1.0]
+  rust:
+    version: [1.60.0]
+  # preferred versions and variants, num_libs
+  amdblis:
+    version: [3.0]
+    variants: 'threads=openmp'
+  amdlibflame:
+    version: [3.0]
+    variants: 'threads=openmp'
+  amdscalapack:
+    version: [3.0]
+    variants: 'build_type=Release'
+  aocl-sparse:
+    version: [3.0]
+    variants: 'build_type=Release'
+  amdfftw:
+    version: [3.0]
+    variants: 'precision=float,double,long_double'
+  amdlibm:
+    version: [3.0]
+  blaspp:
+    version: [2022.07.00]
+    variants: '~cuda build_type=Release'
+  boost:
+    version: [1.80.0]
+    variants: '+mpi +numpy +python'
+  eigen:
+    version: [3.4.0]
+    variants: 'build_type=Release'
+  fftw:
+    version: [3.3.10,2.1.5]
+    variants: '+openmp precision=float,double,long_double'
+  gsl:
+    version: [2.7.1]
+  hpx:
+    version: [1.8.1]
+    variants: '+async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi cxxstd=14 build_type=Release'
+  kokkos:
+    version: [3.7.02]
+    variants: '+hwloc +memkind +numactl +openmp +tuning cxxstd=14 build_type=Release'
+  netlib-lapack:
+    version: [3.10.1]
+    variants: 'build_type=Release'
+  openblas:
+    version: [0.3.21]
+    variants: 'threads=openmp'
+  opencv:
+     version: [4.5.2]
+     variants: 'build_type=Release'
+  plasma:
+    version: [22.9.29]
+    variants: 'build_type=Release'
+  petsc:
+    version: [3.18.1]
+    variants: '+fftw' # commenting out trilinos as per environment note # +trilinos'
+  plumed:
+    version: [2.9.0]
+  netlib-scalapack:
+    version: [2.2.0]
+  slate:
+    version: [2022.07.00]
+    variants: '~cuda build_type=Release'
+  trilinos:
+    version: [13.0.1]
+    variants: '+adios2 +openmp +python build_type=Release'
+# preferred versions and variants, io_libs
+  hdf5:
+    version: [1.12.2]
+    variants: 'api=v112 +hl +fortran +szip build_type=Release'
+  hdf:
+    version: [4.2.15]
+    variants: '+shared+external-xdr'
+  adios2:
+    version: [2.9.0]
+    variants: '+python +hdf5 build_type=Release'
+  netcdf-c:
+    version: [4.9.0]
+    variants: '+hdf4 +parallel-netcdf'
+  netcdf-cxx:
+    version: [4.2]
+  netcdf-cxx4:
+    version: [4.3.1]
+  netcdf-fortran:
+    version: [4.6.0]
+  parallel-netcdf:
+    version: [1.12.3]
+  py-h5netcdf:
+    version: [0.10.0]
+  py-netcdf4:
+    version: [1.5.8]
+# for end users apps, prefer cmake variant build_type=Release
+  caliper:
+    variants: 'build_type=Release'
+  gromacs:
+    variants: 'build_type=Release'
+  lammps:
+    variants: 'build_type=Release'
+  nektar:
+    variants: 'build_type=Release'
+  visit:
+    variants: 'build_type=Release'
+
+  #for astro packages prefer release
+  casacore:
+    variants: 'build_type=Release'
+  everybeam:
+    variants: 'build_type=Release'
+  wsclean:
+    variants: 'build_type=Release'
+  idg:
+    variants: 'build_type=Release'
+  cghcentre:
+    variants: 'build_type=Release'
+
+  # ===========================================================================
+  #                                  EXTERNALS
+  # ===========================================================================
+  pkg-config:
+    externals:
+    - spec: pkg-config@0.29.2
+      prefix: /usr
+    buildable: false
+
+  hwloc:
+    externals:
+    - spec: hwloc@2.8.0
+      prefix: /usr
+    buildable: false
+
+  numactl:
+    externals:
+    - spec: numactl@2.0.14
+      prefix: /usr
+    buildable: false
+
+  pcre:
+    externals:
+    - spec: pcre@8.45
+      prefix: /usr
+    buildable: false
+
+  libssh:
+    externals:
+    - spec: libssh@0.9.6
+      prefix: /usr
+    buildable: false
+
+
+# ----------------------------------------------------------------------------
+#                                        CRAY
+# ----------------------------------------------------------------------------
+  lustre:
+    externals:
+    - spec: lustre@2.15.0.4_rc2_cray_178_gf28cb6f
+      prefix: /usr
+    buildable: false
+
+  # adding prefixes as in NERSC Perlmutter configs
+  # -----
+  # MPI and communication related externals 
+  # ----- 
+  cray-mpich:
+    externals:
+    - spec: cray-mpich@8.1.27%gcc
+      modules:
+      - cray-mpich/8.1.27
+      - craype-network-ofi
+      prefix: /opt/cray/pe/mpich/8.1.27/ofi/gnu/9.1
+    - spec: cray-mpich@8.1.27%cce
+      modules:
+      - cray-mpich/8.1.27
+      - craype-network-ofi
+      prefix: /opt/cray/pe/mpich/8.1.27/ofi/crayclang/14.0
+    - spec: cray-mpich@8.1.25%aocc
+      modules:
+      - cray-mpich/8.1.25
+      - craype-network-ofi
+      prefix: /opt/cray/pe/mpich/8.1.25/ofi/aocc/3.0
+    buildable: false
+
+  cray-pmi:
+    externals:
+    - spec: cray-pmi@6.1.10
+      modules:
+      - cray-pmi/6.1.10
+    buildable: false
+
+  xpmem:
+    externals:
+    - spec: xpmem@2.5.2
+      modules:
+      - xpmem/2.5.2-2.4_3.47__gd0f7936.shasta
+      prefix: /opt/cray/xpmem/2.5.2-2.4_3.47__gd0f7936.shasta
+    buildable: false
+
+  # libraries related to libfabric and mpi 
+  libfabric:
+    externals:
+    - spec: libfabric@1.15.2.0
+      modules:
+      - libfabric/1.15.2.0
+      prefix: /opt/cray/libfabric/1.15.2.0
+    buildable: false
+
+  openssl:
+    externals:
+    - spec: openssl@1.1.1
+      prefix: /usr
+    buildable: false
+
+  brotli:
+    externals:
+    - spec: brotli@1.0.7
+      prefix: /usr
+    buildable: false
+
+  curl:
+    externals:
+    - spec: curl@7.79.1
+      prefix: /usr
+    buildable: false
+
+  openssh:
+    externals:
+    - spec: openssh@8.4p1
+      prefix: /usr
+    buildable: false
+
+  keyutils:
+    externals:
+    - spec: keyutils@1.6.3
+      prefix: /usr
+    buildable: false
+
+  cryptopp:
+    externals:
+    - spec: cryptopp@8.6.0
+      prefix: /usr
+    buildable: false
+
+  openldap:
+    externals:
+    - spec: openldap@2.4.46
+      prefix: /usr
+    buildable: false
+
+  libpsl:
+    externals:
+    - spec: libpsl@0.20.1
+      prefix: /usr
+    buildable: false
+
+  nghttp2:
+    externals:
+    - spec: nghttp2@1.40.0
+      prefix: /usr
+    buildable: false
+
+  libidn2:
+    externals:
+    - spec: libidn2@2.2.0
+      prefix: /usr
+    buildable: false
+
+  libyaml:
+    externals:
+    - spec: libyaml@0.1.7
+      prefix: /usr
+    buildable: false
+  # ----- 
+  # other external packages not related to communication
+  # -----
+  papi:
+    externals:
+    - spec: papi@7.0.1.1
+      modules:
+      - papi/7.0.1.1
+      prefix: /opt/cray/pe/papi/7.0.1.1
+    buildable: false
+# Cray-LibSci: commenting out, as bug was identified (21 December 2021)
+#  cray-libsci:
+#    externals:
+#    - spec: cray-libsci@22.08.1.1%gcc
+#      modules:
+#      - cray-libsci/22.08.1.1
+#      prefix: /opt/cray/pe/libsci/22.08.1.1/gnu/9.1/x86_64
+#    - spec: cray-libsci@21.08.1.2%cce
+#      modules:
+#      - cray-libsci/22.08.1.1
+#      prefix: /opt/cray/pe/libsci/22.08.1.1/cray/9.0/x86_64
+#    - spec: cray-libsci@22.08.1.1%aocc
+#      modules:
+#      - cray-libsci/22.08.1.1
+#      prefix: /opt/cray/pe/libsci/22.08.1.1/aocc/2.0/x86_64
+#    buildable: false
+# Cray-FFTW: commenting out, as for Cray-Libsci
+#  cray-fftw:
+#    externals:
+#    - spec: cray-fftw@3.3.10.1 target=zen3
+#      modules:
+#      - craype-x86-milan
+#      - cray-fftw/3.3.10.1
+#      prefix: /opt/cray/pe/fftw/3.3.10.1/x86_milan
+#    - spec: cray-fftw@3.3.10.1 target=zen3
+#      modules:
+#      - craype-x86-milan
+#      - cray-fftw/3.3.10.1
+#      prefix: /opt/cray/pe/fftw/3.3.10.1/x86_milan
+#    buildable: false
+
+
+# =====================================================================
+#                       ROCM EXTERNALS
+# =====================================================================
+
+  rocm-bandwidth-test:
+      buildable: false
+      externals:
+      - spec: rocm-bandwidth-test@5.7.0
+        prefix: /opt/rocm-5.7.0
+      - spec: rocm-bandwidth-test@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocm-opencl:
+      buildable: false
+      externals:
+      - spec: rocm-opencl@5.7.0
+        prefix: /opt/rocm-5.7.0
+      - spec: rocm-opencl@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hipsparse:
+      buildable: false
+      externals:
+      - spec: hipsparse@5.7.0
+        prefix: /opt/rocm-5.7.0
+      - spec: hipsparse@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  atmi:
+      buildable: false
+
+  rocm-clang-ocl:
+      buildable: false
+      externals:
+      - spec: rocm-clang-ocl@5.7.0
+        prefix: /opt/rocm-5.7.0
+      - spec: rocm-clang-ocl@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  llvm-amdgpu:
+      buildable: false
+      externals:
+      - spec: llvm-amdgpu@5.7.0
+        prefix: /opt/rocm-5.7.0
+      - spec: llvm-amdgpu@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hipfort:
+      buildable: false
+
+  hsa-rocr-dev:
+      buildable: false
+      externals:
+      - spec: hsa-rocr-dev@5.7.0
+        prefix: /opt/rocm-5.7.0
+      - spec: hsa-rocr-dev@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hip-rocclr:
+      buildable: false
+      externals:
+      - spec: hip-rocclr@5.7.0
+        prefix: /opt/rocm-5.7.0
+      - spec: hip-rocclr@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  roctracer-dev-api:
+      buildable: false
+      externals:
+      - spec: roctracer-dev-api@5.7.0
+        prefix: /opt/rocm-5.7.0
+      - spec: roctracer-dev-api@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocm-smi:
+      buildable: false
+      externals:
+      - spec: rocm-smi@5.7.0
+        prefix: /opt/rocm-5.7.0
+      - spec: rocm-smi@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocrand:
+      buildable: false
+      externals:
+      - spec: rocrand@5.7.0
+        prefix: /opt/rocm-5.7.0
+      - spec: rocrand@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocm-cmake:
+      buildable: false
+      externals:
+      - spec: rocm-cmake@5.7.0
+        prefix: /opt/rocm-5.7.0
+      - spec: rocm-cmake@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocfft:
+      buildable: false
+      externals:
+      - spec: rocfft@5.7.0
+        prefix: /opt/rocm-5.7.0
+      - spec: rocfft@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocm-device-libs:
+      buildable: false
+      externals:
+      - spec: rocm-device-libs@5.7.0
+        prefix: /opt/rocm-5.7.0
+      - spec: rocm-device-libs@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hipfft:
+      buildable: false
+      externals:
+      - spec: hipfft@5.7.0
+        prefix: /opt/rocm-5.7.0
+      - spec: hipfft@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocthrust:
+      buildable: false
+      externals:
+      - spec: rocthrust@5.7.0
+        prefix: /opt/rocm-5.7.0
+      - spec: rocthrust@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocprofiler-dev:
+      buildable: false
+      externals:
+      - spec: rocprofiler-dev@5.7.0
+        prefix: /opt/rocm-5.7.0
+      - spec: rocprofiler-dev@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocalution:
+      buildable: false
+      externals:
+      - spec: rocalution@5.7.0
+        prefix: /opt/rocm-5.7.0
+      - spec: rocalution@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocm-debug-agent:
+      buildable: false
+      externals:
+      - spec: rocm-debug-agent@5.7.0
+        prefix: /opt/rocm-5.7.0
+      - spec: rocm-debug-agent@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hipblas:
+      buildable: false
+      externals:
+      - spec: hipblas@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocm-gdb:
+      buildable: false
+      externals:
+      - spec: rocm-gdb@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hipify-clang:
+      buildable: false
+      externals:
+      - spec: hipify-clang@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocprim:
+      buildable: false
+      externals:
+      - spec: rocprim@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hsakmt-roct:
+      buildable: false
+      externals:
+      - spec: hsakmt-roct@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  roctracer-dev:
+      buildable: false
+      externals:
+      - spec: roctracer-dev@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hipcub:
+      buildable: false
+      externals:
+      - spec: hipcub@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocm-smi-lib:
+      buildable: false
+      externals:
+      - spec: rocm-smi-lib@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocwmma:
+      buildable: false
+      externals:
+      - spec: rocwmma@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocm-openmp-extras:
+      buildable: false
+      externals:
+      - spec: rocm-openmp-extras@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  comgr:
+      buildable: false
+      externals:
+      - spec: comgr@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocblas:
+      buildable: false
+      externals:
+      - spec: rocblas@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rccl:
+      buildable: false
+      externals:
+      - spec: rccl@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocminfo:
+      buildable: false
+      externals:
+      - spec: rocminfo@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hip:
+      buildable: false
+      externals:
+      - spec: hip@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocsparse:
+      buildable: false
+      externals:
+      - spec: rocsparse@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocsolver:
+      buildable: false
+      externals:
+      - spec: rocsolver@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  rocm-dbgapi:
+      buildable: false
+      externals:
+      - spec: rocm-dbgapi@5.2.3
+        prefix: /opt/rocm-5.2.3
+
+
+  hipsolver:
+      buildable: false
+      externals:
+      - spec: hipsolver@5.2.3
+        prefix: /opt/rocm-5.2.3
+

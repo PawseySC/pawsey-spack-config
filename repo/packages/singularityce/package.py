@@ -1,8 +1,4 @@
-#updated dependency to conmon and new versions
-#+    variant("conmon", default=False, description="required to run OCI container monitor")
-#+    depends_on("conmon", when="+conmon")
-##############################################################################
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2024 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -18,7 +14,6 @@ from spack.package import *
 class SingularityBase(MakefilePackage):
     variant("suid", default=True, description="install SUID binary")
     variant("network", default=True, description="install network plugins")
-    variant("conmon", default=False, description="required to run OCI container monitor")
 
     depends_on("pkgconfig", type="build")
     depends_on("conmon", type=("build", "run"))
@@ -31,7 +26,10 @@ class SingularityBase(MakefilePackage):
     depends_on("git", when="@develop")  # mconfig uses it for version info
     depends_on("shadow", type="run", when="@3.3:")
     depends_on("cryptsetup", type=("build", "run"), when="@3.4:")
-    depends_on("conmon", when="+conmon")
+    depends_on("libfuse", type=("build", "run"), when="@4.0:")
+    depends_on("autoconf", type="build", when="@4.0:")
+    depends_on("automake", type="build", when="@4.0:")
+    depends_on("libtool", type="build", when="@4.0:")
 
     conflicts("platform=darwin", msg="singularity requires a Linux VM on Windows & Mac")
 
@@ -59,7 +57,7 @@ class SingularityBase(MakefilePackage):
     # Unpack the tarball as usual, then move the src dir into
     # its home within GOPATH.
     def do_stage(self, mirror_only=False):
-        super(SingularityBase, self).do_stage(mirror_only)
+        super().do_stage(mirror_only)
         if not os.path.exists(self.singularity_gopath_dir):
             # Move the expanded source to its destination
             tty.debug(
@@ -76,18 +74,23 @@ class SingularityBase(MakefilePackage):
     def build_directory(self):
         return self.singularity_gopath_dir
 
+    # Allow overriding config options
+    @property
+    def config_options(self):
+        # Using conmon from spack
+        return ["--without-conmon"]
+
     # Hijack the edit stage to run mconfig.
     def edit(self, spec, prefix):
         with working_dir(self.build_directory):
-            confstring = "./mconfig --prefix=%s" % prefix
+            _config_options = ["--prefix=%s" % prefix]
+            _config_options += self.config_options
             if "~suid" in spec:
-                confstring += " --without-suid"
+                _config_options += ["--without-suid"]
             if "~network" in spec:
-                confstring += " --without-network"
-            if "~conmon" in spec: 
-                confstring += " --without-conmon"
-            configure = Executable(confstring)
-            configure()
+                _config_options += ["--without-network"]
+            configure = Executable("./mconfig")
+            configure(*_config_options)
 
     # Set these for use by MakefilePackage's default build/install methods.
     build_targets = ["-C", "builddir", "parallel=False"]
@@ -108,11 +111,6 @@ class SingularityBase(MakefilePackage):
         filter_file(
             r"^# mksquashfs path =",
             "mksquashfs path = {0}".format(squash_path),
-            join_path(prefix.etc, self.singularity_name, self.singularity_name + ".conf"),
-        )
-        filter_file(
-            r"^shared loop devices = no",
-            "shared loop devices = yes",
             join_path(prefix.etc, self.singularity_name, self.singularity_name + ".conf"),
         )
 
@@ -196,16 +194,21 @@ class Singularityce(SingularityBase):
     See package definition or `spack-build-out.txt` build log for details,
     e.g.
 
-    tail -15 $(spack location -i singularity)/.spack/spack-build-out.txt
+    tail -15 $(spack location -i singularityce)/.spack/spack-build-out.txt
     """
 
     homepage = "https://sylabs.io/singularity/"
     url = "https://github.com/sylabs/singularity/releases/download/v3.9.1/singularity-ce-3.9.1.tar.gz"
     git = "https://github.com/sylabs/singularity.git"
 
-    maintainers = ['alalazo']
+    license("Apache-2.0")
+
+    maintainers("alalazo")
     version("master", branch="master")
 
+    version("4.1.0", sha256="119667f18e76a750b7d4f8612d7878c18a824ee171852795019aa68875244813")
+    version("4.0.3", sha256="b3789c9113edcac62032ce67cd1815cab74da6c33c96da20e523ffb54cdcedf3")
+    version("3.11.5", sha256="5acfbb4a109d9c63a25c230e263f07c1e83f6c726007fbcd97a533f03d33a86a")
     version("3.11.4", sha256="751dbea64ec16fd7e7af1e36953134c778c404909f9d27ba89006644160b2fde")
     version("3.11.3", sha256="a77ede063fd115f85f98f82d2e30459b5565db7d098665497bcd684bf8edaec9")
     version("3.10.3", sha256="f87d8e212ce209c5212d6faf253b97a24b5d0b6e6b17b5e58b316cdda27a332f")

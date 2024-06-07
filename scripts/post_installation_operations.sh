@@ -65,5 +65,12 @@ echo "Apply licensing permissions.."
 
 # step 7. customise shpc container modules
 echo "Customising shpc container modules.."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/patch_shpc_pawsey_modules.sh
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/patch_shpc_pawsey_modules.sh"
 
+# step 8, run previous manual steps outlined in 2024.05 deployment CRs
+echo "Executing CRs"
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/cr_operations.sh
+
+# step 8, run reframe tests for module generation and functionality
+echo "Running spack reframe tests.."
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_rfm_module_tests.sh"

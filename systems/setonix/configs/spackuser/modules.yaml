@@ -6,7 +6,7 @@ modules:
 
     lmod:
 
-      # select all packages that depend on python, or r, or java,
+      # Select all packages that depend on python, or r, or java,
       # and set these modules to autoload their dependencies
       ^python:
         autoload: direct
@@ -21,6 +21,8 @@ modules:
       gnuplot:
         autoload: none
       hpctoolkit:
+        autoload: none
+      lammps:
         autoload: none
 
       # for libraries make sure to load direct dependencies
@@ -134,8 +136,8 @@ modules:
         ansys-fluidstructures: 'applications/{name}/{version}'
         cpmd: 'applications/{name}/{version}'
         cp2k: 'applications/{name}/{version}'
-        gromacs +double: 'applications/{name}/{version}-double'
-        gromacs: 'applications/{name}/{version}-mixed'
+        "gromacs +double": 'applications/{name}/{version}-double'
+        "gromacs ~double": 'applications/{name}/{version}-mixed'
         amdgromacs: 'applications/gromacs-amd-gfx90a/{version}'
         "lammps ~rocm": 'applications/{name}/{version}'
         "lammps +rocm": 'applications/{name}-amd-gfx90a/{version}'
@@ -194,8 +196,8 @@ modules:
         gsl: 'libraries/{name}/{version}'
         hpx: 'libraries/{name}/{version}'
         "kokkos +hpx": 'libraries/{name}/{version}-hpx'
-        "kokkos +openmp": 'libraries/{name}/{version}-openmp'
-        kokkos: 'libraries/{name}/{version}'
+        "kokkos +openmp +rocm": 'libraries/{name}-amd-gfx90a/{version}-openmp'
+        "kokkos +openmp ~rocm": 'libraries/{name}/{version}-openmp' 
         netlib-lapack: 'libraries/{name}/{version}'
         openblas: 'libraries/{name}/{version}'
         blaspp: 'libraries/{name}/{version}'
@@ -256,7 +258,7 @@ modules:
         libtool: 'utilities/{name}/{version}'
         ninja: 'utilities/{name}/{version}'
         # to avoid multiple cmake modules, picking a specific one
-        "cmake ~doc+ncurses+ownlibs~qt": 'utilities/{name}/{version}'
+        "cmake ~doc+ncurses+ownlibs": 'utilities/{name}/{version}'
         emacs: 'utilities/{name}/{version}'
         ffmpeg: 'utilities/{name}/{version}'
         gnuplot: 'utilities/{name}/{version}'
@@ -362,6 +364,7 @@ modules:
         hpctoolkit: 'developer-tools/{name}/{version}'
         hpcviewer: 'developer-tools/{name}/{version}'
         py-hatchet: 'developer-tools/{name}/{version}'
+        omnitrace: 'developer-tools/{name}/{version}'
 
         # git needs special name, because `.git` is ignored by Lmod
         git: 'dependencies/.git-module/{version}-{hash:7}'

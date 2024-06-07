@@ -55,7 +55,9 @@ compilers:
     - craype-x86-milan
     - craype-network-ofi
     - xpmem
-    environment: {}
+    environment:
+      set:
+        PE_ENV: "GNU"
     extra_rpaths: []
 
 # - compiler:
@@ -163,7 +165,7 @@ compilers:
 
 # cray compilers 
 - compiler:
-    spec: cce@15.0.1
+    spec: cce@16.0.1
     paths:
       cc: cc
       cxx: CC
@@ -178,12 +180,14 @@ compilers:
     target: any
     modules:
     - PrgEnv-cray
-    - cce/15.0.1
+    - cce/16.0.1
     - craype
     - craype-x86-milan
     - craype-network-ofi
     - xpmem
-    environment: {}
+    environment:
+      set:
+        PE_ENV: "CRAY"
     extra_rpaths: []
 
 # - compiler:
