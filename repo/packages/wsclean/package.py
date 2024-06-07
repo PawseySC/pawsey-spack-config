@@ -31,6 +31,10 @@ class Wsclean(CMakePackage):
     maintainers = ['dipietrantonio']
 
     version('3.4', git='https://gitlab.com/aroffringa/wsclean.git', tag='v3.4', submodules=True)
+    version('3.3', git='https://gitlab.com/aroffringa/wsclean.git', tag='v3.3', submodules=True)
+    version('3.2', git='https://gitlab.com/aroffringa/wsclean.git', tag='v3.2', submodules=True)
+    version('3.1', git='https://gitlab.com/aroffringa/wsclean.git', tag='v3.1', submodules=True)
+    version('3.0', git='https://gitlab.com/aroffringa/wsclean.git', tag='v3.0', submodules=True)
     version('2.10.1', git='https://gitlab.com/aroffringa/wsclean.git', tag='v2.10.1', submodules=True)
     version('2.9', git='https://gitlab.com/aroffringa/wsclean.git', tag='wsclean2.9', submodules=True)
 
@@ -45,9 +49,11 @@ class Wsclean(CMakePackage):
     depends_on('cfitsio@3.48:')
     depends_on('boost@1.80.0: +date_time +filesystem +system +test +program_options')
     depends_on('idg@0.8.1', when='@3.0 +idg')
-    depends_on('idg@1.0.0', when='@3.1 +idg')
+    depends_on('idg@1.0.0', when='@3.1: +idg')
     depends_on('everybeam@0.2.0', when='@3.0 +everybeam')
     depends_on('everybeam@0.3.1', when='@3.1 +everybeam')
+    depends_on('everybeam@0.4.0', when='@3.2 +everybeam')
+    depends_on('everybeam@0.4.0', when='@3.3 +everybeam')
     depends_on('everybeam@0.5.2:0.5.8', when='@3.4 +everybeam')
     depends_on('mpi', when='+mpi')
     depends_on('blas', when='@3.0:')
