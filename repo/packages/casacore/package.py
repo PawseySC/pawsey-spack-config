@@ -68,7 +68,7 @@ class Casacore(CMakePackage):
     depends_on('gsl', when='@3.5.0:')
 
     def cmake_args(self):
-        args = []
+        args = ['-DCMAKE_Fortran_FLAGS=-fallow-argument-mismatch']
         spec = self.spec
 
         args.append(self.define_from_variant('ENABLE_SHARED', 'shared'))
