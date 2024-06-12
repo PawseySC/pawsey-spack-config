@@ -5,7 +5,7 @@ AMBER_VERSION=24
 AMBER_SRC_DIR=/software/setonix/licensed_src/amber
 BUILD_DIR=$MYSCRATCH/amber_build_automated
 INSTALL_DIR=$MYSCRATCH/amber_install_automated #/software/setonix/2024.05/software/linux-sles15-zen3/gcc-12.2.0/amber-amd-gfx90a/22 
-MODULE_DIR=
+MODULE_DIR=${MYSCRATCH}/modulefiles/amber-amd-gfx90a
 amber_tools_src=$AMBER_SRC_DIR/AmberTools24.tar.bz2
 amber_src=$AMBER_SRC_DIR/Amber24.tar.bz2
 
