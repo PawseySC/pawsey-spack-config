@@ -6,7 +6,7 @@
 from spack.package import *
 
 
-class Idg(CMakePackage):
+class Idg(CMakePackage, CudaPackage):
     """
     Image Domain Gridding (IDG) is a fast method for convolutional resampling (gridding/degridding) 
     of radio astronomical data (visibilities). Direction-dependent effects (DDEs) 
@@ -14,15 +14,21 @@ class Idg(CMakePackage):
     """
 
     homepage = "https://www.astron.nl/citt/IDG/"
-    git      = "https://git.astron.nl/RD/idg.git"
+    git      = "https://gitlab.com/astron-idg/idg.git"
 
-    version('1.0.0', commit='3322756fb8b6e3bb1fe5293f3e07e40623ff8486')
-    version('0.8.1', commit='a09f3c85094c592f9304fff4c31e920c7592c3c3')
+    version("1.2.0", tag="1.2.0")
+    version("1.1.0", tag="1.1.0")
+    version("1.0.0", tag="1.0.0")
+    version("0.7", tag="0.7")
 
     depends_on('boost')
     depends_on('fftw-api@3')
     depends_on('blas')
 
-    def url_for_version(self, version):
-        return ("https://git.astron.nl/RD/idg/-/archive/{0}/idg-{0}.tar.gz".format(version))
 
+    def cmake_args(self):
+        args = []
+        if '+cuda' in self.spec:
+            args.append("-DBUILD_LIB_CUDA=ON")
+            args.append(f"-DCUDA_ROOT_DIR={self.spec['cuda'].prefix}")
+        return args
