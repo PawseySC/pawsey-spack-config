@@ -12,7 +12,6 @@ class Birli(Package):
 
     depends_on("rust@1.64.0:", type="build")
     depends_on("cfitsio@3.49")
-    depends_on("curl") # because cfitsio does not --disable-curl by default
     depends_on("aoflagger@3.2.0:")
     depends_on("erfa") # because of Marlu
 
