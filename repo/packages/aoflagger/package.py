@@ -19,7 +19,7 @@ class Aoflagger(CMakePackage):
     depends_on('libxml2')
     depends_on('cfitsio')
     depends_on('libpng')
-    depends_on('hdf5@1.10.7 +cxx ~mpi api=v110')
+    depends_on('hdf5@1.10: +cxx ~mpi api=v110')
     depends_on('lua@5.2:')
     depends_on('cmake', type='build')
 
