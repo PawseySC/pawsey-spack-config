@@ -8,7 +8,7 @@ class Birli(Package):
 
     maintainers = ["d3v-null"]
 
-    version("0.10.0", tag="v0.8.0")
+    version("0.10.0", tag="v0.10.0")
 
     depends_on("rust@1.64.0:", type="build")
     depends_on("cfitsio@3.49")
