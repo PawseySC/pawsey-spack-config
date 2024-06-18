@@ -3,29 +3,18 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-# ----------------------------------------------------------------------------
-# If you submit this package back to Spack as a pull request,
-# please first remove this boilerplate and all FIXME comments.
-#
-# This is a template package file for Spack.  We've put "FIXME"
-# next to all the things you'll want to change. Once you've handled
-# them, you can save this file and test your package like this:
-#
-#     spack install cotter
-#
-# You can edit this file again by typing:
-#
-#     spack edit cotter
-#
-# See the Spack documentation for more information on packaging.
-# ----------------------------------------------------------------------------
-
 from spack import *
 
 
 class Wsclean(CMakePackage):
-    """FIXME: Put a proper description of your package here."""
-
+    """
+     WSClean (w-stacking clean) is a fast generic widefield imager. It uses the w-stacking algorithm
+     and can make use of the w-snapshot algorithm. As of Feb 2014, it is 2-12 times faster than CASA's
+     w-projection, depending on the array configuration. It supports full-sky imaging and proper beam
+     correction for homogeneous dipole arrays such as the MWA.
+     WSClean allows Hogbom and Cotton-Schwab cleaning and has wideband, multiscale, compressed
+     sensing and joined-polarization deconvolution modes. All operations are performed on the CPU.
+    """
     homepage = "https://gitlab.com/aroffringa/wsclean"
 
     maintainers = ['dipietrantonio']
