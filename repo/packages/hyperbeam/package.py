@@ -21,6 +21,7 @@ class Hyperbeam(Package):
     maintainers = ["d3v-null"]
 
     version("0.8.0", tag="v0.8.0")
+    version("0.5.0", tag="v0.5.0")
     variant("python", default=True, description="Build and install Python bindings.")
 
     depends_on("rust@1.64.0:", type="build")
@@ -31,6 +32,7 @@ class Hyperbeam(Package):
     depends_on("py-numpy", type=("build", "run"), when="+python")
     depends_on("python", type=("build", "run"), when="+python")
     depends_on("py-pip", type="build", when="+python")
+    depends_on("erfa", when="@0.5.0")
 
     sanity_check_is_file = [
         join_path("include", "mwa_hyperbeam.h"),
@@ -86,12 +88,13 @@ class Hyperbeam(Package):
         cc_example()
 
     def setup_run_environment(self, env):
-        python_version = self.spec["python"].version.string
-        python_version = python_version[:python_version.rfind(".")]
-        env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
+        if '+python' in self.spec:
+            python_version = self.spec["python"].version.string
+            python_version = python_version[:python_version.rfind(".")]
+            env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
 
     def setup_dependent_run_environment(self, env, dependent_spec):
-        if dependent_spec.package.extends(self.spec):
+        if '+python' in self.spec and dependent_spec.package.extends(self.spec):
             python_version = self.spec["python"].version.string
             python_version = python_version[:python_version.rfind(".")]
             env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
