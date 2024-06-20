@@ -86,12 +86,13 @@ class Mwalib(Package):
         cc_example("test_files/1384808344/1384808344_metafits.fits")
 
     def setup_run_environment(self, env):
-        python_version = self.spec["python"].version.string
-        python_version = python_version[:python_version.rfind(".")]
-        env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
+        if "+python" in self.spec:
+            python_version = self.spec["python"].version.string
+            python_version = python_version[:python_version.rfind(".")]
+            env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
 
     def setup_dependent_run_environment(self, env, dependent_spec):
-        if dependent_spec.package.extends(self.spec):
+        if "+python" in self.spec and  dependent_spec.package.extends(self.spec):
             python_version = self.spec["python"].version.string
             python_version = python_version[:python_version.rfind(".")]
             env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
