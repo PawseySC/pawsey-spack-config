@@ -1,0 +1,11 @@
+repos:
+# this list is interpreted as a priority list, 
+# in that items higher up in the list are inspected first
+# and take precedence
+#
+# This one is for user recipes
+- USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/$USER/ella/DATE_TAG/spack_repo
+# 
+# Spack user (Pawsey staff) populates this one with fixed recipes for Setonix
+# that are not (yet) in the Spack public repo
+- INSTALL_PREFIX/spack/var/spack/repos/pawsey
