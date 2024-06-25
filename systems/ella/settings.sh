@@ -182,7 +182,7 @@ singularity_name_general="singularityce"
 # root location for Pawsey custom builds
 custom_root_dir="custom"
 # root location for Pawsey utilities (spack, shpc, scripts)
-utilities_root_dir="pawsey"
+utilities_root_dir="/pawsey/software/projects/pawsey0001"
 # root location for containers
 containers_root_dir="containers"
 # location for Pawsey custom build modules
