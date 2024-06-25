@@ -13,8 +13,6 @@ fi
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
-# for first run, use cray-python, because there is no Spack python yet
-module load cray-python
 # initialise spack 
 . "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh"
 
