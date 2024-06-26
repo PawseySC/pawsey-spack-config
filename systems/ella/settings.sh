@@ -28,13 +28,15 @@ if [ "$USER" = "spack" ]; then
     INSTALL_GROUP="spack"
 fi
 
+echo $INSALL_GROUP
+
 if [ -z ${INSTALL_GROUP+x} ]; then
     echo "The 'INSTALL_GROUP' variable must be set to linux group that will own the installed files."
     exit 1
 fi
 
 # Note the use of '' instead of "" to allow env variables to be present in config files
-USER_PERMANENT_FILES_PREFIX='/pawsey/ella/projects/'
+USER_PERMANENT_FILES_PREFIX="/pawsey/software/projects/pawsey0001/ella"
 USER_TEMP_FILES_PREFIX='/tmp'
 SPACK_USER_CONFIG_PATH="$MYSOFTWARE/ella/$DATE_TAG/.spack_user_config"
 BOOTSTRAP_PATH='$MYSOFTWARE/ella/'$DATE_TAG/.spack_user_config/bootstrap
@@ -47,12 +49,12 @@ SPACK_POPULATE_CACHE=0
 
 pawseyenv_version="${DATE_TAG}"
 
-archs="arm64"
+archs="armv9.0a"
 # compiler versions (needed for module trees with compiler dependency)
 gcc_version="12.3.0"
 
 # architecture of login/compute nodes (needed by Singularity symlink module)
-cpu_arch="arm64"
+cpu_arch="armv9.0a"
 
 # tool versions
 spack_version="0.21.0" # the prefix "v" is added in setup_spack.sh
@@ -180,9 +182,9 @@ singularity_name_general="singularityce"
 
 # NOTE: the following are ALL RELATIVE to root_dir above
 # root location for Pawsey custom builds
-custom_root_dir="custom"
+custom_root_dir="/pawsey/software/projects/pawsey0001"
 # root location for Pawsey utilities (spack, shpc, scripts)
-utilities_root_dir="/pawsey/software/projects/pawsey0001"
+utilities_root_dir="utilities"
 # root location for containers
 containers_root_dir="containers"
 # location for Pawsey custom build modules
