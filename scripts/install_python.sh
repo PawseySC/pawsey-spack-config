@@ -38,5 +38,7 @@ spack -d spec python@${python_version} %gcc@${gcc_version}
 echo "Installing Python with default compilers.."
 for arch in $archs; do
     sg $INSTALL_GROUP -c "spack install --no-checksum python@${python_version} %gcc@${gcc_version} target=$arch"
-    sg $INSTALL_GROUP -c "spack install --no-checksum python@${python_version} %cce@${cce_version} target=$arch"
+    if [ "$SYSTEM" != "ella" ]; then
+    	sg $INSTALL_GROUP -c "spack install --no-checksum python@${python_version} %cce@${cce_version} target=$arch"
+    fi
 done
