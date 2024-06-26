@@ -3,6 +3,8 @@
 export DATE_TAG=2024.06
 export SYSTEM=ella
 
+export PAWSEY_PROJECT=pawsey0001
+
 # .pawsey_project is not sourced on ella
 if [ -z "${MYSOFTWARE}" ]; then
 	export MYSOFTWARE="/pawsey/software/projects/$PAWSEY_PROJECT/$USER"
@@ -27,4 +29,5 @@ if [ ! -L "${INSTALL_PREFIX}" ]; then
 	    ln -s "$ACTUAL_INSTALL_PREFIX" "$INSTALL_PREFIX"
 fi
 
-./scripts/install_spack.sh
+. ./scripts/install_spack.sh
+. ./scripts/install_python.sh
