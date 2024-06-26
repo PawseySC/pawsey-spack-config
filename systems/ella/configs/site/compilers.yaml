@@ -37,10 +37,10 @@ compilers:
 - compiler:
     spec: gcc@12.3.0
     paths:
-      cc: gcc-12
-      cxx: g++-12
-      f77: gfortran-12
-      fc: gfortran-12
+      cc: /usr/bin/gcc-12
+      cxx: /usr/bin/g++-12
+      f77: /usr/bin/gfortran-12
+      fc: /usr/bin/gfortran-12
     flags:
       cflags: -O3
       cxxflags: -O3
@@ -48,17 +48,17 @@ compilers:
       fflags: -O3 -fallow-argument-mismatch
     operating_system: ubuntu
     target: any
-    modules: {}
+    modules:
     environment: {}
     extra_rpaths: []
 
 - compiler:
     spec: gcc@11.4.1
     paths:
-      cc: gcc
-      cxx: g++
-      f77: gfortran
-      fc: gfortran
+      cc: /usr/bin/gcc
+      cxx: /usr/bin/g++
+      f77: /usr/bin/gfortran
+      fc: /usr/bin/gfortran
     flags:
       cflags: -O3
       cxxflags: -O3
@@ -66,7 +66,7 @@ compilers:
       fflags: -O3 -fallow-argument-mismatch
     operating_system: rocky
     target: any
-    modules: {}
+    modules:
     environment: {}
     extra_rpaths: []
 
