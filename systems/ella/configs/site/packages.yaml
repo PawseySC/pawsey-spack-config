@@ -52,7 +52,7 @@ packages:
   libseccomp:
     version: [2.5.3]
   zlib:
-    version: [1.10.4]
+    version: []
   zstd:
     version: [1.4.8]
   json-c:
@@ -76,7 +76,7 @@ packages:
     version: [3.11.6]
     variants: '+optimizations +zlib +sqlite3 +tkinter ~ssl'
   gdbm:
-    version: [1.23.1]
+    version: [1.23]
   apr:
     version: [1.7.4]
   gettext:
