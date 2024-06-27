@@ -12,7 +12,7 @@ from pathlib import Path
 import shutil
 
 
-class Hyperbeam(Package):
+class Hyperbeam(Package, ROCmPackage, CudaPackage):
     """Primary beam code for the Murchison Widefield Array (MWA) radio telescope."""
 
     homepage = "https://github.com/MWATelescope/mwa_hyperbeam"
@@ -20,8 +20,12 @@ class Hyperbeam(Package):
 
     maintainers = ["d3v-null"]
 
+    version("0.9.2", tag="v0.9.2")
     version("0.8.0", tag="v0.8.0")
+    version("0.7.2", tag="v0.7.2")
+    version("0.6.1", tag="v0.6.1")
     version("0.5.0", tag="v0.5.0")
+
     variant("python", default=True, description="Build and install Python bindings.")
 
     depends_on("rust@1.64.0:", type="build")
@@ -34,6 +38,8 @@ class Hyperbeam(Package):
     depends_on("py-pip", type="build", when="+python")
     depends_on("erfa", when="@0.5.0")
 
+    conflicts("+rocm", when="@:0.6.0") # early hip support was added in 0.6.0
+
     sanity_check_is_file = [
         join_path("include", "mwa_hyperbeam.h"),
         join_path("lib", "libmwa_hyperbeam.a"),
@@ -44,13 +50,32 @@ class Hyperbeam(Package):
     def setup_build_environment(self, env):
         build_dir = self.stage.source_path
         env.set('CARGO_HOME', f"{build_dir}/.cargo")
+        if self.spec.satisfies("+rocm"):
+            amdgpu_target = ",".join(self.spec.variants["amdgpu_target"].value)
+            env.set('HYPERBEAM_HIP_ARCH', amdgpu_target)
+            hip_spec = self.spec["hip"]
+            rocm_dir = hip_spec.prefix
+            print(f"rocm_dir: {rocm_dir}, amdgpu_target: {amdgpu_target}")
+            if hip_spec.satisfies("@6:"):
+                env.set('HIP_PATH', rocm_dir)
+            else:
+                env.set('HIP_PATH', rocm_dir)
+                env.set('ROCM_PATH', rocm_dir)
+        if self.spec.satisfies("+cuda"):
+            cuda_arch = spec.variants["cuda_arch"].value
+            env.set('HYPERBEAM_CUDA_COMPUTE', cuda_arch)
+            cuda_dir = self.spec["cuda"].prefix
+            print(f"cuda_dir: {cuda_dir}, cuda_arch: {cuda_arch}")
 
     def install(self, spec, prefix):
-        os.system("env")
         cargo = Executable("cargo")
-        cargo("generate-lockfile")
+        features = ["hdf5-static"]
+        if self.spec.satisfies("+rocm"):
+            features += ["hip"]
+        if self.spec.satisfies("+cuda"):
+            features += ["cuda"]
         with fs.working_dir(self.stage.source_path):
-            cargo("build", "--locked", "--release", "--features=hdf5-static")
+            cargo("build", "--locked", "--release", f"--features={','.join(features)}")
             shutil.copytree("include", f"{prefix}/include")
             os.mkdir(f"{prefix}/lib")
             release = Path("target/release/")
@@ -60,7 +85,8 @@ class Hyperbeam(Package):
             if '+python' in spec:
                 maturin = which("maturin")
                 pip = which("pip3")
-                maturin("build", "--release", "--features", "python,hdf5-static", "--strip")
+                pyfeatures = ["python"]+features
+                maturin("build", "--release", f"--features={','.join(pyfeatures)}", "--strip")
                 whl_file =list(os.listdir("target/wheels"))[0]
                 pip("install", f"--prefix={prefix}", f"target/wheels/{whl_file}")
 
@@ -88,13 +114,23 @@ class Hyperbeam(Package):
         cc_example()
 
     def setup_run_environment(self, env):
-        if '+python' in self.spec:
+        if self.spec.satisfies("+python"):
             python_version = self.spec["python"].version.string
             python_version = python_version[:python_version.rfind(".")]
             env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
 
     def setup_dependent_run_environment(self, env, dependent_spec):
-        if '+python' in self.spec and dependent_spec.package.extends(self.spec):
+        if self.spec.satisfies("+python") and dependent_spec.package.extends(self.spec):
             python_version = self.spec["python"].version.string
             python_version = python_version[:python_version.rfind(".")]
             env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
+
+# test me on setonix with
+"""
+module load spack/default
+spack env activate --temp -p
+spack add hyperbeam amdgpu_target=gfx90a +rocm
+spack install
+wget https://github.com/MWATelescope/mwa_hyperbeam/blob/main/examples/analytic_gpu.py
+python analytic_gpu.py
+"""
