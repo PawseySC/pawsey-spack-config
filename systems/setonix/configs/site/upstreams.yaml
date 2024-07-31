@@ -3,6 +3,9 @@ upstreams:
 # it acts as an upstream installation for user-specific installations
   system_wide:
     install_tree: INSTALL_PREFIX/software
+
+  project_wide:
+    install_tree: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/setonix/DATE_TAG/software
 # autoload+upstream currently does not work, 
 # so better not to expose upstreams modules to user installations
 #    modules:
