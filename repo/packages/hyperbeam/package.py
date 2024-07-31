@@ -20,7 +20,8 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
 
     maintainers = ["d3v-null"]
 
-    version("0.9.2", tag="v0.9.2")
+    version("main", branch="main")
+    version("0.9.3", tag="v0.9.3")
     version("0.8.0", tag="v0.8.0")
     version("0.7.2", tag="v0.7.2")
     version("0.6.1", tag="v0.6.1")
@@ -33,6 +34,7 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
     depends_on("curl") # because cfitsio does not --disable-curl by default
     depends_on("hdf5 +cxx ~mpi api=v110")
     depends_on("py-maturin", when="+python")
+    depends_on("patchelf@0.17.2", type=("build", "run"), when="+python") # otherwise wheel is mangled https://github.com/PawseySC/pawsey-spack-config/pull/280#issuecomment-2258095785
     depends_on("py-numpy", type=("build", "run"), when="+python")
     depends_on("python", type=("build", "run"), when="+python")
     depends_on("py-pip", type="build", when="+python")
@@ -67,13 +69,17 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
             cuda_dir = self.spec["cuda"].prefix
             print(f"cuda_dir: {cuda_dir}, cuda_arch: {cuda_arch}")
 
-    def install(self, spec, prefix):
-        cargo = Executable("cargo")
+    def get_features(self):
         features = ["hdf5-static"]
         if self.spec.satisfies("+rocm"):
             features += ["hip"]
         if self.spec.satisfies("+cuda"):
             features += ["cuda"]
+        return features
+
+    def install(self, spec, prefix):
+        cargo = Executable("cargo")
+        features = self.get_features()
         with fs.working_dir(self.stage.source_path):
             cargo("build", "--locked", "--release", f"--features={','.join(features)}")
             shutil.copytree("include", f"{prefix}/include")
@@ -82,7 +88,7 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
             for f in release.iterdir():
                 if f.name.startswith("libmwa_hyperbeam."):
                     shutil.copy2(f"{f}", f"{prefix}/lib/")
-            if '+python' in spec:
+            if self.spec.satisfies("+python"):
                 maturin = which("maturin")
                 pip = which("pip3")
                 pyfeatures = ["python"]+features
@@ -94,24 +100,33 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
     @on_package_attributes(run_tests=True)
     def cargo_test(self):
         cargo = Executable("cargo")
-        cargo("test", "--release", "--lib", "--features=hdf5-static")
+        features = self.get_features()
+        # TODO: more elegant way of setting beam file from variants?
+        # e.g. /scratch/references/mwa/mwa_full_embedded_element_pattern.h5
+        # see: <https://pawsey.atlassian.net/servicedesk/customer/portal/3/GS-29129>
+        # Executable("ln")("-s", "/software/projects/mwaeor/dev/mwa_full_embedded_element_pattern.h5", "mwa_full_embedded_element_pattern.h5")
+        cargo("test", "--release", "--lib", f"--features={','.join(features)}")
 
     @run_after("install")
     @on_package_attributes(run_tests=True)
-    def test_examples(self):
+    def test_cc_examples(self):
         cc = which(os.environ["CC"])
-        exe = "fee"
-        cc(
-            f"examples/{exe}.c",
-            f"-L{self.prefix.lib}",
-            f"-I{self.prefix.include}",
-            "-lm", "-lpthread", "-ldl",
-            "-lmwa_hyperbeam"
-            f"{exe}.cpp",
-            "-o", exe,
-        )
-        cc_example = which(exe)
-        cc_example()
+        cc_exes = ["analytic", "analytic_parallel", "fee", "fee_parallel", "fee_parallel_omp"]
+        if self.spec.satisfies("+rocm") or self.spec.satisfies("+cuda"):
+            cc_exes += ["fee_gpu", "analytic_gpu"]
+        for exe in cc_exes:
+            cc(
+                f"examples/{exe}.c",
+                f"-L{self.prefix.lib}",
+                f"-I{self.prefix.include}",
+                "-lm", "-lpthread", "-ldl",
+                "-lmwa_hyperbeam",
+                "-o", exe,
+            )
+            args = []
+            if "fee" in exe:
+                args += ["mwa_full_embedded_element_pattern.h5"]
+            Executable(f"./{exe}")(*args)
 
     def setup_run_environment(self, env):
         if self.spec.satisfies("+python"):
@@ -127,10 +142,21 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
 
 # test me on setonix with
 """
+salloc --nodes=1 --partition=gpu-highmem --account=pawsey0875-gpu -t 00:30:00 --gres=gpu:1
+
 module load spack/default
+
 spack env activate --temp -p
-spack add hyperbeam amdgpu_target=gfx90a +rocm
-spack install
-wget https://github.com/MWATelescope/mwa_hyperbeam/blob/main/examples/analytic_gpu.py
-python analytic_gpu.py
+spack add hyperbeam@main +rocm +python amdgpu_target=gfx90a
+spack install --test=root --reuse
+eval $(spack module lmod loads 'hyperbeam@main' | grep -v '#')
+
+# TODO: this would be preferable:
+# spack install --test=root --reuse hyperbeam@main +rocm +python amdgpu_target=gfx90a
+# spack module lmod refresh
+# module use $MYSOFTWARE/setonix/2024.05/modules/zen3/gcc/12.2.0
+# module load hyperbeam/main-yztxu42
+
+wget https://raw.githubusercontent.com/MWATelescope/mwa_hyperbeam/main/examples/analytic_gpu.py
+$SPACK_PYTHON analytic_gpu.py
 """
