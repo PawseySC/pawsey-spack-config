@@ -1,12 +1,16 @@
 upstreams:
-# this is the location of the system wide installation
-# it acts as an upstream installation for user-specific installations
+  # Project-wide installations are made visible to use-private spack commands to provide
+  # dependencies. They are also listed before the system-wide upstream because 
+  # project-wide installations may depend on system-wide ones.
+  project_wide:
+    install_tree: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/setonix/DATE_TAG/software
+
+  # this is the location of the system wide installation
+  # it acts as an upstream installation for project-wide and user-specific installations
   system_wide:
     install_tree: INSTALL_PREFIX/software
 
-  project_wide:
-    install_tree: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/setonix/DATE_TAG/software
-# autoload+upstream currently does not work, 
+#  autoload+upstream currently does not work, 
 # so better not to expose upstreams modules to user installations
 #    modules:
 #      lmod: INSTALL_PREFIX/modules
