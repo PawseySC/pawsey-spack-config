@@ -59,8 +59,8 @@ This is where system specific configurations are placed. In particular, the foll
 
 * `configs/` is a directory containing `yaml` configuraiton files for Spack. There are three types of configuration:
   * `site/`: Spack configuration files that are valid for all users, which will sit in `$spack/etc/spack`.
-  * `project/`: Spack configuration files that are valid for project-wide installations executed by any user using the dedicated script `spack_project.sh`.
-  * `spackuser/`: Spack configuration files for system-wide installs, performed by Pawsey staff, which will sit in `/home/spack/.spack/`, allowing the `spack` user to override system-wide settings.
+  * `project/`: Spack configuration files that are valid for project-wide installations executed by any user using the custom Spack command `spack project [...]`.
+  * `spackuser/`: Spack configuration files for system-wide installation, performed by Pawsey staff using the `spack` linux user,  allowing to override the `site` settings.
 * `environments/`: Spack environments to be deployed.
 * `templates/`: modulefile templates for Spack.
 
