@@ -47,7 +47,5 @@ salloc --nodes=1 --partition=gpu-highmem --account=pawsey0875-gpu -t 00:30:00 --
 module load spack/default
 
 spack install --test=root --reuse birli@main
-spack module lmod refresh
-module use $MYSOFTWARE/setonix/2024.05/modules/zen3/gcc/12.2.0
-eval $(spack module lmod loads 'birli@main' | grep -v '#')
+spack load birli@main
 """
