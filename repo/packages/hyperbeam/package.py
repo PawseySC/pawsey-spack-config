@@ -139,24 +139,3 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
             python_version = self.spec["python"].version.string
             python_version = python_version[:python_version.rfind(".")]
             env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
-
-# test me on setonix with
-"""
-salloc --nodes=1 --partition=gpu-highmem --account=pawsey0875-gpu -t 00:30:00 --gres=gpu:1
-
-module load spack/default
-
-spack env activate --temp -p
-spack add hyperbeam@main +rocm +python amdgpu_target=gfx90a
-spack install --test=root --reuse
-eval $(spack module lmod loads 'hyperbeam@main' | grep -v '#')
-
-# TODO: this would be preferable:
-# spack install --test=root --reuse hyperbeam@main +rocm +python amdgpu_target=gfx90a
-# spack module lmod refresh
-# module use $MYSOFTWARE/setonix/2024.05/modules/zen3/gcc/12.2.0
-# module load hyperbeam/main-yztxu42
-
-wget https://raw.githubusercontent.com/MWATelescope/mwa_hyperbeam/main/examples/analytic_gpu.py
-$SPACK_PYTHON analytic_gpu.py
-"""

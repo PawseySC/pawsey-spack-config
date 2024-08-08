@@ -97,25 +97,3 @@ class Mwalib(Package):
             python_version = self.spec["python"].version.string
             python_version = python_version[:python_version.rfind(".")]
             env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
-
-
-"""
-salloc --nodes=1 --partition=gpu-highmem --account=pawsey0875-gpu -t 00:30:00 --gres=gpu:1
-
-module load spack/default
-
-spack install --test=root --reuse mwalib@main +python
-spack load 'mwalib@main'
-
-# catch undefined variables
-( set -u; echo MYSOFTWARE: $MYSOFTWARE$'\n'MYSCRATCH: $MYSCRATCH )
-
-# Astro stuff
-export obsid=1087251016
-export outdir="${MYSCRATCH}/${obsid}"
-mkdir -p $outdir
-export metafits="${outdir}/${obsid}.metafits"
-[ -f "$metafits" ] || wget -O "$metafits" $'http://ws.mwatelescope.org/metadata/fits?obs_id='${obsid}
-wget https://raw.githubusercontent.com/MWATelescope/mwalib/main/examples/mwalib-print-context.py
-python mwalib-print-context.py -m $metafits
-"""
