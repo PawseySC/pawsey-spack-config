@@ -20,7 +20,10 @@ class Mwalib(Package):
 
     maintainers = ["d3v-null"]
 
+    version("main", branch="main")
+    version("1.4.0", tag="v1.4.0")
     version("1.3.3", tag="v1.3.3")
+
     variant("python", default=True, description="Build and install Python bindings.")
 
     depends_on("rust@1.64.0:", type="build")
@@ -78,12 +81,10 @@ class Mwalib(Package):
             f"-L{self.prefix.lib}",
             f"-I{self.prefix.include}",
             "-lm", "-lpthread", "-ldl",
-            "-lmwalib"
-            f"{exe}.cpp",
+            "-lmwalib",
             "-o", exe,
         )
-        cc_example = which(exe)
-        cc_example("test_files/1384808344/1384808344_metafits.fits")
+        Executable(f"./{exe}")("test_files/1384808344/1384808344_metafits.fits")
 
     def setup_run_environment(self, env):
         if "+python" in self.spec:
@@ -96,4 +97,3 @@ class Mwalib(Package):
             python_version = self.spec["python"].version.string
             python_version = python_version[:python_version.rfind(".")]
             env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
-
