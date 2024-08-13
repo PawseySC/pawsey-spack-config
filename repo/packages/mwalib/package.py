@@ -27,8 +27,12 @@ class Mwalib(Package):
     variant("python", default=True, description="Build and install Python bindings.")
 
     depends_on("rust@1.64.0:", type="build")
+    
+    # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.
+    # curl is needed because cfitsio does not --disable-curl by default
     depends_on("cfitsio@3.49")
-    depends_on("curl") # because cfitsio does not --disable-curl by default
+    depends_on("curl")
+    
     depends_on("py-maturin", when="+python")
     depends_on("py-numpy", type=("build", "run"), when="+python")
     depends_on("python", type=("build", "run"), when="+python")
