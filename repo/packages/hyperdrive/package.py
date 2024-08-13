@@ -13,8 +13,11 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
 
     variant("plotting", default=True, description="Enable plotting subcommands like plot-solutions")
 
-    depends_on("rust@1.68.0:", type="build")
+    # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.
+    # curl is needed because cfitsio does not --disable-curl by default
     depends_on("cfitsio@3.49")
+    depends_on("curl")
+
     depends_on("aoflagger@3.2.0:") # because of Birli
     depends_on("erfa") # because of Marlu
     depends_on("hdf5@1.10: +cxx ~mpi api=v110")
