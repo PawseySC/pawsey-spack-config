@@ -30,6 +30,7 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
     variant("python", default=True, description="Build and install Python bindings.")
 
     depends_on("rust@1.64.0:", type="build")
+    depends_on("cmake", type="build")
 
     # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.
     # curl is needed because cfitsio does not --disable-curl by default
@@ -37,12 +38,12 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
     depends_on("curl")
     depends_on("hdf5 +cxx ~mpi api=v110")
     depends_on("py-maturin", when="+python")
-    
+
     # this is the only version of patchelf that has been found to work with maturin. patchelf@0.18
-    # corrupts the dynamic libraries, making them unusable. 
+    # corrupts the dynamic libraries, making them unusable.
     # https://github.com/PawseySC/pawsey-spack-config/pull/280#issuecomment-2258095785
     depends_on("patchelf@0.17.2", type=("build", "run"), when="+python")
-    
+
     depends_on("py-numpy", type=("build", "run"), when="+python")
     depends_on("python", type=("build", "run"), when="+python")
     depends_on("py-pip", type="build", when="+python")

@@ -13,6 +13,7 @@ class Birli(Package):
     version("0.10.0", tag="v0.10.0")
 
     depends_on("rust@1.64.0:", type="build")
+    depends_on("cmake", type="build")
 
     # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.
     # curl is needed because cfitsio does not --disable-curl by default
