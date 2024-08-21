@@ -3,3 +3,5 @@
 config:
   install_tree:
     root: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/setonix/DATE_TAG/software
+
+  environments_root: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/setonix/DATE_TAG/environments

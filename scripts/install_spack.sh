@@ -25,7 +25,8 @@ mkdir -p ${SPACK_USER_CONFIG_PATH}
 
 # We will use the Pawsey spack mirror, to which several patches will be applied.
 if ! [ -e ${INSTALL_PREFIX}/spack ]; then
-  git clone https://github.com/pawseysc/spack ${INSTALL_PREFIX}/spack
+  git clone https://github.com/spack/spack.git ${INSTALL_PREFIX}/spack
+#  git clone https://github.com/pawseysc/spack ${INSTALL_PREFIX}/spack
   cd "${INSTALL_PREFIX}/spack"
   git checkout v${spack_version}
 
@@ -74,7 +75,8 @@ sed -i \
   -e "s|BOOTSTRAP_PATH|${BOOTSTRAP_PATH}|g"\
   ${INSTALL_PREFIX}/spack/etc/spack/*.yaml \
   ${SPACK_USER_CONFIG_PATH}/*.yaml \
-  ${INSTALL_PREFIX}/spack/etc/spack/project/*.yaml
+  ${INSTALL_PREFIX}/spack/etc/spack/project/*.yaml \
+  ${INSTALL_PREFIX}/spack/templates/modules/modulefile.lua
 
 
 # Instantiate utility scripts and copy them within the spack installation directory.
@@ -96,19 +98,24 @@ sed \
 
 cp ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_refresh_modules.sh \
    ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_rm_modules.sh \
+   ${PAWSEY_SPACK_CONFIG_REPO}/scripts/spack_generate_migration_scripts.sh \
    ${INSTALL_PREFIX}/spack/bin/
 
-# spack_project.sh: install a software for the entire project.
-sed \
-  -e "s;INSTALL_PREFIX;${INSTALL_PREFIX};g" \
-  ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_project.sh \
-  >${INSTALL_PREFIX}/spack/bin/spack_project.sh
+# Install a spack wrapper to handle project installations
+if ! [ -e ${INSTALL_PREFIX}/spack/bin/realspack ]; then
+  mv ${INSTALL_PREFIX}/spack/bin/spack ${INSTALL_PREFIX}/spack/bin/realspack
+  sed \
+    -e "s;INSTALL_PREFIX;${INSTALL_PREFIX};g" \
+    ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack \
+    >${INSTALL_PREFIX}/spack/bin/spack
+fi
 
 chmod a+rx \
   ${INSTALL_PREFIX}/spack/bin/spack_create_user_moduletree.sh \
   ${INSTALL_PREFIX}/spack/bin/spack_refresh_modules.sh \
   ${INSTALL_PREFIX}/spack/bin/spack_rm_modules.sh \
-  ${INSTALL_PREFIX}/spack/bin/spack_project.sh
+  ${INSTALL_PREFIX}/spack/bin/spack_generate_migration_scripts.sh \
+  ${INSTALL_PREFIX}/spack/bin/spack
 
 # edit and copy over Spack modulefile
 mkdir -p ${INSTALL_PREFIX}/${spack_module_dir}

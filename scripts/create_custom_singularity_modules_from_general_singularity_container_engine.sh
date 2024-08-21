@@ -104,5 +104,6 @@ for version in $( ls ${src_dir}/*.lua 2>/dev/null ) ; do
     -e '/^-- add MPI START/,/^-- add MPI END/{/^-- add MPI START/!{/^-- add MPI END/!d}}' \
     -e '/^-- add GPUMPI START/,/^-- add GPUMPI END/{/^-- add GPUMPI START/!{/^-- add GPUMPI END/!d}}' \
     ${src_dir}/.${version} > ${dst_dir}/${version}-slurm.lua
+  sed -i '/^load("/d' ${dst_dir}/${version}-*.lua
   echo "Finished generating modules for ${version}"
 done

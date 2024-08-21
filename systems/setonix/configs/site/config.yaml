@@ -4,6 +4,7 @@ config:
   install_tree:
     root: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix/DATE_TAG/software
 
+  environments_root: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix/DATE_TAG/environments
   # Locations where templates should be found
   template_dirs:
   # This is now for all users

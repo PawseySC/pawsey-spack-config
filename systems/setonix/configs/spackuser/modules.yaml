@@ -6,7 +6,7 @@ modules:
 
     lmod:
 
-      # select all packages that depend on python, or r, or java,
+      # Select all packages that depend on python, or r, or java,
       # and set these modules to autoload their dependencies
       ^python:
         autoload: direct
@@ -21,6 +21,8 @@ modules:
       gnuplot:
         autoload: none
       hpctoolkit:
+        autoload: none
+      lammps:
         autoload: none
 
       # for libraries make sure to load direct dependencies
@@ -47,6 +49,8 @@ modules:
         autoload: direct
 
       # numerical libraries
+      arpack-ng:
+        autoload: direct
       amdblis:
         autoload: direct
       amdlibflame:
@@ -87,6 +91,13 @@ modules:
         autoload: direct
       petsc:
         autoload: direct
+      metis:
+        autoload: direct
+      parmetis:
+        autoload: direct
+      scotch:
+        autoload: direct
+
 
       # i/o libraries
       hdf5:
@@ -103,6 +114,8 @@ modules:
         autoload: direct
       parallel-netcdf:
         autoload: direct
+      squashfs:
+        autoload: none
 
 
       projections:
@@ -123,10 +136,15 @@ modules:
         ansys-fluidstructures: 'applications/{name}/{version}'
         cpmd: 'applications/{name}/{version}'
         cp2k: 'applications/{name}/{version}'
-        gromacs: 'applications/{name}/{version}'
-        lammps: 'applications/{name}/{version}'
-        namd: 'applications/{name}/{version}'
+        "gromacs +double": 'applications/{name}/{version}-double'
+        "gromacs ~double": 'applications/{name}/{version}-mixed'
+        amdgromacs: 'applications/gromacs-amd-gfx90a/{version}'
+        "lammps ~rocm": 'applications/{name}/{version}'
+        "lammps +rocm": 'applications/{name}-amd-gfx90a/{version}'
+        "namd +rocm": 'applications/{name}-amd-gfx90a/{version}'
+        "namd ~rocm": 'applications/{name}/{version}'
         nektar: 'applications/{name}/{version}'
+        "nekrs +rocm": 'applications/{name}-amd-gfx90a/{version}'
         nwchem: 'applications/{name}/{version}'
         # Previously, no openfoam modules were generated for bare-metal installs
         # But after issues with singularity in Nov2022, now openfoam bare metal
@@ -134,6 +152,7 @@ modules:
         openfoam: 'applications/{name}/{version}'
         # This other flavour of openfoam will be kept blocked until bare-metal install is tested
         #openfoam-org: 'applications/{name}/{version}'
+        ncl: 'applications/{name}/{version}' 
         quantum-espresso: 'applications/{name}/{version}'
         "vasp@6": 'applications/{name}6/{version}'
         vasp: 'applications/{name}/{version}'
@@ -145,11 +164,12 @@ modules:
         #roms: 'applications/{name}/{version}'
         #wrf: 'applications/{name}/{version}'
 
-        #cdo: 'applications/{name}/{version}'
+        cdo: 'applications/{name}/{version}'
         nco: 'applications/{name}/{version}'
         ncview: 'applications/{name}/{version}'
 
         # numerical or parallelisation libraries 
+        arpack-ng: 'libraries/{name}/{version}'
         "amdblis +suphandling": 'libraries/{name}/{version}'
         "amdblis ~suphandling": 'libraries/{name}/{version}-nosup'
         amdlibflame: 'libraries/{name}/{version}'
@@ -176,18 +196,29 @@ modules:
         gsl: 'libraries/{name}/{version}'
         hpx: 'libraries/{name}/{version}'
         "kokkos +hpx": 'libraries/{name}/{version}-hpx'
-        "kokkos +openmp": 'libraries/{name}/{version}-openmp'
-        kokkos: 'libraries/{name}/{version}'
+        "kokkos +openmp +rocm": 'libraries/{name}-amd-gfx90a/{version}-openmp'
+        "kokkos +openmp ~rocm": 'libraries/{name}/{version}-openmp' 
         netlib-lapack: 'libraries/{name}/{version}'
         openblas: 'libraries/{name}/{version}'
         blaspp: 'libraries/{name}/{version}'
         opencv: 'libraries/{name}/{version}'
         plasma: 'libraries/{name}/{version}'
-        petsc: 'libraries/{name}/{version}'
+        "petsc +complex~trilinos": 'libraries/{name}/{version}-complex'
+        "petsc ~complex~trilinos": 'libraries/{name}/{version}-nocomplex'
+        "petsc +complex+trilinos": 'libraries/{name}/{version}-complex-trilinos'
+        "petsc ~complex+trilinos": 'libraries/{name}/{version}-nocomplex-trilinos'
         plumed: 'libraries/{name}/{version}'
         netlib-scalapack: 'libraries/{name}/{version}'
         slate: 'libraries/{name}/{version}'
-        trilinos: 'libraries/{name}/{version}'
+        "trilinos ~rocm": 'libraries/{name}/{version}'
+        "trilinos +rocm": 'libraries/{name}-amd-gfx90a/{version}'
+        "scotch ~metis": 'libraries/{name}/{version}'
+        "scotch +metis": 'libraries/{name}/{version}-metis'
+        "metis ~int64~real64": 'libraries/{name}/{version}'
+        "metis +int64+real64": 'libraries/{name}/{version}-64bit'
+        "parmetis ~int64": 'libraries/{name}/{version}'
+        "parmetis +int64": 'libraries/{name}/{version}-64bit'
+        "magma +rocm": 'libraries/{name}-amd-gfx90a/{version}'
 
         # IO libraries 
         # to account for all the hdf5 variants 
@@ -225,8 +256,9 @@ modules:
         autoconf: 'utilities/{name}/{version}'
         automake: 'utilities/{name}/{version}'
         libtool: 'utilities/{name}/{version}'
+        ninja: 'utilities/{name}/{version}'
         # to avoid multiple cmake modules, picking a specific one
-        "cmake ~doc+ncurses+ownlibs~qt": 'utilities/{name}/{version}'
+        "cmake ~doc+ncurses+ownlibs": 'utilities/{name}/{version}'
         emacs: 'utilities/{name}/{version}'
         ffmpeg: 'utilities/{name}/{version}'
         gnuplot: 'utilities/{name}/{version}'
@@ -242,8 +274,11 @@ modules:
         tower-agent: 'utilities/{name}/{version}'
         tower-cli: 'utilities/{name}/{version}'
         mpifileutils: 'utilities/{name}/{version}'
+        feh: 'utilities/{name}/{version}'
+        lz4: 'utilities/{name}/{version}'
+        squashfs: 'utilities/{name}/{version}'
 
-        # S3 clients 
+        # S3 clients
         awscli: 'utilities/{name}/{version}'
         py-boto3: 'utilities/{name}/{version}'
         rclone: 'utilities/{name}/{version}'
@@ -329,6 +364,7 @@ modules:
         hpctoolkit: 'developer-tools/{name}/{version}'
         hpcviewer: 'developer-tools/{name}/{version}'
         py-hatchet: 'developer-tools/{name}/{version}'
+        omnitrace: 'developer-tools/{name}/{version}'
 
         # git needs special name, because `.git` is ignored by Lmod
         git: 'dependencies/.git-module/{version}-{hash:7}'

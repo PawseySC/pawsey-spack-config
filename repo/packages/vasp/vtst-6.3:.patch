@@ -1,0 +1,90 @@
+diff -r -c vasp.6.3.0/src/.objects vasp.6.3.0+vtst/src/.objects
+*** vasp.6.3.0/src/.objects	2022-01-20 23:10:06.000000000 +0800
+--- vasp.6.3.0+vtst/src/.objects	2023-04-14 23:52:21.000000000 +0800
+***************
+*** 115,120 ****
+--- 115,124 ----
+  	dos.o \
+  	elf.o \
+  	hamil_rot.o \
++ 	bfgs.o dynmat.o instanton.o lbfgs.o sd.o cg.o dimer.o bbm.o \
++ 	fire.o lanczos.o neb.o qm.o \
++ 	pyamff_fortran/*.o ml_pyamff.o \
++ 	opt.o \
+  	chain.o \
+  	dyna.o \
+  	fileio.o \
+diff -r -c vasp.6.3.0/src/main.F vasp.6.3.0+vtst/src/main.F
+*** vasp.6.3.0/src/main.F	2022-01-20 23:10:07.000000000 +0800
+--- vasp.6.3.0+vtst/src/main.F	2023-04-14 23:50:28.000000000 +0800
+***************
+*** 922,928 ****
+  ! init all chains (INCAR reader)
+  !-----------------------------------------------------------------------
+        LCHAIN = IMAGES > 0 .AND. .NOT.AFQMC_SET % ACTIVE
+!       IF (LCHAIN) CALL chain_init( T_INFO, IO)
+  !-----------------------------------------------------------------------
+  !xml finish copying parameters from INCAR to xml file
+  ! no INCAR reading from here 
+--- 922,928 ----
+  ! init all chains (INCAR reader)
+  !-----------------------------------------------------------------------
+        LCHAIN = IMAGES > 0 .AND. .NOT.AFQMC_SET % ACTIVE
+!       CALL chain_init( T_INFO, IO)
+  !-----------------------------------------------------------------------
+  !xml finish copying parameters from INCAR to xml file
+  ! no INCAR reading from here 
+***************
+*** 3517,3523 ****
+        ENDIF
+  
+        CALL CHAIN_FORCE(T_INFO%NIONS,DYN%POSION,TOTEN,TIFOR, &
+!            LATT_CUR%A,LATT_CUR%B,IO%IU6)
+  
+        CALL PARALLEL_TEMPERING(NSTEP,T_INFO%NIONS,DYN%POSION,DYN%VEL,TOTEN,TIFOR,DYN%TEBEG,DYN%TEEND, &
+             LATT_CUR%A,LATT_CUR%B,IO%IU6)
+--- 3517,3523 ----
+        ENDIF
+  
+        CALL CHAIN_FORCE(T_INFO%NIONS,DYN%POSION,TOTEN,TIFOR, &
+!            TSIF, LATT_CUR%A,LATT_CUR%B,IO%IU6)
+  
+        CALL PARALLEL_TEMPERING(NSTEP,T_INFO%NIONS,DYN%POSION,DYN%VEL,TOTEN,TIFOR,DYN%TEBEG,DYN%TEEND, &
+             LATT_CUR%A,LATT_CUR%B,IO%IU6)
+diff -r -c vasp.6.3.0/src/makefile vasp.6.3.0+vtst/src/makefile
+*** vasp.6.3.0/src/makefile	2022-01-20 23:10:06.000000000 +0800
+--- vasp.6.3.0+vtst/src/makefile	2023-04-14 23:53:58.000000000 +0800
+***************
+*** 14,20 ****
+  OFLAG=$(OFLAG_2)
+  OFLAG_IN=$(OFLAG)
+  
+! LIB=lib parser
+  LLIB=-Llib -ldmy -Lparser -lparser
+  
+  SRCDIR=../../src
+--- 14,20 ----
+  OFLAG=$(OFLAG_2)
+  OFLAG_IN=$(OFLAG)
+  
+! LIB=lib parser pyamff_fortran
+  LLIB=-Llib -ldmy -Lparser -lparser
+  
+  SRCDIR=../../src
+***************
+*** 145,151 ****
+  	$(MAKE) -C $@ -j1
+  #	$(MAKE) -C $@
+  
+! dependencies: sources
+  	$(MAKE) depend
+  
+  depend: $(F90SRC)
+--- 145,151 ----
+  	$(MAKE) -C $@ -j1
+  #	$(MAKE) -C $@
+  
+! dependencies: sources libs
+  	$(MAKE) depend
+  
+  depend: $(F90SRC)
