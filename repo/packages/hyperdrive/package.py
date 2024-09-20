@@ -51,8 +51,8 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
             env.set('HYPERDRIVE_CUDA_COMPUTE', cuda_arch)
             cuda_dir = self.spec["cuda"].prefix
             # print(f"cuda_dir: {cuda_dir}, cuda_arch: {cuda_arch}")
-        if (target_cpu:=self.spec.variants["rustc-cpu"].value):
-            env.append_flags("RUSTFLAGS", f"-C target-cpu={target_cpu}")
+        if (target_cpu:=self.spec.variants.get("rustc-cpu", None)):
+            env.append_flags("RUSTFLAGS", f"-C target-cpu={target_cpu.value}")
 
     def get_features(self):
         features = []
