@@ -28,15 +28,17 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
     version("0.5.0", tag="v0.5.0")
 
     variant("python", default=True, description="Build and install Python bindings.")
+    variant("hdf5-static", default=False, description="Link statically to hdf5 via hdf5-sys crate.")
+    variant("rustc-cpu", default="native", description="Target a specific CPU in rustc, e.g. znver3")
 
     depends_on("rust@1.64.0:", type="build")
     depends_on("cmake", type="build")
 
     # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.
-    # curl is needed because cfitsio does not --disable-curl by default
-    depends_on("cfitsio@3.49")
-    depends_on("curl")
-    depends_on("hdf5 +cxx ~mpi api=v110")
+    # default spack cfitsio does not give the +reentrant option
+    depends_on("cfitsio@3.49 +reentrant")
+
+    depends_on("hdf5@1.10 +cxx ~mpi api=v110", when="~hdf5-static")
     depends_on("py-maturin", when="+python")
 
     # this is the only version of patchelf that has been found to work with maturin. patchelf@0.18
@@ -66,7 +68,7 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
             env.set('HYPERBEAM_HIP_ARCH', amdgpu_target)
             hip_spec = self.spec["hip"]
             rocm_dir = hip_spec.prefix
-            print(f"rocm_dir: {rocm_dir}, amdgpu_target: {amdgpu_target}")
+            # print(f"rocm_dir: {rocm_dir}, amdgpu_target: {amdgpu_target}")
             if hip_spec.satisfies("@6:"):
                 env.set('HIP_PATH', rocm_dir)
             else:
@@ -76,10 +78,14 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
             cuda_arch = spec.variants["cuda_arch"].value
             env.set('HYPERBEAM_CUDA_COMPUTE', cuda_arch)
             cuda_dir = self.spec["cuda"].prefix
-            print(f"cuda_dir: {cuda_dir}, cuda_arch: {cuda_arch}")
+            # print(f"cuda_dir: {cuda_dir}, cuda_arch: {cuda_arch}")
+        if (target_cpu:=self.spec.variants["rustc-cpu"].value):
+            env.append_flags("RUSTFLAGS", f"-C target-cpu={target_cpu}")
 
     def get_features(self):
-        features = ["hdf5-static"]
+        features = []
+        if self.spec.satisfies("+hdf5-static"):
+            features += ["hdf5-static"]
         if self.spec.satisfies("+rocm"):
             features += ["hip"]
         if self.spec.satisfies("+cuda"):
@@ -111,9 +117,7 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
         cargo = Executable("cargo")
         features = self.get_features()
         # TODO: more elegant way of setting beam file from variants?
-        # e.g. /scratch/references/mwa/mwa_full_embedded_element_pattern.h5
-        # see: <https://pawsey.atlassian.net/servicedesk/customer/portal/3/GS-29129>
-        # Executable("ln")("-s", "/software/projects/mwaeor/dev/mwa_full_embedded_element_pattern.h5", "mwa_full_embedded_element_pattern.h5")
+        Executable("ln")("-s", "/scratch/references/mwa/beam-models/mwa_full_embedded_element_pattern.h5", "mwa_full_embedded_element_pattern.h5")
         cargo("test", "--release", "--lib", f"--features={','.join(features)}")
 
     @run_after("install")

@@ -11,18 +11,22 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
     version("main",  branch="main")
     version("0.4.1", tag="v0.4.1")
 
+    # unknown issue on setonix when enabled https://github.com/PawseySC/pawsey-spack-config/pull/280#issuecomment-2296128762
+    variant("cfitsio-static", default=False, description="Enable the fitsio_src feature of the fitsio-sys crate.")
+    variant("hdf5-static", default=False, description="Link statically to hdf5 via hdf5-sys crate.")
     variant("plotting", default=True, description="Enable plotting subcommands like plot-solutions")
+    variant("rustc-cpu", default="native", description="Target a specific CPU in rustc, e.g. znver3")
 
     depends_on("rust@1.64.0:")
     depends_on("cmake", type="build")
     # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.
-    # curl is needed because cfitsio does not --disable-curl by default
-    depends_on("cfitsio@3.49")
-    depends_on("curl")
+    # default spack cfitsio does not give the +reentrant option
+    depends_on("cfitsio@3.49 +reentrant")
+    # hdf5-sys v0.8 built with 110 api https://crates.io/crates/hdf5-sys/0.8.0
+    depends_on("hdf5@1.10 +cxx ~mpi api=v110", when="~hdf5-static")
 
-    depends_on("aoflagger@3.2.0:") # because of Birli
+    depends_on("aoflagger@3.0.0:") # because of Birli
     depends_on("erfa") # because of Marlu
-    depends_on("hdf5@1.10: +cxx ~mpi api=v110")
     depends_on("fontconfig", when="+plotting")
     depends_on("libpng", when="+plotting")
 
@@ -36,7 +40,7 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
             env.set('HYPERDRIVE_HIP_ARCH', amdgpu_target)
             hip_spec = self.spec["hip"]
             rocm_dir = hip_spec.prefix
-            print(f"rocm_dir: {rocm_dir}, amdgpu_target: {amdgpu_target}")
+            # print(f"rocm_dir: {rocm_dir}, amdgpu_target: {amdgpu_target}")
             if hip_spec.satisfies("@6:"):
                 env.set('HIP_PATH', rocm_dir)
             else:
@@ -46,15 +50,21 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
             cuda_arch = spec.variants["cuda_arch"].value
             env.set('HYPERDRIVE_CUDA_COMPUTE', cuda_arch)
             cuda_dir = self.spec["cuda"].prefix
-            print(f"cuda_dir: {cuda_dir}, cuda_arch: {cuda_arch}")
+            # print(f"cuda_dir: {cuda_dir}, cuda_arch: {cuda_arch}")
+        if (target_cpu:=self.spec.variants["rustc-cpu"].value):
+            env.append_flags("RUSTFLAGS", f"-C target-cpu={target_cpu}")
 
     def get_features(self):
-        features = ["cfitsio-static", "hdf5-static"]
+        features = []
+        if self.spec.satisfies("+cfitsio-static"):
+            features += ["cfitsio-static"]
+        if self.spec.satisfies("+hdf5-static"):
+            features += ["hdf5-static"]
         if self.spec.satisfies("+rocm"):
             features += ["hip"]
         if self.spec.satisfies("+cuda"):
             features += ["cuda"]
-        if self.spec.satisfies('+plotting'):
+        if self.spec.satisfies("+plotting"):
             features += ["plotting"]
         return features
 
