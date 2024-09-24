@@ -15,7 +15,7 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
     variant("cfitsio-static", default=False, description="Enable the fitsio_src feature of the fitsio-sys crate.")
     variant("hdf5-static", default=False, description="Link statically to hdf5 via hdf5-sys crate.")
     variant("plotting", default=True, description="Enable plotting subcommands like plot-solutions")
-    variant("rustc-cpu", default="native", description="Target a specific CPU in rustc, e.g. znver3")
+    variant("portable", default=True, description="Disable native CPU optimizations")
 
     depends_on("rust@1.64.0:")
     depends_on("cmake", type="build")
@@ -51,8 +51,8 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
             env.set('HYPERDRIVE_CUDA_COMPUTE', cuda_arch)
             cuda_dir = self.spec["cuda"].prefix
             # print(f"cuda_dir: {cuda_dir}, cuda_arch: {cuda_arch}")
-        if (target_cpu:=self.spec.variants.get("rustc-cpu", None)):
-            env.append_flags("RUSTFLAGS", f"-C target-cpu={target_cpu.value}")
+        if self.spec.satisfies("~portable"):
+            env.append_flags("RUSTFLAGS", f"-C target-cpu=native")
 
     def get_features(self):
         features = []

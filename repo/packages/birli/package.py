@@ -15,7 +15,7 @@ class Birli(Package):
 
     # unknown issue on setonix when enabled https://github.com/PawseySC/pawsey-spack-config/pull/280#issuecomment-2296128762
     variant("cfitsio-static", default=False, description="Enable the fitsio_src feature of the fitsio-sys crate.")
-    variant("rustc-cpu", default="native", description="Target a specific CPU in rustc, e.g. znver3")
+    variant("portable", default=True, description="Disable native CPU optimizations")
 
     depends_on("rust@1.64.0:", type="build")
     depends_on("cmake", type="build")
@@ -34,8 +34,8 @@ class Birli(Package):
         env.set('CARGO_HOME', f"{build_dir}/.cargo")
         if self.spec.satisfies("+cfitsio-static"):
             env.set('MWALIB_LINK_STATIC_CFITSIO', 1)
-        if (target_cpu:=self.spec.variants["rustc-cpu"].value):
-            env.append_flags("RUSTFLAGS", f"-C target-cpu={target_cpu}")
+        if self.spec.satisfies("~portable"):
+            env.append_flags("RUSTFLAGS", f"-C target-cpu=native")
 
     def get_features(self):
         features = []

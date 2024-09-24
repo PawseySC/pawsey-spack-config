@@ -29,7 +29,7 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
 
     variant("python", default=True, description="Build and install Python bindings.")
     variant("hdf5-static", default=False, description="Link statically to hdf5 via hdf5-sys crate.")
-    variant("rustc-cpu", default="native", description="Target a specific CPU in rustc, e.g. znver3")
+    variant("portable", default=True, description="Disable native CPU optimizations")
 
     depends_on("rust@1.64.0:", type="build")
     depends_on("cmake", type="build")
@@ -79,8 +79,8 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
             env.set('HYPERBEAM_CUDA_COMPUTE', cuda_arch)
             cuda_dir = self.spec["cuda"].prefix
             # print(f"cuda_dir: {cuda_dir}, cuda_arch: {cuda_arch}")
-        if (target_cpu:=self.spec.variants["rustc-cpu"].value):
-            env.append_flags("RUSTFLAGS", f"-C target-cpu={target_cpu}")
+        if self.spec.satisfies("~portable"):
+            env.append_flags("RUSTFLAGS", f"-C target-cpu=native")
 
     def get_features(self):
         features = []
