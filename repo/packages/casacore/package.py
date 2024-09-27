@@ -67,6 +67,7 @@ class Casacore(CMakePackage):
     depends_on('py-numpy', when='+python')
     depends_on('gsl', when='@3.5.0:')
 
+        
     def cmake_args(self):
         args = ['-DCMAKE_Fortran_FLAGS=-fallow-argument-mismatch']
         spec = self.spec
@@ -78,7 +79,7 @@ class Casacore(CMakePackage):
         args.append(self.define_from_variant('USE_ADIOS2', 'adios2'))
         args.append(self.define_from_variant('USE_MPI', 'adios2'))
         args.append(self.define_from_variant('ENABLE_TABLELOCKING', 'tablelocking'))
-
+        args.append("-DDATA_DIR=/scratch/references/casacore-data/Measures")
         # fftw3 is required by casacore starting with v3.4.0, but the
         # old fftpack is still available. For v3.4.0 and later, we
         # always require FFTW3 dependency with the optional addition
