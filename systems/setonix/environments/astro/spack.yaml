@@ -48,7 +48,6 @@ spack:
     - mwalib@1.5.0+python~portable
     - giant-squid@1.0.3
     - aoflagger@3.4.0
-    - wsclean@3.4+everybeam+idg
     - hyperbeam@0.9.3 ~portable +python
     - hyperbeam@0.9.3 ~portable +rocm +python amdgpu_target=gfx90a
     - hyperdrive@0.4.1 ~portable
