@@ -56,6 +56,7 @@ spack:
     - birli@0.15.1 ~portable
     - calceph@3.5.5 target=zen3
     - presto@5.0.1 target=zen3
+    - casacore@3.5.0 datapath=setonix build_type=Release target=zen3
 
   - mwa-no-python:
     - chgcentre build_type=Release target=zen3
