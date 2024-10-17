@@ -40,15 +40,27 @@ spack:
     - xerces-c transcoder=gnuiconv
     - xerces-c transcoder=iconv  
     - subversion
-  - mwa-util-set:
-    - chgcentre build_type=Release ^casacore ~python build_type=Release
-    #  - mwa-util-set-with-python:
-    #    - wsclean@3.0 +mpi +idg +everybeam build_type=Release ^chgcentre build_type=Release
-    #  ^casacore ~python build_type=Release
-    #- wsclean@3.0 ~mpi +idg +everybeam build_type=Release ^chgcentre build_type=Release
-    #  ^casacore ~python build_type=Release
-    #- wsclean@2.10.1 build_type=Release ^chgcentre build_type=Release ^casacore ~python
-    #  build_type=Release
+
+  - mwa-with-python:
+    - wsclean@3.4 +mpi +idg +everybeam build_type=Release target=zen3
+    - wsclean@3.4 ~mpi +idg +everybeam build_type=Release target=zen3
+    - wsclean@2.9 +idg build_type=Release target=zen3
+    - mwalib@1.5.0+python~portable
+    - giant-squid@1.0.3 target=zen3
+    - giant-squid@1.0.3 target=zen2
+    - aoflagger@3.4.0 build_type=Release target=zen3 ^cfitsio@3.49
+    - hyperbeam@0.9.3 ~portable +python
+    - hyperbeam@0.9.3 ~portable +rocm +python amdgpu_target=gfx90a
+    - hyperdrive@0.4.1 ~portable
+    - hyperdrive@0.4.1 ~portable amdgpu_target=gfx90a +rocm
+    - birli@0.15.1 ~portable
+    - calceph@3.5.5 target=zen3
+    - presto@5.0.1 target=zen3
+    - casacore@3.5.0 datapath=setonix build_type=Release target=zen3
+
+  - mwa-no-python:
+    - chgcentre build_type=Release target=zen3
+
   # TODO add versions 
   - python-astro-set:
     - py-funcsigs #package not available in spack/0.20.0, using recipe from 0.19.0
@@ -75,15 +87,16 @@ spack:
     - [$astro-util-set, $askap-util-set]
     - ['%gcc@12.2.0']
     - [target=zen3]
-      #- matrix:
-      #  - [$mwa-util-set-with-python]
-      #  - [^python@3.11.6]
-      #  - ['%gcc@12.2.0']
-      #  - [target=zen3]
+
   - matrix:
-    - [$mwa-util-set]
+    - [ $mwa-no-python]
     - ['%gcc@12.2.0']
-    - [target=zen3]
+
+  - matrix:
+    - [$mwa-with-python]
+    - [^python@3.11.6]
+    - ['%gcc@12.2.0']
+
   - matrix:
     - [$python-astro-set]
     - [^python@3.11.6]
