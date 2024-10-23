@@ -34,7 +34,7 @@ if [ -z ${INSTALL_GROUP+x} ]; then
 fi
 
 # Note the use of '' instead of "" to allow env variables to be present in config files
-USER_PERMANENT_FILES_PREFIX='/software/ella/projects/'
+USER_PERMANENT_FILES_PREFIX='/software/projects/'
 USER_TEMP_FILES_PREFIX='/tmp'
 SPACK_USER_CONFIG_PATH="$MYSOFTWARE/ella/$DATE_TAG/.spack_user_config"
 BOOTSTRAP_PATH='$MYSOFTWARE/ella/'$DATE_TAG/.spack_user_config/bootstrap
@@ -49,13 +49,14 @@ pawseyenv_version="${DATE_TAG}"
 
 archs="aarch64"
 # compiler versions (needed for module trees with compiler dependency)
-gcc_version="13.3.0"
+gcc_version="13.2.0"
 
 # architecture of login/compute nodes (needed by Singularity symlink module)
-cpu_arch="x86_64"
+# NOTE: On Ella this is architecture of the compute nodes ONLY
+cpu_arch="aarch64"
 
 # tool versions
-spack_version="0.22.1" # the prefix "v" is added in setup_spack.sh
+spack_version="0.21.0" # the prefix "v" is added in setup_spack.sh
 singularity_version="4.1.5.-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="4.1.5-mpi" # has to match the version in the Spack env yaml + mpi tag
 # Not deploying shpc on Ella for now.
@@ -64,7 +65,7 @@ singularity_mpi_version="4.1.5-mpi" # has to match the version in the Spack env 
 
 # python (and py tools) versions
 python_name="python"
-python_version="3.11.6" # has to match the version in the Spack env yaml
+python_version="3.10.10" # has to match the version in the Spack env yaml
 setuptools_version="68.0.0" # has to match the version in the Spack env yaml
 pip_version="23.1.2" # has to match the version in the Spack env yaml
 # r major minor version
@@ -72,7 +73,7 @@ r_version_majorminor="4.2.2"
 
 # list of module categories
 # Empty list until we know which of these are required on Ella.
-module_cat_list=""
+module_cat_list="programming-languages python-packages"
 #module_cat_list="
 #astro-applications
 #bio-applications
@@ -95,7 +96,7 @@ env_list=""
 #cray_utils
 #num_libs
 #cray_num_libs
-#python
+# python
 #cray_python
 #io_libs
 #cray_io_libs
