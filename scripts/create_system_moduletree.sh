@@ -17,7 +17,6 @@ PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /d
 
 # list of module categories included in variables.sh (sourced above)
 
-archs="zen3 zen2"
 compilers="gcc/${gcc_version} aocc/${aocc_version} cce/${cce_version}"
 for arch in $archs; do
   for compiler in $compilers; do
