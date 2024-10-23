@@ -20,6 +20,10 @@ packages:
       # fine, considering world readable and user writable
       # could not use $PAWSEY_PROJECT, as variables are apparently not evaluated here
 
+# Want a default GCC other than the system compilers, so gcc is buildable.
+  gcc:
+    buildable: true
+
 # don't build virtuals with an external provider
   mpi:
     buildable: true
@@ -27,8 +31,6 @@ packages:
     buildable: false
   cce:
     buildable: false
-  gcc:
-    buildable: true
   aocc:
     buildable: false
   intel:
