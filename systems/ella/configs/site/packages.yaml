@@ -3,7 +3,7 @@ packages:
   # note the compiler and providers specifications
   # only suggest a priority order, they do not exclude other options
   # suggested priority for compilers.
-    compiler: [ gcc@12.3.0, gcc@11.4.1 ]
+    compiler: [ gcc@13.2.0 ]
     providers:
       mpi: [ openmpi ]
       blas: [ openblas ]
@@ -20,14 +20,16 @@ packages:
       # fine, considering world readable and user writable
       # could not use $PAWSEY_PROJECT, as variables are apparently not evaluated here
 
+# Want a default GCC other than the system compilers, so gcc is buildable.
+  gcc:
+    buildable: true
+
 # don't build virtuals with an external provider
   mpi:
     buildable: true
   pkgconfig:
     buildable: false
   cce:
-    buildable: false
-  gcc:
     buildable: false
   aocc:
     buildable: false
@@ -52,11 +54,11 @@ packages:
   libseccomp:
     version: [2.5.3]
   zlib:
-    version: [1.10.4]
+    version: [1.2.13]
   zstd:
     version: [1.4.8]
   json-c:
-    version: [0.15.3]
+    version: [0.16]
   krb5:
     version: [1.19.2]
   # cmake can have multiple entries so set default
@@ -73,16 +75,16 @@ packages:
     variants: '~omp_as_runtime ~clang ~compiler-rt ~polly ~gold'
   # preferred versions and variants, python
   python:
-    version: [3.11.6]
+    version: [3.10.10]
     variants: '+optimizations +zlib +sqlite3 +tkinter ~ssl'
   gdbm:
-    version: [1.23.1]
+    version: [1.23]
   apr:
     version: [1.7.4]
   gettext:
     version: [0.21.1]
   py-cython:
-    version: [3.0.4]
+    version: [3.0.0a9]
   py-dask:
     version: [2023.4.1]
   py-h5py:
@@ -115,7 +117,7 @@ packages:
   go:
     version: [1.19.10]
   julia:
-     version: [1.8.2]
+     version: [1.10.5]
   openjdk:
     version: [17.0.5_8]
   r:
@@ -125,13 +127,13 @@ packages:
   ruby:
     version: [3.1.0]
   rust:
-    version: [1.70.0]
+    version: [1.65.0]
   # preferred versions and variants, num_libs
   blaspp:
     version: [2023.08.25]
     variants: '+cuda build_type=Release'
   boost:
-    version: [1.83.0]
+    version: [1.82.0]
     variants: '+mpi +numpy +python'
   eigen:
     version: [3.4.0]
@@ -143,7 +145,7 @@ packages:
     version: [2.7.1]
   hpx:
     version: [1.9.1]
-    variants: '+async_mpi +cuda malloc=jemalloc max_cpu_count=128 networking=mpi cxxstd=14 build_type=Release'
+    variants: '+async_mpi +cuda malloc=jemalloc max_cpu_count=70 networking=mpi cxxstd=14 build_type=Release'
   kokkos:
     version: [4.1.00]
     variants: '+hwloc +memkind +numactl +openmp +tuning +cuda cxxstd=14 build_type=Release'
@@ -226,38 +228,38 @@ packages:
   # ===========================================================================
   pkg-config:
     externals:
-    - spec: pkg-config@0.29.2
+    - spec: pkg-config@1.7.3
       prefix: /usr
     buildable: false
 
   hwloc:
     externals:
-    - spec: hwloc@2.7.0
+    - spec: hwloc@2.4.1
       prefix: /usr
     buildable: false
 
   numactl:
     externals:
-    - spec: numactl@2.0.14
+    - spec: numactl@2.0.16
       prefix: /usr
     buildable: false
 
   pcre:
     externals:
-    - spec: pcre@8.39
+    - spec: pcre@8.44
       prefix: /usr
     buildable: false
 
   libssh:
     externals:
-    - spec: libssh@0.9.6
+    - spec: libssh@0.10.4
       prefix: /usr
     buildable: false
 
 
   openssl:
     externals:
-    - spec: openssl@3.0.2
+    - spec: openssl@3.0.7
       prefix: /usr
     buildable: false
 
@@ -269,13 +271,13 @@ packages:
 
   curl:
     externals:
-    - spec: curl@7.81.0
+    - spec: curl@7.76.1
       prefix: /usr
     buildable: false
 
   openssh:
     externals:
-    - spec: openssh@8.9p1
+    - spec: openssh@8.7p1
       prefix: /usr
     buildable: false
 
@@ -287,7 +289,7 @@ packages:
 
   libpsl:
     externals:
-    - spec: libpsl@0.21.0
+    - spec: libpsl@0.21.1
       prefix: /usr
     buildable: false
 
@@ -299,19 +301,19 @@ packages:
 
   libidn2:
     externals:
-    - spec: libidn2@2.3.2
+    - spec: libidn2@2.3.0
       prefix: /usr
     buildable: false
 
   libyaml:
     externals:
-    - spec: libyaml@0.2.2
+    - spec: libyaml@0.2.5
       prefix: /usr
     buildable: false
 
   cuda:
     externals:
-    - spec: cuda@12.3
-      prefix: /usr/local/cuda-12.3/
+    - spec: cuda@12.6
+      prefix: /usr/local/cuda
     buildable: false
 

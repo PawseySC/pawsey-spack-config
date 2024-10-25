@@ -32,26 +32,8 @@ compilers:
 # Note also the addition of default flags
 
 # ===================================================================
-#                        GNU 12.2.0
+#                        GNU 11.4.1
 # ===================================================================
-- compiler:
-    spec: gcc@12.3.0
-    paths:
-      cc: gcc-12
-      cxx: g++-12
-      f77: gfortran-12
-      fc: gfortran-12
-    flags:
-      cflags: -O3
-      cxxflags: -O3
-      cppflags: -O3
-      fflags: -O3 -fallow-argument-mismatch
-    operating_system: ubuntu
-    target: any
-    modules: {}
-    environment: {}
-    extra_rpaths: []
-
 - compiler:
     spec: gcc@11.4.1
     paths:
@@ -64,9 +46,9 @@ compilers:
       cxxflags: -O3
       cppflags: -O3
       fflags: -O3 -fallow-argument-mismatch
-    operating_system: rocky
-    target: any
-    modules: {}
+    operating_system: rocky9
+    target: aarch64
+    modules: []
     environment: {}
     extra_rpaths: []
 
