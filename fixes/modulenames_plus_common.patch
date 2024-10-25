@@ -17,7 +17,7 @@ index eaf79f6d04..1be017f46e 100644
 @@ -614,8 +616,9 @@ def use_name(self):
              projection = self.conf.default_projections["all"]
  
-         name = self.spec.format(projection)
+         name = self.spec.format_path(projection)
 -        # Not everybody is working on linux...
 -        parts = name.split("/")
 +        # Not everybody is working on linux... so split on /
