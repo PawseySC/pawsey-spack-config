@@ -38,7 +38,9 @@ spack -d spec nano
 
 # Ensure spack has access to the specified gcc version for the python build.
 if ! spack compilers | grep -q "gcc@${gcc_version}" ; then
-	sg $INSTALL_GROUP -c "spack install -j $(nproc) gcc@${gcc_version}"
+    for arch in $archs; do
+	sg $INSTALL_GROUP -c "spack install -j $(nproc) gcc@${gcc_version} target=$arch"
+    done
     	sg $INSTALL_GROUP -c "spack compiler add $(spack location -i gcc@${gcc_version})"
 fi
 
