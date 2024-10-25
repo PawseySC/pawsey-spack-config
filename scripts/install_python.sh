@@ -38,8 +38,8 @@ spack -d spec nano
 
 # Ensure spack has access to the specified gcc version for the python build.
 if ! spack compilers | grep -q "gcc@${gcc_version}" ; then
-	spack install -j $(nproc) gcc@${gcc_version}
-    spack compiler add "$(spack location -i gcc@${gcc_version})"
+	sg $INSTALL_GROUP -c "spack install -j $(nproc) gcc@${gcc_version}"
+    	sg $INSTALL_GROUP -c "spack compiler add $(spack location -i gcc@${gcc_version})"
 fi
 
 # second thing we need is Python
@@ -48,7 +48,7 @@ spack -d spec python@${python_version} %gcc@${gcc_version}
 
 echo "Installing Python with default compilers.."
 for arch in $archs; do
-	sg $INSTALL_GROUP -c "spack install --no-checksum python@${python_version} %gcc@${gcc_version} target=$arch"
+	sg $INSTALL_GROUP -c "spack install -j $(nproc) --no-checksum python@${python_version} %gcc@${gcc_version} target=$arch"
     if [ ! -z "${CRAYPE_VERSION+x}" ]; then
         sg $INSTALL_GROUP -c "spack install --no-checksum python@${python_version} %cce@${cce_version} target=$arch"
     fi
