@@ -12,10 +12,9 @@ r_version_majorminor="R_VERSION_MAJORMINOR"
 
 # for user and project directories, give option to provide project via CLI
 tree_project="${1:-$PAWSEY_PROJECT}"
-project_root_dir="USER_PERMANENT_FILES_PREFIX/${tree_project}/setonix/DATE_TAG"
-user_root_dir="USER_PERMANENT_FILES_PREFIX/${tree_project}/${USER}/setonix/DATE_TAG"
+project_root_dir="USER_PERMANENT_FILES_PREFIX/${tree_project}/${SYSTEM}/DATE_TAG"
+user_root_dir="USER_PERMANENT_FILES_PREFIX/${tree_project}/${USER}/${SYSTEM}/DATE_TAG"
 
-archs="zen3 zen2"
 compilers="gcc/${gcc_version} aocc/${aocc_version} cce/${cce_version}"
 
 # create backbone of the user/project spack moduletree
