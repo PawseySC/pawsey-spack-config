@@ -15,7 +15,7 @@ PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /d
 
 # for first run, use the system python, because there is no Spack python yet
 
-if [ ! $CRAYPE_VERSION = "" ]; then
+if [ ! -z "${CRAYPE_VERSION+x}" ]; then
     module load cray-python
 fi
 
@@ -38,7 +38,7 @@ spack -d spec nano
 
 # Ensure spack has access to the specified gcc version for the python build.
 if ! spack compilers | grep -q "gcc@${gcc_version}" ; then
-    spack install gcc@${gcc_version}
+	spack install -j $(nproc) gcc@${gcc_version}
     spack compiler add "$(spack location -i gcc@${gcc_version})"
 fi
 
@@ -49,7 +49,7 @@ spack -d spec python@${python_version} %gcc@${gcc_version}
 echo "Installing Python with default compilers.."
 for arch in $archs; do
 	sg $INSTALL_GROUP -c "spack install --no-checksum python@${python_version} %gcc@${gcc_version} target=$arch"
-    if [ ! $CRAYPE_VERSION = "" ]; then
+    if [ ! -z "${CRAYPE_VERSION+x}" ]; then
         sg $INSTALL_GROUP -c "spack install --no-checksum python@${python_version} %cce@${cce_version} target=$arch"
     fi
 done
