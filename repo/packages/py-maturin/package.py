@@ -25,6 +25,7 @@ class PyMaturin(PythonPackage):
     depends_on("py-setuptools-rust@1.4:", type="build")
     depends_on("py-tomli@1.1:", when="^python@:3.10", type=("build", "run"))
     depends_on("rust", type=("build", "run"))
+    depends_on("patchelf@0.17.2", type=("build", "run"))
 
     def setup_build_environment(self, env):
         env.set("CARGO_HOME", f"{self.stage.source_path}/.cargo")

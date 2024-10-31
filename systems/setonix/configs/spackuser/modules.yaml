@@ -352,7 +352,15 @@ modules:
         "wsclean ~mpi ~idg ~everybeam": 'astro-applications/{name}/{version}'
         "wsclean ~mpi +idg ~everybeam": 'astro-applications/{name}/{version}-idg'
         "wsclean ~mpi +idg +everybeam": 'astro-applications/{name}/{version}-idg-everybeam'
-
+        mwalib: 'astro-applications/{name}/{version}'
+        birli: 'astro-applications/{name}/{version}'
+        presto: 'astro-applications/{name}/{version}'
+        calceph: 'astro-applications/{name}/{version}'
+        giant-squid: 'astro-applications/{name}/{version}'
+        'hyperbeam +rocm': 'astro-applications/{name}-amd-gfx90a/{version}'
+        hyperbeam: 'astro-applications/{name}/{version}'
+        'hyperdrive +rocm': 'astro-applications/{name}-amd-gfx90a/{version}'
+        hyperdrive: 'astro-applications/{name}/{version}'
         #performance tests 
         "hpl ~openmp": 'benchmarking/{name}/{version}'
         "hpl +openmp": 'benchmarking/{name}/{version}+openmp'

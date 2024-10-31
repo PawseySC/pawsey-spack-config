@@ -41,6 +41,8 @@ class Casacore(CMakePackage):
     variant('hdf5', default=False, description='Build HDF5 support')
     variant('python', default=False, description='Build python support')
     variant('tablelocking', default=False, description='Enable table locking.')
+    variant('datapath', default='none', values=('none', 'setonix'),
+        description='Path to pre-installed casacore Measures data.')
     # Force dependency on readline in v3.2 and earlier. Although the
     # presence of readline is tested in CMakeLists.txt, and casacore
     # can be built without it, there's no way to control that
@@ -67,6 +69,7 @@ class Casacore(CMakePackage):
     depends_on('py-numpy', when='+python')
     depends_on('gsl', when='@3.5.0:')
 
+        
     def cmake_args(self):
         args = ['-DCMAKE_Fortran_FLAGS=-fallow-argument-mismatch']
         spec = self.spec
@@ -78,7 +81,8 @@ class Casacore(CMakePackage):
         args.append(self.define_from_variant('USE_ADIOS2', 'adios2'))
         args.append(self.define_from_variant('USE_MPI', 'adios2'))
         args.append(self.define_from_variant('ENABLE_TABLELOCKING', 'tablelocking'))
-
+        if spec.variants['datapath'].value == 'setonix':
+            args.append("-DDATA_DIR=/scratch/references/casacore-data/Measures")
         # fftw3 is required by casacore starting with v3.4.0, but the
         # old fftpack is still available. For v3.4.0 and later, we
         # always require FFTW3 dependency with the optional addition
