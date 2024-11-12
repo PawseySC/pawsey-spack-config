@@ -5,7 +5,7 @@ spack:
     
 # py-pip and py-setuptools: installed in env_langs
 # snakemake: docs recommend to install with conda
-    - ffmpeg@4.4.1 +avresample
+    - ffmpeg@6.1.1 +avresample
     #- gnuplot@5.4.2 +X  ^python@3.11.6 +optimizations+zlib ^libiconv
     #- llvm@15.0.4 ~omp_as_runtime ~polly ~gold #fails with cce
     - nextflow@22.10.0 #supports DSL-1
@@ -29,12 +29,12 @@ spack:
     - matlab@R2021a key=$MATLAB_INSTALL_KEY mode=automated
   specs:
   - matrix:
-    - [cmake@3.27.7]
-    - ['%cce@16.0.1']
+    - [cmake@3.27.9]
+    - ['%cce@17.0.0']
     - [target=zen3, target=zen2]
   - matrix:
     - [$packages]
-    - ['%cce@16.0.1']
+    - ['%cce@17.0.0']
     - [target=zen3, target=zen2]
   - matrix:
     - [singularityce@4.1.0 cflags="-O0" cppflags="-O0" cxxflags="-O0"]

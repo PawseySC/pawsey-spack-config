@@ -9,8 +9,8 @@ spack:
     
     # boost: might need several boosts with different stadards
     # spack/0.19.0 offers only up to boost@1.80.0
-    - boost@1.83.0 +mpi +numpy +python cxxstd=14
-    - boost@1.83.0 +mpi +numpy +python cxxstd=98
+    - boost@1.85.0 +mpi +numpy +python cxxstd=14
+    - boost@1.85.0 +mpi +numpy +python cxxstd=98
     - hpx@1.9.1 +async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi 
       build_type=Release ^boost ^netlib-lapack@3.11.0 
     
@@ -22,7 +22,7 @@ spack:
     
     # - kokkos@3.4.01 +hwloc +memkind +numactl +openmp +rocm +tuning cxxstd=14 build_type=Release
     # for hpx must explicitly set openmp off 
-    - kokkos@4.1.00 +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ~openmp
+    - kokkos@4.3.00 +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ~openmp
       build_type=Release ^hpx@1.9.1 +async_mpi max_cpu_count=128 networking=mpi build_type=Release
   # because of odd concretization of packages with python dependences defaulting to 3.9.9 and not the 
   # version specified in the packages.yaml, separate packages between those with python dep and those without
@@ -37,15 +37,15 @@ spack:
     - opencv@4.8.0 build_type=Release
     
       #    - opencv@3.4.18 build_type=Release
-    - trilinos@15.0.0 +adios2 +openmp +python ~cuda ^adios2@2.9.2 build_type=Release
+    - trilinos@15.1.1 +adios2 +openmp +python ~cuda ^adios2@2.9.2 build_type=Release
       ^hdf5@1.14.3 build_type=Release
   - petsc-set:    
-    - petsc@3.20.1
+    - petsc@3.21.1
   - numerical:
     
     - netlib-lapack@3.11.0 build_type=Release
     - netlib-scalapack@2.2.0
-    - blaspp@2023.08.25 ~cuda build_type=Release #^openblas  # openblas fails with cce compiler
+    - blaspp@2023.11.05 ~cuda build_type=Release #^openblas  # openblas fails with cce compiler
     - eigen@3.4.0 build_type=Release # charris: build ok on Joey 2021-12-16
     - fftw@2.1.5 +openmp precision=float,double # fftw 2 does not support long doubles
     - fftw@3.3.10 +openmp precision=float,double,long_double
@@ -53,45 +53,45 @@ spack:
   - amd-with-python:
     
     # AMD AOCL
-    - amdblis@3.0 threads=openmp
-    - amdblis@3.0
+    - amdblis@4.2 threads=openmp
+    - amdblis@4.2
     
     # variant below useful for at least one PaCER
-    - amdlibflame@3.0
-    - amdscalapack@3.0 build_type=Release
-    - aocl-sparse@3.0 build_type=Release
+    - amdlibflame@4.2
+    - amdscalapack@4.2 build_type=Release
+    - aocl-sparse@4.2 build_type=Release
   - amd:
-    - amdfftw@3.0 precision=float,double,long_double
+    - amdfftw@4.2 precision=float,double,long_double
   specs:
   - matrix:
     - [$parallel]
-    - ['%cce@16.0.1']
+    - ['%cce@17.0.0']
     - [^python@3.11.6]
     - [target=zen3]
   - matrix:
     - [$petsc-set]
-    - ['%cce@16.0.1']
+    - ['%cce@17.0.0']
     - [^python@3.11.6 ^fftw@3.3.10 ^netlib-lapack@3.11.0]
     - [~complex] #+complex is throwing this error: unknown type name '__complex128'
     - [+fftw ~trilinos +hwloc +openmp ~cuda]
     - [target=zen3]      
   - matrix:
     - [$numerical]
-    - ['%cce@16.0.1']
+    - ['%cce@17.0.0']
     - [target=zen3]
   - matrix:
     - [$numerical-with-python]
-    - ['%cce@16.0.1']
+    - ['%cce@17.0.0']
     - [^python@3.11.6 +optimizations+zlib]
     - [target=zen3]
 # for now don't build amd math libraries
   #- matrix:
   #  - [$amd]
-  #  - ['%gcc@12.2.0', '%cce@16.0.1', '%aocc@3.2.0']
+  #  - ['%gcc@12.2.0', '%cce@17.0.0', '%aocc@3.2.0']
   #  - [target=zen3]
   #- matrix:
   #  - [$amd-with-python]
-  #  - ['%gcc@12.2.0', '%cce@16.0.1', '%aocc@3.2.0']
+  #  - ['%gcc@12.2.0', '%cce@17.0.0', '%aocc@3.2.0']
   #  - [^python@3.11.6]
   #  - [target=zen3]
   view: false

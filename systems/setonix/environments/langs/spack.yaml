@@ -8,28 +8,28 @@ spack:
     #- openssl@3.0.7 ^perl@5.36.0
     # do we really need openssl 3.0.7?
     #- go@1.17.2 ^openssl@3.0.7
-    - go@1.21.3
+    - go@1.22.2
     
     # NotReadyYet:    
     # - julia@1.6.1 #Default recipe is very weak. Faulty. Lots of needed dependencies are missing.
-    - openjdk@17.0.8.1_1
-    - r@4.3.0
-    - ruby@3.1.0
+    - openjdk@21.0.0_35
+    - r@4.4.1
+    - ruby@3.3.0
     
     # latest version of rust available may have issues but spack listed latest release is fine. 
     # CRISTIAN: commenting it out because the installation causes issues https://github.com/spack/spack/issues/44201
     # - rust@1.70.0 ^python@3.11.6 +optimizations+zlib
   - py-utilities:
     - py-pip@23.1.2
-    - py-setuptools@68.0.0
+    - py-setuptools@59.4.0
   specs:
   - matrix:
     - [$py-utilities]
     - [^python@3.11.6 +optimizations+zlib]
-    - ['%gcc@12.2.0']
+    - ['%gcc@12.3.0']
     - [target=zen3]
   - matrix:
     - [$packages]
-    - ['%gcc@12.2.0']
+    - ['%gcc@12.3.0']
     - [target=zen3]
   view: false

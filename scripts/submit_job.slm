@@ -2,14 +2,28 @@
 #SBATCH --nodes=1
 #SBATCH --exclusive
 #SBATCH --time=1-00:00:00
-#SBATCH --reservation=PAWSEY_CPU_TESTING
+##SBATCH --reservation=PAWSEY_CPU_TESTING
 ##SBATCH -p gpu
 ##SBATCH -A pawsey0001-gpu 
 ##SBATCH --gpus-per-node=8
 
 export SYSTEM=setonix
 export INSTALL_GROUP=pawsey0001
-export INSTALL_PREFIX=/scratch/pawsey0001/ddeeptimahanti/2024.05
+export INSTALL_PREFIX=/scratch/pawsey0001/ilkhom/2024.11
+
+
+module load cpe/23.12
+alias gcc="gcc-12"
+alias g++="gcc-12"
+alias gfortran="gfortran-12"
+
+gcc --version
+g++ --version
+gfortran --version
+
+cc --version
+CC --version
+ftn --version
 
 ./install_software_stack.sh
 

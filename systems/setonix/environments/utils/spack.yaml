@@ -5,8 +5,9 @@ spack:
     
 # py-pip and py-setuptools: installed in env_langs
 # snakemake: docs recommend to install with conda
-    - ffmpeg@4.4.1 +avresample
-    - gnuplot@5.4.3 +X  ^python@3.11.6 +optimizations+zlib
+#    - ffmpeg@4.4.1 +avresample
+    - ffmpeg@6.1.1
+    - gnuplot@6.0.0
     - llvm@15.0.4 ~polly ~gold # Ilkhom: ~omp_as_runtime variant is removed from spack/0.21.0
     - nextflow@22.10.0 #supports DSL-1
     - nextflow@23.10.0 #supports DSL-2
@@ -27,18 +28,18 @@ spack:
     - matlab@R2021a key=$MATLAB_INSTALL_KEY mode=automated
   specs:
   - matrix:
-    - [cmake@3.27.7]
-    - ['%gcc@12.2.0']
+    - [cmake@3.27.9]
+    - ['%gcc@12.3.0']
     - [target=zen3, target=zen2]
   - matrix:
     - [$packages]
-    - ['%gcc@12.2.0']
+    - ['%gcc@12.3.0']
     - [target=zen3, target=zen2]
   - matrix:
     - [singularityce@4.1.0 cflags="-O0" cppflags="-O0" cxxflags="-O0"]
 # TODO: build licensed software
   # - matrix:
   #   - [$licensed]
-  #   - ['%gcc@12.2.0']
+  #   - ['%gcc@12.3.0']
   #   - [target=zen3]
   view: false

@@ -16,11 +16,11 @@ spack:
   - matrix:
     - [$s3-python-set]
     - [^python@3.11.6 +optimizations+zlib]
-    - ['%cce@16.0.1']
+    - ['%cce@17.0.0']
     - [target=zen2, target=zen3]
   - matrix:
     - [$s3-go-set]
-    - ['%cce@16.0.1']
+    - ['%cce@17.0.0']
     - [target=zen2, target=zen3]
   view: false
 
