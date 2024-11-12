@@ -9,6 +9,7 @@ class Chips(MakefilePackage):
     maintainers('d3v-null')
 
     version("main", branch="main")
+    version("setonix2024.05", tag="setonix2024.05")
 
     depends_on('cfitsio')
     depends_on('openblas')
