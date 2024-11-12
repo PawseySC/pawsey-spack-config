@@ -15,12 +15,12 @@ spack:
   # casacore variants
   # try running spack install --no-checksum 
   - casacore-legacy:
-    - casacore@3.2.1 +python build_type=Release ^python@3.11.6 # no checksum for this release 
+    - casacore@3.2.1 +python datapath=setonix build_type=Release ^python@3.11.6 # no checksum for this release 
   - casacore-set:
-    - casacore@3.3.0
-    - casacore@3.4.0
+    - casacore@3.3.0 datapath=setonix
+    - casacore@3.4.0 datapath=setonix
   - casacore-new-set:
-    - casacore@3.5.0 +openmp+python+hdf5 build_type=Release
+    - casacore@3.5.0 +openmp+python+hdf5 datapath=setonix build_type=Release
   - astro-util-set:
     - cfitsio
     - wcslib +cfitsio
@@ -56,7 +56,6 @@ spack:
     - birli@0.15.1 ~portable
     - calceph@3.5.5 target=zen3
     - presto@5.0.1 target=zen3
-    - casacore@3.5.0 datapath=setonix build_type=Release target=zen3
 
   - mwa-no-python:
     - chgcentre build_type=Release target=zen3
