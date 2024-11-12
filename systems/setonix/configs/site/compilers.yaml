@@ -35,7 +35,7 @@ compilers:
 #                        GNU 12.2.0
 # ===================================================================
 - compiler:
-    spec: gcc@12.3.0
+    spec: gcc@13.3.0
     paths:
       cc: cc
       cxx: CC
@@ -50,7 +50,7 @@ compilers:
     target: any
     modules:
     - PrgEnv-gnu
-    - gcc-native/12.3
+    - gcc-native/13.2
     - craype
     - craype-x86-milan
     - craype-network-ofi
@@ -165,7 +165,7 @@ compilers:
 
 # cray compilers 
 - compiler:
-    spec: cce@17.0.0
+    spec: cce@18.0.0
     paths:
       cc: cc
       cxx: CC
@@ -180,7 +180,7 @@ compilers:
     target: any
     modules:
     - PrgEnv-cray
-    - cce/17.0.0
+    - cce/18.0.0
     - craype
     - craype-x86-milan
     - craype-network-ofi
@@ -240,7 +240,7 @@ compilers:
 
 # amd compilers 
 - compiler:
-    spec: aocc@4.2.0
+    spec: aocc@5.0.0
     paths:
       cc: cc
       cxx: CC
@@ -255,7 +255,7 @@ compilers:
     target: any
     modules:
     - PrgEnv-aocc
-    - aocc/4.2.0
+    - aocc/5.0.0
     - craype
     - craype-x86-milan
     - craype-network-ofi
