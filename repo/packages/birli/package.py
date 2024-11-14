@@ -21,6 +21,7 @@ class Birli(Package):
     variant("portable", default=True, description="Disable native CPU optimizations")
 
     depends_on("rust@1.64.0:", type="build")
+    depends_on("rust@1.65.0:", type="build", when="@0.16.0:")
     depends_on("cmake", type="build")
 
     # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.
