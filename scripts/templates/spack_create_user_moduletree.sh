@@ -44,8 +44,18 @@ repo:
   namespace: 'user_repo'
 EOF
 
+# create base dir for project-wide Spack repository of recipes
+mkdir -p "${project_root_dir}/spack_repo/packages"
+cat << EOF >"${project_root_dir}/spack_repo/repo.yaml"
+repo:
+  namespace: 'project_repo'
+EOF
+
+
 # create base dir for user SHPC registry of recipes
 mkdir -p "${user_root_dir}/shpc_registry"
+# ..and for project-wide recipes
+mkdir -p "${project_root_dir}/shpc_registry"
 
 # create base dir for Python pip user installations (PYTHONUSERBASE)
 mkdir -p "${user_root_dir}/python"

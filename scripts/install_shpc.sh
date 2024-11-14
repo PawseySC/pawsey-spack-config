@@ -74,6 +74,7 @@ shpc config remove registry https://github.com/singularityhub/shpc-registry
 shpc config add registry "${INSTALL_PREFIX}/${shpc_install_dir}/registry"
 shpc config add registry "${INSTALL_PREFIX}/${shpc_install_dir}/pawsey_registry"
 shpc config add registry "${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/shpc_registry"
+shpc config add registry "${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/setonix/$DATE_TAG/shpc_registry"
 # user install location for modulefiles
 shpc config set "module_base:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/${shpc_containers_modules_dir_long}"
 # disable default version for modulefiles (original)
