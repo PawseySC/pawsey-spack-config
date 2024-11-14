@@ -19,6 +19,7 @@ class Wsclean(CMakePackage):
 
     maintainers = ['dipietrantonio']
 
+    version('3.5', git='https://gitlab.com/aroffringa/wsclean.git', tag='v3.5', submodules=True)
     version('3.4', git='https://gitlab.com/aroffringa/wsclean.git', tag='v3.4', submodules=True)
     version('3.3', git='https://gitlab.com/aroffringa/wsclean.git', tag='v3.3', submodules=True)
     version('3.2', git='https://gitlab.com/aroffringa/wsclean.git', tag='v3.2', submodules=True)
@@ -44,6 +45,7 @@ class Wsclean(CMakePackage):
     depends_on('everybeam@0.4.0', when='@3.2 +everybeam')
     depends_on('everybeam@0.4.0', when='@3.3 +everybeam')
     depends_on('everybeam@0.5.2:0.5.8', when='@3.4 +everybeam')
+    depends_on('everybeam@0.6.0', when='@3.5 +everybeam')
     depends_on('mpi', when='+mpi')
     depends_on('blas', when='@3.0:')
     depends_on('doxygen', when='@3.0:')

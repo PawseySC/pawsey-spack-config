@@ -9,6 +9,7 @@ class Birli(Package):
     maintainers = ["d3v-null"]
 
     version("main", branch="main")
+    version("0.16.0", tag="v0.16.0")
     version("0.15.1", tag="v0.15.1")
     version("0.14.0", tag="v0.14.0")
     version("0.13.0", tag="v0.13.0")
