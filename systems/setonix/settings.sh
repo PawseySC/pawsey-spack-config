@@ -209,7 +209,7 @@ shpc_containers_modules_dir="${containers_root_dir}/${shpc_allusers_modules_dir_
 # location for SHPC container modules (long version, as installed)
 shpc_containers_modules_dir_long="${containers_root_dir}/${shpc_allusers_modules_dir_long}"
 # location for SHPC containers
-shpc_containers_dir="${containers_root_dir}/sif"
+shpc_containers_dir="${containers_root_dir}/sifs"
 
 # suffix for Pawsey custom build modules
 custom_modules_suffix="custom"
