@@ -40,6 +40,16 @@ fi
 # pip install package
 sg ${INSTALL_GROUP} -c "pip install --prefix=${INSTALL_PREFIX}/${shpc_install_dir} singularity-hpc==${shpc_version}"
 
+# install here custom shpc wrapper
+cd ${INSTALL_PREFIX}/${shpc_install_dir}/bin
+[ -e realshpc ] || mv shpc realshpc
+sed -e "s;REALSHPC;${INSTALL_PREFIX}/${shpc_install_dir}/bin/realshpc;g" \
+  -e "s|DATE_TAG|$DATE_TAG|g"\
+  -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
+   ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/shpc > shpc 
+chmod a+rx shpc
+cd -
+
 # get registry from github repo
 if ! [ -e "${INSTALL_PREFIX}/${shpc_install_dir}/registry" ]; then
     # get registry from github repo
