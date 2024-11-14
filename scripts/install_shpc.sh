@@ -88,6 +88,7 @@ shpc config set "default_view:${shpc_containers_modules_dir##*/}"
 shpc config set "singularity_module:${singularity_name}/${singularity_version}"
 # enable wrapper scripts
 shpc config set wrapper_scripts:enabled:true
+shpc config set "wrapper_base:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/containers/wrappers"
 # GPU support (Phase 2)
 #shpc config set container_features:gpu:amd
 # enable X11 graphics
