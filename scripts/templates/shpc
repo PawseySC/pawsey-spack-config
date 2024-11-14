@@ -8,21 +8,14 @@ if (( $# > 0 )) && [ "$1" = "project" ]; then
     umask g+rwx
 
     BASE_PATH=USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/setonix/DATE_TAG
-    
-    MODULES_FULLPATH=${BASE_PATH}/modules/${MODULE_SUBPATH}/${COMPILER_VERSION}
 
     SHPC_OPTIONS="-c set:wrapper_base:${BASE_PATH}/containers/wrappers
          -c set:container_base:${BASE_PATH}/containers/sifs
          -c set:module_base:${BASE_PATH}/containers/modules-long
          -c set:views_base:${BASE_PATH}/containers/views/modules
-         -c set:default_view:" 
+         -c set:default_view:modules"
     
     ${REALSHPC} ${SHPC_OPTIONS} ${@}
-    # This was a workaround to have modules visible in current configuration
-    # copy module file
-    [ -e "${MODULES_FULLPATH}/${CONTAINER_NAME}" ] || mkdir -p "${MODULES_FULLPATH}/${CONTAINER_NAME}"
-    cp -r "${BASE_PATH}/containers/modules-long/shpc_registry/${CONTAINER_NAME}/${CONTAINER_TAG}/module.lua" "${MODULES_FULLPATH}/${CONTAINER_NAME}/${CONTAINER_TAG}.lua"
-    echo "Modulefile installed."
 else
     ${REALSHPC} ${@}
 fi
