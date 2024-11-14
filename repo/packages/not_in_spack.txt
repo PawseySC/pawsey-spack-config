@@ -1,0 +1,16 @@
+diff: ../../../spack/var/spack/repos/builtin/packages/amdgromacs/package.py: No such file or directory
+diff: ../../../spack/var/spack/repos/builtin/packages/ansys-fluids/package.py: No such file or directory
+diff: ../../../spack/var/spack/repos/builtin/packages/ansys-fluidstructures/package.py: No such file or directory
+diff: ../../../spack/var/spack/repos/builtin/packages/ansys-structures/package.py: No such file or directory
+diff: ../../../spack/var/spack/repos/builtin/packages/birli/package.py: No such file or directory
+diff: ../../../spack/var/spack/repos/builtin/packages/calceph/package.py: No such file or directory
+diff: ../../../spack/var/spack/repos/builtin/packages/everybeam/package.py: No such file or directory
+diff: ../../../spack/var/spack/repos/builtin/packages/giant-squid/package.py: No such file or directory
+diff: ../../../spack/var/spack/repos/builtin/packages/hyperbeam/package.py: No such file or directory
+diff: ../../../spack/var/spack/repos/builtin/packages/mwalib/package.py: No such file or directory
+diff: ../../../spack/var/spack/repos/builtin/packages/psrfits-utils/package.py: No such file or directory
+diff: ../../../spack/var/spack/repos/builtin/packages/py-erfa/package.py: No such file or directory
+diff: ../../../spack/var/spack/repos/builtin/packages/py-funcsigs/package.py: No such file or directory
+diff: ../../../spack/var/spack/repos/builtin/packages/vdifio/package.py: No such file or directory
+diff: ../../../spack/var/spack/repos/builtin/packages/wcstools/package.py: No such file or directory
+diff: ../../../spack/var/spack/repos/builtin/packages/wsclean/package.py: No such file or directory
