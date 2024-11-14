@@ -28,9 +28,18 @@ done
 chmod --silent g+rwX "${project_root_dir}"
 chmod --silent -R g+rwX "${project_root_dir}/modules"
 
-# create shpc container modules base dir (symlinks - views)
+# create shpc user-private container modules base dir (symlinks - views)
 mkdir -p "${user_root_dir}/${shpc_containers_modules_dir}"
 cat << EOF >"${user_root_dir}/${shpc_containers_modules_dir}/view.yaml"
+view:
+  name: modules
+  modules: []
+  system_modules: []
+EOF
+
+# create project-wide shpc container modules base dir (symlinks - views)
+mkdir -p "${project_root_dir}/${shpc_containers_modules_dir}"
+cat << EOF >"${project_root_dir}/${shpc_containers_modules_dir}/view.yaml"
 view:
   name: modules
   modules: []
