@@ -172,10 +172,10 @@ compilers:
       f77: ftn
       fc: ftn
     flags:
-      cflags: -O3
-      cxxflags: -O3
-      cppflags: -O3
-      fflags: -O3
+      cflags: -O3  -Wl,--undefined-version
+      cxxflags: -O3 -Wl,--undefined-version
+      cppflags: -O3 -Wl,--undefined-version
+      fflags: -O3 -Wl,--undefined-version
     operating_system: sles15
     target: any
     modules:

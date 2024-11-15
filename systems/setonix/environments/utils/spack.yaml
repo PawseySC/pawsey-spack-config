@@ -29,14 +29,14 @@ spack:
   specs:
   - matrix:
     - [cmake@3.27.9]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.0']
     - [target=zen3, target=zen2]
   - matrix:
     - [$packages]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.0']
     - [target=zen3, target=zen2]
-  - matrix:
-    - [singularityce@4.1.0 cflags="-O0" cppflags="-O0" cxxflags="-O0"]
+#  - matrix:
+#    - [singularityce@4.1.0 cflags="-O0" cppflags="-O0" cxxflags="-O0"]
 # TODO: build licensed software
   # - matrix:
   #   - [$licensed]

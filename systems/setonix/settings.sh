@@ -62,7 +62,7 @@ aocc_version="5.0.0"
 cpu_arch="zen3"
 
 # tool versions
-spack_version="0.22.0" # the prefix "v" is added in setup_spack.sh
+spack_version="0.22.2" # the prefix "v" is added in setup_spack.sh
 singularity_version="4.1.0-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="4.1.0-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.28"
