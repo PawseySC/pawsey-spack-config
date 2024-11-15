@@ -6,9 +6,9 @@ spack:
 # py-pip and py-setuptools: installed in env_langs
 # snakemake: docs recommend to install with conda
 #    - ffmpeg@4.4.1 +avresample
-    - ffmpeg@6.1.1
+## for now    - ffmpeg@6.1.1
     - gnuplot@6.0.0
-    - llvm@15.0.4 ~polly ~gold # Ilkhom: ~omp_as_runtime variant is removed from spack/0.21.0
+## for now    - llvm@15.0.4 ~polly ~gold # Ilkhom: ~omp_as_runtime variant is removed from spack/0.21.0
     - nextflow@22.10.0 #supports DSL-1
     - nextflow@23.10.0 #supports DSL-2
     - parallel@20220522
