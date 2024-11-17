@@ -27,9 +27,7 @@ module use ${INSTALL_PREFIX}/staff_modulefiles
 module --ignore-cache load pawseyenv/${pawseyenv_version}
 # swap is needed for the pawsey_temp module to work
 module swap PrgEnv-gnu PrgEnv-cray
-module load cpe/24.07
 module swap PrgEnv-cray PrgEnv-gnu
-module load cpe/24.07
 
 # These need to be exported to be accessible within Reframe tests
 export PAWSEY_SPACK_CONFIG_REPO=${PAWSEY_SPACK_CONFIG_REPO}
