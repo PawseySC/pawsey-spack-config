@@ -15,6 +15,8 @@ cc --version
 CC --version
 ftn --version
 
+export PKG_CONFIG_PATH=/usr/lib64/pkgconfig:$PKG_CONFIG_PATH
+
 ./install_software_stack.sh
 
 #Run rocm env on a gpu node with craype-accel-amd-gfx90a loaded

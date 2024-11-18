@@ -60,6 +60,32 @@ compilers:
         PE_ENV: "GNU"
     extra_rpaths: []
 
+- compiler:
+    spec: gcc@13.3.1
+    paths:
+      cc: cc
+      cxx: CC
+      f77: ftn
+      fc: ftn
+    flags:
+      cflags: 
+      cxxflags: 
+      cppflags: 
+      fflags:  -fallow-argument-mismatch
+    operating_system: sles15
+    target: any
+    modules:
+    - PrgEnv-gnu
+    - gcc-native/13.2
+    - craype
+    - craype-x86-milan
+    - craype-network-ofi
+    - xpmem
+    environment:
+      set:
+        PE_ENV: "GNU"
+    extra_rpaths: []
+
 # - compiler:
 #     spec: gcc@12.2.0gpu
 #     paths:

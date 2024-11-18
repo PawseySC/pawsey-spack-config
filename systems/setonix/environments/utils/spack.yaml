@@ -15,7 +15,7 @@ spack:
     - reframe@3.12.0 ^python@3.11.6 +optimizations+zlib
     - reframe@4.0.4 ^python@3.11.6 +optimizations+zlib
     # now moving to singularityce rather than older singularity
-    - singularityce@4.1.0
+    #- singularityce@4.1.0
     #- singularityce@4.0.3~conmon ^go@1.22.1
     - mpifileutils@0.11.1+lustre
     - feh@3.10
@@ -34,6 +34,10 @@ spack:
   - matrix:
     - [$packages]
     - ['%gcc@13.3.0']
+    - [target=zen3, target=zen2]
+  - matrix:
+    - [singularityce@4.1.0] 
+    - ['%gcc@13.3.1']
     - [target=zen3, target=zen2]
 #  - matrix:
 #    - [singularityce@4.1.0 cflags="-O0" cppflags="-O0" cxxflags="-O0"]
