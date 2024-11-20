@@ -150,7 +150,7 @@ packages:
 #    - spec: perl@5.26.1~cpanm
 #      prefix: /usr
   ruby:
-    version: [3.3.0]
+    version: [3.3.5]
   # preferred versions and variants, num_libs
   amdblis:
     version: [4.2]

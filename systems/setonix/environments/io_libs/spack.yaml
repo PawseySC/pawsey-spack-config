@@ -12,7 +12,7 @@ spack:
     - hdf5@1.14.3
     - hdf5@1.10.7
   - adios-set:
-    - adios2@2.9.2
+    - adios2@2.10.0
   - netcdf-set:
     - netcdf-c@4.9.2 +hdf4 +parallel-netcdf ^hdf+shared
     - netcdf-cxx@4.2
@@ -33,27 +33,27 @@ spack:
   specs:
   - matrix:
     - [$hdf5-set]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.0']
     - [api=v110, api=v18, api=v16]
     - [+mpi, ~mpi+cxx]
 #    - [+hl +fortran +szip ^libszip build_type=Release]
     - [^libszip] 
   - matrix:
     - [hdf5@1.14.3]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.0']
     - [api=v112]
     - [+mpi, ~mpi+cxx]
 #    - [+hl +fortran +szip ^libszip build_type=Release]
     - [^libszip]      
   - matrix:
     - [$adios-set]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.0']
     - [+python ^python@3.11.6 +optimizations+zlib, ~python]
     - [~hdf5, +hdf5 ^hdf5@1.14.3 +hl +fortran +szip api=v112 build_type=Release]
     #- [^hdf5@1.12.1 +hl +fortran +szip api=v112 build_type=Release, ^hdf5@1.12.1 +hl +fortran +szip api=v110 build_type=Release,
     #  ^hdf5@1.12.1 +hl +fortran +szip api=v18 build_type=Release]
   - matrix:
     - [$netcdf-set]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.0']
     - [target=zen3]
   view: false

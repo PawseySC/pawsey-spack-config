@@ -14,7 +14,7 @@ spack:
     # - julia@1.6.1 #Default recipe is very weak. Faulty. Lots of needed dependencies are missing.
     - openjdk@21.0.0_35
     - r@4.4.1
-    - ruby@3.3.0
+    - ruby@3.3.5
     
     # latest version of rust available may have issues but spack listed latest release is fine. 
     # CRISTIAN: commenting it out because the installation causes issues https://github.com/spack/spack/issues/44201
@@ -26,10 +26,10 @@ spack:
   - matrix:
     - [$py-utilities]
     - [^python@3.11.6 +optimizations+zlib]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.0']
     - [target=zen3]
   - matrix:
     - [$packages]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.0']
     - [target=zen3]
   view: false
