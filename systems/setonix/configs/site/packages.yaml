@@ -72,10 +72,10 @@ packages:
   json-c:
     version: [0.16]
   krb5:
-    version: [1.20.1]
+    version: [1.21.3]
   # cmake can have multiple entries so set default
   cmake:
-    version: [3.27.9]
+    version: [3.30.5]
     variants: ~doc+ncurses+ownlibs~qt
 # Commented out - see GENERAL NOTES above
 #    externals:
@@ -85,7 +85,7 @@ packages:
 #    - spec: cmake@3.10.2
 #      prefix: /usr
   ffmpeg:
-    version: [6.1.1]
+    version: [7.0.2]
   gnuplot:
     version: [6.0.0]
     variants: '+X'
@@ -96,17 +96,17 @@ packages:
     version: [3.11.6]
     variants: '+optimizations +zlib ~ssl'
   gdbm:
-    version: [1.23]
+    version: [1.24]
   apr:
-    version: [1.7.4] #subversion needs older apr version
+    version: [1.7.5] #subversion needs older apr version
   gettext:
     version: [0.22.5]
   py-cython:
-    version: [3.0.8]
+    version: [3.0.11]
   py-dask:
-    version: [2023.4.1]
+    version: [2024.7.1]
   py-h5py:
-    version: [3.11.0]
+    version: [3.12.1]
   py-ipython:
     version: [8.14.0]
   py-matplotlib:
@@ -132,7 +132,7 @@ packages:
     version: [59.4.0]
   # preferred versions and variants, compilers
   go:
-    version: [1.22.2]
+    version: [1.23.2]
   julia:
      version: [1.10.2]
   openjdk:

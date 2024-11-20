@@ -28,7 +28,7 @@ if ! [ -e ${INSTALL_PREFIX}/spack ]; then
   git clone https://github.com/spack/spack.git ${INSTALL_PREFIX}/spack
 #  git clone https://github.com/pawseysc/spack ${INSTALL_PREFIX}/spack
   cd "${INSTALL_PREFIX}/spack"
-  git checkout tags/v${spack_version}
+  git checkout v${spack_version}
 
   # apply Marco's LMOD fixes into spack tree
   patch ${INSTALL_PREFIX}/spack/lib/spack/spack/modules/lmod.py \
