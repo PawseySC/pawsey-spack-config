@@ -15,6 +15,7 @@ class GiantSquid(Package):
 
     maintainers = ["d3v-null"]
 
+    version("1.1.0", tag="v1.1.0")
     version("1.0.3", tag="v1.0.3")
 
     depends_on("rust@1.70.0:", type="build")
