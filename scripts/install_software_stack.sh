@@ -22,6 +22,8 @@ echo "Running first python install"
 echo "Running first reframe install"
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_reframe.sh"
 
+exit 0
+
 echo "Run concretization.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/concretize_environments.sh"
 

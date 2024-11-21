@@ -108,35 +108,35 @@ packages:
   py-h5py:
     version: [3.12.1]
   py-ipython:
-    version: [8.14.0]
+    version: [8.28.0]
   py-matplotlib:
-    version: [3.8.4]
+    version: [3.9.2]
     variants: '+movies'
   py-mpi4py:
-    version: [3.1.5]
+    version: [4.0.1]
   py-numba:
     version: [0.58.1]
   py-numpy:
-    version: [1.26.4]
+    version: [2.1.2]
   py-pandas:
-    version: [2.2.2]
+    version: [2.2.3]
   py-pip:
     version: [23.1.2]
   py-plotly:
     version: [5.20.0]
   py-scikit-learn:
-    version: [1.4.2]
+    version: [1.5.2]
   py-scipy:
-    version: [1.13.0]
+    version: [1.14.1]
   py-setuptools:
     version: [59.4.0]
   # preferred versions and variants, compilers
   go:
     version: [1.23.2]
   julia:
-     version: [1.10.2]
+     version: [1.11.0]
   openjdk:
-    version: [21.0.0_35]
+    version: [21.0.3_9]
   r:
     version: [4.4.1]
 # Commented out - see GENERAL NOTES above
@@ -144,7 +144,7 @@ packages:
 #    - spec: r@4.0.5.1
 #      prefix: /opt/cray/pe/R/4.0.5.1
   perl:
-    version: [5.38.0]
+    version: [5.40.0]
 # Commented out - see GENERAL NOTES above
 #    externals:
 #    - spec: perl@5.26.1~cpanm
@@ -153,27 +153,27 @@ packages:
     version: [3.3.5]
   # preferred versions and variants, num_libs
   amdblis:
-    version: [4.2]
+    version: [5.0]
     variants: 'threads=openmp'
   amdlibflame:
-    version: [4.2]
+    version: [5.0]
     variants: 'threads=openmp'
   amdscalapack:
-    version: [4.2]
+    version: [5.0]
     variants: 'build_type=Release'
   aocl-sparse:
-    version: [4.2]
+    version: [5.0]
     variants: 'build_type=Release'
   amdfftw:
-    version: [4.2]
+    version: [5.0]
     variants: 'precision=float,double,long_double'
   amdlibm:
-    version: [4.2]
+    version: [5.0]
   blaspp:
-    version: [2023.11.05]
+    version: [2024.10.26]
     variants: '~cuda build_type=Release'
   boost:
-    version: [1.85.0]
+    version: [1.86.0]
     variants: '+mpi +numpy +python'
   eigen:
     version: [3.4.0]
@@ -182,47 +182,47 @@ packages:
     version: [3.3.10,2.1.5]
     variants: '+openmp precision=float,double,long_double'
   gsl:
-    version: [2.7.1]
+    version: [2.8]
   hpx:
-    version: [1.9.1]
+    version: [1.10.0]
     variants: '+async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi cxxstd=14 build_type=Release'
   kokkos:
-    version: [4.3.00]
+    version: [4.4.01]
     variants: '+hwloc +memkind +numactl +openmp +tuning cxxstd=14 build_type=Release'
   netlib-lapack:
     version: [3.11.0]
     variants: 'build_type=Release'
   openblas:
-    version: [0.3.26]
+    version: [0.3.28]
     variants: 'threads=openmp'
   opencv:
-     version: [4.8.0]
+     version: [4.10.0]
      variants: 'build_type=Release'
   plasma:
-    version: [23.8.2]
+    version: [24.8.7]
     variants: 'build_type=Release'
   petsc:
-    version: [3.21.1]
+    version: [3.22.1]
     variants: '+fftw' # commenting out trilinos as per environment note # +trilinos'
   plumed:
-    version: [2.9.0]
+    version: [2.9.2]
   netlib-scalapack:
     version: [2.2.0]
   slate:
-    version: [2023.11.05]
+    version: [2024.10.29]
     variants: '~cuda build_type=Release'
   trilinos:
-    version: [15.1.1]
+    version: [15.0.0]
     variants: '+adios2 +openmp +python build_type=Release'
 # preferred versions and variants, io_libs
   hdf5:
-    version: [1.14.3]
+    version: [1.14.5]
     variants: 'api=v112 +hl +fortran +szip build_type=Release'
   hdf:
     version: [4.2.15]
     variants: '+shared+external-xdr'
   adios2:
-    version: [2.10.0]
+    version: [2.10.2]
     variants: '+python +hdf5 build_type=Release'
   netcdf-c:
     version: [4.9.2]

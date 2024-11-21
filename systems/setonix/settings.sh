@@ -55,6 +55,7 @@ RFM_TEST_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_checks
 archs="zen2 zen3"
 # compiler versions (needed for module trees with compiler dependency)
 gcc_version="13.3.0"
+gcc_versionO="13.3.1"
 cce_version="18.0.0"
 aocc_version="5.0.0"
 
