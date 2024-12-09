@@ -51,8 +51,9 @@ class Wsclean(CMakePackage):
     depends_on('doxygen', when='@3.0:')
     depends_on('python', when='@3.0:')
     patch("wsclean_2.10.1.patch", when="@2.10.1")
-    patch('mpi1.patch', when='@3.0:')
-    patch('mpi2.patch', when='@3.0:')
+    patch('mpi1.patch', when='@3.0:3.4')
+    patch('mpi2.patch', when='@3.0:3.4')
+    patch('mpiv3.5.patch', when='@3.5:')
 
     @run_before("cmake")
     def change_source_dir(self):
