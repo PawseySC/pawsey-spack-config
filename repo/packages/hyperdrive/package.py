@@ -10,6 +10,8 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
 
     version("main",  branch="main")
     version("0.4.1", tag="v0.4.1")
+    version("0.4.1-peel", tag="v0.4.1-peel")
+    version("0.4.1-devel", tag="v0.4.1-devel")
 
     # unknown issue on setonix when enabled https://github.com/PawseySC/pawsey-spack-config/pull/280#issuecomment-2296128762
     variant("cfitsio-static", default=False, description="Enable the fitsio_src feature of the fitsio-sys crate.")

@@ -1,0 +1,24 @@
+diff --git a/distributed/mpibig.cpp b/distributed/mpibig.cpp
+index 2b69035..dbf8a93 100644
+--- a/distributed/mpibig.cpp
++++ b/distributed/mpibig.cpp
+@@ -4,6 +4,7 @@
+ 
+ #include <algorithm>
+ #include <cstdint>
++#include <cstddef>
+ 
+ using aocommon::Logger;
+ 
+diff --git a/distributed/mpibig.h b/distributed/mpibig.h
+index 47d0bbc..c6f2270 100644
+--- a/distributed/mpibig.h
++++ b/distributed/mpibig.h
+@@ -2,6 +2,7 @@
+ #define DISTRIBUTED_MPI_BIG_H_
+ 
+ #include <mpi.h>
++#include <cstddef>
+ 
+ namespace wsclean {
+ 
