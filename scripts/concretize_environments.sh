@@ -47,3 +47,9 @@ for env in $cray_env_list ; do
   spack concretize -f
   spack env deactivate
 done
+
+
+echo "Concretizing env cray_rocm.."
+spack env activate ${envdir}/rocm
+spack concretize -f
+spack env deactivate

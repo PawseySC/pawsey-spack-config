@@ -68,10 +68,10 @@ compilers:
       f77: ftn
       fc: ftn
     flags:
-      cflags: 
-      cxxflags: 
-      cppflags: 
-      fflags:  -fallow-argument-mismatch
+      cflags:
+      cxxflags:
+      cppflags:
+      fflags: -fallow-argument-mismatch
     operating_system: sles15
     target: any
     modules:
@@ -198,10 +198,37 @@ compilers:
       f77: ftn
       fc: ftn
     flags:
-      cflags: -O3  -Wl,--undefined-version
+      cflags: -O3 -Wl,--undefined-version
       cxxflags: -O3 -Wl,--undefined-version
       cppflags: -O3 -Wl,--undefined-version
       fflags: -O3 -Wl,--undefined-version
+    operating_system: sles15
+    target: any
+    modules:
+    - PrgEnv-cray
+    - cce/18.0.0
+    - craype
+    - craype-x86-milan
+    - craype-network-ofi
+    - xpmem
+    environment:
+      set:
+        PE_ENV: "CRAY"
+    extra_rpaths: []
+
+# cray compilers 
+- compiler:
+    spec: cce@18.0.1
+    paths:
+      cc: cc
+      cxx: CC
+      f77: ftn
+      fc: ftn
+    flags:
+      cflags: -O3
+      cxxflags: -O3
+      cppflags: -O3
+      fflags: -O3
     operating_system: sles15
     target: any
     modules:

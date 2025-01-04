@@ -18,10 +18,10 @@ spack:
     # use the flag cxxstd ... Update in recipes might fix this but for the moment, we fix 
     # this in our repo
     # cxxstd=14 is not a variant in kokkos@3.7.02
-    - kokkos@4.3.00 ~rocm +hwloc +memkind +numactl +openmp +tuning build_type=Release
+    - kokkos@4.4.01 ~rocm +hwloc +memkind +numactl +openmp +tuning build_type=Release
     
     # for hpx must explicitly set openmp off 
-    - kokkos@4.3.00 +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ~openmp
+    - kokkos@4.4.01 +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ~openmp
       build_type=Release ^hpx@1.9.1 +async_mpi max_cpu_count=128 networking=mpi build_type=Release
     - metis@5.1.0 ~int64~real64
     - metis@5.1.0 +int64+real64
@@ -44,12 +44,14 @@ spack:
     - plumed@2.9.0
     
     # some heavier numerical library builds 
-    - opencv@4.8.0 build_type=Release
+    - opencv@4.10.0 build_type=Release
     
       #    - opencv@3.4.18 build_type=Release
     - trilinos@15.0.0 ~rocm +adios2 +openmp +python ~cuda ^adios2@2.9.2 build_type=Release
       ^hdf5@1.14.3 build_type=Release
       #- trilinos@15.1.0 ~rocm +adios2 +openmp +python +tpetra +kokkos +zoltan ~cuda ^adios2@2.9.2 build_type=Release failed with /usr/include/stdlib.h:31:10: fatal error: 'stddef.h' file not found 
+
+    #- trilinos@16.0.0 ~rocm +adios2 +openmp +python +tpetra +kokkos +zoltan ~cuda ^adios2@2.9.2 build_type=Release
 
   - petsc-set:    
     # TODO: currently unable to configure petsc with trilinos. 
@@ -62,11 +64,11 @@ spack:
     # - openblas@0.3.21 threads=openmp # PLACEHOLDER - please look at scripts/install_environments.sh
     - netlib-lapack@3.11.0 build_type=Release
     - netlib-scalapack@2.2.0
-    - blaspp@2023.11.05 ~cuda build_type=Release ^openblas
+    - blaspp@2024.10.26 ~cuda build_type=Release ^openblas
     - eigen@3.4.0 build_type=Release # charris: build ok on Joey 2021-12-16
     - fftw@2.1.5 +openmp precision=float,double # fftw 2 does not support long doubles
     - fftw@3.3.10 +openmp precision=float,double,long_double
-    - gsl@2.7.1
+    - gsl@2.8
   - amd-with-python:
     
     # AMD AOCL

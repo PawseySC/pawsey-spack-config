@@ -2,6 +2,12 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
+# Pawsey, Ilkhom: added mkdirp(rubygems_certs_path) in line 162 
+# Pawsey, Ilkhom: added env.set("CFLAGS", "-fcommon") to handle error: duplicate symbol for cce compiler
+# Pawsey, Ilkhom: added  patch("fix_CFLAGS.patch") for cce compiler
+
+
+
 import re
 
 import spack.build_systems.autotools
@@ -72,6 +78,7 @@ class Ruby(AutotoolsPackage, NMakePackage):
     patch("ruby_23_gcc7.patch", level=0, when="@2.2.0:2.2 %gcc@7:")
     patch("ruby_23_gcc7.patch", level=0, when="@2.3.0:2.3.4 %gcc@7:")
     patch("ruby_24_gcc7.patch", level=1, when="@2.4.0 %gcc@7:")
+    patch("fix_CFLAGS.patch", when="@3.3.5: %cce@18:")
 
     resource(
         name="rubygems-updated-ssl-cert",
@@ -126,6 +133,11 @@ class SetupEnvironment:
 
 
 class AutotoolsBuilder(spack.build_systems.autotools.AutotoolsBuilder, SetupEnvironment):
+    def setup_build_environment(self, env):
+        if self.spec.compiler.name == "cce":
+            env.set("CFLAGS", "-fcommon")
+            env.set("CXXFLAGS", "-fcommon")
+
     def configure_args(self):
         args = []
         if "+openssl" in self.spec:

@@ -7,20 +7,20 @@ spack:
   definitions:
   - s3-python-set:
     - awscli@1.29.41
-    - py-boto3@1.26.26
+    - py-boto3@1.34.44
   - s3-go-set:
-    - rclone@1.63.1
+    - rclone@1.68.1
 #    - miniocli@2023-06-28 #deprecated by pawsey
   # add package specs to the `specs` list
   specs:
   - matrix:
     - [$s3-python-set]
     - [^python@3.11.6 +optimizations+zlib]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.0']
     - [target=zen2, target=zen3]
   - matrix:
     - [$s3-go-set]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.0']
     - [target=zen2, target=zen3]
   view: false
 

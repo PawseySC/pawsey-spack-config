@@ -35,9 +35,11 @@ spack -d spec nano
 # spec gcc
 echo "Concretization of Reframe.."
 spack -d spec reframe@${reframe_version} %gcc@${gcc_version}
+spack spec reframe@${reframe_version} %cce@${cce_version}
 
 echo "Installing Reframe with default compilers.."
 for arch in $archs; do
     sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %gcc@${gcc_version} target=$arch"
-    sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %cce@${cce_version} target=$arch"
+    #sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %cce@18.0.1 ^py-maturin@1.1.0%gcc@13.3.0 target=$arch"
+    #sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %cce@${cce_version} target=$arch"
 done

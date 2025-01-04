@@ -2,6 +2,14 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
+# Pawsey, Ilkhom: 1) replaced f"-D HIP_HIPCC_FLAGS='-O3 --amdgpu-target={amdgpu_target} --save-temps -I/opt/cray/pe/mpich/8.1.30/ofi/gnu/12.3/include/'" with 
+#                          f"-D HIP_HIPCC_FLAGS='-O3 -I/opt/rocm-6.1.3/include/hipfft --offload-arch={amdgpu_target} --save-temps -I/opt/cray/pe/mpich/8.1.30/ofi/gnu/12.3/include/'" 
+# cmake was not able to find /opt/rocm-6.1.3/include/hipfft
+# --amdgpu-target is deprecated in rocm/6.1.3
+#                 2) patch("fix_hip_add_library.patch"): this is to set the new path of FindHIP.cmake to /opt/rocm-6.1.3/lib/cmake/hip/FindHIP.cmake
+#                 3) patch("fix_memoryAttributes.patch"): this is to replace 
+#                    isPinned = (memoryAttributes.memoryType == hipMemoryTypeHost); with
+#                    isPinned = (memoryAttributes.isManaged == 0);
 
 from spack.package import *
 from spack.util.prefix import Prefix
@@ -34,6 +42,8 @@ class Amdgromacs(CMakePackage, ROCmPackage):
     depends_on("mpi")
     depends_on("hwloc")
     
+    patch("fix_hip_add_library.patch")
+    patch("fix_memoryAttributes.patch")
 
 #    def patch(self):
 #        plumed = Executable(self.spec["plumed"].prefix.bin.plumed)
@@ -77,7 +87,7 @@ class Amdgromacs(CMakePackage, ROCmPackage):
             "-DCMAKE_HIP_ARCHITECTURES='gfx90a'",
             "-DAMDGPU_TARGETS='gfx90a'",
             "-DGPU_TARGETS='gfx90a'",
-            f"-D HIP_HIPCC_FLAGS='-O3 --amdgpu-target={amdgpu_target} --save-temps -I/opt/cray/pe/mpich/8.1.25/ofi/gnu/9.1/include'",
+            f"-D HIP_HIPCC_FLAGS='-O3 -I/opt/rocm-6.1.3/include/hipfft --offload-arch={amdgpu_target} --save-temps -I/opt/cray/pe/mpich/8.1.30/ofi/gnu/12.3/include/'",
             "-DGMX_GPU_USE_VKFFT=ON",
             "-DCMAKE_C_FLAGS='-Ofast'",
             "-DCMAKE_CXX_FLAGS='-Ofast'", 

@@ -1,0 +1,6 @@
+spack:
+  specs:
+    - singularityce@4.1.0%gcc@13.3.1
+  view: false
+  concretizer:
+    unify: true

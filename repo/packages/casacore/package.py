@@ -56,8 +56,8 @@ class Casacore(CMakePackage):
     depends_on('lapack')
     depends_on('cfitsio')
     depends_on('wcslib@4.20:+cfitsio')
-    depends_on('fftw-api@3 precision=float,double', when='@3.4.0:')
-    depends_on('fftw-api@3 precision=float,double', when='~fftpack')
+    depends_on('fftw@3: precision=float,double', when='@3.4.0:')
+    depends_on('fftw@3: precision=float,double', when='~fftpack')
     # SOFA dependency suffers the same problem in CMakeLists.txt as readline;
     # force a dependency when building unit tests
     depends_on('sofa-c', type='test')

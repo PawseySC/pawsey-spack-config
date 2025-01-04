@@ -9,13 +9,15 @@
 
 export SYSTEM=setonix
 export INSTALL_GROUP=pawsey0001
-export INSTALL_PREFIX=/lus/joey/software/projects/pawsey0001/ilkhom/spack23/2024.11
+export INSTALL_PREFIX=/lus/joey/software/projects/pawsey0001/ilkhom/spack23/2024.12
 
 cc --version
 CC --version
 ftn --version
 
 export PKG_CONFIG_PATH=/usr/lib64/pkgconfig:$PKG_CONFIG_PATH
+
+ml cray-pmi/6.1.15
 
 ./install_software_stack.sh
 

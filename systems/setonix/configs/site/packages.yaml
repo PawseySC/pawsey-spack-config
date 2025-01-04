@@ -308,6 +308,12 @@ packages:
       prefix: /usr
     buildable: false
 
+  libgcrypt:
+    externals:
+    - spec: libgcrypt@1.9.4
+      prefix: /usr
+    buildable: false
+
 # ----------------------------------------------------------------------------
 #                                        CRAY
 # ----------------------------------------------------------------------------
@@ -448,7 +454,7 @@ packages:
       prefix: /opt/cray/pe/libsci/24.07.0/GNU/12.3/x86_64
     - spec: cray-libsci@24.07.0%cce
       modules:
-      - cray-libsci/23.07.0
+      - cray-libsci/24.07.0
       prefix: /opt/cray/pe/libsci/24.07.0/CRAYCLANG/17.0/x86_64
     #- spec: cray-libsci@23.09.1.1%aocc
     #  modules:
@@ -671,6 +677,12 @@ packages:
       - spec: rocm-openmp-extras@6.1.3
         prefix: /opt/rocm-6.1.3
 
+
+  rocm-core:
+      buildable: false
+      externals:
+      - spec: rocm-core@6.1.3
+        prefix: /opt/rocm-6.1.3
 
   comgr:
       buildable: false

@@ -2,7 +2,6 @@ spack:
 # note: preferred versions are set in packages.yaml
   definitions:
   - packages:
-    
 # py-pip and py-setuptools: installed in env_langs
 # snakemake: docs recommend to install with conda
 #    - ffmpeg@4.4.1 +avresample
@@ -13,32 +12,33 @@ spack:
     - nextflow@24.10.0 #supports DSL-2
     - parallel@20240822
     - reframe@3.12.0 ^python@3.11.6 +optimizations+zlib
-    - reframe@4.6.3 ^python@3.11.6 +optimizations+zlib
+    #- reframe@4.6.3 +docs ^python@3.11.6 +optimizations+zlib. New version is not required
     # now moving to singularityce rather than older singularity
     #- singularityce@4.1.0
     #- singularityce@4.0.3~conmon ^go@1.22.1
     - mpifileutils@0.11.1+lustre
     - feh@3.10
-# utilities for Nextflow Tower
-    - tower-agent@0.4.5
-    - tower-cli@0.7.0
-# add nano here for now
     - nano@8.2
+    - cmake@3.30.5
+## utilities for Nextflow Tower tower-agent and tower-cli are no longer needed. PR 41576
+#    - tower-agent@0.4.5
+#    - tower-cli@0.7.0
+# add nano here for now
   - licensed:
     - matlab@R2021a key=$MATLAB_INSTALL_KEY mode=automated
+#  - matrix:
+#    - [cmake@3.30.5]
+#    - ['%gcc@13.3.0']
+#    - [target=zen3, target=zen2]
   specs:
-  - matrix:
-    - [cmake@3.30.5]
-    - ['%gcc@13.3.0']
-    - [target=zen3, target=zen2]
   - matrix:
     - [$packages]
     - ['%gcc@13.3.0']
     - [target=zen3, target=zen2]
-  - matrix:
-    - [singularityce@4.1.0] 
-    - ['%gcc@13.3.1']
-    - [target=zen3, target=zen2]
+#  - matrix:
+#    - [$without_O3] 
+#    - ['%gcc@13.3.1']
+#    - [target=zen3, target=zen2]
 #  - matrix:
 #    - [singularityce@4.1.0 cflags="-O0" cppflags="-O0" cxxflags="-O0"]
 # TODO: build licensed software

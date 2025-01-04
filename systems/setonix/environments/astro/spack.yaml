@@ -2,6 +2,7 @@
 #
 # It describes a set of packages to be installed, along with
 # configuration settings.
+# Pawsey, Ilkhom: giant-squid@1.0.3 is moved to mwa-no-python to avoid concretization error.
 spack:
   packages:
     'blas:':
@@ -46,8 +47,6 @@ spack:
     - wsclean@3.4 ~mpi +idg +everybeam build_type=Release target=zen3
     - wsclean@2.9 +idg build_type=Release target=zen3
     - mwalib@1.5.0+python~portable
-    - giant-squid@1.0.3 target=zen3
-    - giant-squid@1.0.3 target=zen2
     - aoflagger@3.4.0 build_type=Release target=zen3 ^cfitsio@3.49
     - hyperbeam@0.9.3 ~portable +python
     - hyperbeam@0.9.3 ~portable +rocm +python amdgpu_target=gfx90a
@@ -60,6 +59,8 @@ spack:
 
   - mwa-no-python:
     - chgcentre build_type=Release target=zen3
+    - giant-squid@1.0.3 target=zen3
+    - giant-squid@1.0.3 target=zen2
 
   # TODO add versions 
   - python-astro-set:
@@ -72,7 +73,7 @@ spack:
   specs:
   - matrix:
     - [$casacore-set]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.0']
     - [target=zen3]
     - [+python build_type=Release ^python@3.11.6]
     - [+openmp, ~openmp]
@@ -81,30 +82,30 @@ spack:
         # can't use hdf%@1.14.3 for casacore yet
   - matrix:
     - [$casacore-legacy]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.0']
     - [target=zen3]
   - matrix:
     - [$astro-util-set, $askap-util-set]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.0']
     - [target=zen3]
 
   - matrix:
     - [ $mwa-no-python]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.0']
 
   - matrix:
     - [$mwa-with-python]
     - [^python@3.11.6]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.0']
 
   - matrix:
     - [$python-astro-set]
     - [^python@3.11.6]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.0']
     - [target=zen3]
   - matrix:
     - [$casacore-new-set]
     - [^python@3.11.6]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.0']
     - [target=zen3]
   view: false

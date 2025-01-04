@@ -36,6 +36,7 @@ spack -d spec nano
 # spec gcc
 echo "Concretization of Python.."
 spack -d spec python@${python_version} %gcc@${gcc_version}
+spack -d spec python@${python_version} %cce@${cce_version}
 
 echo "Installing Python with default compilers.."
 for arch in $archs; do

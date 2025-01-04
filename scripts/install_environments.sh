@@ -19,6 +19,7 @@ module --ignore-cache load pawseyenv/${pawseyenv_version}
 # swap is needed for the pawsey_temp module to work
 module swap PrgEnv-gnu PrgEnv-cray
 module swap PrgEnv-cray PrgEnv-gnu
+module use $INSTALL_PREFIX/modules/zen3/gcc/13.3.0/programming-languages
 module load spack/${spack_version}
 
 nprocs="128"

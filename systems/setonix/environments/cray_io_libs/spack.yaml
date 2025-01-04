@@ -9,10 +9,10 @@ spack:
 #      variants: ~external-xdr
   definitions:
   - hdf5-set:
-    - hdf5@1.14.3
+    - hdf5@1.14.5
     - hdf5@1.10.7
   - adios-set:
-    - adios2@2.9.2
+    - adios2@2.10.2
   - netcdf-set:
     - netcdf-c@4.9.2 +hdf4 +parallel-netcdf ^hdf+shared
     - netcdf-cxx@4.2
@@ -33,31 +33,32 @@ spack:
   specs:
   - matrix:
     - [$hdf5-set]
-    - ['%cce@17.0.0']
+    - ['%cce@18.0.0']
     - [api=v110, api=v18, api=v16]
     - [+mpi, ~mpi+cxx]
     - [+hl +fortran +szip build_type=Release]
     - [generator=make]
     - [^libaec generator=make]
   - matrix:
-    - [hdf5@1.14.3]
-    - ['%cce@17.0.0']
+    - [hdf5@1.14.5]
+    - ['%cce@18.0.0']
     - [api=v112]
     - [+mpi, ~mpi+cxx]
     - [+hl +fortran +szip build_type=Release]
     - [generator=make]
+    - [^libaec generator=make]
   - matrix:
     - [$adios-set]
-    - ['%cce@17.0.0']
+    - ['%cce@18.0.0']
     - [+python ^python@3.11.6 +optimizations+zlib, ~python]
     - [^netlib-lapack@3.11.0] 
       #    - [^openblas@0.3.26%cce threads=openmp build_system=cmake]
     - [+hdf5]
-    - [^hdf5@1.14.3 +hl +fortran +szip api=v112 build_type=Release]
+    - [^hdf5@1.14.5 +hl +fortran +szip api=v112 build_type=Release]
     #- [^hdf5@1.12.1 +hl +fortran +szip api=v112 build_type=Release, ^hdf5@1.12.1 +hl +fortran +szip api=v110 build_type=Release,
     #  ^hdf5@1.12.1 +hl +fortran +szip api=v18 build_type=Release]
   - matrix:
     - [$netcdf-set]
-    - ['%cce@17.0.0']
+    - ['%cce@18.0.0']
     - [target=zen3]
   view: false

@@ -29,3 +29,11 @@ class PyMaturin(PythonPackage):
 
     def setup_build_environment(self, env):
         env.set("CARGO_HOME", f"{self.stage.source_path}/.cargo")
+    # Ensure proper environment variables for Rust are set
+        env.set('RUSTFLAGS', '-C relocation-model=pic')
+
+#    def flag_handler(self, name, flags):
+#        if name == "cflags":
+#            if self.spec.satisfies("%cce"):
+#                flags.append("-Wno-error=implicit-function-declaration -Wl,--no-relax -h PIC")
+#        return (flags, None, None)
