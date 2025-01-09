@@ -49,9 +49,9 @@ spack:
     - mwalib@1.5.0+python~portable
     - aoflagger@3.4.0 build_type=Release target=zen3 ^cfitsio@3.49
     - hyperbeam@0.9.3 ~portable +python
-    - hyperbeam@0.9.3 ~portable +rocm +python amdgpu_target=gfx90a
+#    - hyperbeam@0.9.3 ~portable +rocm +python amdgpu_target=gfx90a
     - hyperdrive@0.4.1 ~portable
-    - hyperdrive@0.4.1 ~portable amdgpu_target=gfx90a +rocm
+#    - hyperdrive@0.4.1 ~portable amdgpu_target=gfx90a +rocm
     - birli@0.15.1 ~portable
     - calceph@3.5.5 target=zen3
     - presto@5.0.1 target=zen3
@@ -106,6 +106,7 @@ spack:
   - matrix:
     - [$casacore-new-set]
     - [^python@3.11.6]
+    - [^boost@1.83.0]
     - ['%gcc@13.3.0']
     - [target=zen3]
   view: false

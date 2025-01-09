@@ -822,7 +822,10 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
     patch("660.patch", when="@20170922")
     patch("gtest_fix.patch", when="@:20210310 %aocc@3.2.0")
 
-    patch("fix_fmt_print.patch", when="@20230802:")
+    #patch("fix_fmt_print.patch", when="@20230802: %cce@18.0.0:")
+    patch("fix_fmt_print.patch")
+    patch("fix_dump_xyz.cpp.patch")
+    patch("fix_citeme.cpp.patch")
 
     # This patch merged to LAMMPS trunk at 20221222 and backported to
     # stable version 20220623.4. We still patch all other affected

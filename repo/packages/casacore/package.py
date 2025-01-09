@@ -69,6 +69,7 @@ class Casacore(CMakePackage):
     depends_on('py-numpy', when='+python')
     depends_on('gsl', when='@3.5.0:')
 
+    patch("fix_bytepacker.h.patch",when='@3.5.0')
         
     def cmake_args(self):
         args = ['-DCMAKE_Fortran_FLAGS=-fallow-argument-mismatch']
@@ -104,6 +105,7 @@ class Casacore(CMakePackage):
             args.extend(['-DBUILD_PYTHON=YES', '-DBUILD_PYTHON3=NO'])
 
         args.append('-DBUILD_TESTING=OFF')
+        
         return args
 
     def patch(self):

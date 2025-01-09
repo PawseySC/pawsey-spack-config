@@ -1,0 +1,10 @@
+--- a/tables/Dysco/bytepacker.h	2025-01-08 10:05:05.000000000 +0800
++++ b/tables/Dysco/bytepacker.h	2025-01-08 10:05:26.000000000 +0800
+@@ -2,6 +2,7 @@
+ #define DYSCO_BYTE_PACKER_H
+ 
+ #include <stdexcept>
++#include <cstdint>
+ 
+ namespace dyscostman {
+ 

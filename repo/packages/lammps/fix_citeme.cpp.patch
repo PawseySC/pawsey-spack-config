@@ -1,0 +1,11 @@
+--- a/src/citeme.cpp	2025-01-07 14:22:41.000000000 +0800
++++ b/src/citeme.cpp	2025-01-07 14:23:50.000000000 +0800
+@@ -25,7 +25,7 @@
+ static const char cite_nagline[] =
+     "Your simulation uses code contributions which should be cited:\n";
+ 
+-static const char cite_file[] = "The {} {} lists these citations in BibTeX format.\n\n";
++constexpr const char cite_file[] = "The {} {} lists these citations in BibTeX format.\n\n";
+ 
+ // define hash function
+ static std::hash<std::string> get_hash;

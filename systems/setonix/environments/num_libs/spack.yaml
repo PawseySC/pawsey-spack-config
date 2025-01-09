@@ -8,9 +8,9 @@ spack:
   - parallel:
     
     # boost: might need several boosts with different stadards
-    - boost@1.85.0 +mpi +numpy +python cxxstd=14
+    - boost@1.86.0 +mpi +numpy +python cxxstd=14
     # IA cxxstd=98 is replaced by cxxstd=11 in the following line since boost@1.85.0 does not support cxxstd=98
-    - boost@1.85.0 +mpi +numpy +python cxxstd=11
+    - boost@1.86.0 +mpi +numpy +python cxxstd=11
     - hpx@1.9.1 +async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi 
       build_type=Release ^boost
     
