@@ -29,12 +29,12 @@ if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
 fi
 
 # make sure Clingo is bootstrapped
-echo "Running 'spack spec nano' to bootstrap Clingo.."
-spack spec nano
+echo "Running 'spack -d spec nano' to bootstrap Clingo.."
+spack -d spec nano
 
 # spec gcc
 echo "Concretization of Reframe.."
-spack spec reframe@${reframe_version} %gcc@${gcc_version}
+spack -d spec reframe@${reframe_version} %gcc@${gcc_version}
 spack spec reframe@${reframe_version} %cce@${cce_version}
 
 echo "Installing Reframe with default compilers.."

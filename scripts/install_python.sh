@@ -30,13 +30,13 @@ fi
 
 # make sure Clingo is bootstrapped
 echo "Running 'spack -d spec nano' to bootstrap Clingo.."
-spack spec nano
+spack -d spec nano
 
 # first thing we need is Python
 # spec gcc
 echo "Concretization of Python.."
-spack spec python@${python_version} %gcc@${gcc_version}
-spack spec python@${python_version} %cce@${cce_version}
+spack -d spec python@${python_version} %gcc@${gcc_version}
+spack -d spec python@${python_version} %cce@${cce_version}
 
 echo "Installing Python with default compilers.."
 for arch in $archs; do
