@@ -11,9 +11,9 @@ spack:
     - nekrs@23.0 amdgpu_target=gfx90a:xnack+ +rocm
     - amdgromacs@2023 amdgpu_target=gfx90a +rocm
       
-###  - lammps:
-###    - lammps@=20240829.1 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +hwloc+memkind+numactl+openmp+tuning+rocm build_type=Release
-###    - lammps@=20230802.3 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +hwloc+memkind+numactl+openmp+tuning+rocm build_type=Release      
+  - lammps:
+    - lammps@=20240829.1 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +hwloc+memkind+numactl+openmp+tuning+rocm build_type=Release
+    - lammps@=20230802.3 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +hwloc+memkind+numactl+openmp+tuning+rocm build_type=Release      
   specs:
   - matrix:
     - [$packages-with-python]

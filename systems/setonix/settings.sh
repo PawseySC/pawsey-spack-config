@@ -97,6 +97,7 @@ dependencies
 # list of spack build environments - missing vis
 env_list="
 utils
+singularity_env
 num_libs
 python
 io_libs
