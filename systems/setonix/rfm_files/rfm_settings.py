@@ -590,7 +590,7 @@ site_configuration = {
             'target_systems': ['setonix', 'joey'],
             'modules': [
                 'PrgEnv-cray',
-                'cray-mpich/8.1.27',
+                'cray-mpich/8.1.30',
             ]
         },
         {
@@ -598,7 +598,7 @@ site_configuration = {
             'target_systems': ['setonix', 'joey'],
             'modules': [
                 'PrgEnv-gnu',
-                'cray-mpich/8.1.27',
+                'cray-mpich/8.1.30',
             ]
         },
         {
@@ -606,7 +606,7 @@ site_configuration = {
             'target_systems': ['setonix', 'joey'],
             'modules': [
                 'PrgEnv-aocc',
-                'cray-mpich/8.1.27',
+                'cray-mpich/8.1.30',
             ]
         },
         {

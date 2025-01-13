@@ -10,6 +10,8 @@ applications:
   gromacs/2023-double: ['gmx_mpi_d', '--version', 'GROMACS version']
   gromacs/2022.5-mixed: ['gmx_mpi', '--version', 'GROMACS version']
   gromacs/2023-mixed: ['gmx_mpi', '--version', 'GROMACS version']
+  gromacs/2024.3-double: ['gmx_mpi_d', '--version', 'GROMACS version']
+  gromacs/2024.3-mixed: ['gmx_mpi_d', '--version', 'GROMACS version']
   gromacs-amd-gfx90a/2023: ['gmx_mpi', '--version', 'GROMACS version']
   cdo: ['cdo', '--help', 'Usage : cdo']
   cp2k: ['cp2k.psmp', '--version', 'CP2K version']
@@ -57,6 +59,13 @@ astro-applications:
   py-healpy: ['python3', '-c "import healpy; print(healpy)"', "module 'healpy'"]
   log4cxx: ['ldd', 'lib64/liblog4cxx.so']
   libzmq: ['ldd', 'lib/libzmq.so']
+  wsclean: ['wsclean', '-version', 'EveryBeam is available']
+  presto: ['rednoise', '', 'Rednoise extraction routine.']
+  mwalib: ['ldd', 'lib/libmwalib.so']
+  hyperdrive: ['hyperdrive', '', 'Christopher H. Jordan']
+  hyperbeam: ['ldd', 'lib/libmwa_hyperbeam.so']
+  giant-squid: ['giant-squid', '', 'An alternative, efficient and easy-to-use MWA ASVO client.']
+  birli: ['birli', '', 'Preprocess Murchison Widefield Array MetaFITS and GPUFITS data into usable astronomy formats.']
 # No eigen (no suitable binary or library found), hpx (python script can't be called easily)
 libraries:
   hpx: ['python3', 'bin/hpxrun.py', 'This script is a simple startup script']
