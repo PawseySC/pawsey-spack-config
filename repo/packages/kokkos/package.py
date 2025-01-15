@@ -365,7 +365,7 @@ class Kokkos(CMakePackage, CudaPackage, ROCmPackage):
         when="@4.2.00",
     )
 
-    patch("fix_Kokkos_HIP_Instance.cpp.patch", when="+rocm")
+    patch("fix_Kokkos_HIP_Instance.cpp.patch", when="@:4.2.00 +rocm")
 
     variant("shared", default=True, description="Build shared libraries")
 
