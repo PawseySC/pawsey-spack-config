@@ -5,15 +5,18 @@ spack:
     - kokkos@4.4.01 +rocm amdgpu_target=gfx90a +hwloc +memkind +numactl +openmp +tuning build_type=Release
     - magma@2.8.0 +rocm ~cuda amdgpu_target=gfx90a  
     - slate@2024.10.29 +rocm amdgpu_target=gfx90a build_type=Release 
-    - trilinos@15.0.0 +rocm amdgpu_target=gfx90a +adios2 +openmp +python ~cuda ^adios2@2.9.2 build_type=Release
+#    - trilinos@15.0.0 +rocm amdgpu_target=gfx90a +adios2 +openmp +python ~cuda ^adios2@2.9.2 build_type=Release
 #      ^hdf5@1.14.3 build_type=Release
 
+#    - nekrs@23.0 amdgpu_target=gfx90a:xnack+ +rocm
     - nekrs@23.0 amdgpu_target=gfx90a:xnack+ +rocm
     - amdgromacs@2023 amdgpu_target=gfx90a +rocm
       
   - lammps:
-    - lammps@=20240829.1 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +hwloc+memkind+numactl+openmp+tuning+rocm build_type=Release
-    - lammps@=20230802.3 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +hwloc+memkind+numactl+openmp+tuning+rocm build_type=Release      
+    #- lammps@=20240829.1 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +hwloc+memkind+numactl+openmp+tuning+rocm build_type=Release
+    #- lammps@=20230802.4 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +hwloc+memkind+numactl+openmp+tuning+rocm build_type=Release      
+    - lammps@=20240829.1 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +rocm amdgpu_target=gfx90a +hwloc +memkind +numactl +openmp +tuning build_type=Release 
+    - lammps@=20230802.4 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +rocm amdgpu_target=gfx90a +hwloc +memkind +numactl +openmp +tuning build_type=Release 
   specs:
   - matrix:
     - [$packages-with-python]
@@ -21,10 +24,10 @@ spack:
     - [^python@3.11.6 +optimizations+zlib]
     - [target=zen3]
 # mpiio is no longer a variant
-###  - matrix:
-###    - [$lammps]
-###    - [+adios +asphere +atc +awpmd +bocs +body +brownian +class2 +colloid +colvars +compress +coreshell +dielectric +diffraction +dipole +dpd-basic +dpd-meso +dpd-react +dpd-smooth +drude +eff +extra-compute +extra-dump +extra-fix +extra-molecule +extra-pair +fep +ffmpeg +granular +h5md +interlayer +jpeg +kim +kokkos +kspace +latboltz +machdyn +manifold +manybody +mc +meam +mesont       +mgpt +misc +ml-iap +ml-snap +mofff +molecule +molfile +netcdf +openmp-package +opt +orient +peri +phonon +plugin +plumed +png +poems +ptm +python +qeq +qtb +reaction +reaxff +replica +rigid +shock +smtbq +sph +spin +srd +tally +uef +voronoi +yaff build_type=Release ]
-###    - [^plumed@2.9.2 ^adios2@2.10.2]
-###    - ['%gcc@13.3.0']
-###    - [target=zen3]      
+  - matrix:
+    - [$lammps]
+    - [+adios +asphere +atc +awpmd +bocs +body +brownian +class2 +colloid +colvars +compress +coreshell +dielectric +diffraction +dipole +dpd-basic +dpd-meso +dpd-react +dpd-smooth +drude +eff +extra-compute +extra-dump +extra-fix +extra-molecule +extra-pair +fep +ffmpeg +granular +h5md +interlayer +jpeg +kim +kokkos +kspace +latboltz +machdyn +manifold +manybody +mc +meam +mesont       +mgpt +misc +ml-iap +ml-snap +mofff +molecule +molfile +netcdf +openmp-package +opt +orient +peri +phonon +plugin +plumed +png +poems +ptm +python +qeq +qtb +reaction +reaxff +replica +rigid +shock +smtbq +sph +spin +srd +tally +uef +voronoi +yaff build_type=Release ]
+    - [^plumed@2.9.2 ^adios2@2.10.2]
+    - ['%gcc@13.3.0']
+    - [target=zen3]      
   view: false

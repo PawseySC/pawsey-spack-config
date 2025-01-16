@@ -735,7 +735,7 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
     depends_on("vtk", when="+vtk")
     depends_on("hipcub", when="~kokkos +rocm")
     depends_on("llvm-amdgpu ", when="+rocm", type="build")
-    depends_on("rocm-openmp-extras", when="+rocm +openmp", type="build")
+    # depends_on("rocm-openmp-extras", when="+rocm +openmp", type="build")
     depends_on("gsl@2.6:", when="+rheo")
 
     # propagate CUDA and ROCm architecture when +kokkos
@@ -826,6 +826,7 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
     patch("fix_fmt_print.patch")
     patch("fix_dump_xyz.cpp.patch")
     patch("fix_citeme.cpp.patch")
+    patch("fix_fix_property_atom.cpp.patch", when="+rocm")
 
     # This patch merged to LAMMPS trunk at 20221222 and backported to
     # stable version 20220623.4. We still patch all other affected
@@ -998,6 +999,9 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
         if self.spec.satisfies("+plugin"):
             env.prepend_path("LAMMPS_PLUGIN_PATH", self.prefix.lib.lammps.plugins)
             env.prepend_path("LAMMPS_PLUGIN_PATH", self.prefix.lib64.lammps.plugins)
+        if "+rocm" in self.spec:
+            env.prepend_path("LD_LIBRARY_PATH", self.spec["llvm-amdgpu"].prefix.llvm.lib)
+
 
     @run_after("install")
     def make_plugins_directories(self):

@@ -26,6 +26,7 @@ module load ${python_name}/${python_version}
 #module load py-setuptools/${setuptools_version}-py${python_version}
 module load py-pip/${pip_version}-py${python_version}
 module load singularity/${singularity_version}
+module load .py-rpds-py/0.18.1-yzaxwxs .py-markupsafe/2.1.3-ziz46uu
 
 # Remove previous cached config files if any
 if [ -e ~/.singularity-hpc/settings.yml ]; then

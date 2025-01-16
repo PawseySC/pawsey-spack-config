@@ -30,7 +30,7 @@ echo "Run reframe concretization tests.."
 
 echo "Install environments.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_environments.sh"
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_cray_environments.sh"
+#"${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_cray_environments.sh"
 
 echo "Run reframe package installation tests.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_rfm_module_tests.sh"
