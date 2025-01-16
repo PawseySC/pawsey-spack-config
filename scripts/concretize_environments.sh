@@ -28,28 +28,23 @@ module load spack/${spack_version}
 # list of environments included in variables.sh (sourced above)
 envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 
-#for env in $env_list ; do
-#  echo "Concretizing env $env.."
-#  spack env activate ${envdir}/${env} 
-#  spack concretize -f
-#  spack env deactivate
-#done
-#
+for env in $env_list ; do
+  echo "Concretizing env $env.."
+  spack env activate ${envdir}/${env} 
+  spack concretize -f
+  spack env deactivate
+done
+
 #echo "Concretizing env rocm.."
 #spack env activate ${envdir}/rocm
 #spack concretize -f
 #spack env deactivate
 
 
-for env in $cray_env_list ; do
-  echo "Concretizing env $env.."
-  spack env activate ${envdir}/${env}
-  spack concretize -f
-  spack env deactivate
-done
+#for env in $cray_env_list ; do
+#  echo "Concretizing env $env.."
+#  spack env activate ${envdir}/${env}
+#  spack concretize -f
+#  spack env deactivate
+#done
 
-
-echo "Concretizing env cray_rocm.."
-spack env activate ${envdir}/rocm
-spack concretize -f
-spack env deactivate
