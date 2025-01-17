@@ -1,11 +1,16 @@
 spack:
   # compile these on a gpu node with craype-accel-amd-gfx90a loaded
   definitions:
+
+  - mwa-with-python:
+    - hyperbeam@0.9.3 ~portable +rocm +python amdgpu_target=gfx90a
+    - hyperdrive@0.4.1 ~portable amdgpu_target=gfx90a +rocm
+
   - packages-with-python:
     - kokkos@4.4.01 +rocm amdgpu_target=gfx90a +hwloc +memkind +numactl +openmp +tuning build_type=Release
     - magma@2.8.0 +rocm ~cuda amdgpu_target=gfx90a  
     - slate@2024.10.29 +rocm amdgpu_target=gfx90a build_type=Release 
-#    - trilinos@15.0.0 +rocm amdgpu_target=gfx90a +adios2 +openmp +python ~cuda ^adios2@2.9.2 build_type=Release
+    - trilinos@15.0.0 +rocm amdgpu_target=gfx90a +adios2 +openmp +python ~cuda ^adios2@2.9.2 build_type=Release
 #      ^hdf5@1.14.3 build_type=Release
 
 #    - nekrs@23.0 amdgpu_target=gfx90a:xnack+ +rocm
@@ -15,8 +20,10 @@ spack:
   - lammps:
     #- lammps@=20240829.1 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +hwloc+memkind+numactl+openmp+tuning+rocm build_type=Release
     #- lammps@=20230802.4 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +hwloc+memkind+numactl+openmp+tuning+rocm build_type=Release      
-    - lammps@=20240829.1 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +rocm amdgpu_target=gfx90a +hwloc +memkind +numactl +openmp +tuning build_type=Release 
+    #- lammps@=20240829.1 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +rocm amdgpu_target=gfx90a +hwloc +memkind +numactl +openmp +tuning build_type=Release 
     - lammps@=20230802.4 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +rocm amdgpu_target=gfx90a +hwloc +memkind +numactl +openmp +tuning build_type=Release 
+
+
   specs:
   - matrix:
     - [$packages-with-python]
@@ -30,4 +37,10 @@ spack:
     - [^plumed@2.9.2 ^adios2@2.10.2]
     - ['%gcc@13.3.0']
     - [target=zen3]      
+
+  - matrix:
+    - [$mwa-with-python]
+    - [^python@3.11.6]
+    - ['%gcc@13.3.0']
+
   view: false
