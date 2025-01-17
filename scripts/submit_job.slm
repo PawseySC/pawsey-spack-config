@@ -20,6 +20,7 @@ export INSTALL_PREFIX=/scratch/pawsey0001/ilkhom/2025.01
 #Run rocm env on a gpu node with craype-accel-amd-gfx90a loaded
 #cd ../systems/${SYSTEM}/environments/rocm
 #module load craype-accel-amd-gfx90a
+#module load rocm
 #spack env activate .
 #spack concretize -f
 #spack install -j128
