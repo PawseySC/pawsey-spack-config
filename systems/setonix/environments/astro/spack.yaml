@@ -23,7 +23,7 @@ spack:
   - casacore-new-set:
     - casacore@3.5.0 +openmp+python+hdf5 build_type=Release
   - astro-util-set:
-    - cfitsio
+    - cfitsio@4.4.0
     - wcslib +cfitsio
     - wcslib ~cfitsio  
     - pgplot

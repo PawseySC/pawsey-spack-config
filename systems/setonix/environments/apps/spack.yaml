@@ -25,7 +25,7 @@ spack:
 # Current alternative:
     - openfoam@2312
     - openfoam@2206
-#    - ncl@6.6.2 ^esmf ~mpi
+    - ncl@6.6.2 ^esmf ~mpi
   - lammps:
     # +latte and +cg-sdk is removed from the cpu build as well so we can use the same recipe for cpu and gpu lammps builds
     # lammps: LAMMPS is incompatible with Kokkos 4.x until @20230802 so reverting to kokkos@3.7.02

@@ -8,6 +8,8 @@ spack:
 #    hdf:
 #      variants: ~external-xdr
   definitions:
+  - squashfs-set:
+    - squashfs@4.6.1
   - hdf5-set:
     - hdf5@1.14.3
     - hdf5@1.10.7
@@ -56,4 +58,9 @@ spack:
     - [$netcdf-set]
     - ['%gcc@13.3.0']
     - [target=zen3]
+  - matrix:
+    - [$squashfs-set]
+    - ['%gcc@13.3.0']
+    - [target=zen3]
+
   view: false
