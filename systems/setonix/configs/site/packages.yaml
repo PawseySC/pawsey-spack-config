@@ -299,7 +299,7 @@ packages:
   rust:
     externals:
     - spec: rust@1.78.0
-      prefix: /software/setonix/2024.05/software/linux-sles15-zen3/gcc-12.2.0/rust-1.78.0/toolchains/stable-x86_64-unknown-linux-gnu
+      prefix: /software/setonix/2025.02/software/linux-sles15-zen3/gcc-13.3.0/rust-1.78.0/toolchains/stable-x86_64-unknown-linux-gnu
     buildable: false
 
   libseccomp:
