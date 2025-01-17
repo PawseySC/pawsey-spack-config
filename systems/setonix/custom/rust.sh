@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Pawsey compilation environment
-STACK_VERSION=2024.05
+STACK_VERSION=2025.02
 COMPILER=gcc
-COMPILER_VERSION=12.2.0
+COMPILER_VERSION=13.3.0
 OSARCH=linux-sles15-zen3
 ARCH=zen3
 
