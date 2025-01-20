@@ -220,7 +220,7 @@ class Plumed(AutotoolsPackage):
 
     parallel = False
 
-    patch("fix_json_Makefile.patch", when="@2.9.2:%cce")
+    patch("fix_json_Makefile.patch", when="@2.9.2")
 
     def apply_patch(self, other):
         # The name of MD engines differ slightly from the ones used in Spack

@@ -49,6 +49,7 @@ class Charmpp(Package):
     depends_on("c", type="build")  # generated
     depends_on("cxx", type="build")  # generated
     depends_on("fortran", type="build")  # generated
+    depends_on("cray-pmi", type="build")
 
     # Support OpenMPI; see
     # <https://github.com/UIUC-PPL/charm/issues/1206>

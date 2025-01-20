@@ -292,7 +292,7 @@ class Ncl(Package):
                 # Build GRIB2 support (optional) into NCL?
                 "y\n" if self.spec.satisfies("+grib") else "n\n",
                 # Enter local library search path(s) :
-                self.spec["fontconfig"].prefix.lib
+                self.spec["fontconfig"].prefix.lib64
                 + " "
                 + self.spec["pixman"].prefix.lib
                 + " "

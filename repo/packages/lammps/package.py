@@ -826,7 +826,7 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
     patch("fix_fmt_print.patch")
     patch("fix_dump_xyz.cpp.patch")
     patch("fix_citeme.cpp.patch")
-    patch("fix_fix_property_atom.cpp.patch", when="+rocm")
+    patch("fix_fix_property_atom.cpp.patch")
 
     # This patch merged to LAMMPS trunk at 20221222 and backported to
     # stable version 20220623.4. We still patch all other affected
