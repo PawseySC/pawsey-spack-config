@@ -19,7 +19,8 @@ applications:
   #'cpmd': ['cpmd.x', '-h', 'Usage: cpmd.x']
   lammps: ['lmp', '-h', 'Large-scale Atomic/Molecular Massively Parallel Simulator']
   lammps-amd-gfx90a: ['lmp', '-h', 'Large-scale Atomic/Molecular Massively Parallel Simulator']
-  namd: ['namd2', '-h', 'Info: NAMD']
+  namd2: ['namd2', '-h', 'Info: NAMD']
+  namd3: ['namd3', '-h', 'Info: NAMD']
   namd-amd-gfx90a: ['namd2', '-h', 'Info: NAMD'] # 2023.08
   ncl: ['ncargversion', '', 'NCAR Graphics Software Version']
   nco: ['ncdiff', '--help', 'find more help on ncdiff']
