@@ -36,7 +36,7 @@ PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /d
 #    - to avoid confusion
 
 # define source (Spack) and destination (Pawsey) directories for Singularity
-src_old_dir="${INSTALL_PREFIX}/modules/${cpu_arch}/gcc/${gcc_versionO}/utilities/${singularity_name_general}"
+src_old_dir="${INSTALL_PREFIX}/modules/${cpu_arch}/gcc/${gcc_version}/utilities/${singularity_name_general}"
 src_dir="${INSTALL_PREFIX}/modules/${cpu_arch}/gcc/${gcc_version}/utilities/${singularity_name}"
 dst_dir="${INSTALL_PREFIX}/${singularity_symlink_module_dir}"
 echo "Using module files in ${src_old_dir}"

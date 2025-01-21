@@ -136,7 +136,8 @@ packages:
   julia:
      version: [1.11.0]
   openjdk:
-    version: [21.0.3_9]
+    version: [17.0.8.1_1]
+#    version: [21.0.3_9]
   r:
     version: [4.4.1]
 # Commented out - see GENERAL NOTES above

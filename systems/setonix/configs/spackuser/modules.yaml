@@ -378,6 +378,10 @@ modules:
         # git needs special name, because `.git` is ignored by Lmod
         git: 'dependencies/.git-module/{version}-{hash:7}'
 
+        # py-rpds-py and py-markupsafe do not need a hash to install shpc
+        py-rpds-py: 'dependencies/.py-rpds-py/{version}'
+        py-markupsafe: 'dependencies/.py-markupsafe/{version}'
+
         # by default all others are hidden
         # PJE: Marco had no hash for dependencies 
         # but just to be careful to avoid name conflicts

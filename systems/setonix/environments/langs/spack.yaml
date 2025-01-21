@@ -12,7 +12,9 @@ spack:
     
     # NotReadyYet:    
     # - julia@1.6.1 #Default recipe is very weak. Faulty. Lots of needed dependencies are missing.
-    - openjdk@21.0.3_9
+    #openjdk@17.0.8.1_1 is needed for nextflow
+    - openjdk@17.0.8.1_1
+    #- openjdk@21.0.3_9
     - r@4.4.1
     - ruby@3.3.5
     
