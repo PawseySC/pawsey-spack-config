@@ -11,6 +11,11 @@ export SYSTEM=setonix
 export INSTALL_GROUP=pawsey0001
 export INSTALL_PREFIX=/software/setonix/2025.02
 
+module use $INSTALL_PREFIX/staff_modulefiles
+module --ignore-cache load pawseyenv/2025.02
+module load gcc-native/13.2
+module load spack/0.23.0
+
 #export PKG_CONFIG_PATH=/usr/lib64/pkgconfig:$PKG_CONFIG_PATH
 
 #ml cray-pmi/6.1.15
