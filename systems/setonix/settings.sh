@@ -37,7 +37,7 @@ fi
 USER_PERMANENT_FILES_PREFIX='/software/projects'
 USER_TEMP_FILES_PREFIX='/scratch'
 SPACK_USER_CONFIG_PATH="$MYSOFTWARE/setonix/$DATE_TAG/.spack_user_config"
-BOOTSTRAP_PATH="$MYSOFTWARE/setonix/$DATE_TAG/.spack_user_config/bootstrap"
+BOOTSTRAP_PATH='$MYSOFTWARE/setonix/'$DATE_TAG/.spack_user_config/bootstrap
 # Set a new mirror where to fetch prebuilt binaries, if any.
 SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
 # When SPACK_POPULATE_CACHE=1, spack will push binaries in the above cache location for later use.
