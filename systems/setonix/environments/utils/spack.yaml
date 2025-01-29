@@ -11,7 +11,8 @@ spack:
     - nextflow@22.10.0 #supports DSL-1
     - nextflow@24.10.0 #supports DSL-2
     - parallel@20240822
-    - reframe@3.12.0 ^python@3.11.6 +optimizations+zlib
+# Reframe installation is not required since it is done via install_reframe.sh
+    #- reframe@3.12.0 ^python@3.11.6 +optimizations+zlib
     #- reframe@4.6.3 +docs ^python@3.11.6 +optimizations+zlib. New version is not required
     # now moving to singularityce rather than older singularity
     #- singularityce@4.1.0
