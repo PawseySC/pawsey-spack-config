@@ -21,6 +21,7 @@ class Mwalib(Package):
     maintainers = ["d3v-null"]
 
     version("main", branch="main")
+    version("1.8.2", tag="v1.8.2")
     version("1.5.0", tag="v1.5.0")
     version("1.4.0", tag="v1.4.0")
     version("1.3.3", tag="v1.3.3")
@@ -32,6 +33,7 @@ class Mwalib(Package):
     variant("portable", default=True, description="Disable native CPU optimizations")
 
     depends_on("rust@1.64.0:", type="build")
+    depends_on("rust@1.65.0:", type="build", when="@1.8:")
 
     # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.
     # default spack cfitsio does not give the +reentrant option

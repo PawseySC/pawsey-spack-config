@@ -5,6 +5,10 @@ repos:
 #
 # This one is for user recipes
 - USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix/DATE_TAG/spack_repo
+
+# The following is for project-wide recipes
+- USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/setonix/DATE_TAG/spack_repo
+
 # 
 # Spack user (Pawsey staff) populates this one with fixed recipes for Setonix
 # that are not (yet) in the Spack public repo

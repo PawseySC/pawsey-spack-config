@@ -41,6 +41,16 @@ fi
 # pip install package
 sg ${INSTALL_GROUP} -c "pip install --prefix=${INSTALL_PREFIX}/${shpc_install_dir} singularity-hpc==${shpc_version}"
 
+# install here custom shpc wrapper
+cd ${INSTALL_PREFIX}/${shpc_install_dir}/bin
+[ -e realshpc ] || mv shpc realshpc
+sed -e "s;REALSHPC;${INSTALL_PREFIX}/${shpc_install_dir}/bin/realshpc;g" \
+  -e "s|DATE_TAG|$DATE_TAG|g"\
+  -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
+   ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/shpc > shpc 
+chmod a+rx shpc
+cd -
+
 # get registry from github repo
 if ! [ -e "${INSTALL_PREFIX}/${shpc_install_dir}/registry" ]; then
     # get registry from github repo
@@ -75,6 +85,7 @@ shpc config remove registry https://github.com/singularityhub/shpc-registry
 shpc config add registry "${INSTALL_PREFIX}/${shpc_install_dir}/registry"
 shpc config add registry "${INSTALL_PREFIX}/${shpc_install_dir}/pawsey_registry"
 shpc config add registry "${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/shpc_registry"
+shpc config add registry "${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/setonix/$DATE_TAG/shpc_registry"
 # user install location for modulefiles
 shpc config set "module_base:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/${shpc_containers_modules_dir_long}"
 # disable default version for modulefiles (original)
@@ -89,6 +100,7 @@ shpc config set "default_view:${shpc_containers_modules_dir##*/}"
 shpc config set "singularity_module:${singularity_name}/${singularity_version}"
 # enable wrapper scripts
 shpc config set wrapper_scripts:enabled:true
+shpc config set "wrapper_base:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/containers/wrappers"
 # GPU support (Phase 2)
 #shpc config set container_features:gpu:amd
 # enable X11 graphics

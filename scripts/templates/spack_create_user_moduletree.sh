@@ -28,9 +28,18 @@ done
 chmod --silent g+rwX "${project_root_dir}"
 chmod --silent -R g+rwX "${project_root_dir}/modules"
 
-# create shpc container modules base dir (symlinks - views)
+# create shpc user-private container modules base dir (symlinks - views)
 mkdir -p "${user_root_dir}/${shpc_containers_modules_dir}"
 cat << EOF >"${user_root_dir}/${shpc_containers_modules_dir}/view.yaml"
+view:
+  name: modules
+  modules: []
+  system_modules: []
+EOF
+
+# create project-wide shpc container modules base dir (symlinks - views)
+mkdir -p "${project_root_dir}/${shpc_containers_modules_dir}"
+cat << EOF >"${project_root_dir}/${shpc_containers_modules_dir}/view.yaml"
 view:
   name: modules
   modules: []
@@ -44,8 +53,18 @@ repo:
   namespace: 'user_repo'
 EOF
 
+# create base dir for project-wide Spack repository of recipes
+mkdir -p "${project_root_dir}/spack_repo/packages"
+cat << EOF >"${project_root_dir}/spack_repo/repo.yaml"
+repo:
+  namespace: 'project_repo'
+EOF
+
+
 # create base dir for user SHPC registry of recipes
 mkdir -p "${user_root_dir}/shpc_registry"
+# ..and for project-wide recipes
+mkdir -p "${project_root_dir}/shpc_registry"
 
 # create base dir for Python pip user installations (PYTHONUSERBASE)
 mkdir -p "${user_root_dir}/python"

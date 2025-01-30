@@ -68,7 +68,9 @@ prepend_path("LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX", psc_sw_env_user_modules_roo
 -- Add User SHPC modules to MODULEPATH
 local psc_sw_env_shpc_user_root = "USER_PERMANENT_FILES_PREFIX/" .. psc_sw_env_project .. "/" .. psc_sw_env_user .. "/setonix/DATE_TAG/" .. psc_sw_env_shpc_containers_modules_dir
 prepend_path("MODULEPATH", psc_sw_env_shpc_user_root)
-
+ -- and the project-wide SHPC modules..
+local psc_sw_env_shpc_project_root = "USER_PERMANENT_FILES_PREFIX/" .. psc_sw_env_project .. "/setonix/DATE_TAG/" .. psc_sw_env_shpc_containers_modules_dir
+prepend_path("MODULEPATH", psc_sw_env_shpc_project_root)
 
 -- Add Project modules to Cray Lmod hierarchy variables
 local psc_sw_env_project_modules_root = "USER_PERMANENT_FILES_PREFIX/" .. psc_sw_env_project .. "/setonix/DATE_TAG/modules/" .. arch
