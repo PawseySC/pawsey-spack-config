@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if (( $# > 0 )) && [ "$1" = "project" ]; then
+    # enable group access and writing to the stack
+    umask g+rwx
+
+    BASE_PATH=USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/setonix/DATE_TAG
+
+    SHPC_OPTIONS="-c set:wrapper_base:${BASE_PATH}/containers/wrappers
+         -c set:container_base:${BASE_PATH}/containers/sifs
+         -c set:module_base:${BASE_PATH}/containers/modules-long
+         -c set:views_base:${BASE_PATH}/containers/views
+         -c set:default_view:modules"
+
+    REALSHPC ${SHPC_OPTIONS} ${@:2}
+else
+    REALSHPC ${@}
+fi
