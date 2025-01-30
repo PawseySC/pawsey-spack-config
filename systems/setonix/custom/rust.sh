@@ -8,7 +8,7 @@ OSARCH=linux-sles15-zen3
 ARCH=zen3
 
 PROGRAM_NAME=rust
-PROGRAM_VERSION=1.78.0 # look up online which version corresponds to stable
+PROGRAM_VERSION=1.84.0 # look up online which version corresponds to stable
 
 INSTALL_DIR_PREFIX=/software/setonix/$STACK_VERSION/software/$OSARCH/$COMPILER-$COMPILER_VERSION/$PROGRAM_NAME-$PROGRAM_VERSION
 INSTALL_DIR=$INSTALL_DIR_PREFIX/toolchains/stable-x86_64-unknown-linux-gnu
