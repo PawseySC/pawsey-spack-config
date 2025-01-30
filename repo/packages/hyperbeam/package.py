@@ -21,6 +21,7 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
     maintainers = ["d3v-null"]
 
     version("main", branch="main")
+    version("0.10.0", tag="v0.10.0")
     version("0.9.3", tag="v0.9.3")
     version("0.8.0", tag="v0.8.0")
     version("0.7.2", tag="v0.7.2")
@@ -32,6 +33,7 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
     variant("portable", default=True, description="Disable native CPU optimizations")
 
     depends_on("rust@1.64.0:", type="build")
+    depends_on("rust@1.80.0:", type="build", when="@0.10.0:")
     depends_on("cmake", type="build")
 
     # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.

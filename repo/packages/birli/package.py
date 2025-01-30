@@ -9,6 +9,7 @@ class Birli(Package):
     maintainers = ["d3v-null"]
 
     version("main", branch="main")
+    version("0.16.0", tag="v0.16.0")
     version("0.15.1", tag="v0.15.1")
     version("0.14.0", tag="v0.14.0")
     version("0.13.0", tag="v0.13.0")
@@ -20,6 +21,7 @@ class Birli(Package):
     variant("portable", default=True, description="Disable native CPU optimizations")
 
     depends_on("rust@1.64.0:", type="build")
+    depends_on("rust@1.65.0:", type="build", when="@0.16.0:")
     depends_on("cmake", type="build")
 
     # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.
