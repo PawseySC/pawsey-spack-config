@@ -120,7 +120,7 @@ local singularity_bindpath = "/askapbuffer,/scratch,/software"
 singularity_bindpath = singularity_bindpath .. ",/var/run/munge/munge.socket.2,/etc/slurm"
 -- add SLURM END
 -- add CRAY_PATHS START
-singularity_bindpath = singularity_bindpath .. ",/var/opt/cray/pe,/etc/opt/cray/pe,/opt/cray,/etc/alternatives/cray-dvs,/etc/alternatives/cray-xpmem"
+singularity_bindpath = singularity_bindpath .. ",/var/opt/cray/pe,/etc/opt/cray/pe,/opt/cray,/etc/alternatives/cray-xpmem"
 -- commented out below, adding lib64. Could be useful
 -- singularity_bindpath = singularity_bindpath .. ",/lib64/libc.so.6,/lib64/libpthread.so.0,/lib64/librt.so.1,/lib64/libdl.so.2,/lib64/libz.so.1,/lib64/libselinux.so.1,/lib64/libm.so.6"
 -- add CRAY_PATHS END
