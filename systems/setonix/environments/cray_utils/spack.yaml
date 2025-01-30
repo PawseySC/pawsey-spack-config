@@ -2,49 +2,40 @@ spack:
 # note: preferred versions are set in packages.yaml
   definitions:
   - packages:
-    
 # py-pip and py-setuptools: installed in env_langs
 # snakemake: docs recommend to install with conda
-    - ffmpeg@4.4.1 +avresample
-    #- gnuplot@5.4.2 +X  ^python@3.11.6 +optimizations+zlib ^libiconv
-    #- llvm@15.0.4 ~omp_as_runtime ~polly ~gold #fails with cce
+#    - ffmpeg@4.4.1 +avresample
+## for now    - ffmpeg@6.1.1
+## for now    - gnuplot@6.0.0
+## for now    - llvm@15.0.4 ~polly ~gold # Ilkhom: ~omp_as_runtime variant is removed from spack/0.21.0
     - nextflow@22.10.0 #supports DSL-1
-    - nextflow@23.10.0 #supports DSL-2
-    - parallel@20220522
-    - reframe@3.12.0 ^python@3.11.6 +optimizations+zlib
-    - reframe@4.0.4 ^python@3.11.6 +optimizations+zlib
+    - nextflow@24.10.0 #supports DSL-2
+    - parallel@20240822
+#   reframe is not needed in cray env 
+#    - reframe@3.12.0 ^python@3.11.6 +optimizations+zlib
+#    - reframe@4.6.3 +docs ^python@3.11.6 +optimizations+zlib
+#    - reframe@3.12.0
+#    - reframe@4.6.3 +docs 
     # now moving to singularityce rather than older singularity
-    #- singularityce@3.11.4~conmon ^go@1.19.10 #lvm2 fails
-    # lvm2 - ld.lld: error: relocation R_X86_64_32 cannot be used against local symbol; recompile with -fPIC
-    #- lvm2
-    #- singularityce@3.11.4
+    #- singularityce@4.1.0
+    #- singularityce@4.0.3~conmon ^go@1.22.1
     - mpifileutils@0.11.1+lustre
-    - feh@3.10
-# utilities for Nextflow Tower
-    - tower-agent@0.4.5
-    - tower-cli@0.7.0
+## for now    - feh@3.10
+    - nano@8.2
+    - cmake@3.30.5
+## utilities for Nextflow Tower tower-agent and tower-cli are no longer needed. PR 41576
+#    - tower-agent@0.4.5
+#    - tower-cli@0.7.0
 # add nano here for now
-    - nano@7.2
   - licensed:
     - matlab@R2021a key=$MATLAB_INSTALL_KEY mode=automated
+#  - matrix:
+#    - [cmake@3.30.5]
+#    - ['%gcc@13.3.0']
+#    - [target=zen3, target=zen2]
   specs:
   - matrix:
-    - [cmake@3.27.7]
-    - ['%cce@16.0.1']
-    - [target=zen3, target=zen2]
-  - matrix:
     - [$packages]
-    - ['%cce@16.0.1']
+    - ['%cce@18.0.0']
     - [target=zen3, target=zen2]
-  - matrix:
-    - [singularityce@4.1.0 cflags="-O0" cppflags="-O0" cxxflags="-O0"]
-#  - matrix:
-#    - [lvm2 cflags="-O0" cppflags="-O0" cxxflags="-O0"]
-#  - matrix:
-#    - [lvm2 cflags="-Wl,--no-relax" cppflags="-Wl,--no-relax" cxxflags="-Wl,--no-relax"]
-# TODO: build licensed software
-  # - matrix:
-  #   - [$licensed]
-  #   - ['%gcc@12.2.0']
-  #   - [target=zen3]
   view: false

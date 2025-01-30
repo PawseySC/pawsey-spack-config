@@ -35,7 +35,7 @@ compilers:
 #                        GNU 12.2.0
 # ===================================================================
 - compiler:
-    spec: gcc@12.2.0
+    spec: gcc@13.3.0
     paths:
       cc: cc
       cxx: CC
@@ -50,7 +50,33 @@ compilers:
     target: any
     modules:
     - PrgEnv-gnu
-    - gcc/12.2.0
+    - gcc-native/13.2
+    - craype
+    - craype-x86-milan
+    - craype-network-ofi
+    - xpmem
+    environment:
+      set:
+        PE_ENV: "GNU"
+    extra_rpaths: []
+
+- compiler:
+    spec: gcc@13.3.1
+    paths:
+      cc: cc
+      cxx: CC
+      f77: ftn
+      fc: ftn
+    flags:
+      cflags:
+      cxxflags:
+      cppflags:
+      fflags: -fallow-argument-mismatch
+    operating_system: sles15
+    target: any
+    modules:
+    - PrgEnv-gnu
+    - gcc-native/13.2
     - craype
     - craype-x86-milan
     - craype-network-ofi
@@ -165,7 +191,34 @@ compilers:
 
 # cray compilers 
 - compiler:
-    spec: cce@16.0.1
+    spec: cce@18.0.0
+    paths:
+      cc: cc
+      cxx: CC
+      f77: ftn
+      fc: ftn
+    flags:
+      cflags: -O3 -Wl,--undefined-version
+      cxxflags: -O3 -Wl,--undefined-version
+      cppflags: -O3 -Wl,--undefined-version
+      fflags: -O3 -Wl,--undefined-version
+    operating_system: sles15
+    target: any
+    modules:
+    - PrgEnv-cray
+    - cce/18.0.0
+    - craype
+    - craype-x86-milan
+    - craype-network-ofi
+    - xpmem
+    environment:
+      set:
+        PE_ENV: "CRAY"
+    extra_rpaths: []
+
+# cray compilers 
+- compiler:
+    spec: cce@18.0.1
     paths:
       cc: cc
       cxx: CC
@@ -180,7 +233,7 @@ compilers:
     target: any
     modules:
     - PrgEnv-cray
-    - cce/16.0.1
+    - cce/18.0.0
     - craype
     - craype-x86-milan
     - craype-network-ofi
@@ -240,7 +293,7 @@ compilers:
 
 # amd compilers 
 - compiler:
-    spec: aocc@3.2.0
+    spec: aocc@5.0.0
     paths:
       cc: cc
       cxx: CC
@@ -255,7 +308,7 @@ compilers:
     target: any
     modules:
     - PrgEnv-aocc
-    - aocc/3.2.0
+    - aocc/5.0.0
     - craype
     - craype-x86-milan
     - craype-network-ofi

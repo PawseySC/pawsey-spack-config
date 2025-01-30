@@ -1,0 +1,11 @@
+--- a/core/src/HIP/Kokkos_HIP_Instance.cpp	2024-12-18 14:00:37.000000000 +0800
++++ b/core/src/HIP/Kokkos_HIP_Instance.cpp	2024-12-18 14:01:35.000000000 +0800
+@@ -86,7 +86,7 @@
+     KOKKOS_IMPL_HIP_SAFE_CALL(hipGetDeviceProperties(&hipProp, i));
+ 
+     s << "Kokkos::HIP[ " << i << " ] "
+-      << "gcnArch " << hipProp.gcnArch << ", Total Global Memory: "
++      << "gcnArchName " << hipProp.gcnArchName << ", Total Global Memory: "
+       << ::Kokkos::Impl::human_memory_size(hipProp.totalGlobalMem)
+       << ", Shared Memory per Block: "
+       << ::Kokkos::Impl::human_memory_size(hipProp.sharedMemPerBlock);

@@ -56,8 +56,8 @@ class Casacore(CMakePackage):
     depends_on('lapack')
     depends_on('cfitsio')
     depends_on('wcslib@4.20:+cfitsio')
-    depends_on('fftw-api@3 precision=float,double', when='@3.4.0:')
-    depends_on('fftw-api@3 precision=float,double', when='~fftpack')
+    depends_on('fftw@3: precision=float,double', when='@3.4.0:')
+    depends_on('fftw@3: precision=float,double', when='~fftpack')
     # SOFA dependency suffers the same problem in CMakeLists.txt as readline;
     # force a dependency when building unit tests
     depends_on('sofa-c', type='test')
@@ -69,6 +69,7 @@ class Casacore(CMakePackage):
     depends_on('py-numpy', when='+python')
     depends_on('gsl', when='@3.5.0:')
 
+    patch("fix_bytepacker.h.patch",when='@3.5.0')
         
     def cmake_args(self):
         args = ['-DCMAKE_Fortran_FLAGS=-fallow-argument-mismatch']
@@ -104,6 +105,7 @@ class Casacore(CMakePackage):
             args.extend(['-DBUILD_PYTHON=YES', '-DBUILD_PYTHON3=NO'])
 
         args.append('-DBUILD_TESTING=OFF')
+        
         return args
 
     def patch(self):

@@ -1,0 +1,10 @@
+--- a/json/Makefile	2024-12-20 16:02:14.000000000 +0800
++++ b/json/Makefile	2024-12-20 16:02:51.000000000 +0800
+@@ -24,6 +24,7 @@
+ all:
+ 	./get_action_list.sh > action_list
+ 	../src/lib/plumed --no-mpi gen_json --actions action_list > syntax.json
++	grep -v '\[CRAYBLAS_WARNING\]' syntax.json > syntax_clean.json && mv syntax_clean.json syntax.json
+ ifeq (, $(shell which jq))
+ 	@echo Could not find jq executable so unable to test if syntax.json is valid json.  Consider running sudo apt-get install jq
+ else

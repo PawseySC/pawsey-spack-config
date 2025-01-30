@@ -4,11 +4,12 @@
 spack:
   definitions:
   - packages:
-    - wrf@4.5.1 ^cmake@3.27.7 +doc+ncurses+ownlibs  #~qt Ilkhom: qt variant of cmake is removed from spack/0.21.0 # charris: manual build for em_real okay in Nov sprint, using --only dependencies and option 47
+    - wrf@4.6.1  build_type=dmpar compile_type=em_real  #~qt Ilkhom: qt variant of cmake is removed from spack/0.21.0 # charris: manual build for em_real okay in Nov sprint, using --only dependencies and option 47
+    #- wrf@4.6.1 ^cmake@3.30.5 +doc+ncurses+ownlibs  #~qt Ilkhom: qt variant of cmake is removed from spack/0.21.0 # charris: manual build for em_real okay in Nov sprint, using --only dependencies and option 47
   specs:
   - matrix:
     - [$packages]
-    - ['%gcc@12.2.0']
+    - ['%gcc@13.3.0']
     - [^python@3.11.6]
     - [target=zen3]
   view: false

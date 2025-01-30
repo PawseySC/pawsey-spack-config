@@ -25,6 +25,7 @@ class Idg(CMakePackage, CudaPackage):
     depends_on('fftw-api@3')
     depends_on('blas')
 
+    patch("fix_FFT.cpp.patch")
 
     def cmake_args(self):
         args = []

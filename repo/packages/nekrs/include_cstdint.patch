@@ -1,0 +1,8 @@
+--- a/3rd_party/occa/src/occa/internal/modes/dpcpp/polyfill.hpp	2024-12-15 00:11:45.000000000 +0800
++++ b/3rd_party/occa/src/occa/internal/modes/dpcpp/polyfill.hpp	2024-12-15 00:11:50.000000000 +0800
+@@ -1,4 +1,5 @@
+ #include <occa/defines.hpp>
++#include <cstdint>
+ 
+ #ifndef OCCA_MODES_DPCPP_POLYFILL_HEADER
+ #define OCCA_MODES_DPCPP_POLYFILL_HEADER

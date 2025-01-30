@@ -3,32 +3,32 @@ spack:
   - packages:
     
     # aocc, rocm, gcc, llvm: provided by system installations
-    - perl@5.38.0
+    - perl@5.40.0
     # this is a proposed change to eliminate openss and older go
     #- openssl@3.0.7 ^perl@5.36.0
     # do we really need openssl 3.0.7?
     #- go@1.17.2 ^openssl@3.0.7
-    - go@1.21.3
+    - go@1.23.2
     
     # NotReadyYet:    
     # - julia@1.6.1 #Default recipe is very weak. Faulty. Lots of needed dependencies are missing.
-    - openjdk@17.0.8.1_1
+    - openjdk@21.0.3_9
     #- r@4.3.0        
-    - ruby@3.1.0     
+    - ruby@3.3.5     
     
     # latest version of rust available may have issues but spack listed latest release is fine. 
     #- rust@1.70.0 ^python@3.11.6 +optimizations+zlib   
   - py-utilities:
     - py-pip@23.1.2
-    - py-setuptools@68.0.0
+    - py-setuptools@59.4.0
   specs:
   - matrix:
     - [$py-utilities]
     - [^python@3.11.6 +optimizations+zlib]
-    - ['%cce@16.0.1']
+    - ['%cce@18.0.0']
     - [target=zen3]
   - matrix:
     - [$packages]
-    - ['%cce@16.0.1']
+    - ['%cce@18.0.0']
     - [target=zen3]
   view: false

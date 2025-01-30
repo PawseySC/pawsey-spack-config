@@ -1,0 +1,11 @@
+--- a/src/dump_cfg.cpp	2024-12-13 10:21:51.000000000 +0800
++++ b/src/dump_cfg.cpp	2024-12-13 10:22:47.000000000 +0800
+@@ -142,7 +142,7 @@
+       header += fmt::format("auxiliary[{}] = {}\n",i-5,keyword_user[i]);
+     else
+       header += fmt::format("auxiliary[{}] = {}\n",i-5,auxname[i-5]);
+-  fmt::print(fp, header);
++  fmt::print(fp, "{}", header);
+ }
+ 
+ /* ----------------------------------------------------------------------

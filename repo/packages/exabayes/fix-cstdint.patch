@@ -1,0 +1,10 @@
+--- a/src/config/BlockRunParameters.hpp
++++ b/src/config/BlockRunParameters.hpp
+@@ -5,6 +5,7 @@
+ #include <cassert>
+ #include "ExaBlock.hpp"
+ #include "common.h"
++#include <cstdint>
+ 
+ 
+ class BlockRunParameters : public ExaBlock

@@ -1,0 +1,16 @@
+--- a/3rd_party/occa/src/occa/internal/modes/hip/utils.cpp	2024-12-16 12:28:37.000000000 +0800
++++ b/3rd_party/occa/src/occa/internal/modes/hip/utils.cpp	2024-12-16 12:35:17.000000000 +0800
+@@ -57,11 +57,11 @@
+       OCCA_HIP_ERROR("Getting HIP device properties",
+                      hipGetDeviceProperties(&hipProps, deviceId));
+ 
+-      if (hipProps.gcnArch) { // AMD or NVIDIA
++      if (strlen(hipProps.gcnArchName) > 0) { // AMD or NVIDIA
+ #if HIP_VERSION >= 306
+         return hipProps.gcnArchName;
+ #else
+-        return "gfx" + toString(hipProps.gcnArch);
++        return std::string(hipProps.gcnArchName); // Ensure backward compatibility
+ #endif
+       }
+ 

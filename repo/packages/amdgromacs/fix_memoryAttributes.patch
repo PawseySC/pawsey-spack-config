@@ -1,0 +1,11 @@
+--- a/src/gromacs/gpu_utils/gpu_utils.hip.cpp	2024-12-14 23:06:25.000000000 +0800
++++ b/src/gromacs/gpu_utils/gpu_utils.hip.cpp	2024-12-14 23:07:18.000000000 +0800
+@@ -90,7 +90,7 @@
+ //#if HIPRT_VERSION < 11 * 1000
+ //            isPinned = true;
+ //#else
+-            isPinned = (memoryAttributes.memoryType == hipMemoryTypeHost);
++            isPinned = (memoryAttributes.isManaged == 0);
+ //#endif
+             break;
+ 

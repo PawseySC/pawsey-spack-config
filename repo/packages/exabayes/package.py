@@ -38,6 +38,7 @@
 # < 
 # < 
 # Contribute recipe and patch
+# Pawsey, Ilkhom: Added patch to #include <cstdint> to BlockRunParameters.hpp
 class Exabayes(AutotoolsPackage):
     """ExaBayes is a software package for Bayesian tree inference. It is
        particularly suitable for large-scale analyses on computer clusters."""
@@ -65,6 +66,8 @@ class Exabayes(AutotoolsPackage):
 
     # configure updated to better determine if MPI compiler available
     patch('configure_mpi.patch', level=0, when='@1.5.1: +mpi', )
+    # The following patch adds #include <cstdint> to BlockRunParameters.hpp
+    patch('fix-cstdint.patch')
 
     def configure_args(self):
         args = []

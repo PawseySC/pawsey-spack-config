@@ -142,7 +142,8 @@ modules:
         "lammps ~rocm": 'applications/{name}/{version}'
         "lammps +rocm": 'applications/{name}-amd-gfx90a/{version}'
         "namd +rocm": 'applications/{name}-amd-gfx90a/{version}'
-        "namd ~rocm": 'applications/{name}/{version}'
+        "namd@2 ~rocm": 'applications/{name}2/{version}'
+        "namd@3 ~rocm": 'applications/{name}3/{version}'
         nektar: 'applications/{name}/{version}'
         "nekrs +rocm": 'applications/{name}-amd-gfx90a/{version}'
         nwchem: 'applications/{name}/{version}'
@@ -373,6 +374,10 @@ modules:
         hpcviewer: 'developer-tools/{name}/{version}'
         py-hatchet: 'developer-tools/{name}/{version}'
         omnitrace: 'developer-tools/{name}/{version}'
+
+        # py-rpds-py and py-markupsafe do not need a hash to install shpc
+        py-rpds-py: 'dependencies/.py-rpds-py/{version}'
+        py-markupsafe: 'dependencies/.py-markupsafe/{version}'
 
         # git needs special name, because `.git` is ignored by Lmod
         git: 'dependencies/.git-module/{version}-{hash:7}'

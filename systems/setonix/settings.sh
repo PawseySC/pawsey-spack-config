@@ -3,7 +3,7 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2024.05"
+DATE_TAG="2025.02"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
     INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
@@ -37,7 +37,7 @@ fi
 USER_PERMANENT_FILES_PREFIX='/software/projects'
 USER_TEMP_FILES_PREFIX='/scratch'
 SPACK_USER_CONFIG_PATH="$MYSOFTWARE/setonix/$DATE_TAG/.spack_user_config"
-BOOTSTRAP_PATH="$MYSOFTWARE/setonix/$DATE_TAG/.spack_user_config/bootstrap"
+BOOTSTRAP_PATH='$MYSOFTWARE/setonix/'$DATE_TAG/.spack_user_config/bootstrap
 # Set a new mirror where to fetch prebuilt binaries, if any.
 SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
 # When SPACK_POPULATE_CACHE=1, spack will push binaries in the above cache location for later use.
@@ -54,18 +54,19 @@ RFM_TEST_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_checks
 
 archs="zen2 zen3"
 # compiler versions (needed for module trees with compiler dependency)
-gcc_version="12.2.0"
-cce_version="16.0.1"
-aocc_version="3.2.0"
+gcc_version="13.3.0"
+gcc_versionO="13.3.1"
+cce_version="18.0.0"
+aocc_version="5.0.0"
 
 # architecture of login/compute nodes (needed by Singularity symlink module)
 cpu_arch="zen3"
 
 # tool versions
-spack_version="0.21.0" # the prefix "v" is added in setup_spack.sh
+spack_version="0.23.0" # the prefix "v" is added in setup_spack.sh
 singularity_version="4.1.0-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="4.1.0-mpi" # has to match the version in the Spack env yaml + mpi tag
-shpc_version="0.1.28"
+shpc_version="0.1.30"
 shpc_registry_version="6daa16631460b9a93db2b9580dae360397d00aa7"
 
 # python (and py tools) versions
@@ -74,7 +75,7 @@ python_version="3.11.6" # has to match the version in the Spack env yaml
 setuptools_version="59.4.0" # has to match the version in the Spack env yaml
 pip_version="23.1.2" # has to match the version in the Spack env yaml
 # r major minor version
-r_version_majorminor="4.3.0"
+r_version_majorminor="4.4.1"
 # reframe major minor version
 reframe_version="3.12.0"
 
@@ -96,6 +97,7 @@ dependencies
 # list of spack build environments - missing vis
 env_list="
 utils
+singularity_env
 num_libs
 python
 io_libs
@@ -232,11 +234,11 @@ spack_module_dir="${utilities_modules_dir}/spack"
 # Use the Cray provided ROCm until we have a stable custom build.
 
 ROCM_VERSIONS=(
-"5.7.3"
+"6.1.3"
 )
 
 ROCM_PATHS=(
-"/software/setonix/rocm/5.7.3"
+"/opt/rocm-6.1.3"
 )
 
 fi # end include guard
