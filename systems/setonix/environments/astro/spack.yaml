@@ -22,7 +22,8 @@ spack:
   - casacore-new-set:
     - casacore@3.5.0 +openmp+python+hdf5 datapath=setonix build_type=Release
   - astro-util-set:
-    - cfitsio
+    - cfitsio@3.49 +reentrant
+    - cfitsio@4.4.0 +reentrant
     - wcslib +cfitsio
     - wcslib ~cfitsio  
     - pgplot
