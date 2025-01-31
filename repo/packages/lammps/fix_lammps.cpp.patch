@@ -1,0 +1,11 @@
+--- a/src/lammps.cpp	2025-01-31 16:36:43.000000000 +0800
++++ b/src/lammps.cpp	2025-01-31 16:40:04.000000000 +0800
+@@ -628,7 +628,7 @@
+     // screen and logfile messages for universe and world
+ 
+     if ((universe->me == 0) && (!helpflag)) {
+-      const char fmt[] = "LAMMPS ({})\nRunning on {} partitions of processors\n";
++      const std::string fmt = "LAMMPS ({})\nRunning on {} partitions of processors\n";
+       if (universe->uscreen)
+         fmt::print(universe->uscreen,fmt,version,universe->nworlds);
+ 
