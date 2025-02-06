@@ -9,6 +9,8 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
     maintainers = ["d3v-null"]
 
     version("main",  branch="main")
+    version("0.5.0", tag="v0.5.0")
+    version("0.5.0-devel", tag="v0.5.0-devel")
     version("0.4.1", tag="v0.4.1")
     version("0.4.1-peel", tag="v0.4.1-peel")
     version("0.4.1-devel", tag="v0.4.1-devel")
