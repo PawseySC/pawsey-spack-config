@@ -21,7 +21,7 @@ spack:
     #- lammps@=20240829.1 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +hwloc+memkind+numactl+openmp+tuning+rocm build_type=Release
     #- lammps@=20230802.4 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +hwloc+memkind+numactl+openmp+tuning+rocm build_type=Release      
     #- lammps@=20240829.1 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +rocm amdgpu_target=gfx90a +hwloc +memkind +numactl +openmp +tuning build_type=Release 
-    - lammps@=20230802.4 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +rocm amdgpu_target=gfx90a +hwloc +memkind +numactl +openmp +tuning build_type=Release 
+    - lammps@=20230802.4 amdgpu_target=gfx90a +rocm ^kokkos +rocm amdgpu_target=gfx90a +hwloc +memkind +numactl +openmp +tuning build_type=Release 
 
 
   specs:
