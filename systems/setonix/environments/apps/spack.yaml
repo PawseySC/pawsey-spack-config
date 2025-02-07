@@ -29,8 +29,8 @@ spack:
   - lammps:
     # +latte and +cg-sdk is removed from the cpu build as well so we can use the same recipe for cpu and gpu lammps builds
     # lammps: LAMMPS is incompatible with Kokkos 4.x until @20230802 so reverting to kokkos@3.7.02
-    - lammps@=20240829.1 ~rocm ^kokkos@4.4.01+hwloc+memkind+numactl+openmp+tuning~rocm build_type=Release
-    - lammps@=20230802.4 ~rocm ^kokkos@4.4.01+hwloc+memkind+numactl+openmp+tuning~rocm build_type=Release
+    - lammps@=20240829.1 ~rocm ^kokkos+hwloc+memkind+numactl+openmp+tuning~rocm build_type=Release
+    - lammps@=20230802.4 ~rocm ^kokkos+hwloc+memkind+numactl+openmp+tuning~rocm build_type=Release
 
 #^kokkos@3.7.02
 
