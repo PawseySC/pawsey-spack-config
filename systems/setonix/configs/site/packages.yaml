@@ -719,6 +719,17 @@ packages:
       - spec: hip@6.1.3
         prefix: /opt/rocm-6.1.3
 
+  miopen-hip:
+      buildable: false
+      externals:
+      - spec: miopen-hip@6.1.3
+        prefix: /opt/rocm-6.1.3
+
+  hiprand:
+      buildable: false
+      externals:
+      - spec: hiprand@6.1.3
+        prefix: /opt/rocm-6.1.3
 
   rocsparse:
       buildable: false
