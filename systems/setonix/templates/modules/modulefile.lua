@@ -99,7 +99,7 @@ setenv("NXF_SINGULARITY_CACHEDIR", os.getenv("MYSOFTWARE").."/.nextflow_singular
 -- LD_LIBRARY_PATH addition 
 local singularity_ld_path = ""
 -- add CRAY_PATHS START
-singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/mpich/default/ofi/gnu/9.1/lib-abi-mpich:/opt/cray/pe/mpich/default/gtl/lib:/opt/cray/xpmem/default/lib64:/opt/cray/pe/pmi/default/lib:/opt/cray/pe/pals/default/lib"
+singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/mpich/default/ofi/gnu/12.3/lib-abi-mpich:/opt/cray/pe/mpich/default/gtl/lib:/opt/cray/xpmem/default/lib64:/opt/cray/pe/pmi/default/lib:/opt/cray/pe/pals/default/lib"
 singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/gcc-libs"
 -- add CRAY_PATHS END
 -- add MPI START
