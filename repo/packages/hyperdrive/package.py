@@ -22,6 +22,7 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
     variant("portable", default=True, description="Disable native CPU optimizations")
 
     depends_on("rust@1.64.0:")
+    depends_on("rust@1.80.0:", when="@0.5.0:")
     depends_on("cmake", type="build")
     # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.
     # default spack cfitsio does not give the +reentrant option
