@@ -358,10 +358,12 @@ modules:
         presto: 'astro-applications/{name}/{version}'
         calceph: 'astro-applications/{name}/{version}'
         giant-squid: 'astro-applications/{name}/{version}'
-        'hyperbeam +rocm': 'astro-applications/{name}-amd-gfx90a/{version}'
-        hyperbeam: 'astro-applications/{name}/{version}'
-        'hyperdrive +rocm': 'astro-applications/{name}-amd-gfx90a/{version}'
-        hyperdrive: 'astro-applications/{name}/{version}'
+        # naming convention for astronomy GPU software does not follow
+        # the usual one as per explicit request of Dev Null.
+        'hyperbeam +rocm': 'astro-applications/{name}/{version}'
+        hyperbeam: 'astro-applications/{name}/{version}-cpu'
+        'hyperdrive +rocm': 'astro-applications/{name}/{version}'
+        hyperdrive: 'astro-applications/{name}/{version}-cpu'
         #performance tests 
         "hpl ~openmp": 'benchmarking/{name}/{version}'
         "hpl +openmp": 'benchmarking/{name}/{version}+openmp'
