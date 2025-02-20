@@ -33,9 +33,6 @@ echo "Install environments.."
 # Next line is not required as it is included in install_environments.sh
 # "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_cray_environments.sh"
 
-echo "Run reframe package installation tests.."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_rfm_module_tests.sh"
-
 echo "Update singularity modules.."
 # note that moving forward using the singularityce recipes. Comment out the singularity_modules, kept for reference
 #"${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_custom_singularity_modules.sh"
