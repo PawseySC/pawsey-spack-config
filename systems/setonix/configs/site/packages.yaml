@@ -299,8 +299,8 @@ packages:
 
   rust:
     externals:
-    - spec: rust@1.78.0
-      prefix: /software/setonix/2025.02/software/linux-sles15-zen3/gcc-13.3.0/rust-1.78.0/toolchains/stable-x86_64-unknown-linux-gnu
+    - spec: rust@1.84.1
+      prefix: /software/setonix/2025.02/software/linux-sles15-zen3/gcc-13.3.0/rust-1.84.1/toolchains/stable-x86_64-unknown-linux-gnu
     buildable: false
 
   libseccomp:
@@ -719,6 +719,17 @@ packages:
       - spec: hip@6.1.3
         prefix: /opt/rocm-6.1.3
 
+  miopen-hip:
+      buildable: false
+      externals:
+      - spec: miopen-hip@6.1.3
+        prefix: /opt/rocm-6.1.3
+
+  hiprand:
+      buildable: false
+      externals:
+      - spec: hiprand@6.1.3
+        prefix: /opt/rocm-6.1.3
 
   rocsparse:
       buildable: false
