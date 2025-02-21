@@ -1,3 +1,4 @@
+
 modules:
 
   default:
@@ -200,9 +201,9 @@ modules:
         "kokkos +openmp +rocm": 'libraries/{name}-amd-gfx90a/{version}-openmp'
         "kokkos +openmp ~rocm": 'libraries/{name}/{version}-openmp' 
         netlib-lapack: 'libraries/{name}/{version}'
+        openblas: 'libraries/{name}/{version}'
         "blaspp +rocm": 'libraries/{name}-amd-gfx90a/{version}'
         "blaspp ~rocm": 'libraries/{name}/{version}'
-        blaspp: 'libraries/{name}/{version}'
         opencv: 'libraries/{name}/{version}'
         plasma: 'libraries/{name}/{version}'
         "petsc +complex~trilinos": 'libraries/{name}/{version}-complex'
