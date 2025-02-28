@@ -70,8 +70,9 @@ fi
 export PATH="${INSTALL_PREFIX}/${shpc_install_dir}/bin":$PATH
 export PYTHONPATH="${INSTALL_PREFIX}/${shpc_install_dir}/lib/python${python_version_major}.${python_version_minor}/site-packages":$PYTHONPATH
 
-# need to create this registry directory, otherwise corresponding config command above will fail
+# need to create these registry directories, otherwise corresponding config commands will fail
 mkdir -p ${USER_PERMANENT_FILES_PREFIX}/$PAWSEY_PROJECT/$USER/setonix/$DATE_TAG/shpc_registry
+mkdir -p ${USER_PERMANENT_FILES_PREFIX}/$PAWSEY_PROJECT/setonix/$DATE_TAG/shpc_registry
 
 #### ALL SHPC CONFIG COMMANDS HERE
 # in alternative, we could provide edited yamls, just to copy over

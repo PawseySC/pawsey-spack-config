@@ -51,7 +51,7 @@ compilers:
     modules:
     - PrgEnv-gnu
     - gcc-native/13.2
-    - craype
+    - craype/2.7.32
     - craype-x86-milan
     - craype-network-ofi
     - xpmem
@@ -77,7 +77,7 @@ compilers:
     modules:
     - PrgEnv-gnu
     - gcc-native/13.2
-    - craype
+    - craype/2.7.32
     - craype-x86-milan
     - craype-network-ofi
     - xpmem
@@ -207,7 +207,7 @@ compilers:
     modules:
     - PrgEnv-cray
     - cce/18.0.0
-    - craype
+    - craype/2.7.32
     - craype-x86-milan
     - craype-network-ofi
     - xpmem

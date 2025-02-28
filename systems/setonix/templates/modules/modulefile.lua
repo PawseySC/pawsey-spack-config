@@ -99,7 +99,7 @@ setenv("NXF_SINGULARITY_CACHEDIR", os.getenv("MYSOFTWARE").."/.nextflow_singular
 -- LD_LIBRARY_PATH addition 
 local singularity_ld_path = ""
 -- add CRAY_PATHS START
-singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/mpich/default/ofi/gnu/9.1/lib-abi-mpich:/opt/cray/pe/mpich/default/gtl/lib:/opt/cray/xpmem/default/lib64:/opt/cray/pe/pmi/default/lib:/opt/cray/pe/pals/default/lib"
+singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/mpich/8.1.30/ofi/gnu/12.3/lib-abi-mpich:/opt/cray/pe/mpich/8.1.30/gtl/lib:/opt/cray/xpmem/default/lib64:/opt/cray/pe/pmi/default/lib:/opt/cray/pe/pals/default/lib"
 singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/gcc-libs"
 -- add CRAY_PATHS END
 -- add MPI START
@@ -165,7 +165,7 @@ singularity_ld_preload = singularity_ld_preload .. ":/lib64/libselinux.so.1"
 singularity_ld_preload = singularity_ld_preload .. ":/usr/lib64/liblustreapi.so.1:/usr/lib64/liblnetconfig.so.4:/usr/lib64/libyaml-0.so.2:/usr/lib64/libnl-genl-3.so.200:/usr/lib64/libnl-3.so.200"
 -- add MPI END
 -- add GPUMPI START
-singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/mpich/default/gtl/lib/libmpi_gtl_hsa.so.0"
+singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/mpich/8.1.30/gtl/lib/libmpi_gtl_hsa.so.0"
 -- add GPUMPI END
 prepend_path("SINGULARITYENV_LD_PRELOAD", singularity_ld_preload)
 
