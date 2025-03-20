@@ -13,17 +13,18 @@ class GiantSquid(Package):
     homepage = "https://github.com/MWATelescope/giant-squid"
     git = "https://github.com/MWATelescope/giant-squid.git"
 
-    maintainers = ["d3v-null"]
+    maintainers = ["gsleap", "d3v-null"]
 
     version("1.1.0", tag="v1.1.0")
     version("1.0.3", tag="v1.0.3")
+    version("2.0.1", tag="v2.0.1")
 
-    depends_on("rust@1.70.0:", type="build")
+    depends_on("rust@1.71.1:", type="build")
 
     def setup_build_environment(self, env):
         build_dir = self.stage.source_path
-        env.set('CARGO_HOME', f"{build_dir}/.cargo")
-        env.set('RUST_BACKTRACE', 1)
+        env.set("CARGO_HOME", f"{build_dir}/.cargo")
+        env.set("RUST_BACKTRACE", 1)
 
     def install(self, spec, prefix):
         cargo = Executable("cargo")
