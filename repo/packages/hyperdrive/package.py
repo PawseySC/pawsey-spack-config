@@ -1,14 +1,16 @@
 from spack.package import *
 
+
 class Hyperdrive(Package, ROCmPackage, CudaPackage):
     """A preprocessing pipeline for the Murchison Widefield Array"""
 
     homepage = "https://github.com/MWATelescope/mwa_hyperdrive"
     git = "https://github.com/MWATelescope/mwa_hyperdrive.git"
 
-    maintainers = ["d3v-null"]
+    maintainers = ["d3v-null", "gsleap"]
 
-    version("main",  branch="main")
+    version("main", branch="main")
+    version("0.5.1", tag="v0.5.1")
     version("0.5.0", tag="v0.5.0")
     version("0.5.0-devel", tag="v0.5.0-devel")
     version("0.4.1", tag="v0.4.1")
@@ -30,8 +32,8 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
     # hdf5-sys v0.8 built with 110 api https://crates.io/crates/hdf5-sys/0.8.0
     depends_on("hdf5@1.10 +cxx ~mpi api=v110", when="~hdf5-static")
 
-    depends_on("aoflagger@3.0.0:") # because of Birli
-    depends_on("erfa") # because of Marlu
+    depends_on("aoflagger@3.0.0:")  # because of Birli
+    depends_on("erfa")  # because of Marlu
     depends_on("fontconfig", when="+plotting")
     depends_on("libpng", when="+plotting")
 
@@ -39,21 +41,21 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
 
     def setup_build_environment(self, env):
         build_dir = self.stage.source_path
-        env.set('CARGO_HOME', f"{build_dir}/.cargo")
+        env.set("CARGO_HOME", f"{build_dir}/.cargo")
         if self.spec.satisfies("+rocm"):
             amdgpu_target = ",".join(self.spec.variants["amdgpu_target"].value)
-            env.set('HYPERDRIVE_HIP_ARCH', amdgpu_target)
+            env.set("HYPERDRIVE_HIP_ARCH", amdgpu_target)
             hip_spec = self.spec["hip"]
             rocm_dir = hip_spec.prefix
             # print(f"rocm_dir: {rocm_dir}, amdgpu_target: {amdgpu_target}")
             if hip_spec.satisfies("@6:"):
-                env.set('HIP_PATH', rocm_dir)
+                env.set("HIP_PATH", rocm_dir)
             else:
-                env.set('HIP_PATH', rocm_dir)
-                env.set('ROCM_PATH', rocm_dir)
+                env.set("HIP_PATH", rocm_dir)
+                env.set("ROCM_PATH", rocm_dir)
         if self.spec.satisfies("+cuda"):
             cuda_arch = spec.variants["cuda_arch"].value
-            env.set('HYPERDRIVE_CUDA_COMPUTE', cuda_arch)
+            env.set("HYPERDRIVE_CUDA_COMPUTE", cuda_arch)
             cuda_dir = self.spec["cuda"].prefix
             # print(f"cuda_dir: {cuda_dir}, cuda_arch: {cuda_arch}")
         if self.spec.satisfies("~portable"):
@@ -76,7 +78,14 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
     def install(self, spec, prefix):
         cargo = Executable("cargo")
         features = self.get_features()
-        cargo("install", "--path=.", f"--root={prefix}", "--no-default-features", f"--features={','.join(features)}", "--locked")
+        cargo(
+            "install",
+            "--path=.",
+            f"--root={prefix}",
+            "--no-default-features",
+            f"--features={','.join(features)}",
+            "--locked",
+        )
 
     @run_after("install")
     @on_package_attributes(run_tests=True)
