@@ -4,7 +4,7 @@ spack:
   - packages:
 # py-pip and py-setuptools: installed in env_langs
 # snakemake: docs recommend to install with conda
-#    - ffmpeg@4.4.1 +avresample
+    - ffmpeg@7.0.2 +libx264 +doc +drawtext +libaom +libmp3lame +libopenjpeg +libopus +libsnappy +libspeex +libvorbis +libvpx +libwebp +libxml2 +libzmq +lzma +nonfree +openssl +sdl2
 ## for now    - ffmpeg@6.1.1
     - gnuplot@6.0.0
 ## for now    - llvm@15.0.4 ~polly ~gold # Ilkhom: ~omp_as_runtime variant is removed from spack/0.21.0
