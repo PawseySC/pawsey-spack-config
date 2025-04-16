@@ -15,6 +15,7 @@ class GiantSquid(Package):
 
     maintainers = ["gsleap", "d3v-null"]
 
+    version("2.1.0", tag="v2.1.0")
     version("2.0.1", tag="v2.0.1")
     version("1.1.0", tag="v1.1.0")
     version("1.0.3", tag="v1.0.3")

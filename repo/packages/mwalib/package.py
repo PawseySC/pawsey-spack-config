@@ -18,9 +18,10 @@ class Mwalib(Package):
     homepage = "https://github.com/MWATelescope/mwalib"
     git = "https://github.com/MWATelescope/mwalib.git"
 
-    maintainers = ["d3v-null"]
+    maintainers = ["gsleap", "d3v-null"]
 
     version("main", branch="main")
+    version("1.8.7", tag="v1.8.7")
     version("1.8.2", tag="v1.8.2")
     version("1.5.0", tag="v1.5.0")
     version("1.4.0", tag="v1.4.0")
@@ -53,7 +54,7 @@ class Mwalib(Package):
 
     def get_features(self):
         features = []
-        if self.spec.satisfies('+cfitsio-static'):
+        if self.spec.satisfies("+cfitsio-static"):
             features += ["cfitsio-static"]
         return features
 
@@ -69,10 +70,10 @@ class Mwalib(Package):
 
     def setup_build_environment(self, env):
         build_dir = self.stage.source_path
-        env.set('CARGO_HOME', f"{build_dir}/.cargo")
+        env.set("CARGO_HOME", f"{build_dir}/.cargo")
         # env.set('RUST_BACKTRACE', 1) # for debugging
         if self.spec.satisfies("+cfitsio-static"):
-            env.set('MWALIB_LINK_STATIC_CFITSIO', 1)
+            env.set("MWALIB_LINK_STATIC_CFITSIO", 1)
         if self.spec.satisfies("~portable"):
             env.append_flags("RUSTFLAGS", f"-C target-cpu=native")
 
@@ -91,7 +92,7 @@ class Mwalib(Package):
                 maturin = which("maturin")
                 pip = which("pip3")
                 maturin("build", *self.get_build_args(python=True))
-                whl_file =list(os.listdir("target/wheels"))[0]
+                whl_file = list(os.listdir("target/wheels"))[0]
                 pip("install", f"--prefix={prefix}", f"target/wheels/{whl_file}")
 
     @run_after("install")
@@ -109,9 +110,12 @@ class Mwalib(Package):
             f"examples/{exe}.c",
             f"-L{self.prefix.lib}",
             f"-I{self.prefix.include}",
-            "-lm", "-lpthread", "-ldl",
+            "-lm",
+            "-lpthread",
+            "-ldl",
             "-lmwalib",
-            "-o", exe,
+            "-o",
+            exe,
         )
         Executable(f"./{exe}")("test_files/1384808344/1384808344_metafits.fits")
 
@@ -120,7 +124,7 @@ class Mwalib(Package):
             env.prepend_path("LD_LIBRARY_PATH", self.spec["cfitsio"].prefix.lib)
         if self.spec.satisfies("+python"):
             python_version = self.spec["python"].version.string
-            python_version = python_version[:python_version.rfind(".")]
+            python_version = python_version[: python_version.rfind(".")]
             env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
 
     def setup_dependent_run_environment(self, env, dependent_spec):
@@ -128,5 +132,5 @@ class Mwalib(Package):
             env.prepend_path("LD_LIBRARY_PATH", self.spec["cfitsio"].prefix.lib)
         if self.spec.satisfies("+python") and dependent_spec.package.extends(self.spec):
             python_version = self.spec["python"].version.string
-            python_version = python_version[:python_version.rfind(".")]
+            python_version = python_version[: python_version.rfind(".")]
             env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")

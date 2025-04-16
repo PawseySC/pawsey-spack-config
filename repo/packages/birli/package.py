@@ -1,14 +1,16 @@
 from spack.package import *
 
+
 class Birli(Package):
     """A preprocessing pipeline for the Murchison Widefield Array"""
 
     homepage = "https://github.com/MWATelescope/birli"
     git = "https://github.com/MWATelescope/birli.git"
 
-    maintainers = ["d3v-null"]
+    maintainers = ["d3v-null", "gsleap"]
 
     version("main", branch="main")
+    version("0.17.1", tag="v0.17.1")
     version("0.16.0", tag="v0.16.0")
     version("0.15.1", tag="v0.15.1")
     version("0.14.0", tag="v0.14.0")
@@ -29,27 +31,27 @@ class Birli(Package):
     depends_on("cfitsio@3.49 +reentrant")
 
     depends_on("aoflagger@3.0.0:")
-    depends_on("erfa") # because of Marlu
+    depends_on("erfa")  # because of Marlu
 
     test_requires_compiler = True
 
     def setup_build_environment(self, env):
         build_dir = self.stage.source_path
-        env.set('CARGO_HOME', f"{build_dir}/.cargo")
+        env.set("CARGO_HOME", f"{build_dir}/.cargo")
         if self.spec.satisfies("+cfitsio-static"):
-            env.set('MWALIB_LINK_STATIC_CFITSIO', 1)
+            env.set("MWALIB_LINK_STATIC_CFITSIO", 1)
         if self.spec.satisfies("~portable"):
             env.append_flags("RUSTFLAGS", f"-C target-cpu=native")
 
     def get_features(self):
         features = []
-        if self.spec.satisfies('+cfitsio-static'):
+        if self.spec.satisfies("+cfitsio-static"):
             features += ["cfitsio-static"]
         return features
 
     def get_cargo_args(self):
         args = []
-        if (features:=self.get_features()):
+        if features := self.get_features():
             args += [f"--features={','.join(features)}"]
         # args += ["--verbose"] # for debugging
         return args
