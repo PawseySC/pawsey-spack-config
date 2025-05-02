@@ -32,10 +32,10 @@ compilers:
 # Note also the addition of default flags
 
 # ===================================================================
-#                        GNU 12.2.0
+#                        GNU 14.2.0
 # ===================================================================
 - compiler:
-    spec: gcc@13.3.0
+    spec: gcc@14.2.0
     paths:
       cc: cc
       cxx: CC
@@ -50,34 +50,8 @@ compilers:
     target: any
     modules:
     - PrgEnv-gnu
-    - gcc-native/13.2
-    - craype/2.7.32
-    - craype-x86-milan
-    - craype-network-ofi
-    - xpmem
-    environment:
-      set:
-        PE_ENV: "GNU"
-    extra_rpaths: []
-
-- compiler:
-    spec: gcc@13.3.1
-    paths:
-      cc: cc
-      cxx: CC
-      f77: ftn
-      fc: ftn
-    flags:
-      cflags:
-      cxxflags:
-      cppflags:
-      fflags: -fallow-argument-mismatch
-    operating_system: sles15
-    target: any
-    modules:
-    - PrgEnv-gnu
-    - gcc-native/13.2
-    - craype/2.7.32
+    - gcc-native/14.2
+    - craype/2.7.34
     - craype-x86-milan
     - craype-network-ofi
     - xpmem
@@ -191,7 +165,7 @@ compilers:
 
 # cray compilers 
 - compiler:
-    spec: cce@18.0.0
+    spec: cce@19.0.0
     paths:
       cc: cc
       cxx: CC
@@ -206,35 +180,8 @@ compilers:
     target: any
     modules:
     - PrgEnv-cray
-    - cce/18.0.0
-    - craype/2.7.32
-    - craype-x86-milan
-    - craype-network-ofi
-    - xpmem
-    environment:
-      set:
-        PE_ENV: "CRAY"
-    extra_rpaths: []
-
-# cray compilers 
-- compiler:
-    spec: cce@18.0.1
-    paths:
-      cc: cc
-      cxx: CC
-      f77: ftn
-      fc: ftn
-    flags:
-      cflags: -O3
-      cxxflags: -O3
-      cppflags: -O3
-      fflags: -O3
-    operating_system: sles15
-    target: any
-    modules:
-    - PrgEnv-cray
-    - cce/18.0.0
-    - craype
+    - cce/19.0.0
+    - craype/2.7.34
     - craype-x86-milan
     - craype-network-ofi
     - xpmem

@@ -73,7 +73,7 @@ spack:
   specs:
   - matrix:
     - [$casacore-set]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
     - [+python build_type=Release ^python@3.11.6]
     - [+openmp, ~openmp]
@@ -82,31 +82,31 @@ spack:
         # can't use hdf%@1.14.3 for casacore yet
   - matrix:
     - [$casacore-legacy]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
   - matrix:
     - [$astro-util-set, $askap-util-set]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
 
   - matrix:
     - [ $mwa-no-python]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
 
   - matrix:
     - [$mwa-with-python]
     - [^python@3.11.6]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
 
   - matrix:
     - [$python-astro-set]
     - [^python@3.11.6]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
   - matrix:
     - [$casacore-new-set]
     - [^python@3.11.6]
     - [^boost@1.83.0]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
   view: false

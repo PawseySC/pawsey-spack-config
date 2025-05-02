@@ -31,11 +31,11 @@ spack:
     - matlab@R2021a key=$MATLAB_INSTALL_KEY mode=automated
 #  - matrix:
 #    - [cmake@3.30.5]
-#    - ['%gcc@13.3.0']
+#    - ['%gcc@14.2.0']
 #    - [target=zen3, target=zen2]
   specs:
   - matrix:
     - [$packages]
-    - ['%cce@18.0.0']
+    - ['%cce@19.0.0']
     - [target=zen3, target=zen2]
   view: false

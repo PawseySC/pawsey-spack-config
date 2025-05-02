@@ -68,28 +68,28 @@ spack:
   - matrix:
     - [$packages-with-python]
     - [^python@3.11.6 +optimizations+zlib~ssl]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
   - matrix:
     - [$packages-with-oldpython]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
   - matrix:
     - [$packages]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
   - matrix:
     - [$vasp_packages]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
   - matrix:
     - [$weather_utils]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
   - matrix:
     - [$lammps]
     - [+adios +asphere +atc +awpmd +bocs +body +brownian +class2 +colloid +colvars +compress +coreshell +dielectric +diffraction +dipole +dpd-basic +dpd-meso +dpd-react +dpd-smooth +drude +eff +extra-compute +extra-dump +extra-fix +extra-molecule +extra-pair +fep +ffmpeg +granular +h5md +interlayer +jpeg +kim +kokkos +kspace +latboltz +machdyn +manifold +manybody +mc +meam +mesont       +mgpt +misc +ml-iap +ml-snap +mofff +molecule +molfile +netcdf +openmp-package +opt +orient +peri +phonon +plugin +plumed +png +poems +ptm +python +qeq +qtb +reaction +reaxff +replica +rigid +shock +smtbq +sph +spin +srd +tally +uef +voronoi +yaff build_type=Release ]
 #    - [^plumed@2.9.0 ^adios2@2.9.2]  
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
   view: false

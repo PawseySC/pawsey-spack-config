@@ -3,7 +3,7 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2025.02"
+DATE_TAG="2025.04"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
     INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
@@ -54,16 +54,16 @@ RFM_TEST_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_checks
 
 archs="zen2 zen3"
 # compiler versions (needed for module trees with compiler dependency)
-gcc_version="13.3.0"
-gcc_versionO="13.3.1"
-cce_version="18.0.0"
+gcc_version="14.2.0"
+gcc_versionO="14.2.1"
+cce_version="19.0.0"
 aocc_version="5.0.0"
 
 # architecture of login/compute nodes (needed by Singularity symlink module)
 cpu_arch="zen3"
 
 # tool versions
-spack_version="0.23.0" # the prefix "v" is added in setup_spack.sh
+spack_version="0.23.1" # the prefix "v" is added in setup_spack.sh
 singularity_version="4.1.0-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="4.1.0-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.30"
@@ -234,11 +234,11 @@ spack_module_dir="${utilities_modules_dir}/spack"
 # Use the Cray provided ROCm until we have a stable custom build.
 
 ROCM_VERSIONS=(
-"6.1.3"
+"6.3.0"
 )
 
 ROCM_PATHS=(
-"/opt/rocm-6.1.3"
+"/opt/rocm-6.3.0"
 )
 
 fi # end include guard
