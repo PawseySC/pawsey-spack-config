@@ -650,3 +650,9 @@ class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
         else:
             options.append("-DGMX_VERSION_STRING_OF_FORK=spack")
         return options
+
+    def setup_build_environment(self, env):
+        spec = self.spec
+
+        if spec.satisfies("%gcc@14:"):
+            env.append_flags("CXXFLAGS", "-fpermissive")
