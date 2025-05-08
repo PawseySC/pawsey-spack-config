@@ -1,0 +1,11 @@
+--- a/libs/core/executors/include/hpx/executors/restricted_thread_pool_executor.hpp	2025-05-06 10:16:42.000000000 +0800
++++ b/libs/core/executors/include/hpx/executors/restricted_thread_pool_executor.hpp	2025-05-06 10:17:01.000000000 +0800
+@@ -242,7 +242,7 @@
+         /// \endcond
+ 
+     private:
+-        std::uint16_t const first_thread_;
++        std::uint16_t first_thread_;
+         mutable std::atomic<std::size_t> os_thread_;
+ 
+         embedded_executor exec_;
