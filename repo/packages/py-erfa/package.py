@@ -31,6 +31,9 @@ class PyErfa(PythonPackage):
     depends_on('py-pip', type='build')
     depends_on('py-packaging', type='build')
     depends_on('py-pkgconfig', type='build')
-    depends_on('py-numpy@1.13:', type=('build', 'run'))
+    depends_on('py-numpy@1.13:1', type=('build', 'run'))
     #depends_on('py-six', type=('build', 'run'))
     depends_on('erfa')
+
+    def setup_build_environment(self, env):
+        env.append_flags('CFLAGS', '-fpermissive -Wno-error=incompatible-pointer-types')
