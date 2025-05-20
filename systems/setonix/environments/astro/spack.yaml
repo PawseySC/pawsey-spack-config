@@ -47,20 +47,20 @@ spack:
     - wsclean@3.4 +mpi +idg +everybeam build_type=Release target=zen3
     - wsclean@3.4 ~mpi +idg +everybeam build_type=Release target=zen3
     - wsclean@2.9 +idg build_type=Release target=zen3
-    - mwalib@1.5.0+python~portable
+    - mwalib@1.8.7+python~portable
     - aoflagger@3.4.0 build_type=Release target=zen3 ^cfitsio@3.49
-    - hyperbeam@0.9.3 ~portable +python
+    - hyperbeam@0.10.2 ~portable +python
 #    - hyperbeam@0.9.3 ~portable +rocm +python amdgpu_target=gfx90a
-    - hyperdrive@0.4.1 ~portable
+    - hyperdrive@0.5.1 ~portable
 #    - hyperdrive@0.4.1 ~portable amdgpu_target=gfx90a +rocm
-    - birli@0.15.1 ~portable
+    - birli@0.17.1 ~portable
     - calceph@3.5.5 target=zen3
     - presto@5.0.1 target=zen3
 
   - mwa-no-python:
     - chgcentre build_type=Release target=zen3
-    - giant-squid@2.0.1 target=zen3
-    - giant-squid@2.0.1 target=zen2
+    - giant-squid@2.1.0 target=zen3
+    - giant-squid@2.1.0 target=zen2
 
   # TODO add versions 
   - python-astro-set:
