@@ -47,7 +47,7 @@ spack:
 # look into this file nektar/cmake/FindNativeBlasLapack.cmake
 # Custom Pawsey recipe, that builds all dependencies internally - OK
 #    - nektar@5.5.0 ^netlib-lapack@3.11.0 build_type=Release
-    - nektar@5.0.2 ^netlib-lapack@3.11.0 ^boost@1.72.0 build_type=Release
+    - nektar@5.0.2 build_type=Release ^netlib-lapack@3.11.0 ^boost@1.72.0
     - quantum-espresso@7.4 +epw +openmp hdf5=parallel
     - quantum-espresso@7.2 +epw +openmp hdf5=parallel
 

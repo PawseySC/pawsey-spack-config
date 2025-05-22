@@ -66,7 +66,7 @@ cpu_arch="zen3"
 spack_version="0.23.1" # the prefix "v" is added in setup_spack.sh
 singularity_version="4.1.0-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="4.1.0-mpi" # has to match the version in the Spack env yaml + mpi tag
-shpc_version="0.1.30"
+shpc_version="0.1.32"
 shpc_registry_version="9748412c407a1feed71837a79ad350a307e66253"
 
 # python (and py tools) versions
@@ -152,6 +152,7 @@ quay.io/biocontainers/velvet:1.2.10--h7132678_5
 quay.io/sarahbeecroft9/interproscan:5.56-89.0
 "
 
+#quay.io/pawsey/pytorch:2.6.0-rocm6.2.2
 container_list_mpi="
 quay.io/pawsey/openfoam:v2212
 quay.io/pawsey/openfoam:v2206
@@ -162,7 +163,6 @@ quay.io/pawsey/openfoam-org:10
 quay.io/pawsey/openfoam-org:9
 quay.io/pawsey/openfoam-org:8
 quay.io/pawsey/openfoam-org:7
-quay.io/pawsey/pytorch:2.6.0-rocm6.2.2
 quay.io/pawsey/tensorflow:2.12.1.570-rocm5.6.0
 amdih/cp2k
 amdih/namd

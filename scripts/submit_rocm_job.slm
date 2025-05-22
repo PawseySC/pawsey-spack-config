@@ -1,20 +1,22 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --exclusive
-#SBATCH --time=1-00:00:00
-#SBATCH --reservation=PAWSEY_GPU_TESTING
+#SBATCH --qos=pawseyoverride
+#SBATCH --time=3-00:00:00
+##SBATCH --reservation=PAWSEY_GPU_TESTING
 #SBATCH -p gpu
 #SBATCH -A pawsey0001-gpu 
 #SBATCH --gpus-per-node=8
 
 export SYSTEM=setonix
 export INSTALL_GROUP=pawsey0001
-export INSTALL_PREFIX=/software/setonix/2025.02
+export INSTALL_PREFIX=/scratch/pawsey0001/ilkhom/2025.04
 
+module load cpe/25.03
 module use $INSTALL_PREFIX/staff_modulefiles
-module --ignore-cache load pawseyenv/2025.02
-module load gcc-native/13.2
-module load spack/0.23.0
+module --ignore-cache load pawseyenv/2025.04
+module load gcc-native/14.2
+module load spack/0.23.1
 
 #export PKG_CONFIG_PATH=/usr/lib64/pkgconfig:$PKG_CONFIG_PATH
 
@@ -22,8 +24,8 @@ module load spack/0.23.0
 
 #Run rocm env on a gpu node with craype-accel-amd-gfx90a loaded
 cd ../systems/${SYSTEM}/environments/rocm
-module load craype-accel-amd-gfx90a
-module load rocm
+#module load craype-accel-amd-gfx90a
+#module load rocm
 spack env activate .
 spack concretize -f
 spack install -j128

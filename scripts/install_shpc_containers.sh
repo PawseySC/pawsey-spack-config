@@ -39,10 +39,10 @@ mkdir -p "${INSTALL_PREFIX}/${containers_root_dir}"
 # will take a while (container downloads)
 # if a container module has already been installed, its installation will complete quickly
 for container in $container_list ; do
-  shpc install $container
+  yes "yes" | shpc install $container
 done
 for container in $container_list_mpi ; do
-  shpc -c set:singularity_module:${singularity_name}/${singularity_mpi_version} install $container
+  yes "yes" | shpc -c set:singularity_module:${singularity_name}/${singularity_mpi_version} install $container
 done
 
 # customise Pawsey container modules

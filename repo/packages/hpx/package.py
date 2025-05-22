@@ -213,6 +213,7 @@ class Hpx(CMakePackage, CudaPackage, ROCmPackage):
     patch("mimalloc_no_version_requirement.patch", when="@:1.8.0 malloc=mimalloc")
 
     patch("fix_restricted_thread_pool_executor.hpp.patch", when="%gcc@14:")
+    patch("fix_restricted_thread_pool_executor.hpp.patch", when="%cce@19:")
 
     def url_for_version(self, version):
         if version >= Version("1.9.0"):
