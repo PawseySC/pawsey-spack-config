@@ -1,0 +1,11 @@
+--- a/wsclean/mwa/recursive_lock.h	2025-05-26 13:50:59.000000000 +0800
++++ b/wsclean/mwa/recursive_lock.h	2025-05-26 13:51:14.000000000 +0800
+@@ -58,8 +58,6 @@
+ 			_mutex->unlock();
+ 		_mutex = other._mutex;
+ 		_nLocks = other.nLocks;
+-		other._mutex = nullptr;
+-		other._nLocks = 0;
+ 	}
+ 	
+ 	void lock()

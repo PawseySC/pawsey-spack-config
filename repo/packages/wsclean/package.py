@@ -54,6 +54,7 @@ class Wsclean(CMakePackage):
     patch('mpi1.patch', when='@3.0:3.4')
     patch('mpi2.patch', when='@3.0:3.4')
     patch('mpiv3.5.patch', when='@3.5:')
+    patch('fix_recursive_lock.h.patch')
 
     @run_before("cmake")
     def change_source_dir(self):
