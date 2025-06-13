@@ -3,7 +3,7 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2025.04"
+DATE_TAG="2025.06"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
     INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
@@ -110,6 +110,7 @@ astro
 bio
 roms
 wrf
+rocm
 "
 # list of cray build environments - can run in parallel with the above gcc env_list
 cray_env_list="
