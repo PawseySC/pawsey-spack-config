@@ -54,7 +54,18 @@ class Wsclean(CMakePackage):
     patch('mpi1.patch', when='@3.0:3.4')
     patch('mpi2.patch', when='@3.0:3.4')
     patch('mpiv3.5.patch', when='@3.5:')
-    patch('fix_recursive_lock.h.patch')
+    patch('fix_recursive_lock.h.patch', when='@2.9')
+    patch("fix_mav.cc.patch")
+
+    def patch(self):
+        import os
+        mavcc = os.path.join(self.stage.source_path, 'external', 'wgridder', 'ducc0', 'infra', 'mav.cc')
+        if os.path.exists(mavcc):
+            filter_file(
+                '#include <cmath>',
+                '#include <cmath>\n#include <algorithm>',
+                mavcc
+            )
 
     @run_before("cmake")
     def change_source_dir(self):

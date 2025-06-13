@@ -44,6 +44,8 @@ class Mwalib(Package):
     depends_on("py-numpy", type=("build", "run"), when="+python")
     depends_on("python", type=("build", "run"), when="+python")
     depends_on("py-pip", type="build", when="+python")
+    depends_on("patchelf", type="build")
+
 
     sanity_check_is_file = [
         join_path("include", "mwalib.h"),
@@ -51,6 +53,7 @@ class Mwalib(Package):
         join_path("lib", "libmwalib.so"),
     ]
     test_requires_compiler = True
+
 
     def get_features(self):
         features = []
