@@ -1,0 +1,16 @@
+--- a/3rd_party/occa/cmake/FindHIP.cmake	2025-06-13 13:47:45.260039043 +0800
++++ b/3rd_party/occa/cmake/FindHIP.cmake	2025-06-13 13:48:20.271609738 +0800
+@@ -105,11 +105,11 @@
+       if(${HIP_COMPILER} STREQUAL "hcc")
+         set(HIP_INCLUDE_DIRS "${HIP_ROOT_DIR}/include;${HIP_ROOT_DIR}/hcc/include")
+         set(HIP_LIBRARIES "${HIP_ROOT_DIR}/lib/libhip_hcc.so")
+-        set(HIP_RUNTIME_DEFINE "__HIP_PLATFORM_HCC__")
++        set(HIP_RUNTIME_DEFINE "__HIP_PLATFORM_AMD__")
+       elseif(${HIP_COMPILER} STREQUAL "clang")
+         set(HIP_INCLUDE_DIRS "${HIP_ROOT_DIR}/include")
+         set(HIP_LIBRARIES "${HIP_ROOT_DIR}/lib/libamdhip64.so")
+-        set(HIP_RUNTIME_DEFINE "__HIP_PLATFORM_HCC__")
++        set(HIP_RUNTIME_DEFINE "__HIP_PLATFORM_AMD__")
+         set(HIP_PLATFORM "hip-clang")
+       endif()
+     elseif(${HIP_PLATFORM} STREQUAL "nvcc")
