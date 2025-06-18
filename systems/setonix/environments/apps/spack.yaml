@@ -15,11 +15,12 @@ spack:
     - gromacs@=2024.3 ~double +lapack build_type=Release 
     - gromacs@=2023 ~double +lapack +plumed build_type=Release ^plumed@2.9.0
     - gromacs@2022.5 ~double +lapack +plumed build_type=Release ^plumed@2.8.2
+    - cp2k@2025.1 +plumed ^plumed@2.9.0
     - cp2k@2024.3 +plumed ^plumed@2.9.0
     - cp2k@2023.2 +plumed ^plumed@2.9.0
 
-    - namd@2.14 ~rocm interface=python fftw=3 ^charmpp backend=ofi pmi=cray-pmi 
-    - namd@3.0.1  ~rocm interface=python fftw=3 ^charmpp backend=ofi pmi=cray-pmi
+#I    - namd@2.14 ~rocm interface=python fftw=3 ^charmpp backend=ofi pmi=cray-pmi 
+#I    - namd@3.0.1  ~rocm interface=python fftw=3 ^charmpp backend=ofi pmi=cray-pmi
       #    - namd@2.15a2 +rocm amdgpu_target=gfx90a ^charmpp@7.0.0 backend=ofi ^ncurses@6.3+symlinks #broken - providing only through containers
 # Failing:    - openfoam-org@8 #Alexis still working on it
 # Current alternative:

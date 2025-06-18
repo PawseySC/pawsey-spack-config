@@ -44,6 +44,7 @@ class Amdgromacs(CMakePackage, ROCmPackage):
     
     patch("fix_hip_add_library.patch")
     patch("fix_memoryAttributes.patch")
+    patch("fix_modularsimulator.h.patch")
 
 #    def patch(self):
 #        plumed = Executable(self.spec["plumed"].prefix.bin.plumed)
@@ -162,6 +163,8 @@ class Amdgromacs(CMakePackage, ROCmPackage):
     def setup_build_environment(self, env):
         if self.spec.satisfies("+rocm"):      
             self.set_variables(env)
+        env.append_flags('CFLAGS', '-fpermissive -Wno-error=incompatible-pointer-types')
+        env.append_flags('CXXFLAGS', '-fpermissive -Wno-error=incompatible-pointer-types')
 
     def setup_run_environment(self, env):
         if self.spec.satisfies("+rocm"):

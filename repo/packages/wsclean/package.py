@@ -55,7 +55,7 @@ class Wsclean(CMakePackage):
     patch('mpi2.patch', when='@3.0:3.4')
     patch('mpiv3.5.patch', when='@3.5:')
     patch('fix_recursive_lock.h.patch', when='@2.9')
-    patch("fix_mav.cc.patch")
+#    patch("fix_mav.cc.patch")
 
     def patch(self):
         import os
