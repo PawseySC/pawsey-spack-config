@@ -28,4 +28,4 @@ cd ../systems/${SYSTEM}/environments/rocm
 #module load rocm
 spack env activate .
 spack concretize -f
-spack install -j128
+spack install -j64

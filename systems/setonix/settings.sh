@@ -110,7 +110,6 @@ astro
 bio
 roms
 wrf
-rocm
 "
 # list of cray build environments - can run in parallel with the above gcc env_list
 cray_env_list="
