@@ -100,7 +100,7 @@ setenv("NXF_SINGULARITY_CACHEDIR", os.getenv("MYSOFTWARE").."/.nextflow_singular
 local singularity_ld_path = ""
 -- add CRAY_PATHS START
 singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/mpich/8.1.32/ofi/gnu/12.3/lib-abi-mpich:/opt/cray/pe/mpich/8.1.32/gtl/lib:/opt/cray/xpmem/default/lib64:/opt/cray/pe/pmi/default/lib:/opt/cray/pe/pals/default/lib"
-singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/gcc-libs"
+--singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/gcc-libs"
 -- add CRAY_PATHS END
 -- add MPI START
 -- for Cassini nics and SS>=11
