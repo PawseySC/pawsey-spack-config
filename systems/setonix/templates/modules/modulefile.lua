@@ -98,6 +98,8 @@ setenv("NXF_SINGULARITY_CACHEDIR", os.getenv("MYSOFTWARE").."/.nextflow_singular
 -- Singularity configuration START
 -- LD_LIBRARY_PATH addition 
 local singularity_ld_path = ""
+-- COS 25.3
+singularity_ld_path = singularity_ld_path .. ":/host_lib64"
 -- add CRAY_PATHS START
 singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/mpich/8.1.32/ofi/gnu/12.3/lib-abi-mpich:/opt/cray/pe/mpich/8.1.32/gtl/lib:/opt/cray/xpmem/default/lib64:/opt/cray/pe/pmi/default/lib:/opt/cray/pe/pals/default/lib"
 --singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/gcc-libs"
@@ -137,6 +139,8 @@ singularity_bindpath = singularity_bindpath .. ",/usr/lib64/libzstd.so.1"
 singularity_bindpath = singularity_bindpath .. ",/usr/lib64/libselinux.so.1"
 -- lustre 
 singularity_bindpath = singularity_bindpath .. ",/usr/lib64/liblustreapi.so.1,/usr/lib64/liblnetconfig.so.4,/usr/lib64/libyaml-0.so.2,/usr/lib64/libnl-genl-3.so.200,/usr/lib64/libnl-3.so.200"
+-- COS 25.3
+singularity_bindpath = singularity_bindpath .. ",/usr/lib64:/host_lib64"
 -- this has to be conditional, path exists only in compute nodes
 if isDir("/var/spool/slurmd") then
   singularity_bindpath = singularity_bindpath .. ",/var/spool/slurmd"
