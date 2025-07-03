@@ -68,6 +68,7 @@ fi
 # need to configure shpc for use, to change configs
 export PATH="${INSTALL_PREFIX}/${shpc_install_dir}/bin":$PATH
 export PYTHONPATH="${INSTALL_PREFIX}/${shpc_install_dir}/lib/python${python_version_major}.${python_version_minor}/site-packages":$PYTHONPATH
+export PYTHONPATH="${INSTALL_PREFIX}/${shpc_install_dir}/lib64/python${python_version_major}.${python_version_minor}/site-packages":$PYTHONPATH
 
 # need to create these registry directories, otherwise corresponding config commands will fail
 mkdir -p ${USER_PERMANENT_FILES_PREFIX}/$PAWSEY_PROJECT/$USER/setonix/$DATE_TAG/shpc_registry
