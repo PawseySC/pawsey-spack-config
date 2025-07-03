@@ -26,7 +26,6 @@ module load ${python_name}/${python_version}
 #module load py-setuptools/${setuptools_version}-py${python_version}
 module load py-pip/${pip_version}-py${python_version}
 module load singularity/${singularity_version}
-module load .py-rpds-py/0.18.1 .py-markupsafe/2.1.3
 # load shpc module
 module load ${shpc_name}/${shpc_version}
 
