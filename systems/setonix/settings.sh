@@ -67,7 +67,7 @@ spack_version="0.23.1" # the prefix "v" is added in setup_spack.sh
 singularity_version="4.1.0-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="4.1.0-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.32"
-shpc_registry_version="9748412c407a1feed71837a79ad350a307e66253"
+shpc_registry_version="be0e301a8f9b1b503c87dad5ec61e74940958216"
 
 # python (and py tools) versions
 python_name="python"
