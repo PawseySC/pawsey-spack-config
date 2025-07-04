@@ -46,7 +46,3 @@ config:
   # Cache directory for miscellaneous files, like the package index.
   # This can be purged with `spack clean --misc-cache`
   misc_cache: INSTALL_PREFIX/software/misc_cache
-
-  # concretizer: `clingo` or `original` (good for debugging concretisations)
-  concretizer: clingo
-  #concretizer: original
