@@ -117,6 +117,7 @@ shpc config inituser
 shpc config set module_base:"${INSTALL_PREFIX}/${shpc_containers_modules_dir_long}"
 # system install location for containers
 shpc config set "container_base:${INSTALL_PREFIX}/${shpc_containers_dir}"
+shpc config set "wrapper_base:${INSTALL_PREFIX}/containers/wrappers"
 # system install location for modulefiles (symlinks - views)
 # variable substitutions assume format like views/modules
 shpc config set "views_base:${INSTALL_PREFIX}/${shpc_containers_modules_dir%/*}"
