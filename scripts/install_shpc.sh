@@ -28,7 +28,6 @@ module load ${python_name}/${python_version}
 #module load py-setuptools/${setuptools_version}-py${python_version}
 module load py-pip/${pip_version}-py${python_version}
 module load singularity/${singularity_version}
-module load .py-rpds-py/0.18.1 .py-markupsafe/2.1.3
 
 # Remove previous cached config files if any
 if [ -e ~/.singularity-hpc/settings.yml ]; then
@@ -71,6 +70,7 @@ fi
 # need to configure shpc for use, to change configs
 export PATH="${INSTALL_PREFIX}/${shpc_install_dir}/bin":$PATH
 export PYTHONPATH="${INSTALL_PREFIX}/${shpc_install_dir}/lib/python${python_version_major}.${python_version_minor}/site-packages":$PYTHONPATH
+export PYTHONPATH="${INSTALL_PREFIX}/${shpc_install_dir}/lib64/python${python_version_major}.${python_version_minor}/site-packages":$PYTHONPATH
 
 # need to create these registry directories, otherwise corresponding config commands will fail
 mkdir -p ${USER_PERMANENT_FILES_PREFIX}/$PAWSEY_PROJECT/$USER/setonix/$DATE_TAG/shpc_registry
