@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --exclusive
-#SBATCH --qos=pawseyoverride
-#SBATCH --time=3-00:00:00
-##SBATCH --reservation=PAWSEY_CPU_TESTING
+##SBATCH --qos=pawseyoverride
+#SBATCH --time=1-00:00:00
+#SBATCH --reservation=GS_32584_CPU_TESTING
 #SBATCH -p work
-##SBATCH -A pawsey0001-gpu 
+#SBATCH -A pawsey0001 
 ##SBATCH --gpus-per-node=8
 
 export SYSTEM=setonix

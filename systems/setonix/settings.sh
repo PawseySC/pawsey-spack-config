@@ -35,7 +35,8 @@ fi
 
 # Note the use of '' instead of "" to allow env variables to be present in config files
 USER_PERMANENT_FILES_PREFIX='/software/projects'
-USER_TEMP_FILES_PREFIX='/scratch'
+#USER_TEMP_FILES_PREFIX='/scratch'
+USER_TEMP_FILES_PREFIX='/tmp'
 SPACK_USER_CONFIG_PATH="$MYSOFTWARE/setonix/$DATE_TAG/.spack_user_config"
 BOOTSTRAP_PATH='$MYSOFTWARE/setonix/'$DATE_TAG/.spack_user_config/bootstrap
 # Set a new mirror where to fetch prebuilt binaries, if any.
