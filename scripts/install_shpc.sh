@@ -18,6 +18,7 @@ module load gcc-native/14.2
 module use "${INSTALL_PREFIX}/staff_modulefiles"
 # we need the python module to be available in order to run spack
 module --ignore-cache load pawseyenv/${pawseyenv_version}
+module load gcc-native/14.2
 # swap is needed for the pawsey_temp module to work
 #module swap PrgEnv-gnu PrgEnv-cray
 #module swap PrgEnv-cray PrgEnv-gnu
