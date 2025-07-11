@@ -355,6 +355,7 @@ modules:
         "wsclean +mpi +idg +everybeam": 'astro-applications/{name}/{version}-idg-everybeam-mpi'
         "wsclean ~mpi ~idg ~everybeam": 'astro-applications/{name}/{version}'
         "wsclean ~mpi +idg ~everybeam": 'astro-applications/{name}/{version}-idg'
+        "wsclean +idg ~ipo": 'astro-applications/{name}/{version}-idg'
         "wsclean ~mpi +idg +everybeam": 'astro-applications/{name}/{version}-idg-everybeam'
         mwalib: 'astro-applications/{name}/{version}'
         birli: 'astro-applications/{name}/{version}'
