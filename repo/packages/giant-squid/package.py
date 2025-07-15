@@ -18,6 +18,7 @@ class GiantSquid(Package):
     version("2.1.2", tag="v2.1.2")
     version("2.1.1", tag="v2.1.1")
     version("2.1.0", tag="v2.1.0")
+    version("2.2.0", tag="v2.2.0")
 
     depends_on("rust@1.82.0:", when="@1.1.0:", type="build")
 
