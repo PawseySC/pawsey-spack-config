@@ -11,6 +11,11 @@
 
 ]]--
 
+local shl_user = os.getenv("USER")
+
+if not (shl_user == "root") then
+prepend_path('LMOD_PACKAGE_PATH', '/software/setonix/lmod-extras')
+
 -- Service variables for this module
 -- 
 --
@@ -108,3 +113,6 @@ local psc_sw_env_custom_modules_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_
 prepend_path("LMOD_CUSTOM_COMPILER_GNU_12_0_PREFIX", psc_sw_env_custom_modules_root .. "/gcc/" .. psc_sw_env_gcc_version .. "/" .. psc_sw_env_custom_modules_suffix)
 prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_17_0_PREFIX", psc_sw_env_custom_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_custom_modules_suffix)
 prepend_path("LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX", psc_sw_env_custom_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_custom_modules_suffix)
+
+end
+-- if not root
