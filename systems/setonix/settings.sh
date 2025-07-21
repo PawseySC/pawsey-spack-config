@@ -67,7 +67,7 @@ spack_version="0.23.1" # the prefix "v" is added in setup_spack.sh
 singularity_version="4.1.0-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="4.1.0-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.32"
-shpc_registry_version="9748412c407a1feed71837a79ad350a307e66253"
+shpc_registry_version="ef423f0310bbac40e4c4b02c2ba0609018f56347"
 
 # python (and py tools) versions
 python_name="python"
@@ -154,6 +154,7 @@ quay.io/sarahbeecroft9/interproscan:5.56-89.0
 
 #quay.io/pawsey/pytorch:2.6.0-rocm6.2.2
 container_list_mpi="
+quay.io/pawsey/openfoam:v2412
 quay.io/pawsey/openfoam:v2212
 quay.io/pawsey/openfoam:v2206
 quay.io/pawsey/openfoam:v2012
@@ -163,10 +164,13 @@ quay.io/pawsey/openfoam-org:10
 quay.io/pawsey/openfoam-org:9
 quay.io/pawsey/openfoam-org:8
 quay.io/pawsey/openfoam-org:7
-quay.io/pawsey/tensorflow:2.12.1.570-rocm5.6.0
-amdih/cp2k
-amdih/namd
-amdih/namd3"
+quay.io/pawsey/tensorflow:2.15.1-rocm6.3.3
+quay.io/pawsey/tensorflow:2.17-rocm6.3.3
+quay.io/pawsey/pytorch:2.7.1-rocm6.3.3
+quay.io/pawsey/cp2k:2024.3-rocm6.3.0
+quay.io/pawsey/namd:3.0.1
+quay.io/pawsey/namd:3.0.1-rocm6.3.0
+"
 #quay.io/pawsey/hpc-python:2022.03						
 #quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 
