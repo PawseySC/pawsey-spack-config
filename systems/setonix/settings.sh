@@ -3,7 +3,7 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2025.06"
+DATE_TAG="2025.08"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
     INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
@@ -35,7 +35,8 @@ fi
 
 # Note the use of '' instead of "" to allow env variables to be present in config files
 USER_PERMANENT_FILES_PREFIX='/software/projects'
-USER_TEMP_FILES_PREFIX='/scratch'
+#USER_TEMP_FILES_PREFIX='/scratch'
+USER_TEMP_FILES_PREFIX='/tmp'
 SPACK_USER_CONFIG_PATH="$MYSOFTWARE/setonix/$DATE_TAG/.spack_user_config"
 BOOTSTRAP_PATH='$MYSOFTWARE/setonix/'$DATE_TAG/.spack_user_config/bootstrap
 # Set a new mirror where to fetch prebuilt binaries, if any.
