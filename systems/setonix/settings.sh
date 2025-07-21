@@ -153,7 +153,7 @@ quay.io/biocontainers/velvet:1.2.10--h7132678_5
 quay.io/sarahbeecroft9/interproscan:5.56-89.0
 "
 
-#quay.io/pawsey/pytorch:2.6.0-rocm6.2.2
+
 container_list_mpi="
 quay.io/pawsey/openfoam:v2412
 quay.io/pawsey/openfoam:v2212
@@ -171,7 +171,6 @@ quay.io/pawsey/pytorch:2.7.1-rocm6.3.3
 quay.io/pawsey/cp2k:2024.3-rocm6.3.0
 quay.io/pawsey/namd:3.0.1
 quay.io/pawsey/namd:3.0.1-rocm6.3.0
-"
 #quay.io/pawsey/hpc-python:2022.03						
 #quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 
