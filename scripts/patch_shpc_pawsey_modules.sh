@@ -59,3 +59,29 @@ for tool in ${sif_dir}/quay.io/pawsey/openfoam* ; do
     fi
   done
 done
+
+# Applying trick in tensorflow and pytorch modules to avoid problems with PYTHONSTARTUP variable
+# See ticket GS-32800 and its parent GS-31936
+# 1) Creating the directory that will contain auxiliary files
+patch_dir="${INSTALL_PREFIX}/pawsey/lmod-variable-fixes"
+mkdir -p ${patch_dir}
+# Copying the file with the LMOD logic to cancel PYTHONSTARTUP variable when loading the modules
+cp "${PAWSEY_SPACK_CONFIG_REPO}/scripts/_fixPYTHONSTARTUP.lua" ${patch_dir}
+
+# 2) Adding into the module.lua files the call for the logic to cancel PYTHONSTARTUP
+for tool in ${long_dir}/quay.io/pawsey/tensorflow* ${long_dir}/quay.io/pawsey/pytorch*; do
+  for module in ${tool}/*/module.lua ; do
+    if [ -e ${module} ] ; then  
+      cat << EOF >> ${module}
+
+-- Fixing problems with PYTHONSTARTUP when using python inside the containers
+-- See ticket GS-32800 and its parent GS-31936
+
+local patch_dir = "${INSTALL_PREFIX}/pawsey/lmod-variable-fixes"
+local patch_file = patch_dir .. "/_fixPYTHONSTARTUP.lua"
+local func = assert(loadfile(patch_file))
+func()
+EOF
+    fi
+  done
+done
