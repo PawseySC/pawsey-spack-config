@@ -25,7 +25,8 @@ class Vasp(MakefilePackage):
     version("6.5.1", sha256="a53fd9dd2a66472a4aa30074dbda44634fc663ea2628377fc01d870e37136f61")
     version("6.4.3", sha256="fe30e773f2a3e909b5e0baa9654032dfbdeff7ec157bc348cee7681a7b6c24f4")
     version("6.3.2", sha256="f7595221b0f9236a324ea8afe170637a578cdd5a837cc7679e7f7812f6edf25a")
-    version('6.3.0', sha256='adcf83bdfd98061016baae31616b54329563aa2739573f069dd9df19c2071ad3')
+    #version('6.3.0', sha256='adcf83bdfd98061016baae31616b54329563aa2739573f069dd9df19c2071ad3')
+    version('6.3.0', sha256='99c78e1e20ea060dcdd44656708cd5ac06c4b2352e04d218abd1a5af2228abfd')
     version('6.2.1', sha256='d25e2f477d83cb20fce6a2a56dcee5dccf86d045dd7f76d3ae19af8343156a13')
     version('6.1.1', sha256='e37a4dfad09d3ad0410833bcd55af6b599179a085299026992c2d8e319bf6927')
     version('5.4.4', sha256='5bd2449462386f01e575f9adf629c08cb03a13142806ffb6a71309ca4431cfb3')
@@ -57,15 +58,20 @@ class Vasp(MakefilePackage):
 
     variant('dftd4', default=False)
 
+    variant("hdf5", default=False, when="@6.2:", 
+            description="Enabled HDF5 support")
+    
     depends_on('rsync', type='build')
     depends_on('openblas')
     depends_on('lapack')
-    depends_on('fftw')
+    depends_on('fftw@3')
     depends_on('mpi', type=('build', 'link', 'run'))
     depends_on('netlib-scalapack', when='+scalapack')
     depends_on('cuda', when='+cuda')
     depends_on('qd', when='%nvhpc')
     depends_on('dftd4', when='+dftd4')
+    depends_on('mctc-lib', when='+dftd4')
+    depends_on("hdf5+fortran+mpi", when="+hdf5")
 
     conflicts('%gcc@:8', msg='GFortran before 9.x does not support all features needed to build VASP')
     conflicts('+vaspsol', when='+cuda', msg='+vaspsol only available for CPU')
@@ -204,7 +210,8 @@ class Vasp(MakefilePackage):
 
         if "+dftd4" in spec:
             with open("makefile.include", "a") as fp:
-                fp.write(f"LLIBS += -L{self.spec['dftd4'].prefix.lib} -ldftd4\n")
+                fp.write(f"LLIBS += -L{self.spec['dftd4'].prefix.lib} -ldftd4 \n")
+                fp.write(f"LLIBS += -L{self.spec['mctc-lib'].prefix.lib} -lmctc-lib\n")
                 fp.write(f"INCS  += -I{self.spec['dftd4'].prefix.include}\n")
                 fp.write(f"INCS  += -I{self.spec['dftd4'].prefix.include}/dftd4/{self.compiler.name}-{self.compiler.version}\n")
 
@@ -220,6 +227,12 @@ class Vasp(MakefilePackage):
             filter_file('^CFLAGS[ ]{0,}=.*$',
                         'CFLAGS ?=',
                         'makefile.include')
+
+        if "+hdf5" in spec:
+            with open("makefile.include", "a") as fp:
+                fp.write(f"LLIBS += -L{self.spec['hdf5'].prefix.lib} {self.spec['hdf5:fortran'].libs.ld_flags}\n")
+                fp.write(f"INCS  += -I{self.spec['hdf5'].prefix.include}\n")
+
 
     def setup_build_environment(self, spack_env):
         spec = self.spec
@@ -273,6 +286,9 @@ class Vasp(MakefilePackage):
 
         if '+vaspsol' in spec:
             cpp_options.append('-Dsol_compat')
+
+        if '+hdf5' in spec:
+            cpp_options.append('-DVASP_HDF5')
 
         if spec.satisfies('%gcc@10:'):
             fflags.append('-fallow-argument-mismatch')
