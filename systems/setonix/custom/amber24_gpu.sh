@@ -23,6 +23,10 @@ sed -i '84d' src/pmemd/src/cuda/CMakeLists.txt
 # Fix missing macro
 sed -i -e '49 a#    define cusparseErrorCheck(error) if(error != hipSuccess) {printf("hipsparse error."); exit(1);}' AmberTools/src/pbsa/hip_definitions.h 
 
+# other errors to fix
+sed -i -e '121 s/&//g' AmberTools/src/mdgx/Wrappers.c
+sed -i -e '1698 s/UInt/UInt2/g' AmberTools/src/mdgx/Peptide.c
+
 ### Fix No. 3 - Add gfx90a support
 ##sed -i -e '894 s/ CACHE STRING/;gfx90a:xnack- CACHE STRING/g'\
 ##       -e '896 s/ CACHE STRING/;gfx90a CACHE STRING/g' cmake/FindHipCUDA.cmake
