@@ -47,6 +47,12 @@ echo "And using this basis to generate modules in ${dst_dir}"
 mkdir -p ${src_dir}
 cp ${src_old_dir}/*.lua ${src_dir}/
 
+# ensure directory for lua patches (which is referenced in singularity module files) exists
+lmod_patch_dir="${INSTALL_PREFIX}/pawsey/lmod-variable-fixes"
+mkdir -p "$lmod_patch_dir"
+cp "${PAWSEY_SPACK_CONFIG_REPO}/scripts/pawsey_fix_initial_bash.lua" ${lmod_patch_dir}
+cp "${PAWSEY_SPACK_CONFIG_REPO}/scripts/pawsey_init_bash" ${lmod_patch_dir}
+
 # ensure destination directory exists
 mkdir -p ${dst_dir}
 # remove old pawsey singularity modules

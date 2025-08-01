@@ -178,6 +178,12 @@ setenv("MPICH_GPU_SUPPORT_ENABLED","1")
 setenv("SINGULARITYENV_MPICH_GPU_SUPPORT_ENABLED","1")
 -- add GPUMPI END
 
+-- Patch lmod messages in singularity shells
+local patch_dir = os.getenv("INSTALL_PREFIX") .. "/pawsey/lmod-variable-fixes"
+local patch_file = patch_dir .. "/pawsey_fix_initial_bash.lua"
+local func = assert(loadfile(patch_file))()
+func(patch_dir)
+
 {% endif %}
 {% if spec.name == 'r' %}setenv("R_LIBS_USER", os.getenv("MYSOFTWARE").."/setonix/DATE_TAG/r/%v")
 {% endif %}

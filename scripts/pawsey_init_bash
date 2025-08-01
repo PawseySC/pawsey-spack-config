@@ -1,0 +1,199 @@
+#!/bin/bash
+# -*- shell-script -*-
+#
+########################################################################
+# Start Lmod BASHENV
+########################################################################
+
+if [ -z "${LMOD_SH_DBG_ON+x}" ]; then
+   case "$-" in
+     *v*x*) __lmod_vx='vx' ;;
+     *v*)   __lmod_vx='v'  ;;
+     *x*)   __lmod_vx='x'  ;;
+   esac;
+fi
+
+[ -n "${__lmod_vx:-}" ] && set +$__lmod_vx 
+
+if [ -n "${__lmod_vx:-}" ]; then
+    echo "Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for this output (/opt/cray/pe/lmod/lmod/init/bash)" 1>&2
+fi
+
+# CMEYER: The export FPATH line is causing lmod warning messages in singularity shells, replacing this block with that used in previous version of script
+# unset __zsh_fpath
+# if [ -n "${ZSH_VERSION+x}" ] &&  ! (autoload -U compinit && compinit -C 2> /dev/null) ; then
+#   __zsh_fpath=$(unset FPATH; zsh -f -c 'echo $FPATH')
+# fi
+# export FPATH=$(/opt/cray/pe/lmod/lmod/libexec/addto --append FPATH ${__zsh_fpath:-$FPATH} /opt/cray/pe/lmod/lmod/init/ksh_funcs)
+# unset __zsh_fpath
+# FPATH FIX START
+SUPPORT_KSH="no"
+if [ $SUPPORT_KSH = yes -o -n "${KSH_VERSION+x}" ]; then
+   if [ -z "${__LMOD_SET_FPATH+x}" ]; then
+      export FPATH=$(/opt/cray/pe/lmod/lmod/libexec/addto --append FPATH  /opt/cray/pe/lmod/lmod/init/ksh_funcs)
+      export __LMOD_SET_FPATH=1
+   fi
+fi
+unset SUPPORT_KSH
+# FPATH FIX END
+
+export LMOD_ROOT=/opt/cray/pe/lmod
+export LMOD_PKG=/opt/cray/pe/lmod/lmod
+export LMOD_DIR=$LMOD_PKG/libexec
+export LMOD_CMD=$LMOD_PKG/libexec/lmod
+export MODULESHOME=$LMOD_PKG
+export LMOD_SETTARG_FULL_SUPPORT=no
+
+########################################################################
+#  Define the module command:  The first line runs the "lmod" command
+#  to generate text:
+#      export PATH="..."
+#  then the "eval" converts the text into changes in the current shell.
+#
+#  The second command is the settarg command.  Normally LMOD_SETTARG_CMD
+#  is undefined or is ":".  Either way the eval does nothing.  When the
+#  settarg module is loaded, it defines LMOD_SETTARG_CMD.  The settarg
+#  command knows how to read the ModuleTable that Lmod maintains and
+#  generates a series of env. vars that describe the current state of
+#  loaded modules.  So if one is on a x86_64 linux computer with gcc/4.7.2
+#  and openmpi/1.6.3 loaded, then settarg will assign:
+#
+#     TARG=_x86_64_gcc-4.7.2_openmpi-1.6.3
+#     TARG_COMPILER=gcc-4.7.2
+#     TARG_COMPILER_FAMILY=gcc
+#     TARG_MACH=x86_64
+#     TARG_MPI=openmpi-1.6.3
+#     TARG_MPI_FAMILY=openmpi
+#     TARG_SUMMARY=x86_64_gcc-4.7.2_openmpi-1.6.3
+#     TARG_TITLE_BAR=gcc-4.7.2 O-1.6.3
+#     TARG_TITLE_BAR_PAREN=(gcc-4.7.2 O-1.6.3)
+#
+#  unloading openmpi/1.6.3 automatically changes these vars to be:
+#
+#     TARG=_x86_64_gcc-4.6.3
+#     TARG_COMPILER=gcc-4.6.3
+#     TARG_COMPILER_FAMILY=gcc
+#     TARG_MACH=x86_64
+#     TARG_SUMMARY=x86_64_gcc-4.6.3
+#     TARG_TITLE_BAR=gcc-4.6.3
+#     TARG_TITLE_BAR_PAREN=(gcc-4.6.3)
+#
+# See Lmod web site for more details.
+
+
+if [ "yes" = "no" ]; then
+   module()
+   {
+     ############################################################
+     # Run Lmod and eval results
+     eval "$($LMOD_CMD bash "$@")" && eval $(${LMOD_SETTARG_CMD:-:} -s sh)
+   }
+else
+   module()
+   {
+     ############################################################
+     # Silence shell debug UNLESS $LMOD_SH_DBG_ON has a value
+     if [ -z "${LMOD_SH_DBG_ON+x}" ]; then
+        case "$-" in
+          *v*x*) __lmod_sh_dbg='vx' ;;
+          *v*)   __lmod_sh_dbg='v'  ;;
+          *x*)   __lmod_sh_dbg='x'  ;;
+        esac;
+     fi
+     
+     if [ -n "${__lmod_sh_dbg:-}" ]; then
+        set +$__lmod_sh_dbg 
+        echo "Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for Lmod's output" 1>&2
+     fi
+
+     ############################################################
+     # Run Lmod and eval results
+     eval "$($LMOD_CMD shell "$@")" && eval "$(${LMOD_SETTARG_CMD:-:} -s sh)"
+     __lmod_my_status=$?
+
+     ############################################################
+     # Un-silence shell debug after module command
+     if [ -n "${__lmod_sh_dbg:-}" ]; then
+       echo "Shell debugging restarted" 1>&2
+       set -$__lmod_sh_dbg;
+     fi;
+     unset __lmod_sh_dbg
+     return $__lmod_my_status
+   }
+fi
+
+
+LMOD_VERSION="8.7.55"
+export LMOD_VERSION
+
+if [ "${LMOD_SETTARG_CMD:-:}" != ":" ]; then
+  settarg () {
+    eval $(${LMOD_SETTARG_CMD:-:} -s sh "$@" )
+  }
+fi
+
+
+########################################################################
+#  ml is a shorthand tool for people who can't type moduel, err, module
+#  It is also a combination command:
+#     ml            -> module list
+#     ml gcc        -> module load gcc
+#     ml -gcc intel -> module unload gcc; module load intel
+#  It does much more. Do: "ml --help" for more information.
+
+
+unalias ml 2> /dev/null || true
+ml()
+{
+  eval "$($LMOD_DIR/ml_cmd "$@")"
+}
+
+if [ -n "${BASH_VERSION:-}" -a "yes" != no ]; then
+  export -f module
+  export -f ml
+fi
+unset export_module
+
+########################################################################
+#  clearMT removes the ModuleTable from your environment.  It is rarely
+#  needed but it useful sometimes.
+
+clearMT()
+{
+  eval $($LMOD_DIR/clearLMOD_cmd --shell bash --simple)
+}
+
+clearLmod()
+{
+  module --force purge
+  eval $($LMOD_DIR/clearLMOD_cmd --shell bash --full "$@")
+}
+
+xSetTitleLmod()
+{
+  builtin echo -n -e "\033]2;$1\007";
+}
+
+########################################################################
+#  Make tab completions available to bash users.
+
+if [ ${BASH_VERSINFO:-0} -ge 3 ] && [ -r  /opt/cray/pe/lmod/lmod/init/lmod_bash_completions ] && [ -n "${PS1:-}" ] && [ -z "${POSIXLY_CORRECT:-}" ]; then
+ . /opt/cray/pe/lmod/lmod/init/lmod_bash_completions
+fi
+
+
+# Restoring XTRACE and VERBOSE states.
+if [ -n "${__lmod_vx:-}" ]; then
+  echo "Shell debugging restarted" 1>&2
+  set -$__lmod_vx;
+  unset __lmod_vx;
+fi;
+
+########################################################################
+# End Lmod BASHENV
+########################################################################
+#
+# Local Variables:
+# mode: shell-script
+# indent-tabs-mode: nil
+# End:
