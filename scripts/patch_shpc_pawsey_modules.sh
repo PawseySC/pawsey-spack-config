@@ -44,6 +44,7 @@ for tool in ${long_dir}/quay.io/pawsey/openfoam* ; do
     if [ -e ${module} ] ; then
       new_conflict="conflict(\"${tool##*/}${shpc_spackuser_container_tag}\")"
       sed --follow-symlinks -i '/conflict(/c '"${new_conflict}"'' ${module}
+      chmod u=rw,go=r ${module} #Recovering the right permissions after sed command
     fi
   done
 done
