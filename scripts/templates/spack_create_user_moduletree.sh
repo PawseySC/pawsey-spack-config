@@ -25,7 +25,6 @@ for arch in $archs; do
     mkdir -p "${user_root_dir}/modules/${arch}/${compiler}/${user_modules_suffix}"
   done
 done
-chmod --silent -R g+rwX "${project_root_dir}"
 
 # create shpc user-private container modules base dir (symlinks - views)
 mkdir -p "${user_root_dir}/${shpc_containers_modules_dir}"
@@ -73,3 +72,5 @@ mkdir -p "${user_root_dir}/r/${r_version_majorminor}"
 
 # create empty control file
 touch ${user_root_dir}/.created_moduletree_bases
+
+chmod --silent -R g+rwX "${project_root_dir}"
