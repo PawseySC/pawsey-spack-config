@@ -15,11 +15,10 @@ class GiantSquid(Package):
 
     maintainers = ["gsleap", "d3v-null"]
 
-    version("2.1.2", tag="v2.1.2")
-    version("2.1.1", tag="v2.1.1")
-    version("2.1.0", tag="v2.1.0")
-
-    depends_on("rust@1.71.1:", when="@1.1.0:", type="build")
+    version("2.3.0", tag="v2.3.0")
+    version("2.2.0", tag="v2.2.0")
+        
+    depends_on("rust@1.82:", when="@2.2.0:", type="build")
 
     def setup_build_environment(self, env):
         build_dir = self.stage.source_path
