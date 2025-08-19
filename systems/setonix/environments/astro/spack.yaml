@@ -61,9 +61,7 @@ spack:
     - chgcentre build_type=Release target=zen3
     - giant-squid@2.3.0 target=zen3
     - giant-squid@2.3.0 target=zen2
-    - giant-squid@2.2.0 target=zen3
-    - giant-squid@2.2.0 target=zen2
-
+    
   # TODO add versions 
   - python-astro-set:
     - py-funcsigs #package not available in spack/0.20.0, using recipe from 0.19.0
