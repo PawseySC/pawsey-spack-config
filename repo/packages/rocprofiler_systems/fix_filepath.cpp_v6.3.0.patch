@@ -1,0 +1,10 @@
+--- a/external/timemory/source/timemory/utility/filepath.cpp	2025-07-26 12:18:04.889434846 +0800
++++ b/external/timemory/source/timemory/utility/filepath.cpp	2025-07-26 12:18:28.537393768 +0800
+@@ -49,6 +49,7 @@
+ #include <iostream>
+ #include <sstream>
+ #include <string>
++#include <algorithm>
+ 
+ namespace tim
+ {

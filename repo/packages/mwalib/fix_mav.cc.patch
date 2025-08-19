@@ -1,0 +1,10 @@
+--- a/external/wgridder/ducc0/infra/mav.cc	2025-06-05 10:56:11.521180759 +0800
++++ b/external/wgridder/ducc0/infra/mav.cc	2025-06-05 10:56:20.061075788 +0800
+@@ -52,6 +52,7 @@
+ 
+ #include "ducc0/infra/mav.h"
+ #include <cmath>
++#include <algorithm>
+ 
+ namespace ducc0 {
+ 

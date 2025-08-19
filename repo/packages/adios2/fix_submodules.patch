@@ -1,0 +1,15 @@
+--- a/bindings/Fortran/CMakeLists.txt	2025-05-16 15:06:20.000000000 +0800
++++ b/bindings/Fortran/CMakeLists.txt	2025-05-16 15:06:40.000000000 +0800
+@@ -15,9 +15,9 @@
+ # re-enable it in the future
+ #
+ # Cray submodules have naming issues so just don't use them for now
+-#if(CMAKE_Fortran_COMPILER_ID MATCHES "Cray")
+-#  set(ADIOS2_HAVE_FORTRAN_SUBMODULES 0 CACHE INTERNAL "" FORCE)
+-#endif()
++if(CMAKE_Fortran_COMPILER_ID MATCHES "Cray")
++  set(ADIOS2_HAVE_FORTRAN_SUBMODULES 0 CACHE INTERNAL "" FORCE)
++endif()
+ 
+ if(ADIOS2_USE_Fortran_flag_argument_mismatch)
+   set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fallow-argument-mismatch")

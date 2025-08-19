@@ -1,0 +1,10 @@
+--- a/external/timemory/source/timemory/utility/procfs/maps.cpp	2025-07-26 12:23:27.676772655 +0800
++++ b/external/timemory/source/timemory/utility/procfs/maps.cpp	2025-07-26 12:23:47.424729570 +0800
+@@ -46,6 +46,7 @@
+ 
+ #    include <string>
+ #    include <vector>
++#    include <algorithm>
+ 
+ namespace tim
+ {

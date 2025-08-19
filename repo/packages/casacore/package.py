@@ -111,3 +111,6 @@ class Casacore(CMakePackage):
     def patch(self):
         # Rely on CMake ability to find hdf5, available since CMake 3.7.X
         os.remove('cmake/FindHDF5.cmake')
+
+    def setup_build_environment(self, env):
+        env.append_flags('CFLAGS', '-fpermissive -Wno-error=incompatible-pointer-types')

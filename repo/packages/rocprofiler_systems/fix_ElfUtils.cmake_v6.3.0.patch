@@ -1,0 +1,19 @@
+--- a/cmake/ElfUtils.cmake	2025-07-26 12:40:15.651001478 +0800
++++ b/cmake/ElfUtils.cmake	2025-07-26 12:41:03.506971665 +0800
+@@ -93,11 +93,11 @@
+ 
+ set(_eu_root ${PROJECT_BINARY_DIR}/external/elfutils)
+ set(_eu_inc_dirs $<BUILD_INTERFACE:${_eu_root}/include>)
+-set(_eu_lib_dirs $<BUILD_INTERFACE:${_eu_root}/lib>)
+-set(_eu_libs $<BUILD_INTERFACE:${_eu_root}/lib/libdw${CMAKE_STATIC_LIBRARY_SUFFIX}>
+-             $<BUILD_INTERFACE:${_eu_root}/lib/libelf${CMAKE_STATIC_LIBRARY_SUFFIX}>)
+-set(_eu_build_byproducts "${_eu_root}/lib/libdw${CMAKE_STATIC_LIBRARY_SUFFIX}"
+-                         "${_eu_root}/lib/libelf${CMAKE_STATIC_LIBRARY_SUFFIX}")
++set(_eu_lib_dirs $<BUILD_INTERFACE:${_eu_root}/lib64>)
++set(_eu_libs $<BUILD_INTERFACE:${_eu_root}/lib64/libdw${CMAKE_STATIC_LIBRARY_SUFFIX}>
++             $<BUILD_INTERFACE:${_eu_root}/lib64/libelf${CMAKE_STATIC_LIBRARY_SUFFIX}>)
++set(_eu_build_byproducts "${_eu_root}/lib64/libdw${CMAKE_STATIC_LIBRARY_SUFFIX}"
++                         "${_eu_root}/lib64/libelf${CMAKE_STATIC_LIBRARY_SUFFIX}")
+ 
+ externalproject_add(
+     rocprofiler-systems-elfutils-build

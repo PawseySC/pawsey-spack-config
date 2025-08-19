@@ -23,4 +23,8 @@ class Aoflagger(CMakePackage):
     depends_on('lua@5.2:')
     depends_on('cmake', type='build')
 
+    # Add Python dependency
+    depends_on('python@3.6:', type=('build', 'link', 'run'))
+    depends_on('py-setuptools', type='build')
+
     patch('as.patch', when='@3.2.0')

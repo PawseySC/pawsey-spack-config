@@ -69,7 +69,7 @@ echo "Customising shpc container modules.."
 
 # step 8, run previous manual steps outlined in 2024.05 deployment CRs
 echo "Executing CRs"
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/cr_operations.sh
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/cr_operations.sh"
 
 # step 8, run reframe tests for module generation and functionality
 echo "Running spack reframe tests.."

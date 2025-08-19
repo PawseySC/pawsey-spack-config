@@ -50,17 +50,15 @@ spack:
     - mwalib@1.8.7+python~portable
     - aoflagger@3.4.0 build_type=Release target=zen3 ^cfitsio@3.49
     - hyperbeam@0.10.2 ~portable +python
-#    - hyperbeam@0.9.3 ~portable +rocm +python amdgpu_target=gfx90a
-    - hyperdrive@0.5.1 ~portable
-#    - hyperdrive@0.4.1 ~portable amdgpu_target=gfx90a +rocm
-    - birli@0.17.1 ~portable
+    - hyperdrive@=0.6.1 ~portable
+    - birli@0.18.0 ~portable
     - calceph@3.5.5 target=zen3
     - presto@5.0.1 target=zen3
 
   - mwa-no-python:
     - chgcentre build_type=Release target=zen3
-    - giant-squid@2.1.0 target=zen3
-    - giant-squid@2.1.0 target=zen2
+    - giant-squid@2.2.0 target=zen3
+    - giant-squid@2.2.0 target=zen2
 
   # TODO add versions 
   - python-astro-set:
@@ -73,7 +71,7 @@ spack:
   specs:
   - matrix:
     - [$casacore-set]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
     - [+python build_type=Release ^python@3.11.6]
     - [+openmp, ~openmp]
@@ -82,31 +80,31 @@ spack:
         # can't use hdf%@1.14.3 for casacore yet
   - matrix:
     - [$casacore-legacy]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
   - matrix:
     - [$astro-util-set, $askap-util-set]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
 
   - matrix:
     - [ $mwa-no-python]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
 
   - matrix:
     - [$mwa-with-python]
     - [^python@3.11.6]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
 
   - matrix:
     - [$python-astro-set]
     - [^python@3.11.6]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
   - matrix:
     - [$casacore-new-set]
     - [^python@3.11.6]
     - [^boost@1.83.0]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
   view: false

@@ -15,11 +15,12 @@ spack:
     - gromacs@=2024.3 ~double +lapack build_type=Release 
     - gromacs@=2023 ~double +lapack +plumed build_type=Release ^plumed@2.9.0
     - gromacs@2022.5 ~double +lapack +plumed build_type=Release ^plumed@2.8.2
+    - cp2k@2025.1 +plumed ^plumed@2.9.0
     - cp2k@2024.3 +plumed ^plumed@2.9.0
     - cp2k@2023.2 +plumed ^plumed@2.9.0
 
-    - namd@2.14 ~rocm interface=python fftw=3 ^charmpp backend=ofi pmi=cray-pmi 
-    - namd@3.0.1  ~rocm interface=python fftw=3 ^charmpp backend=ofi pmi=cray-pmi
+#I    - namd@2.14 ~rocm interface=python fftw=3 ^charmpp backend=ofi pmi=cray-pmi 
+#I    - namd@3.0.1  ~rocm interface=python fftw=3 ^charmpp backend=ofi pmi=cray-pmi
       #    - namd@2.15a2 +rocm amdgpu_target=gfx90a ^charmpp@7.0.0 backend=ofi ^ncurses@6.3+symlinks #broken - providing only through containers
 # Failing:    - openfoam-org@8 #Alexis still working on it
 # Current alternative:
@@ -47,7 +48,7 @@ spack:
 # look into this file nektar/cmake/FindNativeBlasLapack.cmake
 # Custom Pawsey recipe, that builds all dependencies internally - OK
 #    - nektar@5.5.0 ^netlib-lapack@3.11.0 build_type=Release
-    - nektar@5.0.2 ^netlib-lapack@3.11.0 build_type=Release
+    - nektar@5.0.2 build_type=Release ^netlib-lapack@3.11.0 ^boost@1.72.0
     - quantum-espresso@7.4 +epw +openmp hdf5=parallel
     - quantum-espresso@7.2 +epw +openmp hdf5=parallel
 
@@ -68,28 +69,28 @@ spack:
   - matrix:
     - [$packages-with-python]
     - [^python@3.11.6 +optimizations+zlib~ssl]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
   - matrix:
     - [$packages-with-oldpython]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
   - matrix:
     - [$packages]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
   - matrix:
     - [$vasp_packages]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
   - matrix:
     - [$weather_utils]
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
   - matrix:
     - [$lammps]
     - [+adios +asphere +atc +awpmd +bocs +body +brownian +class2 +colloid +colvars +compress +coreshell +dielectric +diffraction +dipole +dpd-basic +dpd-meso +dpd-react +dpd-smooth +drude +eff +extra-compute +extra-dump +extra-fix +extra-molecule +extra-pair +fep +ffmpeg +granular +h5md +interlayer +jpeg +kim +kokkos +kspace +latboltz +machdyn +manifold +manybody +mc +meam +mesont       +mgpt +misc +ml-iap +ml-snap +mofff +molecule +molfile +netcdf +openmp-package +opt +orient +peri +phonon +plugin +plumed +png +poems +ptm +python +qeq +qtb +reaction +reaxff +replica +rigid +shock +smtbq +sph +spin +srd +tally +uef +voronoi +yaff build_type=Release ]
 #    - [^plumed@2.9.0 ^adios2@2.9.2]  
-    - ['%gcc@13.3.0']
+    - ['%gcc@14.2.0']
     - [target=zen3]
   view: false
