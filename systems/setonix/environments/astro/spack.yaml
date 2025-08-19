@@ -57,8 +57,8 @@ spack:
 
   - mwa-no-python:
     - chgcentre build_type=Release target=zen3
-    - giant-squid@2.2.0 target=zen3
-    - giant-squid@2.2.0 target=zen2
+    - giant-squid@2.3.0 target=zen3
+    - giant-squid@2.3.0 target=zen2
 
   # TODO add versions 
   - python-astro-set:
