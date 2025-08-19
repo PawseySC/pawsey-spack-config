@@ -44,6 +44,7 @@ class Amdgromacs(CMakePackage, ROCmPackage):
     
     patch("fix_hip_add_library.patch")
     patch("fix_memoryAttributes.patch")
+    patch("fix_modularsimulator.h.patch")
 
 #    def patch(self):
 #        plumed = Executable(self.spec["plumed"].prefix.bin.plumed)
@@ -87,7 +88,7 @@ class Amdgromacs(CMakePackage, ROCmPackage):
             "-DCMAKE_HIP_ARCHITECTURES='gfx90a'",
             "-DAMDGPU_TARGETS='gfx90a'",
             "-DGPU_TARGETS='gfx90a'",
-            f"-D HIP_HIPCC_FLAGS='-O3 -I/opt/rocm-6.1.3/include/hipfft --offload-arch={amdgpu_target} --save-temps -I/opt/cray/pe/mpich/8.1.30/ofi/gnu/12.3/include/'",
+            f"-D HIP_HIPCC_FLAGS='-O3 -I/opt/rocm-6.3.0/include/hipfft --offload-arch={amdgpu_target} --save-temps -I/opt/cray/pe/mpich/8.1.32/ofi/gnu/12.3/include/'",
             "-DGMX_GPU_USE_VKFFT=ON",
             "-DCMAKE_C_FLAGS='-Ofast'",
             "-DCMAKE_CXX_FLAGS='-Ofast'", 
@@ -162,6 +163,8 @@ class Amdgromacs(CMakePackage, ROCmPackage):
     def setup_build_environment(self, env):
         if self.spec.satisfies("+rocm"):      
             self.set_variables(env)
+        env.append_flags('CFLAGS', '-fpermissive -Wno-error=incompatible-pointer-types')
+        env.append_flags('CXXFLAGS', '-fpermissive -Wno-error=incompatible-pointer-types')
 
     def setup_run_environment(self, env):
         if self.spec.satisfies("+rocm"):

@@ -825,7 +825,7 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
     #patch("fix_fmt_print.patch", when="@20230802: %cce@18.0.0:")
     #patch("fix_fmt_print.patch")
     #patch("fix_dump_xyz.cpp.patch")
-    #patch("fix_citeme.cpp.patch")
+    patch("fix_citeme.cpp.patch",when="@20240829.1")
     #patch("fix_fix_property_atom.cpp.patch")
     #patch("fix_lammps.cpp.patch")
 

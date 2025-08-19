@@ -45,6 +45,8 @@ class Everybeam(CMakePackage):
     patch('cmake.hamaker.patch', when='@0.2.0')
     patch('cmake.oskar.patch', when='@0.2.0')
 
+    patch('fix_recursivelock.h.patch', when='%gcc@14.2.0',sha256="2eae4be50e048731749a5b1297a3684770b99857081a54b9c32d029c109099d8")
+
     def cmake_args(self):
         args = []
         spec = self.spec

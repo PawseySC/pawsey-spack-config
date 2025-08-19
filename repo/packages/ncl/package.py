@@ -181,6 +181,10 @@ class Ncl(Package):
         if self.spec.satisfies("%gcc@10:"):
             fc_flags.append("-fallow-argument-mismatch")
             cc_flags.append("-fcommon")
+            cc_flags.append("-Wno-error=incompatible-pointer-types")
+            cc_flags.append("-Wno-error=implicit-function-declaration")
+            cc_flags.append("-Wno-error=implicit-int")
+            cc_flags.append("-Wno-error=int-conversion")
 
         if self.spec.satisfies("+grib"):
             gribline = (

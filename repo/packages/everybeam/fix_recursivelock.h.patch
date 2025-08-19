@@ -1,0 +1,11 @@
+--- a/cpp/mwabeam/recursivelock.h	2025-06-19 00:10:27.000000000 +0800
++++ b/cpp/mwabeam/recursivelock.h	2025-06-19 00:10:41.000000000 +0800
+@@ -42,8 +42,6 @@
+     if (nlocks_ != 0) mutex_->unlock();
+     mutex_ = other.mutex_;
+     nlocks_ = other.nLocks;
+-    other.mutex_ = nullptr;
+-    other.nlocks_ = 0;
+   }
+ 
+   void lock() {

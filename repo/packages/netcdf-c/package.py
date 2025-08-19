@@ -295,6 +295,12 @@ class NetcdfC(CMakePackage, AutotoolsPackage):
 
     build_system("cmake", "autotools", default=default_build_system)
 
+
+    def setup_build_environment(self, env):
+        env.append_flags('CFLAGS', '-fpermissive -Wno-error=incompatible-pointer-types')
+        env.append_flags('CPPFLAGS', '-fpermissive -Wno-error=incompatible-pointer-types')
+        env.append_flags('CXXFLAGS', '-fpermissive -Wno-error=incompatible-pointer-types')
+
     def setup_run_environment(self, env):
         if self.spec.satisfies("@4.9.0:+shared"):
             # Both HDF5 and NCZarr backends honor the same environment variable:
@@ -304,6 +310,8 @@ class NetcdfC(CMakePackage, AutotoolsPackage):
         if name == "cflags":
             if self.spec.satisfies("%cce"):
                 flags.append("-Wno-error=incompatible-function-pointer-types")
+            #Adding the next line since CPE/25.03 compilers are more pedantic
+            flags.append("-Wno-error=incompatible-pointer-types")
         if self.builder.build_system == "autotools":
             if name == "cflags":
                 if "+pic" in self.spec:
