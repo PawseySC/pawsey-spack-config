@@ -51,6 +51,9 @@ class Cpmd(MakefilePackage):
             cc = spack_cc
             cp.filter(r"FFLAGS='([^']*)'", "FFLAGS='\\1 -fallow-argument-mismatch'")
 
+        if spec.satisfies("%gcc@14:"):
+            cp.filter(r"CFLAGS='([^']*)'", r"CFLAGS='\1 -Wno-int-conversion -fpermissive'")
+
         cp.filter("FC=.+", "FC='{0}'".format(fc))
         cp.filter("CC=.+", "CC='{0}'".format(cc))
         cp.filter("LD=.+", "LD='{0}'".format(fc))

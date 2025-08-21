@@ -3,7 +3,7 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2025.02"
+DATE_TAG="2025.08"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
     INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
@@ -35,7 +35,8 @@ fi
 
 # Note the use of '' instead of "" to allow env variables to be present in config files
 USER_PERMANENT_FILES_PREFIX='/software/projects'
-USER_TEMP_FILES_PREFIX='/scratch'
+#USER_TEMP_FILES_PREFIX='/scratch'
+USER_TEMP_FILES_PREFIX='/tmp'
 SPACK_USER_CONFIG_PATH="$MYSOFTWARE/setonix/$DATE_TAG/.spack_user_config"
 BOOTSTRAP_PATH='$MYSOFTWARE/setonix/'$DATE_TAG/.spack_user_config/bootstrap
 # Set a new mirror where to fetch prebuilt binaries, if any.
@@ -54,20 +55,20 @@ RFM_TEST_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_checks
 
 archs="zen2 zen3"
 # compiler versions (needed for module trees with compiler dependency)
-gcc_version="13.3.0"
-gcc_versionO="13.3.1"
-cce_version="18.0.0"
+gcc_version="14.2.0"
+gcc_versionO="14.2.1"
+cce_version="19.0.0"
 aocc_version="5.0.0"
 
 # architecture of login/compute nodes (needed by Singularity symlink module)
 cpu_arch="zen3"
 
 # tool versions
-spack_version="0.23.0" # the prefix "v" is added in setup_spack.sh
+spack_version="0.23.1" # the prefix "v" is added in setup_spack.sh
 singularity_version="4.1.0-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="4.1.0-mpi" # has to match the version in the Spack env yaml + mpi tag
-shpc_version="0.1.30"
-shpc_registry_version="9748412c407a1feed71837a79ad350a307e66253"
+shpc_version="0.1.32"
+shpc_registry_version="bf0d6db12b1fe478e11c53dad966e25bb7d0a1b3"
 
 # python (and py tools) versions
 python_name="python"
@@ -122,6 +123,7 @@ cray_devel
 cray_s3_clients
 "
 #quay.io/sarahbeecroft9/alphafold:2.2.3
+#quay.io/pawsey/alphafold2-amd-gpu:rocm6.1.1
 container_list="
 amazon/aws-cli:2.13.0
 quay.io/biocontainers/bamtools:2.5.2--hd03093a_0
@@ -152,21 +154,23 @@ quay.io/biocontainers/velvet:1.2.10--h7132678_5
 quay.io/sarahbeecroft9/interproscan:5.56-89.0
 "
 
+
 container_list_mpi="
+quay.io/pawsey/openfoam:v2412
 quay.io/pawsey/openfoam:v2212
 quay.io/pawsey/openfoam:v2206
 quay.io/pawsey/openfoam:v2012
-quay.io/pawsey/openfoam:v2006
-quay.io/pawsey/openfoam:v1912
+quay.io/pawsey/openfoam-org:12
 quay.io/pawsey/openfoam-org:10
 quay.io/pawsey/openfoam-org:9
 quay.io/pawsey/openfoam-org:8
-quay.io/pawsey/openfoam-org:7
-quay.io/pawsey/pytorch:2.6.0-rocm6.2.2
-quay.io/pawsey/tensorflow:2.12.1.570-rocm5.6.0
-amdih/cp2k
-amdih/namd
-amdih/namd3"
+quay.io/pawsey/tensorflow:2.15.1-rocm6.3.3
+quay.io/pawsey/tensorflow:2.17-rocm6.3.3
+quay.io/pawsey/pytorch:2.7.1-rocm6.3.3
+quay.io/pawsey/cp2k:2024.3-rocm6.3.0
+quay.io/pawsey/namd:3.0.1
+quay.io/pawsey/namd:3.0.1-rocm6.3.0
+"
 #quay.io/pawsey/hpc-python:2022.03						
 #quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 
@@ -234,11 +238,11 @@ spack_module_dir="${utilities_modules_dir}/spack"
 # Use the Cray provided ROCm until we have a stable custom build.
 
 ROCM_VERSIONS=(
-"6.1.3"
+"6.3.0"
 )
 
 ROCM_PATHS=(
-"/opt/rocm-6.1.3"
+"/opt/rocm-6.3.0"
 )
 
 fi # end include guard

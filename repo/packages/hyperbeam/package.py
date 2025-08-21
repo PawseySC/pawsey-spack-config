@@ -155,7 +155,7 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
         if self.spec.satisfies("+python"):
             python_version = self.spec["python"].version.string
             python_version = python_version[: python_version.rfind(".")]
-            env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
+            env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib64/python{python_version}/site-packages")
 
     def setup_dependent_run_environment(self, env, dependent_spec):
         if self.spec.satisfies("+python") and dependent_spec.package.extends(self.spec):

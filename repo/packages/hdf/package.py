@@ -156,10 +156,11 @@ class Hdf(AutotoolsPackage):
                 or self.spec.satisfies("%clang@16:")
                 or self.spec.satisfies("%oneapi")
                 or self.spec.satisfies("%cce")
+                or self.spec.satisfies("%gcc@14:")
             ):
                 flags.append("-Wno-error=implicit-function-declaration")
 
-            if self.spec.satisfies("%clang@16:") or self.spec.satisfies("%apple-clang@15:") or self.spec.satisfies("%cce"):
+            if self.spec.satisfies("%clang@16:") or self.spec.satisfies("%apple-clang@15:") or self.spec.satisfies("%cce") or self.spec.satisfies("%gcc@14:"):
                 flags.append("-Wno-error=implicit-int")
 
         return flags, None, None

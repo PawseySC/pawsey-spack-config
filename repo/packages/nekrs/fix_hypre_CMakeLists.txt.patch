@@ -1,0 +1,11 @@
+--- a/3rd_party/hypre/src/CMakeLists.txt	2025-06-13 13:52:25.984601523 +0800
++++ b/3rd_party/hypre/src/CMakeLists.txt	2025-06-13 10:08:31.954302412 +0800
+@@ -24,6 +24,8 @@
+   VERSION ${HYPRE_VERSION}
+   LANGUAGES C)
+ 
++add_compile_options(-fpermissive -Wno-error=incompatible-pointer-types)
++
+ if (${HYPRE_SOURCE_DIR} STREQUAL ${HYPRE_BINARY_DIR})
+   message(FATAL_ERROR "In-place build not allowed! Please use a separate build directory. See the Users Manual or INSTALL file for details.")
+ endif ()

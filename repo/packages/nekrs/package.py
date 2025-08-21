@@ -66,6 +66,8 @@ class Nekrs(Package, CMakePackage, CudaPackage, ROCmPackage):
 
     patch("include_cstdint.patch")
     patch("fix_gcnArch.patch")
+    patch("fix_hypre_CMakeLists.txt.patch")
+    patch("fix_occa_FindHIP.cmake.patch")
 
     def patch(self):
         with working_dir("scripts"):

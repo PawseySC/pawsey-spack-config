@@ -10,9 +10,9 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
     maintainers = ["d3v-null", "gsleap"]
 
     version("main", branch="main")
-    version("0.5.1", tag="v0.5.1")
-    version("0.5.0", tag="v0.5.0")
-    version("0.5.0-devel", tag="v0.5.0-devel")
+    version("0.6.1", tag="v0.6.1")
+    version("0.6.1-devel", tag="v0.6.1-devel")
+    version("0.6.1-autos", tag="v0.6.1-autos")
     version("0.4.1", tag="v0.4.1")
     version("0.4.1-peel", tag="v0.4.1-peel")
     version("0.4.1-devel", tag="v0.4.1-devel")

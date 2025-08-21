@@ -15,6 +15,7 @@ setenv("PAWSEY_SHPC_HOME","INSTALL_PREFIX/SHPC_INSTALL_DIR")
 
 prepend_path("PATH","INSTALL_PREFIX/SHPC_INSTALL_DIR/bin")
 prepend_path("PYTHONPATH","INSTALL_PREFIX/SHPC_INSTALL_DIR/lib/pythonPYTHON_MAJORMINOR/site-packages")
+prepend_path("PYTHONPATH","INSTALL_PREFIX/SHPC_INSTALL_DIR/lib64/pythonPYTHON_MAJORMINOR/site-packages")
 
 -- Enforce explicit usage of versions by requiring full module name
 if (mode() == "load") then

@@ -143,6 +143,9 @@ class PyAstropy(PythonPackage):
             args.extend(['-j', str(make_jobs)])
         return args
 
+    def setup_build_environment(self, env):
+        env.append_flags('CFLAGS', '-fpermissive -Wno-error=incompatible-pointer-types')
+
     @run_after('install')
     @on_package_attributes(run_tests=True)
     def install_test(self):

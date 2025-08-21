@@ -16,13 +16,15 @@ PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /d
 # swap is needed for the pawsey_temp module to work
 module swap PrgEnv-gnu PrgEnv-cray
 module swap PrgEnv-cray PrgEnv-gnu
+module load cpe/25.03
 module use ${INSTALL_PREFIX}/staff_modulefiles
 # we need the python module to be available in order to run spack
 module --ignore-cache load pawseyenv/${pawseyenv_version}
+module load gcc-native/14.2
 # swap is needed for the pawsey_temp module to work
-module swap PrgEnv-gnu PrgEnv-cray
-module swap PrgEnv-cray PrgEnv-gnu
-module use ${INSTALL_PREFIX}/modules/zen3/gcc/13.3.0/programming-languages
+#module swap PrgEnv-gnu PrgEnv-cray
+#module swap PrgEnv-cray PrgEnv-gnu
+module use ${INSTALL_PREFIX}/modules/zen3/gcc/14.2.0/programming-languages
 module load spack/${spack_version}
 
 # list of environments included in variables.sh (sourced above)
