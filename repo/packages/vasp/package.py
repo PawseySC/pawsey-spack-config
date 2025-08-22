@@ -37,8 +37,8 @@ class Vasp(MakefilePackage):
              when='+vaspsol')
 
     resource(name='vtst',
-             url='http://theory.cm.utexas.edu/code/vtstcode-197.tgz',
-             sha256='2017f5129a10e48ef2d928932eb48156dde7b8a9a26e6d0f5c086eae3ee0cb5a',
+             url='http://theory.cm.utexas.edu/code/vtstcode-209.tgz',
+             sha256='8f88265ab200ba61a3cbae119d05677e2744b5338fb9073ce6d901f38c17774b',
              when='+vtst')
 
     variant('scalapack', default=False,
@@ -96,7 +96,7 @@ class Vasp(MakefilePackage):
         if self.spec.satisfies('+vaspsol'):
             shutil.copy('VASPsol/src/solvation.F', 'src/')
 
-        vtst_pfx = 'vtstcode-197/vtstcode'
+        vtst_pfx = 'vtstcode-209/vtstcode'
         vtst_sfx = None
 
         if self.spec.satisfies('@5+vtst'):
@@ -105,8 +105,10 @@ class Vasp(MakefilePackage):
             vtst_sfx = '6.1'
         elif self.spec.satisfies('@6.3+vtst'):
             vtst_sfx = '6.3'
-        elif self.spec.satisfies('@6.4+vtst'):
-            vtst_sfx = '6.4'
+        elif self.spec.satisfies('@6.4.3+vtst'):
+            vtst_sfx = '6.4.3'
+        elif self.spec.satisfies('@6.5.1+vtst'):
+            vtst_sfx = '6.5.1'
 
         if vtst_sfx:
             shutil.copytree(vtst_pfx+vtst_sfx, 'src/', dirs_exist_ok=True)
