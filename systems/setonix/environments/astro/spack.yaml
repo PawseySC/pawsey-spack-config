@@ -51,7 +51,7 @@ spack:
     - aoflagger@3.4.0 build_type=Release target=zen3 ^cfitsio@3.49
     - hyperbeam@0.10.2 ~portable +python
     - hyperdrive@=0.6.1 ~portable
-    - birli@0.18.0 ~portable
+    - birli@0.18.1 ~portable
     - calceph@3.5.5 target=zen3
     - presto@5.0.1 target=zen3
 

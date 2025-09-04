@@ -10,7 +10,7 @@ class Birli(Package):
     maintainers = ["d3v-null", "gsleap"]
 
     version("main", branch="main")
-    version("0.18.0", tag="v0.18.0")
+    version("0.18.1", tag="v0.18.1")
     version("0.17.1", tag="v0.17.1")
     version("0.16.0", tag="v0.16.0")
     version("0.15.1", tag="v0.15.1")
