@@ -1,7 +1,8 @@
 #!/bin/bash -e
 # 
-# Install Spack on a supercomputing system.
-# 
+# The module-stats package allows Pawsey staff to query the Graylog database about modules loaded on Setonix.
+# The source code for the package is hosted on the Pawsey gitlab service, under Cristian's account. May be relocated in the future.
+#
 if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
     SYSTEM="$PAWSEY_CLUSTER"
 fi
