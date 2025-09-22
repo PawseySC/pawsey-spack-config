@@ -12,11 +12,11 @@ spack:
     'fftw-api:':
       buildable: true
   definitions:
-  
+
   # casacore variants
-  # try running spack install --no-checksum 
+  # try running spack install --no-checksum
   - casacore-legacy:
-    - casacore@3.2.1 +python datapath=setonix build_type=Release ^python@3.11.6 # no checksum for this release 
+    - casacore@3.2.1 +python datapath=setonix build_type=Release ^python@3.11.6 # no checksum for this release
   - casacore-set:
     - casacore@3.3.0 datapath=setonix
     - casacore@3.4.0 datapath=setonix
@@ -26,7 +26,7 @@ spack:
     - cfitsio@3.49 +reentrant
     - cfitsio@4.4.0 +reentrant
     - wcslib +cfitsio
-    - wcslib ~cfitsio  
+    - wcslib ~cfitsio
     - pgplot
     - wcstools
   - askap-util-set:
@@ -40,7 +40,7 @@ spack:
     - log4cxx cxxstd=11 ^python@3.11.6
     - mcpp
     - xerces-c transcoder=gnuiconv
-    - xerces-c transcoder=iconv  
+    - xerces-c transcoder=iconv
     - subversion
 
   - mwa-with-python:
@@ -51,7 +51,7 @@ spack:
     - aoflagger@3.4.0 build_type=Release target=zen3 ^cfitsio@3.49
     - hyperbeam@0.10.2 ~portable +python
     - hyperdrive@=0.6.1 ~portable
-    - birli@0.18.1 ~portable
+    - birli@0.18.2 +aoflagger ~portable
     - calceph@3.5.5 target=zen3
     - presto@5.0.1 target=zen3
 
@@ -60,7 +60,7 @@ spack:
     - giant-squid@2.3.0 target=zen3
     - giant-squid@2.3.0 target=zen2
 
-  # TODO add versions 
+  # TODO add versions
   - python-astro-set:
     - py-funcsigs #package not available in spack/0.20.0, using recipe from 0.19.0
     - py-astropy@4.2.1+extras
@@ -75,7 +75,7 @@ spack:
     - [target=zen3]
     - [+python build_type=Release ^python@3.11.6]
     - [+openmp, ~openmp]
-    - [~adios2 ~hdf5, +adios2 +hdf5 ^adios2@2.8.3 +hdf5 ^hdf5@1.12.2 +hl +fortran 
+    - [~adios2 ~hdf5, +adios2 +hdf5 ^adios2@2.8.3 +hdf5 ^hdf5@1.12.2 +hl +fortran
         build_type=Release +szip api=v112]
         # can't use hdf%@1.14.3 for casacore yet
   - matrix:
