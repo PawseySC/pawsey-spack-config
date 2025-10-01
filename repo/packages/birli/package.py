@@ -10,7 +10,7 @@ class Birli(Package):
     maintainers = ["d3v-null", "gsleap"]
 
     version("main", branch="main")
-    version("0.18.0", tag="v0.18.0")
+    version("0.18.2", tag="v0.18.2")
     version("0.17.1", tag="v0.17.1")
     version("0.16.0", tag="v0.16.0")
     version("0.15.1", tag="v0.15.1")
@@ -22,6 +22,7 @@ class Birli(Package):
     # unknown issue on setonix when enabled https://github.com/PawseySC/pawsey-spack-config/pull/280#issuecomment-2296128762
     variant("cfitsio-static", default=False, description="Enable the fitsio_src feature of the fitsio-sys crate.")
     variant("portable", default=True, description="Disable native CPU optimizations")
+    variant("aoflagger", default=True, description="AOFlagger RFI flagging")
 
     depends_on("rust@1.64.0:", type="build")
     depends_on("rust@1.65.0:", type="build", when="@0.16.0:")
@@ -45,9 +46,11 @@ class Birli(Package):
             env.append_flags("RUSTFLAGS", f"-C target-cpu=native")
 
     def get_features(self):
-        features = []
+        features = ["cli"]
         if self.spec.satisfies("+cfitsio-static"):
             features += ["cfitsio-static"]
+        if self.spec.satisfies("+aoflagger"):
+            features += ["aoflagger"]
         return features
 
     def get_cargo_args(self):
