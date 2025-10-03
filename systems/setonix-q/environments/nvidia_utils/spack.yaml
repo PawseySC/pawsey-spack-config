@@ -1,0 +1,35 @@
+spack:
+# note: preferred versions are set in packages.yaml
+  definitions:
+  - packages:
+# py-pip and py-setuptools: installed in env_langs
+# snakemake: docs recommend to install with conda
+    - ffmpeg@7.0.2 +libx264 +doc +drawtext +libaom +libmp3lame +libopenjpeg +libopus +libsnappy +libspeex +libvorbis +libvpx +libwebp +libxml2 +libzmq +lzma +nonfree +openssl +sdl2
+## for now    - ffmpeg@6.1.1
+    - gnuplot@6.0.0
+## for now    - llvm@15.0.4 ~polly ~gold # Ilkhom: ~omp_as_runtime variant is removed from spack/0.21.0
+    - nextflow@22.10.0 #supports DSL-1
+    - nextflow@24.10.0 #supports DSL-2
+    - parallel@20240822
+# Reframe installation is not required since it is done via install_reframe.sh
+    #- reframe@3.12.0 ^python@3.11.6 +optimizations+zlib
+    #- reframe@4.6.3 +docs ^python@3.11.6 +optimizations+zlib. New version is not required
+    # now moving to singularityce rather than older singularity
+    #- singularityce@4.1.0
+    #- singularityce@4.0.3~conmon ^go@1.22.1
+    - mpifileutils@0.11.1+lustre
+    - feh@3.10
+    - nano@8.2
+    - cmake@3.30.5
+## utilities for Nextflow Tower tower-agent and tower-cli are no longer needed. PR 41576
+#    - tower-agent@0.4.5
+#    - tower-cli@0.7.0
+# add nano here for now
+  - licensed:
+    - matlab@R2021a key=$MATLAB_INSTALL_KEY mode=automated
+  specs:
+  - matrix:
+    - [$packages]
+    - ['%nvhpc@24.11']
+    - [target=zen3, target=zen2]
+  view: false

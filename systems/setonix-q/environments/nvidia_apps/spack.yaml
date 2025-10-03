@@ -1,0 +1,16 @@
+spack:
+  packages:
+    'blas:':
+      buildable: true
+    'lapack:':
+      buildable: true
+    'fftw-api:':
+      buildable: true
+  definitions:
+  - packages:
+  specs:
+  - matrix:
+  - matrix:
+    - [$packages]
+    - ['%nvhpc@24.11']
+  view: false
