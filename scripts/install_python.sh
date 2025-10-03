@@ -1,17 +1,21 @@
 #!/bin/bash -e
 
-if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
-    SYSTEM="$PAWSEY_CLUSTER"
-fi
+# if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
+#     SYSTEM="$PAWSEY_CLUSTER"
+# fi
 
-if [ -z ${SYSTEM+x} ]; then
-    echo "The 'SYSTEM' variable is not set. Please specify the system you want to
-    build Spack for."
-    exit 1
-fi
+# if [ -z ${SYSTEM+x} ]; then
+#     echo "The 'SYSTEM' variable is not set. Please specify the system you want to
+#     build Spack for."
+#     exit 1
+# fi
 
-PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
-. "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
+# PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
+# . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
+
+check_installation_environment
+set_spack_config_repo
+set_compilation_sets_for_arch
 
 # for first run, use cray-python, because there is no Spack python yet
 module load cray-python
@@ -33,13 +37,11 @@ echo "Running 'spack spec nano' to bootstrap Clingo.."
 spack spec nano
 
 # first thing we need is Python
-# spec gcc
-echo "Concretization of Python.."
-spack spec python@${python_version} %gcc@${gcc_version}
-spack spec python@${python_version} %cce@${cce_version}
-
-echo "Installing Python with default compilers.."
-for arch in $archs; do
-    sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %gcc@${gcc_version} target=$arch"
-    sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %cce@${cce_version} target=$arch"
+for comp in $compilers; do
+    for arch in $archs; do
+        echo "Concretization of Python.."
+        spack spec python@${python_version} %$comp target=$arch
+        echo "Installing Python with $comp for $arch.."
+        sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %$comp target=$arch"
+    done
 done
