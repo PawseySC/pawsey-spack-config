@@ -44,5 +44,8 @@ echo "Installing shpc..."
 echo "Installing containers.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_shpc_containers.sh"
 
+echo "Installing module stats.."
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_module_stats.sh"
+
 echo "Post installation operations.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/post_installation_operations.sh"
