@@ -5,9 +5,17 @@ REALSPACK="${SPACK_DIR}/bin/realspack"
 
 if (( $# > 0 )) && [ "$1" = "project" ]; then
     # enable group access and writing to the stack
-    umask g+rwx
-    ${REALSPACK} -C "${SPACK_DIR}/etc/spack/project" ${@:2}
+    if [ "$2" = "customise" ]; then
+        pawsey_spack_customise.sh project ${3} ${4}
+    else
+        umask g+rwx
+        ${REALSPACK} -C "${SPACK_DIR}/etc/spack/project" ${@:2}
+    fi
 else
-    ${REALSPACK} ${@}
+    if [ "$1" = "customise" ]; then
+        pawsey_spack_customise.sh user ${2} ${3}
+    else
+        ${REALSPACK} ${@}
+    fi
 fi
 
