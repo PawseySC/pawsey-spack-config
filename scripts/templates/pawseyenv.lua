@@ -114,10 +114,7 @@ prepend_path("LMOD_CUSTOM_COMPILER_GNU_12_0_PREFIX", psc_sw_env_custom_modules_r
 prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_17_0_PREFIX", psc_sw_env_custom_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_custom_modules_suffix)
 prepend_path("LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX", psc_sw_env_custom_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_custom_modules_suffix)
 
-<<<<<<< HEAD
 -- Let scripts know which version of the software stack is loaded
 setenv("PAWSEY_STACK_VERSION", "DATE_TAG")
-=======
 end
 -- if not root
->>>>>>> origin/cpe25.03_spackv0.23.1
