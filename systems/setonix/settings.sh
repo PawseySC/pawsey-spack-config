@@ -3,7 +3,7 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2025.08"
+DATE_TAG="2025.11"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
     INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
@@ -64,7 +64,7 @@ aocc_version="5.0.0"
 cpu_arch="zen3"
 
 # tool versions
-spack_version="0.23.1" # the prefix "v" is added in setup_spack.sh
+spack_version="1.0.2" # the prefix "v" is added in setup_spack.sh
 singularity_version="4.1.0-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="4.1.0-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.32"
