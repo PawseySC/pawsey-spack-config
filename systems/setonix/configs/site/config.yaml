@@ -3,6 +3,8 @@ config:
   # This is the path to the root of the Spack install tree.
   install_tree:
     root: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix/DATE_TAG/software
+    projections:
+      all: "{architecture}/{compiler.name}-{compiler.version}/{name}-{version}-{hash}"
 
   environments_root: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix/DATE_TAG/environments
   # Locations where templates should be found

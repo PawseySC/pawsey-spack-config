@@ -3,7 +3,7 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2025.11"
+#DATE_TAG="2025.11"  # removing this as it is already defined in submit_job.slm.
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
     INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
@@ -69,10 +69,10 @@ singularity_version="4.1.0-nompi" # has to match the version in the Spack env ya
 singularity_mpi_version="4.1.0-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.32"
 shpc_registry_version="bf0d6db12b1fe478e11c53dad966e25bb7d0a1b3"
-
+                     
 # python (and py tools) versions
-python_name="python"
-python_version="3.11.6" # has to match the version in the Spack env yaml
+python_name="python" 
+python_version="3.11.11" # has to match the version in the Spack env yaml
 setuptools_version="59.4.0" # has to match the version in the Spack env yaml
 pip_version="23.1.2" # has to match the version in the Spack env yaml
 # r major minor version

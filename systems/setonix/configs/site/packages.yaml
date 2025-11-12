@@ -3,14 +3,19 @@ packages:
   # note the compiler and providers specifications
   # only suggest a priority order, they do not exclude other options
   # suggested priority for compilers.
-    compiler: [ gcc@14.2.0, cce@19.0.0, aocc@5.0.0 ]
+  #  compiler: [ gcc@14.2.0, cce@19.0.0, aocc@5.0.0 ]
+  #  require:
+  #    - one_of:
+  #        - '%gcc@14.2.0'
+  #        - '%cce@19.0.0'
+  #        - '%aocc@5.0.0'
     providers:
       mpi: [ cray-mpich ]
       blas: [ openblas, amdblis ] #, cray-libsci ] # commenting out cray-libsci as bug was identified
       lapack: [ openblas, netlib-lapack, amdlibflame ] #, cray-libsci ]
       scalapack: [ netlib-scalapack, amdscalapack ] #, cray-libsci ]
       fftw-api: [ fftw, amdfftw ] #, cray-fftw ] # commenting out cray-fftw for now, similar to cray-libsci
-      pkgconfig: [ pkg-config ]
+      pkgconfig: [ pkgconf ]
     permissions:
       read: world
       # this should be user, we do not want pawsey0001 users 
@@ -36,19 +41,67 @@ packages:
 # Edit: FFTW buildable, otherwise in Spack 0.17.0 the concretiser crashes
 #  fftw-api:
 #    buildable: false
-  pkgconfig:
-    buildable: false
+#  pkgconfig:
+#    buildable: false
 # don't build compilers neither
   cce:
     buildable: false
-  gcc:
-    buildable: false
+    externals:
+      - spec: cce@19.0.0
+        modules:
+          - PrgEnv-cray
+          - cce/19.0.0
+          - craype/2.7.34
+          - craype-x86-milan
+          - craype-network-ofi
+          - xpmem
+        extra_attributes:
+          compilers:
+            c: cc
+            cxx: CC
+            fortran: ftn
+          flags:
+            cflags: -O3 -Wl,--undefined-version
+            cxxflags: -O3 -Wl,--undefined-version
+            cppflags: -O3 -Wl,--undefined-version
+            fflags: -O3 -Wl,--undefined-version 
+          environment:
+            set:
+              PE_ENV: "CRAY"
+
+#  gcc:
+#    buildable: false
   aocc:
     buildable: false
   intel:
     buildable: false
   pgi:
     buildable: false
+
+  gcc:
+    buildable: false
+    externals:
+      - spec: gcc@14.2.0 languages='c,c++,fortran'
+        modules:
+          - PrgEnv-gnu
+          - gcc-native/14.2
+          - craype/2.7.34
+          - craype-x86-milan
+          - craype-network-ofi
+          - xpmem
+        extra_attributes:
+          compilers:
+            c: cc
+            cxx: CC
+            fortran: ftn
+          flags:
+            cflags: -O3
+            cxxflags: -O3
+            cppflags: -O3
+            fflags: -O3 -fallow-argument-mismatch
+          environment:
+            set:
+              PE_ENV: "GNU"
 
   # GENERAL NOTES:
   # 1. for each package, only one entry must exist in this yaml
@@ -75,7 +128,7 @@ packages:
     version: [1.21.3]
   # cmake can have multiple entries so set default
   cmake:
-    version: [3.30.5]
+    version: [3.31.6]
     variants: ~doc+ncurses+ownlibs~qt
 # Commented out - see GENERAL NOTES above
 #    externals:
@@ -93,7 +146,7 @@ packages:
     variants: '~omp_as_runtime ~clang ~compiler-rt ~polly ~gold'
   # preferred versions and variants, python
   python:
-    version: [3.11.6]
+    version: [3.11.11]
     variants: '+optimizations +zlib ~ssl'
   gdbm:
     version: [1.24]
@@ -267,11 +320,11 @@ packages:
   # ===========================================================================
   #                                  EXTERNALS
   # ===========================================================================
-  pkg-config:
-    externals:
-    - spec: pkg-config@0.29.2
-      prefix: /usr
-    buildable: false
+  #pkg-config:
+  #  externals:
+  #  - spec: pkg-config@0.29.2
+  #    prefix: /usr
+  #  buildable: false
 
   hwloc:
     externals:
@@ -383,11 +436,11 @@ packages:
       prefix: /usr
     buildable: false
 
-  curl:
-    externals:
-    - spec: curl@8.6.0
-      prefix: /usr
-    buildable: false
+#  curl:
+#    externals:
+#    - spec: curl@8.14.1
+#      prefix: /usr
+#    buildable: false
 
   openssh:
     externals:

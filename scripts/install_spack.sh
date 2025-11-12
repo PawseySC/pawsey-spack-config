@@ -54,13 +54,16 @@ fi
 cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/site/*.yaml ${INSTALL_PREFIX}/spack/etc/spack/
 cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/spackuser/*.yaml ${SPACK_USER_CONFIG_PATH}/
 
+ls ${SPACK_USER_CONFIG_PATH}/
+
 # copy project-wide configs into spack tree, too
 mkdir -p ${INSTALL_PREFIX}/spack/etc/spack/project
 cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/project/*.yaml ${INSTALL_PREFIX}/spack/etc/spack/project/
 
+#Ilkhom: Disabling setonix packages for now.
 # Copy over custom Pawsey recipes in a spack pawsey repo within the spack installation
-[ -e "${INSTALL_PREFIX}/spack/var/spack/repos/pawsey" ] || mkdir -p "${INSTALL_PREFIX}/spack/var/spack/repos/pawsey"
-cp -r ${PAWSEY_SPACK_CONFIG_REPO}/repo/* "${INSTALL_PREFIX}/spack/var/spack/repos/pawsey/"
+#[ -e "${INSTALL_PREFIX}/spack/var/spack/repos/pawsey" ] || mkdir -p "${INSTALL_PREFIX}/spack/var/spack/repos/pawsey"
+#cp -r ${PAWSEY_SPACK_CONFIG_REPO}/repo/* "${INSTALL_PREFIX}/spack/var/spack/repos/pawsey/"
 
 # .. and custom module templates
 [ -e "${INSTALL_PREFIX}/spack/templates" ] || mkdir -p "${INSTALL_PREFIX}/spack/templates"
@@ -163,3 +166,6 @@ sed \
   -e "s;MODULE_LUA_CAT_LIST;${module_lua_cat_list};g" \
   ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/pawseyenv.lua \
   > "${INSTALL_PREFIX}/staff_modulefiles/pawseyenv/${pawseyenv_version}.lua"
+
+
+ls ${SPACK_USER_CONFIG_PATH}/
