@@ -19,7 +19,6 @@ echo "Setting up spack.."
 echo "Running first python install"
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_python.sh"
 
-
 echo "Running first reframe install"
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_reframe.sh"
 

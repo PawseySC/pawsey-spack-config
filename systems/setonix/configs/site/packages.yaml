@@ -4,11 +4,6 @@ packages:
   # only suggest a priority order, they do not exclude other options
   # suggested priority for compilers.
   #  compiler: [ gcc@14.2.0, cce@19.0.0, aocc@5.0.0 ]
-  #  require:
-  #    - one_of:
-  #        - '%gcc@14.2.0'
-  #        - '%cce@19.0.0'
-  #        - '%aocc@5.0.0'
     providers:
       mpi: [ cray-mpich ]
       blas: [ openblas, amdblis ] #, cray-libsci ] # commenting out cray-libsci as bug was identified

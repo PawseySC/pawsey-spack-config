@@ -54,8 +54,6 @@ fi
 cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/site/*.yaml ${INSTALL_PREFIX}/spack/etc/spack/
 cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/spackuser/*.yaml ${SPACK_USER_CONFIG_PATH}/
 
-ls ${SPACK_USER_CONFIG_PATH}/
-
 # copy project-wide configs into spack tree, too
 mkdir -p ${INSTALL_PREFIX}/spack/etc/spack/project
 cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/project/*.yaml ${INSTALL_PREFIX}/spack/etc/spack/project/
@@ -168,4 +166,3 @@ sed \
   > "${INSTALL_PREFIX}/staff_modulefiles/pawseyenv/${pawseyenv_version}.lua"
 
 
-ls ${SPACK_USER_CONFIG_PATH}/
