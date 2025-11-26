@@ -35,11 +35,11 @@ spack spec nano
 # first thing we need is Python
 # spec gcc
 echo "Concretization of Python.."
-spack spec python@${python_version} %gcc@${gcc_version}
-spack spec python@${python_version} %cce@${cce_version}
+spack spec python@${python_version} %gcc_compiler
+spack spec python@${python_version} %cce_compiler
 
 echo "Installing Python with default compilers.."
 for arch in $archs; do
-    sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %gcc@${gcc_version} target=$arch"
-    sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %cce@${cce_version} target=$arch"
+    sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %gcc_compiler target=$arch"
+    sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %cce_compiler target=$arch"
 done

@@ -11,6 +11,6 @@ spack:
   specs:
   - matrix:
     - [$packages]
-    - ['%cce@19.0.0']
+    - ['%cce_compiler']
     - [target=zen3]
   view: false

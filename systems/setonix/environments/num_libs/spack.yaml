@@ -84,12 +84,12 @@ spack:
   specs:
   - matrix:
     - [$parallel]
-    - ['%gcc@14.2.0']
+    - ['%gcc_compiler']
     - [^python@3.11.6]
     - [target=zen3]
   - matrix:
     - [$petsc-set]
-    - ['%gcc@14.2.0']
+    - ['%gcc_compiler']
     - [^python@3.11.6 ^fftw@3.3.10]
     - [+complex, ~complex]
     - [+fftw +hwloc +openmp ~cuda]
@@ -97,11 +97,11 @@ spack:
     - [target=zen3]      
   - matrix:
     - [$numerical]
-    - ['%gcc@14.2.0']
+    - ['%gcc_compiler']
     - [target=zen3]
   - matrix:
     - [$numerical-with-python]
-    - ['%gcc@14.2.0']
+    - ['%gcc_compiler']
     - [^python@3.11.6 +optimizations+zlib]
     - [target=zen3]
 # for now don't build amd math libraries

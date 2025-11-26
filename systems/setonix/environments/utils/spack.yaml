@@ -20,7 +20,7 @@ spack:
     - mpifileutils@0.11.1+lustre
     - feh@3.10
     - nano@8.2
-    - cmake@3.30.5
+    - cmake@3.31.6
 ## utilities for Nextflow Tower tower-agent and tower-cli are no longer needed. PR 41576
 #    - tower-agent@0.4.5
 #    - tower-cli@0.7.0
@@ -34,7 +34,7 @@ spack:
   specs:
   - matrix:
     - [$packages]
-    - ['%gcc@14.2.0']
+    - ['%gcc_compiler']
     - [target=zen3, target=zen2]
 #  - matrix:
 #    - [$without_O3] 

@@ -1,6 +1,6 @@
 toolchains:
   # All-languages GCC 14.2.0 toolchain using your external gcc package
-  gcc14_all:
+  gcc_compiler:
     # Optional: global flags to attach when this toolchain is used
     - spec: cflags="-O3"
     - spec: cxxflags="-O3"
@@ -15,7 +15,7 @@ toolchains:
       when: "%fortran"
 
   # All-languages CCE 19.0.0 toolchain using your external cce package
-  cce19_all:
+  cce_compiler:
     # Optional: global flags, mirroring what you had on cce
     - spec: cflags="-O3 -Wl,--undefined-version"
     - spec: cxxflags="-O3 -Wl,--undefined-version"
