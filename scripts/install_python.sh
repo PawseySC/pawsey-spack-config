@@ -36,10 +36,18 @@ spack spec nano
 # spec gcc
 echo "Concretization of Python.."
 spack spec python@${python_version} %gcc_compiler
+spack spec python@${python_version} %gcc_compiler_zen2
 spack spec python@${python_version} %cce_compiler
+spack spec python@${python_version} %cce_compiler_zen2
 
 echo "Installing Python with default compilers.."
-for arch in $archs; do
-    sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %gcc_compiler target=$arch"
-    sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %cce_compiler target=$arch"
-done
+sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %gcc_compiler"
+sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %gcc_compiler_zen2"
+sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %cce_compiler"
+sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %cce_compiler_zen2"
+
+#for arch in $archs; do
+#    echo "target=$arch"
+#    sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %gcc_compiler target=$arch"
+#    sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %cce_compiler target=$arch"
+#done

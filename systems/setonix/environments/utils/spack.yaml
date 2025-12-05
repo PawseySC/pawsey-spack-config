@@ -34,8 +34,7 @@ spack:
   specs:
   - matrix:
     - [$packages]
-    - ['%gcc_compiler']
-    - [target=zen3, target=zen2]
+    - ['%gcc_compiler','%gcc_compiler_zen2']
 #  - matrix:
 #    - [$without_O3] 
 #    - ['%gcc@13.3.1']

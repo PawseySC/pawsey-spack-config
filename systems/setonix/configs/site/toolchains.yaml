@@ -2,6 +2,22 @@ toolchains:
   # All-languages GCC 14.2.0 toolchain using your external gcc package
   gcc_compiler:
     # Optional: global flags to attach when this toolchain is used
+    - spec: target=zen3 
+    - spec: cflags="-O3"
+    - spec: cxxflags="-O3"
+    - spec: fflags="-O3 -fallow-argument-mismatch"
+
+    # Use gcc@14.2.0 for all three languages, when they are present
+    - spec: "%c=gcc@14.2.0"
+      when: "%c"
+    - spec: "%cxx=gcc@14.2.0"
+      when: "%cxx"
+    - spec: "%fortran=gcc@14.2.0"
+      when: "%fortran"
+
+  gcc_compiler_zen2:
+    # Optional: global flags to attach when this toolchain is used
+    - spec: target=zen2 
     - spec: cflags="-O3"
     - spec: cxxflags="-O3"
     - spec: fflags="-O3 -fallow-argument-mismatch"
@@ -17,6 +33,24 @@ toolchains:
   # All-languages CCE 19.0.0 toolchain using your external cce package
   cce_compiler:
     # Optional: global flags, mirroring what you had on cce
+    - spec: target=zen3 
+    - spec: cflags="-O3 -Wl,--undefined-version"
+    - spec: cxxflags="-O3 -Wl,--undefined-version"
+    - spec: cppflags="-O3 -Wl,--undefined-version"
+    - spec: fflags="-O3 -Wl,--undefined-version"
+
+    # Use cce@19.0.0 for all languages used by the package
+    - spec: "%c=cce@19.0.0"
+      when: "%c"
+    - spec: "%cxx=cce@19.0.0"
+      when: "%cxx"
+    - spec: "%fortran=cce@19.0.0"
+      when: "%fortran"
+
+  # All-languages CCE 19.0.0 toolchain using your external cce package
+  cce_compiler_zen2:
+    # Optional: global flags, mirroring what you had on cce
+    - spec: target=zen2 
     - spec: cflags="-O3 -Wl,--undefined-version"
     - spec: cxxflags="-O3 -Wl,--undefined-version"
     - spec: cppflags="-O3 -Wl,--undefined-version"

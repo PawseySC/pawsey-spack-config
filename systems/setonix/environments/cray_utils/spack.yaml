@@ -36,6 +36,5 @@ spack:
   specs:
   - matrix:
     - [$packages]
-    - ['%cce_compiler']
-    - [target=zen3, target=zen2]
+    - ['%cce_compiler','%cce_compiler_zen2']
   view: false

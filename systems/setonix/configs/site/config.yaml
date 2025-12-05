@@ -2,16 +2,22 @@ config:
 
   # This is the path to the root of the Spack install tree.
   install_tree:
-    root: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix/DATE_TAG/software
+    root: /software/projects/$PAWSEY_PROJECT/$USER/setonix/2025.11/software
     projections:
       all: "{architecture}/{compiler.name}-{compiler.version}/{name}-{version}-{hash}"
 
-  environments_root: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix/DATE_TAG/environments
+      # override for build deps with no compiler
+      gcc: "{architecture}/build-tools/{name}-{version}-{hash}"
+      gcc-runtime:    "{architecture}/build-tools/{name}-{version}-{hash}"
+      compiler-wrapper: "{architecture}/build-tools/{name}-{version}-{hash}"
+      glibc: "{architecture}/build-tools/{name}-{version}-{hash}"
+
+  environments_root: /software/projects/$PAWSEY_PROJECT/$USER/setonix/2025.11/environments
   # Locations where templates should be found
   template_dirs:
   # This is now for all users
   # Some edits are useful to everyone, none has known side effects for end users
-    - INSTALL_PREFIX/spack/templates
+    - /scratch/pawsey0001/ilkhom/2025.11/spack/templates
 
   # Temporary locations Spack can try to use for builds.
   #
@@ -39,18 +45,18 @@ config:
   # `spack clean -a`, so it is important that the specified directory uniquely
   # identifies Spack staging to avoid accidentally wiping out non-Spack work.
   build_stage:
-    - USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix/DATE_TAG/software/$USER/build_stage
+    - /tmp/$PAWSEY_PROJECT/$USER/setonix/2025.11/software/$USER/build_stage
 
   # Directory in which to run tests and store test results.
   # Tests will be stored in directories named by date/time and package
   # name/hash.
-  test_stage: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix/DATE_TAG/software/$USER/test_stage
+  test_stage: /tmp/$PAWSEY_PROJECT/$USER/setonix/2025.11/software/$USER/test_stage
 
   # Cache directory for already downloaded source tarballs and archived
   # repositories. This can be purged with `spack clean --downloads`.
-  source_cache: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix/DATE_TAG/software/$USER/source_cache
+  source_cache: /tmp/$PAWSEY_PROJECT/$USER/setonix/2025.11/software/$USER/source_cache
 
 
   # Cache directory for miscellaneous files, like the package index.
   # This can be purged with `spack clean --misc-cache`
-  misc_cache: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix/DATE_TAG/software/$USER/misc_cache
+  misc_cache: /tmp/$PAWSEY_PROJECT/$USER/setonix/2025.11/software/$USER/misc_cache
