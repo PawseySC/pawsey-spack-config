@@ -1,0 +1,35 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+# Commenting as already in packages.yaml ; leaving for reference
+#  packages:
+#    hdf:
+#      variants: ~external-xdr
+  definitions:
+  - hdf5-set:
+    - hdf5@1.14.3
+    - hdf5@1.10.7
+  - adios-set:
+    - adios2@2.10.0
+  specs:
+  - matrix:
+    - [$hdf5-set]
+    - ['%nvhpc@24.11']
+    - [api=v110, api=v18, api=v16]
+    - [+mpi, ~mpi+cxx]
+    - [^libszip] 
+  - matrix:
+    - [hdf5@1.14.3]
+    - ['%nvhpc@24.11']
+    - [api=v112]
+    - [+mpi, ~mpi+cxx]
+    - [^libszip]      
+  - matrix:
+    - [$adios-set]
+    - ['%nvhpc@24.11']
+    - [+python ^python@3.11.6 +optimizations+zlib, ~python]
+    - [~hdf5, +hdf5 ^hdf5@1.14.3 +hl +fortran +szip api=v112 build_type=Release]
+
+  view: false

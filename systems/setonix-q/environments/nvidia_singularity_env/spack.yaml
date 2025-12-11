@@ -1,0 +1,12 @@
+spack:
+  definitions:
+  - packages:
+    - singularityce@4.1.0%nvhpc@24.11 cflags="-O0" cppflags="-O0" cxxflags="-O0"
+    - singularityce@3.11.4%nvhpc@24.11 cflags="-O0" cppflags="-O0" cxxflags="-O0"
+  specs:
+  - matrix:
+    - [$packages]
+    - [target=zen3, target=zen2]
+  view: false
+  concretizer:
+    unify: when_possible

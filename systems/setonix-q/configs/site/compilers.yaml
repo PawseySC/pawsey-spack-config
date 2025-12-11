@@ -1,0 +1,35 @@
+compilers:
+
+# ===================================================================
+#                        NVIDIA 
+# ===================================================================
+- compiler:
+    spec: nvhpc@24.11
+      cflags: -O3
+      cxxflags: -O3
+      cppflags: -O3
+      fflags: -O3
+    paths:
+      cc: cc
+      cxx: CC
+      f77: ftn
+      fc: ftn
+    flags:
+      cflags: -O3
+      cxxflags: -O3
+      cppflags: -O3
+      fflags: -O3 
+    operating_system: sles15
+    target: any
+    modules:
+    - PrgEnv-nvhpc
+    - gcc-native/12.2.0
+    - craype
+    - craype-arm-grace
+    - craype-network-ofi
+    - xpmem
+    environment:
+      set:
+        PE_ENV: "NVIDIA"
+    extra_rpaths: []
+

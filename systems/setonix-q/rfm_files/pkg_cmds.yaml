@@ -1,0 +1,42 @@
+---
+# Commands used for baseline_sanity_check test
+# Each entry is a list of the form [command name, command option(s), command output]
+
+applications:
+bio-applications:
+# No cppzmq (no suitable command found yet)
+astro-applications:
+# No eigen (no suitable binary or library found), hpx (python script can't be called easily)
+libraries:
+  fftw/3.3.10: ['fftw-wisdom', '-h', 'Usage: fftw-wisdom']
+programming-languages:
+  python: ['python', '-h', 'usage: python']
+# No py-setuptools or py-boto3 (no suitable command found yet for either one)
+utilities:
+  cmake: ['cmake', '--version', 'CMake suite maintained and supported by Kitware']
+  rclone: ['rclone', '-h', 'Rclone syncs files']
+  automake: ['automake', '--help', 'Generate Makefile.in for configure from Makefile.am.']
+  reframe: ['reframe', '-h', 'Options controlling the ReFrame environment:']
+  parallel: ['parallel', '-h', 'GNU Parallel can do much more']
+  libtool: ['libtool', '-h', 'Provide generalized library-building support services.']
+  autoconf: ['autoconf', '-h', 'Generate a configuration script from a TEMPLATE-FILE if given']
+  py-pip: ['pip', '-h', 'pip <command>']
+# no viz packages
+#visualisation:
+python-packages:
+  py-numpy: ['python3', '-c "import numpy as np; print(np.version)"', "module 'numpy.version'"]
+  py-matplotlib: ['python3', '-c "import matplotlib; print(matplotlib)"', "module 'matplotlib'"]
+  py-scipy: ['python3', '-c "import scipy; print(scipy)"', "module 'scipy'"]
+  py-cython: ['python3', '-c "import cython; print(cython)"', "module 'cython'"]
+  py-pandas: ['python3', '-c "import pandas; print(pandas)"', "module 'pandas'"]
+  py-dask: ['python3', '-c "import dask; print(dask)"', "module 'dask'"]
+  py-numba: ['python3', '-c "import numba; print(numba)"', "module 'numba'"]
+  py-scikit-learn: ['python3', '-c "import sklearn; print(sklearn)"', "module 'sklearn'"]
+  py-h5py: ['python3', '-c "import h5py; print(h5py)"', "module 'h5py"]
+  py-mpi4py: ['python3', '-c "import mpi4py; print(mpi4py)"', "module 'mpi4py'"]
+benchmarking:
+  osu-micro-benchmarks: ['osu_init', '', '# OSU MPI Init Test']
+  # Want alternative command for hpl
+  hpl: ['xhpl', '', 'function HPL_pdinfo']
+developer-tools:
+  hpcviewer: ['hpcviewer', '-h', 'hpcviewer ']

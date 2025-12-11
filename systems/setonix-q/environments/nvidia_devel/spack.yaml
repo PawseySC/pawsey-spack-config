@@ -1,0 +1,12 @@
+spack:
+  packages:
+    'binutils:':
+      buildable: true
+  definitions:
+  - packages:
+    - hpcviewer@2024.09
+  specs:
+  - matrix:
+    - [$packages]
+    - ['%nvhpc@24.11']
+  view: false
