@@ -5,10 +5,6 @@ compilers:
 # ===================================================================
 - compiler:
     spec: nvhpc@24.11
-      cflags: -O3
-      cxxflags: -O3
-      cppflags: -O3
-      fflags: -O3
     paths:
       cc: cc
       cxx: CC
@@ -18,12 +14,12 @@ compilers:
       cflags: -O3
       cxxflags: -O3
       cppflags: -O3
-      fflags: -O3 
+      fflags: -O3
     operating_system: sles15
-    target: any
+    target: aarch64
     modules:
-    - PrgEnv-nvhpc
-    - gcc-native/12.2.0
+    - PrgEnv-nvidia
+    - gcc-native-mixed/12.3
     - craype
     - craype-arm-grace
     - craype-network-ofi
@@ -32,4 +28,28 @@ compilers:
       set:
         PE_ENV: "NVIDIA"
     extra_rpaths: []
-
+- compiler:
+    spec: gcc@12.3.0
+    paths:
+      cc: cc
+      cxx: CC
+      f77: ftn
+      fc: ftn
+    flags:
+      cflags: -O3
+      cxxflags: -O3
+      cppflags: -O3
+      fflags: -O3
+    operating_system: sles15
+    target: aarch64
+    modules:
+    - PrgEnv-gnu
+    - gcc-native-mixed/12.3
+    - craype
+    - craype-arm-grace
+    - craype-network-ofi
+    - xpmem
+    environment:
+      set:
+        PE_ENV: "GNU"
+    extra_rpaths: []

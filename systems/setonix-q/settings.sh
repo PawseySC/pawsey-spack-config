@@ -53,15 +53,18 @@ RFM_SETTINGS_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_se
 RFM_STORAGE_DIR=${INSTALL_PREFIX}/rfm_results
 RFM_TEST_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_checks.py
 
-archs="zen2 zen3"
+archs="aarch64"
 # compiler versions (needed for module trees with compiler dependency)
 gcc_version="14.2.0"
 gcc_versionO="14.2.1"
 cce_version="19.0.0"
 aocc_version="5.0.0"
+nvidia_version="24.11"
+main_compiler="nvhpc"
+main_arch="aarch64"
 
 # architecture of login/compute nodes (needed by Singularity symlink module)
-cpu_arch="zen3"
+cpu_arch="aarch64"
 
 # tool versions
 spack_version="0.23.1" # the prefix "v" is added in setup_spack.sh
@@ -82,94 +85,41 @@ reframe_version="3.12.0"
 
 # list of module categories
 module_cat_list="
-astro-applications
-bio-applications
-applications
-libraries
-programming-languages
-utilities
-visualisation
-python-packages
-benchmarking
-developer-tools
-dependencies
+nvidia_apps
+nvidia_bench
+nvidia_devel
+nvidia_io_libs
+nvidia_langs
+nvidia_num_libs
+nvidia_python
+nvidia_s3_clients
+nvidia_singluarity_env
+nvidia_utils
+nvidia_dependencies
 "
 
 # list of spack build environments - missing vis
 env_list="
-utils
-singularity_env
-num_libs
-python
-io_libs
-langs
-apps
-devel
-bench
-s3_clients
-astro
-bio
-roms
-wrf
+nvidia_apps
+nvidia_bench
+nvidia_devel
+nvidia_io_libs
+nvidia_langs
+nvidia_num_libs
+nvidia_python
+nvidia_s3_clients
+nvidia_singluarity_env
+nvidia_utils
+nvidia_dependencies
 "
-# list of cray build environments - can run in parallel with the above gcc env_list
-cray_env_list="
-cray_utils
-cray_num_libs
-cray_python
-cray_io_libs
-cray_langs
-cray_devel
-cray_s3_clients
-"
+
 #quay.io/sarahbeecroft9/alphafold:2.2.3
 #quay.io/pawsey/alphafold2-amd-gpu:rocm6.1.1
 container_list="
-amazon/aws-cli:2.13.0
-quay.io/biocontainers/bamtools:2.5.2--hd03093a_0
-quay.io/biocontainers/bbmap:38.96--h5c4e2a8_0
-quay.io/biocontainers/bcftools:1.15--haf5b3da_0
-quay.io/biocontainers/bedtools:2.30.0--h468198e_3
-quay.io/biocontainers/blast:2.12.0--pl5262h3289130_0
-quay.io/biocontainers/bowtie2:2.4.5--py36hd4290be_0
-quay.io/biocontainers/bwa:0.7.17--h7132678_9
-quay.io/biocontainers/bwa-mem2:2.2.1--hd03093a_2
-quay.io/biocontainers/canu:2.2--ha47f30e_0
-quay.io/biocontainers/clustalo:1.2.4--h87f3376_5
-quay.io/biocontainers/cutadapt:3.7--py38hbff2b2d_0
-quay.io/biocontainers/diamond:2.0.14--hdcc8f71_0
-quay.io/biocontainers/fastqc:0.11.9--hdfd78af_1
-quay.io/biocontainers/gatk4:4.2.5.0--hdfd78af_0
-quay.io/biocontainers/maker:3.01.03--pl5262h8f1cd36_2
-quay.io/biocontainers/mrbayes:3.2.7--h5465cc4_4
-quay.io/biocontainers/mummer:3.23--pl5321h87f3376_14
-quay.io/biocontainers/sambamba:1.0--h98b6b92_0
-quay.io/biocontainers/samtools:1.15--h3843a85_0
-quay.io/biocontainers/spades:3.15.4--h95f258a_0
-quay.io/biocontainers/star:2.7.10a--h9ee0642_0
-quay.io/biocontainers/trimmomatic:0.39--hdfd78af_2
-quay.io/biocontainers/trinity:2.13.2--hea94271_3
-quay.io/biocontainers/vcftools:0.1.16--pl5321hd03093a_7
-quay.io/biocontainers/velvet:1.2.10--h7132678_5
-quay.io/sarahbeecroft9/interproscan:5.56-89.0
 "
 
 
 container_list_mpi="
-quay.io/pawsey/openfoam:v2412
-quay.io/pawsey/openfoam:v2212
-quay.io/pawsey/openfoam:v2206
-quay.io/pawsey/openfoam:v2012
-quay.io/pawsey/openfoam-org:12
-quay.io/pawsey/openfoam-org:10
-quay.io/pawsey/openfoam-org:9
-quay.io/pawsey/openfoam-org:8
-quay.io/pawsey/tensorflow:2.15.1-rocm6.3.3
-quay.io/pawsey/tensorflow:2.17-rocm6.3.3
-quay.io/pawsey/pytorch:2.7.1-rocm6.3.3
-quay.io/pawsey/cp2k:2024.3-rocm6.3.0
-quay.io/pawsey/namd:3.0.1
-quay.io/pawsey/namd:3.0.1-rocm6.3.0
 "
 #quay.io/pawsey/hpc-python:2022.03						
 #quay.io/pawsey/hpc-python:2022.03-hdf5mpi
@@ -237,12 +187,12 @@ spack_module_dir="${utilities_modules_dir}/spack"
 
 # Use the Cray provided ROCm until we have a stable custom build.
 
-ROCM_VERSIONS=(
-"6.3.0"
-)
+#ROCM_VERSIONS=(
+#"6.3.0"
+#)
 
-ROCM_PATHS=(
-"/opt/rocm-6.3.0"
-)
+#ROCM_PATHS=(
+#"/opt/rocm-6.3.0"
+#)
 
 fi # end include guard
