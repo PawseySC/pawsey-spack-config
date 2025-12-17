@@ -1,17 +1,16 @@
 #!/bin/bash -e
+# This script installs the Pawsey software stack using Spack.
+# It assumes that the environment variables SYSTEM and INSTALL_PREFIX are set.
+# If not, it will try to infer them from PAWSEY_CLUSTER and BASE_INSTALL_DIR.
+# The script will install Spack, Python, Reframe, and various software environments.
+# It will also run concretization tests and create custom Singularity modules.
 
-if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
-    SYSTEM="$PAWSEY_CLUSTER"
-fi
+scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+. "${scriptdir}/pawsey_software_stack_funcs.sh"
 
-if [ -z ${SYSTEM+x} ]; then
-    echo "The 'SYSTEM' variable is not set. Please specify the system you want to
-    build Spack for."
-    exit 1
-fi
-
-PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
-. "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
+check_installation_environment
+set_spack_config_repo
+set_compilation_sets_for_arch
 
 echo "Setting up spack.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_spack.sh"

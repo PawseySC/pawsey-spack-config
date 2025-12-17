@@ -2,18 +2,22 @@
 # 
 # Install Spack on a supercomputing system.
 # 
-if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
-    SYSTEM="$PAWSEY_CLUSTER"
-fi
+# if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
+#     SYSTEM="$PAWSEY_CLUSTER"
+# fi
 
-if [ -z ${SYSTEM+x} ]; then
-    echo "The 'SYSTEM' variable is not set. Please specify the system you want to
-    build Spack for."
-    exit 1
-fi
+# if [ -z ${SYSTEM+x} ]; then
+#     echo "The 'SYSTEM' variable is not set. Please specify the system you want to
+#     build Spack for."
+#     exit 1
+# fi
 
-PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
-. "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
+# PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
+# . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
+
+
+check_installation_environment
+set_spack_config_repo
 
 # The $SPACK_USER_CONFIG_PATH directory for the 'spack' user dictates where and how the system-wide
 # software stack installation takes place. We must make sure that current settings
@@ -23,10 +27,8 @@ if [ -e $SPACK_USER_CONFIG_PATH ]; then
 fi
 mkdir -p ${SPACK_USER_CONFIG_PATH}
 
-# We will use the Pawsey spack mirror, to which several patches will be applied.
 if ! [ -e ${INSTALL_PREFIX}/spack ]; then
   git clone https://github.com/spack/spack.git ${INSTALL_PREFIX}/spack
-#  git clone https://github.com/pawseysc/spack ${INSTALL_PREFIX}/spack
   cd "${INSTALL_PREFIX}/spack"
   git checkout v${spack_version}
 
@@ -86,6 +88,7 @@ sed \
   -e "s;GCC_VERSION;${gcc_version};g" \
   -e "s;AOCC_VERSION;${aocc_version};g" \
   -e "s;CCE_VERSION;${cce_version};g" \
+  -e "s;NVIDIA_VERSION;${nvidia_version};g" \
   -e "s;PROJECT_MODULES_SUFFIX;${project_modules_suffix};g" \
   -e "s;USER_MODULES_SUFFIX;${user_modules_suffix};g" \
   -e "s|DATE_TAG|$DATE_TAG|g"\
@@ -160,6 +163,7 @@ sed \
   -e "s;GCC_VERSION;${gcc_version};g" \
   -e "s;CCE_VERSION;${cce_version};g" \
   -e "s;AOCC_VERSION;${aocc_version};g" \
+  -e "s;NVIDIA_VERSION;${nvidia_version};g" \
   -e "s;MODULE_LUA_CAT_LIST;${module_lua_cat_list};g" \
   ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/pawseyenv.lua \
   > "${INSTALL_PREFIX}/staff_modulefiles/pawseyenv/${pawseyenv_version}.lua"

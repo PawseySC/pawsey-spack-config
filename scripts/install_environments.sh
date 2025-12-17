@@ -1,28 +1,33 @@
 #!/bin/bash 
 
-if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
-    SYSTEM="$PAWSEY_CLUSTER"
-fi
+# if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
+#     SYSTEM="$PAWSEY_CLUSTER"
+# fi
 
-if [ -z ${SYSTEM+x} ]; then
-    echo "The 'SYSTEM' variable is not set. Please specify the system you want to
-    build Spack for."
-    exit 1
-fi
+# if [ -z ${SYSTEM+x} ]; then
+#     echo "The 'SYSTEM' variable is not set. Please specify the system you want to
+#     build Spack for."
+#     exit 1
+# fi
 
-PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
-. "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
+# PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
+# . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
-module load cpe/25.03
-module load gcc-native/14.2
-module use ${INSTALL_PREFIX}/staff_modulefiles
-# we need the python module to be available in order to run spack
-module --ignore-cache load pawseyenv/${pawseyenv_version}
-# swap is needed for the pawsey_temp module to work
-#module swap PrgEnv-gnu PrgEnv-cray
-#module swap PrgEnv-cray PrgEnv-gnu
-module use $INSTALL_PREFIX/modules/zen3/gcc/14.2.0/programming-languages
-module load spack/${spack_version}
+check_installation_environment
+set_spack_config_repo
+set_compilation_sets_for_arch
+set_modulepaths_for_arch
+
+# module load cpe/25.03
+# module load gcc-native/14.2
+# module use ${INSTALL_PREFIX}/staff_modulefiles
+# # we need the python module to be available in order to run spack
+# module --ignore-cache load pawseyenv/${pawseyenv_version}
+# # swap is needed for the pawsey_temp module to work
+# #module swap PrgEnv-gnu PrgEnv-cray
+# #module swap PrgEnv-cray PrgEnv-gnu
+# module use $INSTALL_PREFIX/modules/zen3/gcc/14.2.0/programming-languages
+# module load spack/${spack_version}
 
 nprocs="128"
 # We are forced to install openblas outside an environment because its build fails
@@ -36,7 +41,7 @@ if (( counter > 5 )); then
 	echo "Tried to install openblas 5 times, and it didn't work. Stopping here.."
 	exit 1
 fi
-sg $INSTALL_GROUP -c "spack install openblas@0.3.24 threads=openmp"
+sg $INSTALL_GROUP -c "spack install openblas@0.3.24 %${maincompiler} threads=openmp"
 openblas_not_installed=$?
 (( counter = counter + 1 ))
 done
@@ -60,6 +65,9 @@ for env in $env_list; do
   cd -
 done
 
+# instead of having a separate script for cray environments, just
+# append them to the list of env but have a separate variable
+# so can do a parallel build. 
 for env in $cray_env_list; do
   echo "Installing environment $env..."
   cd ${envdir}/${env}
