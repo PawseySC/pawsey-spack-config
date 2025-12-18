@@ -45,6 +45,7 @@ SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
 # The operation will be executed after having installed the environments.
 # Useful when building the stack on the test system.
 SPACK_POPULATE_CACHE=0
+NCPUS=288
 
 pawseyenv_version="${DATE_TAG}"
 
@@ -55,10 +56,7 @@ RFM_TEST_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_checks
 
 archs="aarch64"
 # compiler versions (needed for module trees with compiler dependency)
-gcc_version="14.2.0"
-gcc_versionO="14.2.1"
-cce_version="19.0.0"
-aocc_version="5.0.0"
+gcc_version="12.3.0"
 nvidia_version="24.11"
 main_compiler="nvhpc"
 main_arch="aarch64"

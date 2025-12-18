@@ -11,11 +11,12 @@ compilers:
       f77: ftn
       fc: ftn
     flags:
-      cflags: -O3
-      cxxflags: -O3
-      cppflags: -O3
-      fflags: -O3
+      cflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/12/bin/gcc
+      cxxflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/12/bin/gcc
+      cppflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/12/bin/gcc
+      fflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/12/bin/gcc
     operating_system: sles15
+
     target: aarch64
     modules:
     - PrgEnv-nvidia
@@ -36,10 +37,11 @@ compilers:
       f77: ftn
       fc: ftn
     flags:
-      cflags: -O3
-      cxxflags: -O3
-      cppflags: -O3
-      fflags: -O3
+      # might not need permissive, this was done to get around a cmake+curl bug but that should be fixed in cmake 3.31.7
+      cflags: -O3 -fpermissive
+      cxxflags: -O3 -fpermissive
+      cppflags: -O3 -fpermissive
+      fflags: -O3 -fallow-argument-mismatch
     operating_system: sles15
     target: aarch64
     modules:

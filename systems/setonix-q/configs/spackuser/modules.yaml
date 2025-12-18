@@ -52,17 +52,7 @@ modules:
       # numerical libraries
       arpack-ng:
         autoload: direct
-      amdblis:
-        autoload: direct
-      amdlibflame:
-        autoload: direct
-      amdscalapack:
-        autoload: direct
-      aocl-sparse:
-        autoload: direct
-      amdfftw:
-        autoload: direct
-      amdlibm:
+      cuda:
         autoload: direct
       openblas:
         autoload: direct
@@ -137,21 +127,6 @@ modules:
         ansys-fluidstructures: 'applications/{name}/{version}'
         cpmd: 'applications/{name}/{version}'
         cp2k: 'applications/{name}/{version}'
-        "gromacs +double": 'applications/{name}/{version}-double'
-        "gromacs ~double": 'applications/{name}/{version}-mixed'
-        amdgromacs: 'applications/gromacs-amd-gfx90a/{version}'
-        "lammps ~rocm": 'applications/{name}/{version}'
-        "lammps +rocm": 'applications/{name}-amd-gfx90a/{version}'
-        "namd +rocm": 'applications/{name}-amd-gfx90a/{version}'
-        "namd@2 ~rocm": 'applications/{name}2/{version}'
-        "namd@3 ~rocm": 'applications/{name}3/{version}'
-        nektar: 'applications/{name}/{version}'
-        "nekrs +rocm": 'applications/{name}-amd-gfx90a/{version}'
-        nwchem: 'applications/{name}/{version}'
-        # Previously, no openfoam modules were generated for bare-metal installs
-        # But after issues with singularity in Nov2022, now openfoam bare metal
-        # will also be offered as module
-        openfoam: 'applications/{name}/{version}'
         # This other flavour of openfoam will be kept blocked until bare-metal install is tested
         #openfoam-org: 'applications/{name}/{version}'
         ncl: 'applications/{name}/{version}' 
@@ -172,13 +147,12 @@ modules:
 
         # numerical or parallelisation libraries 
         arpack-ng: 'libraries/{name}/{version}'
-        "amdblis +suphandling": 'libraries/{name}/{version}'
-        "amdblis ~suphandling": 'libraries/{name}/{version}-nosup'
-        amdlibflame: 'libraries/{name}/{version}'
-        amdscalapack: 'libraries/{name}/{version}'
-        aocl-sparse: 'libraries/{name}/{version}'
-        amdfftw: 'libraries/{name}/{version}'
-        amdlibm: 'libraries/{name}/{version}'
+        cuda: 'libraries/{name}/{version}-cuda-gh200'
+        cutensor: 'libraries/{name}/{version}-cuda-gh200'
+        nccl: 'libraries/{name}/{version}-cuda-gh200'
+        nvpl-blas: 'libraries/{name}/{version}-cuda-gh200'
+        nvpl-fft: 'libraries/{name}/{version}-cuda-gh200'
+        nvpl-lapack: 'libraries/{name}/{version}-cuda-gh200'
         "boost +python cxxstd=14 visibility=hidden": 'libraries/{name}/{version}-c++14-python'
         "boost +python cxxstd=11 visibility=hidden": 'libraries/{name}/{version}-c++11-python'
         "boost +python cxxstd=98 visibility=hidden": 'libraries/{name}/{version}-c++98-python'
@@ -198,12 +172,12 @@ modules:
         gsl: 'libraries/{name}/{version}'
         hpx: 'libraries/{name}/{version}'
         "kokkos +hpx": 'libraries/{name}/{version}-hpx'
-        "kokkos +openmp +rocm": 'libraries/{name}-amd-gfx90a/{version}-openmp'
-        "kokkos +openmp ~rocm": 'libraries/{name}/{version}-openmp' 
+        "kokkos +openmp +cuda": 'libraries/{name}-cuda-gh200/{version}-openmp'
+        "kokkos +openmp ~cuda": 'libraries/{name}/{version}-openmp' 
         netlib-lapack: 'libraries/{name}/{version}'
         openblas: 'libraries/{name}/{version}'
-        "blaspp +rocm": 'libraries/{name}-amd-gfx90a/{version}'
-        "blaspp ~rocm": 'libraries/{name}/{version}'
+        "blaspp +cuda": 'libraries/{name}-cuda-gh200/{version}'
+        "blaspp ~cuda": 'libraries/{name}/{version}'
         opencv: 'libraries/{name}/{version}'
         plasma: 'libraries/{name}/{version}'
         "petsc +complex~trilinos": 'libraries/{name}/{version}-complex'
@@ -212,17 +186,17 @@ modules:
         "petsc ~complex+trilinos": 'libraries/{name}/{version}-nocomplex-trilinos'
         plumed: 'libraries/{name}/{version}'
         netlib-scalapack: 'libraries/{name}/{version}'
-        "slate +rocm": 'libraries/{name}-amd-gfx90a/{version}'
-        "slate ~rocm": 'libraries/{name}/{version}'
-        "trilinos ~rocm": 'libraries/{name}/{version}'
-        "trilinos +rocm": 'libraries/{name}-amd-gfx90a/{version}'
+        "slate +cuda": 'libraries/{name}-cuda-gh200/{version}'
+        "slate ~cuda": 'libraries/{name}/{version}'
+        "trilinos ~cuda": 'libraries/{name}/{version}'
+        "trilinos +cuda": 'libraries/{name}-cuda-gh200/{version}'
         "scotch ~metis": 'libraries/{name}/{version}'
         "scotch +metis": 'libraries/{name}/{version}-metis'
         "metis ~int64~real64": 'libraries/{name}/{version}'
         "metis +int64+real64": 'libraries/{name}/{version}-64bit'
         "parmetis ~int64": 'libraries/{name}/{version}'
         "parmetis +int64": 'libraries/{name}/{version}-64bit'
-        "magma +rocm": 'libraries/{name}-amd-gfx90a/{version}'
+        "magma +cuda": 'libraries/{name}-cuda-gh200/{version}'
 
         # IO libraries 
         # to account for all the hdf5 variants 
@@ -281,7 +255,8 @@ modules:
         feh: 'utilities/{name}/{version}'
         lz4: 'utilities/{name}/{version}'
         squashfs: 'utilities/{name}/{version}'
-
+        nvtop: 'utilities/{name}/{version}-cuda-gh200'
+      
         # S3 clients
         awscli: 'utilities/{name}/{version}'
         py-boto3: 'utilities/{name}/{version}'
@@ -364,9 +339,9 @@ modules:
         giant-squid: 'astro-applications/{name}/{version}'
         # naming convention for astronomy GPU software does not follow
         # the usual one as per explicit request of Dev Null.
-        'hyperbeam +rocm': 'astro-applications/{name}/{version}'
+        'hyperbeam +cuda': 'astro-applications/{name}/{version}-cuda-gh200'
         hyperbeam: 'astro-applications/{name}/{version}-cpu'
-        'hyperdrive +rocm': 'astro-applications/{name}/{version}'
+        'hyperdrive +cuda': 'astro-applications/{name}/{version}-cuda-gh200'
         hyperdrive: 'astro-applications/{name}/{version}-cpu'
         #performance tests 
         "hpl ~openmp": 'benchmarking/{name}/{version}'
@@ -380,6 +355,7 @@ modules:
         hpcviewer: 'developer-tools/{name}/{version}'
         py-hatchet: 'developer-tools/{name}/{version}'
         omnitrace: 'developer-tools/{name}/{version}'
+        nvidia-nsight-systems: 'developer-tools/{name}/{version}-cuda-gh200'
 
         # py-rpds-py and py-markupsafe do not need a hash to install shpc
         py-rpds-py: 'dependencies/.py-rpds-py/{version}'
