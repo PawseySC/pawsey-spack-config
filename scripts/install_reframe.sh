@@ -47,11 +47,11 @@ spack spec nano
 # done
 
 
-for comp in $compilers; do
-    for arch in $archs; do
+for comp in ${pythoncompilers[@]}; do
+    for arch in ${archs[@]}; do
         echo "Concretization of Python.."
-        spack spec reframe@${reframe_version} %$comp target=$arch
+        spack spec --reuse reframe@${reframe_version} %$comp target=$arch
         echo "Installing Python with $comp for $arch.."
-        sg $INSTALL_GROUP -c "spack install -j128 --no-checksum reframe@${reframe_version} %$comp target=$arch"
+        sg $INSTALL_GROUP -c "spack install -j${NCPUS} --no-checksum --reuse reframe@${reframe_version} %$comp target=$arch"
     done
 done

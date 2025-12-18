@@ -33,15 +33,15 @@ if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
 fi
 
 # make sure Clingo is bootstrapped
-echo "Running 'spack spec nano' to bootstrap Clingo.."
-spack spec nano
+echo "Running 'spack spec nano %${main_compiler} target=${main_arch}' to bootstrap Clingo.."
+spack spec nano %${main_compiler} target=${main_arch}
 
 # first thing we need is Python
-for comp in $compilers; do
-    for arch in $archs; do
-        echo "Concretization of Python.."
-        spack spec python@${python_version} %$comp target=$arch
+for comp in ${pythoncompilers[@]}; do
+    for arch in ${archs[@]}; do
+        echo "Concretization of Python with $comp for $arch .."
+        spack spec python@${python_version} %$comp target=${arch}
         echo "Installing Python with $comp for $arch.."
-        sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %$comp target=$arch"
+        sg $INSTALL_GROUP -c "spack install -j${NCPUS} --no-checksum python@${python_version} %$comp target=${arch}"
     done
 done

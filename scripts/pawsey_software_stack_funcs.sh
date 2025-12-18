@@ -61,11 +61,13 @@ function set_compilation_sets_for_arch()
         export archs=("zen2" "zen3")
         export maincompiler="gcc@${gcc_version}"
         export compilers=("gcc@${gcc_version}" "cce@${cce_version}" "aocc@${aocc_version}")
+	export pythoncompilers=("gcc@${gcc_version}" "cce@${cce_version}" "aocc@${aocc_version}")
     elif [ "$( uname -m )" == "aarch64" ]; then
         export mainarch="neoverse_v2"
         export archs=("neoverse_v2")
         export maincompiler="nvhpc@${nvidia_version}"
         export compilers=("nvhpc@${nvidia_version}")
+	export pythoncompilers=("gcc@${gcc_version}")
     else
         echo "The architecture '$( uname -m )' is not supported."
         exit 1
