@@ -38,9 +38,9 @@ compilers:
       fc: ftn
     flags:
       # might not need permissive, this was done to get around a cmake+curl bug but that should be fixed in cmake 3.31.7
-      cflags: -O3 -fpermissive
-      cxxflags: -O3 -fpermissive
-      cppflags: -O3 -fpermissive
+      cflags: -O3
+      cxxflags: -O3 
+      cppflags: -O3
       fflags: -O3 -fallow-argument-mismatch
     operating_system: sles15
     target: aarch64
