@@ -23,9 +23,16 @@ spack:
   - utilities:
     - py-pip@23.1.2
     - py-setuptools@59.4.0
+  - gpupy:
+    - py-numba@0.58.1
+
   specs:
   - matrix:
     - [$packages, $utilities]
+    - [^python@3.11.6 +optimizations+zlib]
+    - ['%gcc@12.3.0']
+  - matrix:
+    - [gpupy]
     - [^python@3.11.6 +optimizations+zlib]
     - ['%nvhpc@24.11']
   view: false

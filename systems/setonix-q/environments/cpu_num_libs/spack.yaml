@@ -1,0 +1,31 @@
+spack:
+# They are currently buildable,
+# because cray-libsci and cray-fftw are not in use (see packages.yaml)
+  packages:
+    'fftw-api:':
+      buildable: true
+  definitions:
+  - numerical-cpu:
+    - memkind@1.14.0
+    # boost: might need several boosts with different stadards
+    - boost@1.86.0 +mpi +numpy +python cxxstd=14
+    # IA cxxstd=98 is replaced by cxxstd=11 in the following line since boost@1.85.0 does not support cxxstd=98
+    - boost@1.86.0 +mpi +numpy +python cxxstd=11
+    - metis@5.1.0 ~int64~real64
+    - metis@5.1.0 +int64+real64
+    - parmetis@4.0.3 ~int64
+    - parmetis@4.0.3 +int64
+    - scotch@7.0.4 ~metis
+    - scotch@7.0.4 +metis   
+    - netlib-lapack@3.11.0 build_type=Release
+    - netlib-scalapack@2.2.0
+    - eigen@3.4.0 build_type=Release # charris: build ok on Joey 2021-12-16
+    - fftw@2.1.5 +openmp precision=float,double # fftw 2 does not support long doubles
+    - fftw@3.3.10 +openmp precision=float,double,long_double
+    - gsl@2.8
+    # - openblas@0.3.21 threads=openmp # PLACEHOLDER - please look at scripts/install_environments.sh
+  specs:
+  - matrix:
+    - [$numerical-cpu]
+    - ['%gcc@12.3.0']
+  view: false
