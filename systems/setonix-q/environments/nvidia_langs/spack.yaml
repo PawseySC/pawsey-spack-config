@@ -6,7 +6,7 @@ spack:
     - go@1.25.5
     
     # NotReadyYet:    
-    - julia@1.11.0 #Default recipe is very weak. Faulty. Lots of needed dependencies are missing.
+    # - julia@1.11.0 #Default recipe is very weak. Faulty. Lots of needed dependencies are missing.
     #openjdk@17.0.8.1_1 is needed for nextflow
     - openjdk@17.0.8.1_1
     #- openjdk@21.0.3_9

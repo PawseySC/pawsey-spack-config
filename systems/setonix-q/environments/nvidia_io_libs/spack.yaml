@@ -10,25 +10,18 @@ spack:
   definitions:
   - hdf5-set:
     - hdf5@1.14.3
-    - hdf5@1.10.7
   - adios-set:
-    - adios2@2.10.0
+    - adios2@2.10.2
   specs:
   - matrix:
     - [$hdf5-set]
-    - ['%nvhpc@24.11']
-    - [api=v110, api=v18, api=v16]
+    - ['%gcc@12.3.0']
+    - [api=v112, api=v110, api=v18]
     - [+mpi, ~mpi+cxx]
     - [^libszip] 
   - matrix:
-    - [hdf5@1.14.3]
-    - ['%nvhpc@24.11']
-    - [api=v112]
-    - [+mpi, ~mpi+cxx]
-    - [^libszip]      
-  - matrix:
     - [$adios-set]
-    - ['%nvhpc@24.11']
+    - ['%gcc@12.3.0']
     - [+python ^python@3.11.6 +optimizations+zlib, ~python]
     - [~hdf5, +hdf5 ^hdf5@1.14.3 +hl +fortran +szip api=v112 build_type=Release]
 

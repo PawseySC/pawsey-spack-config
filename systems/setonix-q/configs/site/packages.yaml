@@ -78,7 +78,7 @@ packages:
   # cmake can have multiple entries so set default
   cmake:
     version: [3.31.7]
-    variants: ~doc+ncurses+ownlibs~qt
+    variants: ~doc+ncurses+ownlibs~qtgui
 # Commented out - see GENERAL NOTES above
 #    externals:
 #  # manual addition with the latest version
@@ -314,6 +314,12 @@ packages:
   bash:
     externals:
     - spec: bash@4.4.23
+      prefix: /usr
+    buildable: false
+
+  binutils:
+    externals:
+    - spec: binutils@2.43
       prefix: /usr
     buildable: false
 

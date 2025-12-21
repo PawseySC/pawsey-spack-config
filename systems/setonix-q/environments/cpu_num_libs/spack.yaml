@@ -18,12 +18,13 @@ spack:
     - scotch@7.0.4 ~metis
     - scotch@7.0.4 +metis   
     - netlib-lapack@3.11.0 build_type=Release
-    - netlib-scalapack@2.2.0
+    # - netlib-scalapack@2.2.0 # has issues compiling on arm
     - eigen@3.4.0 build_type=Release # charris: build ok on Joey 2021-12-16
     - fftw@2.1.5 +openmp precision=float,double # fftw 2 does not support long doubles
     - fftw@3.3.10 +openmp precision=float,double,long_double
     - gsl@2.8
-    # - openblas@0.3.21 threads=openmp # PLACEHOLDER - please look at scripts/install_environments.sh
+    - openblas@0.3.28 threads=openmp 
+    - plasma@23.8.2 build_type=Release ^openblas
   specs:
   - matrix:
     - [$numerical-cpu]
