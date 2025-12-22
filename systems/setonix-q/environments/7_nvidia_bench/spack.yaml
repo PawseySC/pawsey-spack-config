@@ -13,13 +13,16 @@ spack:
     - hpl@2.3 ~openmp
     - hpl@2.3 +openmp  
   - mpi-tests:
-    - osu-micro-benchmarks@7.5
+    - osu-micro-benchmarks@7.5 +cuda cuda_arch=90
   - io-tests:
     - ior@3.3.0 +hdf5 +lustre
 
   # add package specs to the `specs` list
   specs:
   - matrix:
-    - [$math-tests, $mpi-tests, $io-tests]
+    - [$math-tests, $io-tests]
+    - ['%gcc@12.3.0']
+  - matrix:
+    - [$mpi-tests]
     - ['%nvhpc@24.11']
   view: false

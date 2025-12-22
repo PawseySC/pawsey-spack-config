@@ -17,10 +17,15 @@ spack:
     - py-plotly@5.20.0
     - py-scikit-learn@1.4.2
     - py-scipy@1.13.0
+    - py-pydantic@2.7.4
+    - py-rich@13.7.1
+    - py-numba@0.58.1
+
   # need these here, too, for the python collection
   - utilities:
     - py-pip@23.1.2
     - py-setuptools@59.4.0
+    - py-setuptools@70.1.0
 
   specs:
   - matrix:

@@ -284,6 +284,14 @@ modules:
         py-plotly: 'python-packages/{name}/{version}'
         py-scikit-learn: 'python-packages/{name}/{version}'
         py-scipy: 'python-packages/{name}/{version}'
+        py-prefect: 'python-packages/{name}/{version}'
+        py-pydantic: 'python-packages/{name}/{version}'
+        py-setuptools: 'python-packages/{name}/{version}'
+        py-scalene: 'python-packages/{name}/{version}'
+        py-jupyterlab: 'python-packages/{name}/{version}'
+        py-pyyaml: 'python-packages/{name}/{version}'
+        py-pip: 'python-packages/{name}/{version}'
+        py-plotly: 'python-packages/{name}/{version}'
 
         #bio 
         beast1: 'bio-applications/{name}/{version}'
