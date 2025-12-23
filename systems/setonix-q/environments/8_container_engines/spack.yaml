@@ -1,7 +1,8 @@
 spack:
   definitions:
   - packages:
-    - singularityce@4.3.5%gcc@12.3.0 #cflags="-O0" cppflags="-O0" cxxflags="-O0"
+    - singularityce@4.3.5%gcc@12.3.0 cflags="-O0" cppflags="-O0" cxxflags="-O0"
+    - apptainer@1.4.5 %gcc cflags="-O0" cppflags="-O0" cxxflags="-O0"
     #- singularityce@3.11.4%gcc@12.3.0 # cflags="-O0" cppflags="-O0" cxxflags="-O0"
   specs:
   - matrix:
