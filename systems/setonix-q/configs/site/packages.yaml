@@ -11,6 +11,7 @@ packages:
       scalapack: [ netlib-scalapack, amdscalapack ] #, cray-libsci ]
       fftw-api: [ fftw, amdfftw ] #, cray-fftw ] # commenting out cray-fftw for now, similar to cray-libsci
       pkgconfig: [ pkg-config ]
+      zlib-api: [ zlib-ng ]
     permissions:
       read: world
       # this should be user, we do not want pawsey0001 users 
