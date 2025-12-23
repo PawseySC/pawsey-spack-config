@@ -1,8 +1,7 @@
 spack:
   definitions:
   - packages:
-    - singularityce@4.3.5%gcc@12.3.0 #cflags="-O0" cppflags="-O0" cxxflags="-O0"
-    #- singularityce@3.11.4%gcc@12.3.0 # cflags="-O0" cppflags="-O0" cxxflags="-O0"
+    - singularityce@4.3.5%gcc@12.3.0 cflags="-O0" cppflags="-O0" cxxflags="-O0"
   specs:
   - matrix:
     - [$packages]
@@ -10,3 +9,8 @@ spack:
   view: false
   concretizer:
     unify: when_possible
+  config:
+    build_environment:
+      prepend_path:
+        PATH: /opt/cray/pe/cce/19.0.0/binutils/aarch64/bin
+
