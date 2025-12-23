@@ -14,9 +14,11 @@ from spack.package import *
 class SingularityBase(MakefilePackage):
     variant("suid", default=True, description="install SUID binary")
     variant("network", default=True, description="install network plugins")
+    variant("libsubid", default=False, description="use libsubid", when="@4.3:")
+    variant("conmon", default=True, description="Use conmon", when="@:4.3")
 
     depends_on("pkgconfig", type="build")
-    depends_on("conmon", type=("build", "run"))
+    depends_on("conmon", type=("build", "run"), when="+conmon")
     depends_on("squashfs", type=("build", "run"))
     depends_on("go@1.16:")
     depends_on("uuid")
@@ -31,6 +33,10 @@ class SingularityBase(MakefilePackage):
     depends_on("automake", type="build", when="@4.0:")
     depends_on("libtool", type="build", when="@4.0:")
     depends_on("go@1.25:", when="@4.3:")
+    # The binutils was added as a dependency to fix 
+    # the ld missing library errors seen on arm nodes
+    # however errors still present. 
+    #depends_on("binutils+ld", type="build")
 
     conflicts("platform=darwin", msg="singularity requires a Linux VM on Windows & Mac")
 
@@ -78,20 +84,25 @@ class SingularityBase(MakefilePackage):
     # Allow overriding config options
     @property
     def config_options(self):
+        return []
         # Using conmon from spack
         #return ["--without-conmon"]
-        # seems like new versions of singularity cannot have --without-conmon
-        return ["--without-libsubid"]
+        ## seems like new versions of singularity cannot have --without-conmon
+        #return ["--without-libsubid"]
 
     # Hijack the edit stage to run mconfig.
     def edit(self, spec, prefix):
         with working_dir(self.build_directory):
             _config_options = ["--prefix=%s" % prefix]
             _config_options += self.config_options
+            if "~libsubid" in spec:
+                _config_options += ["--without-libsubid"]
             if "~suid" in spec:
                 _config_options += ["--without-suid"]
             if "~network" in spec:
                 _config_options += ["--without-network"]
+            if "~conmon" in spec and self.version < "4.3":
+                _config_options += ["--without-conmon"]
             configure = Executable("./mconfig")
             configure(*_config_options)
 
