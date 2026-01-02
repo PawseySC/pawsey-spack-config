@@ -29,11 +29,12 @@ set_modulepaths_for_arch
 # module use $INSTALL_PREFIX/modules/zen3/gcc/14.2.0/programming-languages
 # module load spack/${spack_version}
 
-nprocs="128"
+#nprocs="128"
 # We are forced to install openblas outside an environment because its build fails
 # in a nondeterministic way. So we just keep trying.
 
-openblas_not_installed=1
+# here script altered to just build openblas in envirnoment with appropriate version
+openblas_not_installed=0
 counter=0
 while (( openblas_not_installed > 0 ));
 do
@@ -41,7 +42,8 @@ if (( counter > 5 )); then
 	echo "Tried to install openblas 5 times, and it didn't work. Stopping here.."
 	exit 1
 fi
-sg $INSTALL_GROUP -c "spack install openblas@0.3.24 %${maincompiler} threads=openmp"
+spack spec ${SPACK_SPEC_ARGS} openblas@0.3.24 %${main_compiler} threads=openmp
+sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} openblas@0.3.24 %${main_compiler} threads=openmp"
 openblas_not_installed=$?
 (( counter = counter + 1 ))
 done
@@ -49,20 +51,22 @@ done
 # list of environments included in variables.sh (sourced above)
 envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 
-echo "Running installation with $nprocs cores.."
+echo "Running installation with $NCPUS cores.."
 
 for env in $env_list; do
-  echo "Installing environment $env..."
-  cd ${envdir}/${env}
-  spack env activate ${envdir}/${env} 
-  spack concretize -f
-  if [ "${env}" == "roms" ] || [ "${env}" == "wrf" ] ; then
-    sg $INSTALL_GROUP -c "spack install --no-checksum -j${nprocs} --only dependencies"
-  else
-    sg $INSTALL_GROUP -c "spack install --no-checksum -j${nprocs}"
+  if [ "${env}" != "deprecated" ]; then 
+    echo "Installing environment $env..."
+    cd ${envdir}/${env}
+    spack env activate ${envdir}/${env} 
+    spack concretize -f ${SPACK_CONCRETIZE_ARGS}
+    if [ "${env}" == "roms" ] || [ "${env}" == "wrf" ] ; then
+      sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} --only dependencies"
+    else
+      sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS}"
+    fi
+    spack env deactivate
+    cd -
   fi
-  spack env deactivate
-  cd -
 done
 
 # instead of having a separate script for cray environments, just
@@ -72,8 +76,8 @@ for env in $cray_env_list; do
   echo "Installing environment $env..."
   cd ${envdir}/${env}
   spack env activate ${envdir}/${env}
-  spack concretize -f
-  sg $INSTALL_GROUP -c "spack install --no-checksum -j${nprocs}"
+  spack concretize -f ${SPACK_CONCRETIZE_ARGS}
+  sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS}"
   spack env deactivate
   cd -
 done

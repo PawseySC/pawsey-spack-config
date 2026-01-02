@@ -3,7 +3,7 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2025.08"
+DATE_TAG="2026.01"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
     INSTALL_PREFIX="/software/setonix-q/${DATE_TAG}"
@@ -46,6 +46,9 @@ SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
 # Useful when building the stack on the test system.
 SPACK_POPULATE_CACHE=0
 NCPUS=288
+SPACK_SPEC_ARGS=" --reuse "
+SPACK_INSTALL_ARGS=" --no-checksum "
+SPACK_CONCRETIZE_ARGS=" --reuse "
 
 pawseyenv_version="${DATE_TAG}"
 
@@ -83,32 +86,31 @@ reframe_version="3.12.0"
 
 # list of module categories
 module_cat_list="
-nvidia_apps
-nvidia_bench
-nvidia_devel
-nvidia_io_libs
-nvidia_langs
-nvidia_num_libs
-nvidia_python
-nvidia_s3_clients
-nvidia_singluarity_env
-nvidia_utils
-nvidia_dependencies
+apps
+bench
+devel
+io_libs
+langs
+num_libs
+python
+s3_clients
+singluarity_env
+utils
+dependencies
 "
 
-# list of spack build environments - missing vis
+# list of spack build environments
 env_list="
-nvidia_apps
-nvidia_bench
-nvidia_devel
-nvidia_io_libs
-nvidia_langs
-nvidia_num_libs
-nvidia_python
-nvidia_s3_clients
-nvidia_singluarity_env
+cpu_python
+cpu_s3_clients
+cpu_io_libs
+container_engines
+cpu_devel
+cpu_langs
+cpu_num_libs
 nvidia_utils
-nvidia_dependencies
+nvidia_bench
+nvidia_num_libs
 "
 
 #quay.io/sarahbeecroft9/alphafold:2.2.3

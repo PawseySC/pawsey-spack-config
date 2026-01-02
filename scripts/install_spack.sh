@@ -18,6 +18,7 @@
 
 check_installation_environment
 set_spack_config_repo
+set_compilation_sets_for_arch
 
 # The $SPACK_USER_CONFIG_PATH directory for the 'spack' user dictates where and how the system-wide
 # software stack installation takes place. We must make sure that current settings

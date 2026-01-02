@@ -45,6 +45,10 @@ SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
 # The operation will be executed after having installed the environments.
 # Useful when building the stack on the test system.
 SPACK_POPULATE_CACHE=0
+NPROCS=128
+SPACK_SPEC_ARGS=""
+SPACK_INSTALL_ARGS=" --no-checksum "
+SPACK_CONCRETIZE_ARGS=""
 
 pawseyenv_version="${DATE_TAG}"
 
@@ -59,6 +63,8 @@ gcc_version="14.2.0"
 gcc_versionO="14.2.1"
 cce_version="19.0.0"
 aocc_version="5.0.0"
+main_compiler="gcc"
+main_arch="zen3"
 
 # architecture of login/compute nodes (needed by Singularity symlink module)
 cpu_arch="zen3"
