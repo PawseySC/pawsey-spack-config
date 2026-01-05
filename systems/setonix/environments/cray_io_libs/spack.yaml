@@ -16,7 +16,7 @@ spack:
   - netcdf-set:
     - netcdf-c@4.9.2 +hdf4 +parallel-netcdf ^hdf+shared
     - netcdf-cxx@4.2
-    - netcdf-cxx4@4.3.1 ^python@3.11.6 +optimizations+zlib
+    - netcdf-cxx4@4.3.1 ^python@3.11.11 +optimizations+zlib
     - netcdf-fortran@4.6.1
     - parallel-netcdf@1.12.3
   # currently netcdf has issues because packages require
@@ -50,7 +50,7 @@ spack:
   - matrix:
     - [$adios-set]
     - ['%cce_compiler']
-    - [+python ^python@3.11.6 +optimizations+zlib, ~python]
+    - [+python ^python@3.11.11 +optimizations+zlib, ~python]
     - [^netlib-lapack@3.11.0] 
       #    - [^openblas@0.3.26%cce threads=openmp build_system=cmake]
     - [+hdf5]
@@ -60,5 +60,5 @@ spack:
   - matrix:
     - [$netcdf-set]
     - ['%cce_compiler']
-    - [target=zen3]
+    # - [target=zen3]
   view: false

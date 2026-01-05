@@ -97,26 +97,27 @@ dependencies
 
 # list of spack build environments - missing vis
 env_list="
-utils
+io_libs
+langs
+apps
+devel
+bench
+s3_clients
+astro
+bio
+roms
+wrf
 "
+
 #singularity_env
+#utils
 #num_libs
 #python
-#io_libs
-#langs
-#apps
-#devel
-#bench
-#s3_clients
-#astro
-#bio
-#roms
-#wrf
 
 # list of cray build environments - can run in parallel with the above gcc env_list
-cray_env_list="
-cray_utils
-"
+#cray_env_list="
+#"
+#cray_utils
 #cray_num_libs
 #cray_python
 #cray_io_libs

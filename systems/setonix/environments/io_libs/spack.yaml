@@ -16,7 +16,7 @@ spack:
   - netcdf-set:
     - netcdf-c@4.9.2 +hdf4 +parallel-netcdf ^hdf+shared
     - netcdf-cxx@4.2
-    - netcdf-cxx4@4.3.1 ^python@3.11.6 +optimizations+zlib
+    - netcdf-cxx4@4.3.1 ^python@3.11.11 +optimizations+zlib
     - netcdf-fortran@4.6.1
     - parallel-netcdf@1.12.3
   # currently netcdf has issues because packages require
@@ -48,13 +48,13 @@ spack:
   - matrix:
     - [$adios-set]
     - ['%gcc_compiler']
-    - [+python ^python@3.11.6 +optimizations+zlib, ~python]
+    - [+python ^python@3.11.11 +optimizations+zlib, ~python]
     - [~hdf5, +hdf5 ^hdf5@1.14.3 +hl +fortran +szip api=v112 build_type=Release]
     #- [^hdf5@1.12.1 +hl +fortran +szip api=v112 build_type=Release, ^hdf5@1.12.1 +hl +fortran +szip api=v110 build_type=Release,
     #  ^hdf5@1.12.1 +hl +fortran +szip api=v18 build_type=Release]
   - matrix:
     - [$netcdf-set]
     - ['%gcc_compiler']
-    - [target=zen3]
+    #- [target=zen3]
 
   view: false

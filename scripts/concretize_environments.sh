@@ -33,7 +33,7 @@ envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 for env in $env_list ; do
   echo "Concretizing env $env.."
   spack env activate ${envdir}/${env} 
-  spack concretize -f
+  spack concretize -f #--reuse
   spack env deactivate
 done
 

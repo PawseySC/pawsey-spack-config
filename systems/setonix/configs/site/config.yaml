@@ -4,13 +4,32 @@ config:
   install_tree:
     root: /software/projects/$PAWSEY_PROJECT/$USER/setonix/2025.11/software
     projections:
-      all: "{architecture}/{compiler.name}-{compiler.version}/{name}-{version}-{hash}"
 
-      # override for build deps with no compiler
-      gcc: "{architecture}/build-tools/{name}-{version}-{hash}"
-      gcc-runtime:    "{architecture}/build-tools/{name}-{version}-{hash}"
+      # 1) Python stuff that’s installed via venv/pip build systems
+      #    (no compiler in spec → avoid none-none)
+      'build_system=python_pip':  "{architecture}/compilerless_python/{name}-{version}-{hash}"
+      'build_system=python_venv': "{architecture}/compilerless_python/{name}-{version}-{hash}"
+
+      # 2) Safety net for the “meta” package and a few known pure-python helpers
+      #    in case they don’t expose build_system the way we expect
+      python-venv:                "{architecture}/compilerless_python/{name}-{version}-{hash}"
+      py-pip:                     "{architecture}/compilerless_python/{name}-{version}-{hash}"
+      py-setuptools:              "{architecture}/compilerless_python/{name}-{version}-{hash}"
+      py-wheel:                   "{architecture}/compilerless_python/{name}-{version}-{hash}"
+      py-flit-core:               "{architecture}/compilerless_python/{name}-{version}-{hash}"
+      py-packaging:               "{architecture}/compilerless_python/{name}-{version}-{hash}"
+      py-pyproject-metadata:      "{architecture}/compilerless_python/{name}-{version}-{hash}"
+      meson:                      "{architecture}/compilerless_python/{name}-{version}-{hash}"
+
+      # 3) Build deps / toolchain bits
+      gcc:              "{architecture}/build-tools/{name}-{version}-{hash}"
+      gcc-runtime:      "{architecture}/build-tools/{name}-{version}-{hash}"
       compiler-wrapper: "{architecture}/build-tools/{name}-{version}-{hash}"
-      glibc: "{architecture}/build-tools/{name}-{version}-{hash}"
+      glibc:            "{architecture}/build-tools/{name}-{version}-{hash}"
+      autoconf:         "{architecture}/build-tools/{name}-{version}-{hash}"
+
+      # 4) Default: compiler-aware layout
+      all: "{architecture}/{compiler.name}-{compiler.version}/{name}-{version}-{hash}"
 
   environments_root: /software/projects/$PAWSEY_PROJECT/$USER/setonix/2025.11/environments
   # Locations where templates should be found

@@ -68,7 +68,7 @@ spack:
   specs:
   - matrix:
     - [$packages-with-python]
-    - [^python@3.11.6 +optimizations+zlib~ssl]
+    - [^python@3.11.11 +optimizations+zlib~ssl]
     - ['%gcc_compiler']
   - matrix:
     - [$packages-with-oldpython]

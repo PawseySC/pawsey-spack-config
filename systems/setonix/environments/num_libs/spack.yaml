@@ -25,8 +25,9 @@ spack:
       build_type=Release ^hpx@1.9.1 +async_mpi max_cpu_count=128 networking=mpi build_type=Release
     - metis@5.1.0 ~int64~real64
     - metis@5.1.0 +int64+real64
-    - parmetis@4.0.3 ~int64
-    - parmetis@4.0.3 +int64
+# IAB
+#    - parmetis@4.0.3 ~int64
+#    - parmetis@4.0.3 +int64
     - scotch@7.0.4 ~metis
     - scotch@7.0.4 +metis   
   # because of odd concretization of packages with python dependences defaulting to 3.9.9 and not the 
@@ -85,25 +86,25 @@ spack:
   - matrix:
     - [$parallel]
     - ['%gcc_compiler']
-    - [^python@3.11.6]
-    - [target=zen3]
+    - [^python@3.11.11]
+#    - [target=zen3]
   - matrix:
     - [$petsc-set]
     - ['%gcc_compiler']
-    - [^python@3.11.6 ^fftw@3.3.10]
+    - [^python@3.11.11 ^fftw@3.3.10]
     - [+complex, ~complex]
     - [+fftw +hwloc +openmp ~cuda]
     - [~trilinos]  # fails with +trilinos - Unable to generate list of Trilinos Libraries
-    - [target=zen3]      
+#    - [target=zen3]      
   - matrix:
     - [$numerical]
     - ['%gcc_compiler']
-    - [target=zen3]
+#    - [target=zen3]
   - matrix:
     - [$numerical-with-python]
     - ['%gcc_compiler']
-    - [^python@3.11.6 +optimizations+zlib]
-    - [target=zen3]
+    - [^python@3.11.11 +optimizations+zlib]
+#    - [target=zen3]
 # for now don't build amd math libraries
   #- matrix:
   #  - [$amd]
@@ -112,6 +113,6 @@ spack:
   #- matrix:
   #  - [$amd-with-python]
   #  - ['%gcc@14.2.0', '%cce@15.0.1', '%aocc@3.2.0']
-  #  - [^python@3.11.6]
+  #  - [^python@3.11.11]
   #  - [target=zen3]
   view: false

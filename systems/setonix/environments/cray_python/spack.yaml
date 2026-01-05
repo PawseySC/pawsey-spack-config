@@ -28,12 +28,12 @@ spack:
     - py-setuptools@59.4.0
   specs:
   - matrix:
-    - [python@3.11.6 +optimizations+zlib]
+    - [python@3.11.11 +optimizations+zlib]
     - ['%cce_compiler']
-    - [target=zen3]
+    # - [target=zen3]
   - matrix:
     - [$packages, $utilities]
-    - [^python@3.11.6 +optimizations+zlib]
+    - [^python@3.11.11 +optimizations+zlib]
     - ['%cce_compiler']
-    - [target=zen3]
+    # - [target=zen3]
   view: false

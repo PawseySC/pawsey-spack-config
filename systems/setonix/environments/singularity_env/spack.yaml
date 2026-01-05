@@ -1,13 +1,14 @@
 spack:
   definitions:
   - packages:
-    - singularityce@4.1.0%gcc_compiler cflags="-O0" cppflags="-O0" cxxflags="-O0"
-    - singularityce@3.11.4%gcc_compiler cflags="-O0" cppflags="-O0" cxxflags="-O0"
+    - singularityce@4.1.0
+    - singularityce@3.11.4
+#    - singularityce@4.1.0%gcc_compiler cflags="-O0" cppflags="-O0" cxxflags="-O0"
+#    - singularityce@3.11.4%gcc_compiler cflags="-O0" cppflags="-O0" cxxflags="-O0"
   specs:
   - matrix:
     - [$packages]
-    - ['%gcc_compiler']
-    - [target=zen3, target=zen2]
+    - ['%gcc_compiler_O0','%gcc_compiler_zen2_O0']
   view: false
   concretizer:
     unify: when_possible

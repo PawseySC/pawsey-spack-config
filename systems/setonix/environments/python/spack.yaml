@@ -26,7 +26,6 @@ spack:
   specs:
   - matrix:
     - [$packages, $utilities]
-    - [^python@3.11.6 +optimizations+zlib]
+    - [^python@3.11.11 +optimizations+zlib]
     - ['%gcc_compiler']
-    - [target=zen3]
   view: false
