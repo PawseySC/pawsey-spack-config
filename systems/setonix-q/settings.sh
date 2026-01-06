@@ -3,7 +3,10 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2025.08"
+DATE_TAG="2026.01"
+
+# Must be set manually for the setonix-q software stack
+PAWSEY_CLUSTER="setonix-q"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
     INSTALL_PREFIX="/software/setonix-q/${DATE_TAG}"
