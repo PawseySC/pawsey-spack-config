@@ -43,7 +43,6 @@ local base_install_dir = "BASE_INSTALL_PREFIX"
 local cluster = "CLUSTER"
 local data_tag = "DATE_TAG"
 
--- EM: Why this addition?
 if not (shl_user == "root") then
 prepend_path('LMOD_PACKAGE_PATH', "/software/" .. cluster .. "/lmod-extras")
 
@@ -88,8 +87,8 @@ for _ in pairs(psc_sw_env_module_categories) do num_categories = num_categories 
 -- Cray service functions: /opt/cray/pe/admin-pe/lmod_scripts/lmodHierarchy.lua
 local psc_sw_env_user_modules_root =  "USER_PERMANENT_FILES_PREFIX/" .. table.concat({psc_sw_env_project, psc_sw_env_user, psc_sw_env_clusarchdate, "modules", arch}, "/")
 prepend_path("LMOD_CUSTOM_COMPILER_GNU_12_0_PREFIX", psc_sw_env_user_modules_root .. "/gcc/" .. psc_sw_env_gcc_version .. "/" .. psc_sw_env_user_modules_suffix)
-prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_17_0_PREFIX", psc_sw_env_user_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_user_modules_suffix)
 if arch == "zen2" or arch == "zen3" then
+  prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_17_0_PREFIX", psc_sw_env_user_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_user_modules_suffix)
   prepend_path("LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX", psc_sw_env_user_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_user_modules_suffix)
 end
 if arch == "neoverse_v2" then
@@ -106,8 +105,8 @@ prepend_path("MODULEPATH", psc_sw_env_shpc_project_root)
 -- Add Project modules to Cray Lmod hierarchy variables
 local psc_sw_env_project_modules_root = "USER_PERMANENT_FILES_PREFIX/" .. table.concat({psc_sw_env_project, psc_sw_env_clusarchdate, "modules", arch}, "/") 
 prepend_path("LMOD_CUSTOM_COMPILER_GNU_12_0_PREFIX", psc_sw_env_project_modules_root .. "/gcc/" .. psc_sw_env_gcc_version .. "/" .. psc_sw_env_project_modules_suffix)
-prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_17_0_PREFIX", psc_sw_env_project_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_project_modules_suffix)
 if arch == "zen2" or arch == "zen3" then
+  prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_17_0_PREFIX", psc_sw_env_project_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_project_modules_suffix)
   prepend_path("LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX", psc_sw_env_project_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_project_modules_suffix)
 end
 if arch == "neoverse_v2" then
@@ -129,8 +128,8 @@ local psc_sw_env_nvidia_root = psc_sw_env_spack_root .. "/nvhpc/" .. psc_sw_env_
 -- Note: LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX comes from Lumi, on Joey there was no `_8_0`
 for index = 1,num_categories do
   prepend_path("LMOD_CUSTOM_COMPILER_GNU_12_0_PREFIX", psc_sw_env_gcc_root .. "/" .. psc_sw_env_module_categories[index])
-  prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_17_0_PREFIX", psc_sw_env_cce_root .. "/" .. psc_sw_env_module_categories[index])
   if arch == "zen2" or arch == "zen3" then
+    prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_17_0_PREFIX", psc_sw_env_cce_root .. "/" .. psc_sw_env_module_categories[index])
     prepend_path("LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX", psc_sw_env_aocc_root .. "/" .. psc_sw_env_module_categories[index])
   end
   if arch == "neoverse_v2" then
@@ -147,8 +146,8 @@ prepend_path("MODULEPATH", psc_sw_env_shpc_root)
 -- Add Pawsey custom modules to Cray Lmod hierarchy variables
 local psc_sw_env_custom_modules_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_custom_modules_dir .. "/" .. arch
 prepend_path("LMOD_CUSTOM_COMPILER_GNU_12_0_PREFIX", psc_sw_env_custom_modules_root .. "/gcc/" .. psc_sw_env_gcc_version .. "/" .. psc_sw_env_custom_modules_suffix)
-prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_17_0_PREFIX", psc_sw_env_custom_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_custom_modules_suffix)
 if arch == "zen2" or arch == "zen3" then
+  prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_17_0_PREFIX", psc_sw_env_custom_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_custom_modules_suffix)
   prepend_path("LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX", psc_sw_env_custom_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_custom_modules_suffix)
 end
 if arch == "neoverse_v2" then
