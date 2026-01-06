@@ -34,8 +34,8 @@ class concretise_check(rfm.RunOnlyRegressionTest):
         self.maintainers = ['Craig Meyer']
 
         # Valid systems and PEs
-        self.valid_systems = ['setonix:login', 'joey:login']
-        self.valid_prog_environs = ['PrgEnv-gnu']
+        self.valid_systems = ['setonix-q:quantum']
+        self.valid_prog_environs = ['PrgEnv-gnu', 'PrgEnv-nvidia']
 
         # Execution
         self.executable = 'echo'
@@ -94,9 +94,9 @@ class module_existence_check(rfm.RunOnlyRegressionTest):
         self.maintainers = ['Craig Meyer']
 
         # Valid systems and PEs - set PE based on module path
-        self.valid_systems = ['setonix:login', 'joey:login']
-        if 'cce' in self.mod:
-            self.valid_prog_environs = ['PrgEnv-cray']
+        self.valid_systems = ['setonix-q:quantum']
+        if 'nvidia' in self.mod:
+            self.valid_prog_environs = ['PrgEnv-nvidia']
         elif 'gcc' in self.mod:
             self.valid_prog_environs = ['PrgEnv-gnu']
 
@@ -128,22 +128,15 @@ class module_load_check(rfm.RunOnlyRegressionTest):
         self.maintainers = ['Craig Meyer']
 
         # Valid systems and PEs
-        self.valid_systems = ['setonix:login', 'joey:login']
+        self.valid_systems = ['setonix-q:quantum']
         # Choose PE based on the module path
         # NOTE: May need to edit zen2_path in future updates
-        cce_version = os.environ.get('cce_version')
+        cce_version = os.environ.get('nvidia_version')
         gcc_version = os.environ.get('gcc_version')
-        if 'cce' in self.mod:
-            self.valid_prog_environs = ['PrgEnv-cray']
-            zen2_path = '/opt/cray/pe/lmod/modulefiles/mpi/crayclang/14.0/ofi/1.0/cray-mpich/8.0:{basepath}/modules/zen2/cce/{cce_version}/astro-applications:{basepath}/modules/zen2/cce/{cce_version}/bio-applications:{basepath}/modules/zen2/cce/{cce_version}/applications:{basepath}/modules/zen2/cce/{cce_version}/libraries:{basepath}/modules/zen2/cce/{cce_version}/programming-languages:{basepath}/modules/zen2/cce/{cce_version}/utilities:{basepath}/modules/zen2/cce/{cce_version}/visualisation:{basepath}/modules/zen2/cce/{cce_version}/python-packages:{basepath}/modules/zen2/cce/{cce_version}/benchmarking:{basepath}/modules/zen2/cce/{cce_version}/developer-tools:{basepath}/modules/zen2/cce/{cce_version}/dependencies:{basepath}/custom/modules/zen2/cce/{cce_version}/custom:/opt/cray/pe/lmod/modulefiles/comnet/crayclang/14.0/ofi/1.0:/opt/cray/pe/lmod/modulefiles/compiler/crayclang/14.0:/opt/cray/pe/lmod/modulefiles/mix_compilers:{basepath}/containers/views/modules:{basepath}/pawsey/modules:/software/projects/pawsey0001/cmeyer/setonix/2024.02/containers/views/modules:{basepath}/staff_modulefiles:/software/projects/pawsey0001/cmeyer/setonix/2023.08/modules/zen2/gcc/{gcc_version}:/software/projects/pawsey0001/setonix/2023.08/modules/zen2/gcc/{gcc_version}:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/astro-applications:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/bio-applications:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/applications:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/libraries:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/programming-languages:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/utilities:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/visualisation:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/python-packages:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/benchmarking:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/developer-tools:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/dependencies:/software/setonix/2023.08/custom/modules/zen2/gcc/{gcc_version}/custom:/opt/cray/pe/lmod/modulefiles/perftools/23.03.0:/opt/cray/pe/lmod/modulefiles/net/ofi/1.0:/opt/cray/pe/lmod/modulefiles/cpu/x86-milan/1.0:/opt/cray/pe/modulefiles/Linux:/opt/cray/pe/modulefiles/Core:/opt/cray/pe/lmod/lmod/modulefiles/Core:/opt/cray/pe/lmod/modulefiles/core:/opt/cray/pe/lmod/modulefiles/craype-targets/default:/opt/pawsey/modulefiles:/software/pawsey/modulefiles:/opt/cray/modulefiles'
+        if 'nvidia' in self.mod:
+            self.valid_prog_environs = ['PrgEnv-nvidia']
         elif 'gcc' in self.mod:
             self.valid_prog_environs = ['PrgEnv-gnu']
-            zen2_path = '/opt/cray/pe/lmod/modulefiles/mpi/gnu/8.0/ofi/1.0/cray-mpich/8.0:{basepath}/modules/zen2/gcc/{gcc_version}/astro-applications:{basepath}/modules/zen2/gcc/{gcc_version}/bio-applications:{basepath}/modules/zen2/gcc/{gcc_version}/applications:{basepath}/modules/zen2/gcc/{gcc_version}/libraries:{basepath}/modules/zen2/gcc/{gcc_version}/programming-languages:{basepath}/modules/zen2/gcc/{gcc_version}/utilities:{basepath}/modules/zen2/gcc/{gcc_version}/visualisation:{basepath}/modules/zen2/gcc/{gcc_version}/python-packages:{basepath}/modules/zen2/gcc/{gcc_version}/benchmarking:{basepath}/modules/zen2/gcc/{gcc_version}/developer-tools:{basepath}/modules/zen2/gcc/{gcc_version}/dependencies:{basepath}/custom/modules/zen2/gcc/{gcc_version}/custom:/opt/cray/pe/lmod/modulefiles/comnet/gnu/8.0/ofi/1.0:/opt/cray/pe/lmod/modulefiles/mix_compilers:/opt/cray/pe/lmod/modulefiles/compiler/gnu/8.0:{basepath}/containers/views/modules:{basepath}/pawsey/modules:/software/projects/pawsey0001/cmeyer/setonix/2024.02/containers/views/modules:{basepath}/staff_modulefiles:/software/projects/pawsey0001/cmeyer/setonix/2023.08/modules/zen2/gcc/{gcc_version}:/software/projects/pawsey0001/setonix/2023.08/modules/zen2/gcc/{gcc_version}:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/astro-applications:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/bio-applications:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/applications:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/libraries:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/programming-languages:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/utilities:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/visualisation:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/python-packages:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/benchmarking:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/developer-tools:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/dependencies:/software/setonix/2023.08/custom/modules/zen2/gcc/{gcc_version}/custom:/opt/cray/pe/lmod/modulefiles/perftools/23.03.0:/opt/cray/pe/lmod/modulefiles/net/ofi/1.0:/opt/cray/pe/lmod/modulefiles/cpu/x86-milan/1.0:/opt/cray/pe/modulefiles/Linux:/opt/cray/pe/modulefiles/Core:/opt/cray/pe/lmod/lmod/modulefiles/Core:/opt/cray/pe/lmod/modulefiles/core:/opt/cray/pe/lmod/modulefiles/craype-targets/default:/opt/pawsey/modulefiles:/software/pawsey/modulefiles:/opt/cray/modulefiles'
-        # Since zen3 is default, alter MODULEPATH variable if the module is zen2
-        if 'zen2' in self.mod:
-            install_prefix = os.environ.get('INSTALL_PREFIX')
-            modpath = zen2_path.replace('{basepath}', install_prefix).replace('{cce_version}', cce_version).replace('{gcc_version}', gcc_version)
-            self.prerun_cmds = [f'export MODULEPATH={modpath}']
 
         # Execution
         self.executable = 'module'
@@ -209,15 +202,13 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
         self.amintainers = ['Craig Meyer']
 
         # Valid systems and PEs
-        self.valid_systems = ['setonix:login', 'joey:login']
+        self.valid_systems = ['setonix-q:quantum']
         # Choose PE based on the module
         # NOTE: May need to edit zen2_path in future updates
         if 'cce' in self.mod:
-            self.valid_prog_environs = ['PrgEnv-cray']
-            zen2_path = '/opt/cray/pe/lmod/modulefiles/mpi/crayclang/14.0/ofi/1.0/cray-mpich/8.0:{basepath}/modules/zen2/cce/{cce_version}/astro-applications:{basepath}/modules/zen2/cce/{cce_version}/bio-applications:{basepath}/modules/zen2/cce/{cce_version}/applications:{basepath}/modules/zen2/cce/{cce_version}/libraries:{basepath}/modules/zen2/cce/{cce_version}/programming-languages:{basepath}/modules/zen2/cce/{cce_version}/utilities:{basepath}/modules/zen2/cce/{cce_version}/visualisation:{basepath}/modules/zen2/cce/{cce_version}/python-packages:{basepath}/modules/zen2/cce/{cce_version}/benchmarking:{basepath}/modules/zen2/cce/{cce_version}/developer-tools:{basepath}/modules/zen2/cce/{cce_version}/dependencies:{basepath}/custom/modules/zen2/cce/{cce_version}/custom:/opt/cray/pe/lmod/modulefiles/comnet/crayclang/14.0/ofi/1.0:/opt/cray/pe/lmod/modulefiles/compiler/crayclang/14.0:/opt/cray/pe/lmod/modulefiles/mix_compilers:{basepath}/containers/views/modules:{basepath}/pawsey/modules:/software/projects/pawsey0001/cmeyer/setonix/2024.02/containers/views/modules:{basepath}/staff_modulefiles:/software/projects/pawsey0001/cmeyer/setonix/2023.08/modules/zen2/gcc/{gcc_version}:/software/projects/pawsey0001/setonix/2023.08/modules/zen2/gcc/{gcc_version}:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/astro-applications:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/bio-applications:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/applications:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/libraries:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/programming-languages:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/utilities:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/visualisation:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/python-packages:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/benchmarking:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/developer-tools:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/dependencies:/software/setonix/2023.08/custom/modules/zen2/gcc/{gcc_version}/custom:/opt/cray/pe/lmod/modulefiles/perftools/23.03.0:/opt/cray/pe/lmod/modulefiles/net/ofi/1.0:/opt/cray/pe/lmod/modulefiles/cpu/x86-milan/1.0:/opt/cray/pe/modulefiles/Linux:/opt/cray/pe/modulefiles/Core:/opt/cray/pe/lmod/lmod/modulefiles/Core:/opt/cray/pe/lmod/modulefiles/core:/opt/cray/pe/lmod/modulefiles/craype-targets/default:/opt/pawsey/modulefiles:/software/pawsey/modulefiles:/opt/cray/modulefiles'
+            self.valid_prog_environs = ['PrgEnv-nvidia']
         elif 'gcc' in self.mod:
             self.valid_prog_environs = ['PrgEnv-gnu']
-            zen2_path = '/opt/cray/pe/lmod/modulefiles/mpi/gnu/8.0/ofi/1.0/cray-mpich/8.0:{basepath}/modules/zen2/gcc/{gcc_version}/astro-applications:{basepath}/modules/zen2/gcc/{gcc_version}/bio-applications:{basepath}/modules/zen2/gcc/{gcc_version}/applications:{basepath}/modules/zen2/gcc/{gcc_version}/libraries:{basepath}/modules/zen2/gcc/{gcc_version}/programming-languages:{basepath}/modules/zen2/gcc/{gcc_version}/utilities:{basepath}/modules/zen2/gcc/{gcc_version}/visualisation:{basepath}/modules/zen2/gcc/{gcc_version}/python-packages:{basepath}/modules/zen2/gcc/{gcc_version}/benchmarking:{basepath}/modules/zen2/gcc/{gcc_version}/developer-tools:{basepath}/modules/zen2/gcc/{gcc_version}/dependencies:{basepath}/custom/modules/zen2/gcc/{gcc_version}/custom:/opt/cray/pe/lmod/modulefiles/comnet/gnu/8.0/ofi/1.0:/opt/cray/pe/lmod/modulefiles/mix_compilers:/opt/cray/pe/lmod/modulefiles/compiler/gnu/8.0:{basepath}/containers/views/modules:{basepath}/pawsey/modules:/software/projects/pawsey0001/cmeyer/setonix/2024.02/containers/views/modules:{basepath}/staff_modulefiles:/software/projects/pawsey0001/cmeyer/setonix/2023.08/modules/zen2/gcc/{gcc_version}:/software/projects/pawsey0001/setonix/2023.08/modules/zen2/gcc/{gcc_version}:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/astro-applications:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/bio-applications:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/applications:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/libraries:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/programming-languages:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/utilities:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/visualisation:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/python-packages:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/benchmarking:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/developer-tools:/software/setonix/2023.08/modules/zen2/gcc/{gcc_version}/dependencies:/software/setonix/2023.08/custom/modules/zen2/gcc/{gcc_version}/custom:/opt/cray/pe/lmod/modulefiles/perftools/23.03.0:/opt/cray/pe/lmod/modulefiles/net/ofi/1.0:/opt/cray/pe/lmod/modulefiles/cpu/x86-milan/1.0:/opt/cray/pe/modulefiles/Linux:/opt/cray/pe/modulefiles/Core:/opt/cray/pe/lmod/lmod/modulefiles/Core:/opt/cray/pe/lmod/modulefiles/core:/opt/cray/pe/lmod/modulefiles/craype-targets/default:/opt/pawsey/modulefiles:/software/pawsey/modulefiles:/opt/cray/modulefiles'
         # Since zen3 is default, alter MODULEPATH variable if the module is zen2
         if 'zen2' in self.mod:
             install_prefix = os.environ.get('INSTALL_PREFIX')
@@ -232,7 +223,7 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
         self.base_name = self.mod.split('/')[-2] # Extract package/library name from full module path
         self.mod_category = self.mod.split('/')[-3]
         # Set executable, accounting for packages which have different commands for different package versions
-        version_cmds = ['fftw', 'gromacs']
+        version_cmds = ['fftw']
         version_checks = [v in self.mod for v in version_cmds]
         if any(version_checks):
             self.base_name = self.name_ver

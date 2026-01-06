@@ -1,22 +1,12 @@
 #!/bin/bash 
 
-# if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
-#     SYSTEM="$PAWSEY_CLUSTER"
-# fi
-
-# if [ -z ${SYSTEM+x} ]; then
-#     echo "The 'SYSTEM' variable is not set. Please specify the system you want to
-#     build Spack for."
-#     exit 1
-# fi
-
-# PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
-# . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
-
 check_installation_environment
 set_spack_config_repo
 set_compilation_sets_for_arch
 set_modulepaths_for_arch
+
+#setup spack env variables
+. "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh"
 
 # module load cpe/25.03
 # module load gcc-native/14.2
@@ -29,11 +19,11 @@ set_modulepaths_for_arch
 # module use $INSTALL_PREFIX/modules/zen3/gcc/14.2.0/programming-languages
 # module load spack/${spack_version}
 
-nprocs="128"
 # We are forced to install openblas outside an environment because its build fails
 # in a nondeterministic way. So we just keep trying.
 
-openblas_not_installed=1
+# here script altered to just build openblas in envirnoment with appropriate version
+openblas_not_installed=0
 counter=0
 while (( openblas_not_installed > 0 ));
 do
@@ -41,7 +31,8 @@ if (( counter > 5 )); then
 	echo "Tried to install openblas 5 times, and it didn't work. Stopping here.."
 	exit 1
 fi
-sg $INSTALL_GROUP -c "spack install openblas@0.3.24 %${maincompiler} threads=openmp"
+spack spec ${SPACK_SPEC_ARGS} openblas@0.3.24 %${main_compiler} threads=openmp
+sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} openblas@0.3.24 %${main_compiler} threads=openmp"
 openblas_not_installed=$?
 (( counter = counter + 1 ))
 done
@@ -49,36 +40,21 @@ done
 # list of environments included in variables.sh (sourced above)
 envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 
-echo "Running installation with $nprocs cores.."
+echo "Running installation with $NCPUS cores.."
 
 for env in $env_list; do
-  echo "Installing environment $env..."
-  cd ${envdir}/${env}
-  spack env activate ${envdir}/${env} 
-  spack concretize -f
-  if [ "${env}" == "roms" ] || [ "${env}" == "wrf" ] ; then
-    sg $INSTALL_GROUP -c "spack install --no-checksum -j${nprocs} --only dependencies"
-  else
-    sg $INSTALL_GROUP -c "spack install --no-checksum -j${nprocs}"
-  fi
-  spack env deactivate
-  cd -
+  build_environment ${envdir} ${env}
 done
 
 # instead of having a separate script for cray environments, just
 # append them to the list of env but have a separate variable
 # so can do a parallel build. 
 for env in $cray_env_list; do
-  echo "Installing environment $env..."
-  cd ${envdir}/${env}
-  spack env activate ${envdir}/${env}
-  spack concretize -f
-  sg $INSTALL_GROUP -c "spack install --no-checksum -j${nprocs}"
-  spack env deactivate
-  cd -
+  build_environment ${envdir} ${env}
 done
 
 # Create binary cache
+echo "Creating buildcache for installed packages, module refresh ... "
 if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
   for hash in `spack find -x --format "{hash}"`; do spack buildcache create -a -m systemwide_buildcache  /$hash; done;
 fi

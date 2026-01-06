@@ -12,7 +12,7 @@ spack:
     #- openjdk@21.0.3_9
     - r@4.4.1
     - ruby@3.3.5
-    - rust@1.8.5
+    - rust@1.85.0
     
     # latest version of rust available may have issues but spack listed latest release is fine. 
     # CRISTIAN: commenting it out because the installation causes issues https://github.com/spack/spack/issues/44201

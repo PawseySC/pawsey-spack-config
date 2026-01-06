@@ -101,8 +101,65 @@ function set_modulepaths_for_arch()
     fi
 }
 
+function build_environment() {
+    # build an evnironment given directory and name
+    local envdir=$1
+    local env=$2
+    local testing_only=0
+    if [ ! -z ${3+x} ]; then
+        testing_only=$3
+    fi
+    echo "Installing environment $env..."
+    cd ${envdir}/${env}
+    spack env activate ${envdir}/${env}
+    # standard practice is to concretize in environments, but this can result in lots of duplicates
+    # thus only do if explicitly requested
+    if [ ! -z ${SPACK_ENV_CONCRETIZE+x} ]; then
+        echo "Using concreitization for $env"
+        spack concretize -f ${SPACK_CONCRETIZE_ARGS}
+        if (( $testing_only != 0 )); then
+            echo "Testing only - not installing for $env"
+            spack env deactivate
+            return
+        fi
+        if [ "${env}" == "roms" ] || [ "${env}" == "wrf" ] ; then
+            sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} --only dependencies"
+        else
+            sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS}"
+        fi
+        spack env deactivate
+    else
+        # instead of conretizing in the environment, which tends to produce lots of duplicates,
+        # just use spack find to get the basic spec being requested
+        echo "Using basic spec extraction and spec and install outside environment for $env"
+        rm -f spack.specs.txt spack.specs.output.txt
+        local str=" - "
+        spack find -c -r | awk  "/^$str/{print}" | sed "s: - ::g" > spack.specs.txt
+        spack env deactivate
+        if (( $testing_only != 0 )); then
+            echo "Testing only - not installing for $env"
+        fi
+        echo "Number of specs to be processed for $env: $(wc -l spack.specs.txt)"
+        while read p; do
+            echo "Package $p ..."
+            if (( $testing_only != 0 )); then
+                spack spec ${SPACK_SPEC_ARGS} ${p} >> spack.specs.output.txt
+            else
+                if [ "${env}" == "roms" ] || [ "${env}" == "wrf" ] ; then
+                    sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} --only dependencies ${p}"
+                else
+                    sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} ${p}"
+                fi
+            fi
+        done < spack.specs.txt
+    fi
+    cd -
+}
+
+
 # export relevant functions
 export -f check_installation_environment
 export -f set_spack_config_repo
 export -f set_compilation_sets_for_arch
 export -f set_modulepaths_for_arch
+export -f build_environment

@@ -16,7 +16,7 @@ spack:
   - matrix:
     - [$hdf5-set]
     - ['%gcc@12.3.0']
-    - [api=v112, api=v110, api=v18]
+    - [api=v112, api=v110]
     - [+mpi, ~mpi+cxx]
     - [^libszip] 
   - matrix:
@@ -24,5 +24,6 @@ spack:
     - ['%gcc@12.3.0']
     - [+python ^python@3.11.6 +optimizations+zlib, ~python]
     - [~hdf5, +hdf5 ^hdf5@1.14.3 +hl +fortran +szip api=v112 build_type=Release]
+    - [+pic]
 
   view: false
