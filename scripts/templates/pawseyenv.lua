@@ -89,8 +89,12 @@ for _ in pairs(psc_sw_env_module_categories) do num_categories = num_categories 
 local psc_sw_env_user_modules_root =  "USER_PERMANENT_FILES_PREFIX/" .. table.concat({psc_sw_env_project, psc_sw_env_user, psc_sw_env_clusarchdate, "modules", arch}, "/")
 prepend_path("LMOD_CUSTOM_COMPILER_GNU_12_0_PREFIX", psc_sw_env_user_modules_root .. "/gcc/" .. psc_sw_env_gcc_version .. "/" .. psc_sw_env_user_modules_suffix)
 prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_17_0_PREFIX", psc_sw_env_user_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_user_modules_suffix)
-prepend_path("LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX", psc_sw_env_user_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_user_modules_suffix)
-prepend_path("LMOD_CUSTOM_COMPILER_NVIDIA_PREFIX", psc_sw_env_user_modules_root .. "/nvidia/" .. psc_sw_env_nvidia_version .. "/" .. psc_sw_env_user_modules_suffix)
+if arch == "zen2" or arch == "zen3" then
+  prepend_path("LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX", psc_sw_env_user_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_user_modules_suffix)
+end
+if arch == "neoverse_v2" then
+  prepend_path("LMOD_CUSTOM_COMPILER_NVIDIA_PREFIX", psc_sw_env_user_modules_root .. "/nvhpc/" .. psc_sw_env_nvidia_version .. "/" .. psc_sw_env_user_modules_suffix)
+end
 
 -- Add User SHPC modules to MODULEPATH
 local psc_sw_env_shpc_user_root = "USER_PERMANENT_FILES_PREFIX/" .. table.concat({psc_sw_env_project, psc_sw_env_user, psc_sw_env_clusarchdate, psc_sw_env_shpc_containers_modules_dir}, "/")
@@ -103,8 +107,12 @@ prepend_path("MODULEPATH", psc_sw_env_shpc_project_root)
 local psc_sw_env_project_modules_root = "USER_PERMANENT_FILES_PREFIX/" .. table.concat({psc_sw_env_project, psc_sw_env_clusarchdate, "modules", arch}, "/") 
 prepend_path("LMOD_CUSTOM_COMPILER_GNU_12_0_PREFIX", psc_sw_env_project_modules_root .. "/gcc/" .. psc_sw_env_gcc_version .. "/" .. psc_sw_env_project_modules_suffix)
 prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_17_0_PREFIX", psc_sw_env_project_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_project_modules_suffix)
-prepend_path("LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX", psc_sw_env_project_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_project_modules_suffix)
-prepend_path("LMOD_CUSTOM_COMPILER_NVIDIA_PREFIX", psc_sw_env_project_modules_root .. "/nvidia/" .. psc_sw_env_nvidia_version .. "/" .. psc_sw_env_project_modules_suffix)
+if arch == "zen2" or arch == "zen3" then
+  prepend_path("LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX", psc_sw_env_project_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_project_modules_suffix)
+end
+if arch == "neoverse_v2" then
+  prepend_path("LMOD_CUSTOM_COMPILER_NVIDIA_PREFIX", psc_sw_env_project_modules_root .. "/nvhpc/" .. psc_sw_env_nvidia_version .. "/" .. psc_sw_env_project_modules_suffix)
+end
 
 -- Add Pawsey utility modules (including Spack/SHPC modulefiles) to MODULEPATH
 local psc_sw_env_utilities_modules_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_utilities_modules_dir
@@ -116,14 +124,18 @@ local psc_sw_env_spack_root = psc_sw_env_root_dir .. "/modules/" .. arch
 local psc_sw_env_gcc_root  = psc_sw_env_spack_root .. "/gcc/" .. psc_sw_env_gcc_version
 local psc_sw_env_cce_root  = psc_sw_env_spack_root .. "/cce/" .. psc_sw_env_cce_version
 local psc_sw_env_aocc_root = psc_sw_env_spack_root .. "/aocc/" .. psc_sw_env_aocc_version
-local psc_sw_env_nvidia_root = psc_sw_env_spack_root .. "/nvidia/" .. psc_sw_env_nvidia_version
+local psc_sw_env_nvidia_root = psc_sw_env_spack_root .. "/nvhpc/" .. psc_sw_env_nvidia_version
 -- Add Spack modules to Cray Lmod hierarchy variables
 -- Note: LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX comes from Lumi, on Joey there was no `_8_0`
 for index = 1,num_categories do
   prepend_path("LMOD_CUSTOM_COMPILER_GNU_12_0_PREFIX", psc_sw_env_gcc_root .. "/" .. psc_sw_env_module_categories[index])
   prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_17_0_PREFIX", psc_sw_env_cce_root .. "/" .. psc_sw_env_module_categories[index])
-  prepend_path("LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX", psc_sw_env_aocc_root .. "/" .. psc_sw_env_module_categories[index])
-  prepend_path("LMOD_CUSTOM_COMPILER_NVIDIA_PREFIX", psc_sw_env_nvidia_root .. "/" .. psc_sw_env_module_categories[index])
+  if arch == "zen2" or arch == "zen3" then
+    prepend_path("LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX", psc_sw_env_aocc_root .. "/" .. psc_sw_env_module_categories[index])
+  end
+  if arch == "neoverse_v2" then
+    prepend_path("LMOD_CUSTOM_COMPILER_NVIDIA_PREFIX", psc_sw_env_nvidia_root .. "/" .. psc_sw_env_module_categories[index])
+  end
 end
 
 
@@ -136,18 +148,22 @@ prepend_path("MODULEPATH", psc_sw_env_shpc_root)
 local psc_sw_env_custom_modules_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_custom_modules_dir .. "/" .. arch
 prepend_path("LMOD_CUSTOM_COMPILER_GNU_12_0_PREFIX", psc_sw_env_custom_modules_root .. "/gcc/" .. psc_sw_env_gcc_version .. "/" .. psc_sw_env_custom_modules_suffix)
 prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_17_0_PREFIX", psc_sw_env_custom_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_custom_modules_suffix)
-prepend_path("LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX", psc_sw_env_custom_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_custom_modules_suffix)
-prepend_path("LMOD_CUSTOM_COMPILER_NVIDIA_PREFIX", psc_sw_env_custom_modules_root .. "/nvidia/" .. psc_sw_env_nvidia_version .. "/" .. psc_sw_env_custom_modules_suffix)
-
--- Let scripts know which version of the software stack is loaded
-setenv("PAWSEY_STACK_VERSION", "DATE_TAG")
+if arch == "zen2" or arch == "zen3" then
+  prepend_path("LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX", psc_sw_env_custom_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_custom_modules_suffix)
+end
+if arch == "neoverse_v2" then
+  prepend_path("LMOD_CUSTOM_COMPILER_NVIDIA_PREFIX", psc_sw_env_custom_modules_root .. "/nvhpc/" .. psc_sw_env_nvidia_version .. "/" .. psc_sw_env_custom_modules_suffix)
+end
 
 -- Load default modules if on ARM (workaround until set as defaults by platforms)
 if mode() == "load" and host_arch_name == "aarch64" then
   local gcc_version_major_minor = string.match(psc_sw_env_gcc_version, "(%d+%.%d+)")
+  local old_quiet = os.getenv("LMOD_QUIET") or ""
   load("PrgEnv-nvidia")
   load("craype-arm-grace")
+  pushenv("LMOD_QUIET", "1")
   load("gcc-native-mixed/" .. gcc_version_major_minor)
+  pushenv("LMOD_QUIET", old_quiet)
   unload("cray-libsci")
 end
 
