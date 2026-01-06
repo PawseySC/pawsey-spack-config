@@ -40,7 +40,7 @@ spack:
     # not clear if issue is with petsc or the version of trilinos
     # for the moment trilinos disabled
     # - petsc@3.15.5 +fftw +trilinos +hwloc +openmp +complex ~cuda
-    # - petsc@3.21.1 +fftw +hwloc +openmp +cuda cuda_arch=90
+    - petsc@3.21.1 +fftw +hwloc +openmp +cuda cuda_arch=90
   specs:
   - matrix:
     - [$parallel]
