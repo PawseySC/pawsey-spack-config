@@ -1,22 +1,12 @@
 #!/bin/bash 
 
-# if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
-#     SYSTEM="$PAWSEY_CLUSTER"
-# fi
-
-# if [ -z ${SYSTEM+x} ]; then
-#     echo "The 'SYSTEM' variable is not set. Please specify the system you want to
-#     build Spack for."
-#     exit 1
-# fi
-
-# PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
-# . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
-
 check_installation_environment
 set_spack_config_repo
 set_compilation_sets_for_arch
 set_modulepaths_for_arch
+
+#setup spack env variables
+. "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh"
 
 # module load cpe/25.03
 # module load gcc-native/14.2
@@ -29,7 +19,6 @@ set_modulepaths_for_arch
 # module use $INSTALL_PREFIX/modules/zen3/gcc/14.2.0/programming-languages
 # module load spack/${spack_version}
 
-#nprocs="128"
 # We are forced to install openblas outside an environment because its build fails
 # in a nondeterministic way. So we just keep trying.
 
@@ -54,35 +43,18 @@ envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 echo "Running installation with $NCPUS cores.."
 
 for env in $env_list; do
-  if [ "${env}" != "deprecated" ]; then 
-    echo "Installing environment $env..."
-    cd ${envdir}/${env}
-    spack env activate ${envdir}/${env} 
-    spack concretize -f ${SPACK_CONCRETIZE_ARGS}
-    if [ "${env}" == "roms" ] || [ "${env}" == "wrf" ] ; then
-      sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} --only dependencies"
-    else
-      sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS}"
-    fi
-    spack env deactivate
-    cd -
-  fi
+  build_environment ${envdir} ${env}
 done
 
 # instead of having a separate script for cray environments, just
 # append them to the list of env but have a separate variable
 # so can do a parallel build. 
 for env in $cray_env_list; do
-  echo "Installing environment $env..."
-  cd ${envdir}/${env}
-  spack env activate ${envdir}/${env}
-  spack concretize -f ${SPACK_CONCRETIZE_ARGS}
-  sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS}"
-  spack env deactivate
-  cd -
+  build_environment ${envdir} ${env}
 done
 
 # Create binary cache
+echo "Creating buildcache for installed packages, module refresh ... "
 if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
   for hash in `spack find -x --format "{hash}"`; do spack buildcache create -a -m systemwide_buildcache  /$hash; done;
 fi
