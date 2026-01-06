@@ -188,6 +188,9 @@ prepend_path("MODULEPATH", psc_sw_env_shpc_root)
 local psc_sw_env_custom_modules_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_custom_modules_dir .. "/" .. arch
 prepend_compiler_paths(psc_sw_env_custom_modules_root, psc_sw_env_custom_modules_suffix)
 
+-- Which version of the software stack is loaded
+setenv("PAWSEY_STACK_VERSION", data_tag)
+
 --------------------------------------------------------------------------------
 -- Default Module Loading
 --------------------------------------------------------------------------------
