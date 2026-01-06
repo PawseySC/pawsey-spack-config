@@ -195,12 +195,9 @@ prepend_compiler_paths(psc_sw_env_custom_modules_root, psc_sw_env_custom_modules
 -- Load default modules on ARM (workaround until set as defaults by platforms)
 if mode() == "load" and host_arch_name == "aarch64" then
   local gcc_version_major_minor = string.match(psc_sw_env_gcc_version, "(%d+%.%d+)")
-  local old_quiet = os.getenv("LMOD_QUIET") or ""
   load("PrgEnv-nvidia")
   load("craype-arm-grace")
-  pushenv("LMOD_QUIET", "1")
   load("gcc-native-mixed/" .. gcc_version_major_minor)
-  pushenv("LMOD_QUIET", old_quiet)
   unload("cray-libsci")
 end
 
