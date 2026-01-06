@@ -12,15 +12,18 @@
 ]]--
 
 local shl_user = os.getenv("USER")
-
-if not (shl_user == "root") then
-prepend_path('LMOD_PACKAGE_PATH', "/software/" .. cluster .. "/lmod-extras")
-
+--
 -- Query host general architecture
 local host_arch = subprocess("uname -m")
 local host_arch_name = ""
 if ( string.match(host_arch, "aarch64") ) then
   host_arch_name = "aarch64"
+  local modulepath = os.getenv("MODULEPATH") or ""
+  for path in string.gmatch(modulepath, "[^:]+") do
+    if string.match(path, "/software/setonix/") then
+      remove_path("MODULEPATH", path)
+    end
+  end
 end
 
 -- Query CPU architecture
@@ -40,6 +43,10 @@ local base_install_dir = "BASE_INSTALL_PREFIX"
 local cluster = "CLUSTER"
 local data_tag = "DATE_TAG"
 
+-- EM: Why this addition?
+if not (shl_user == "root") then
+prepend_path('LMOD_PACKAGE_PATH', "/software/" .. cluster .. "/lmod-extras")
+
 -- Service variables for this module
 -- 
 --
@@ -49,8 +56,8 @@ fh:close()
 local psc_sw_env_user = os.getenv("USER")
 -- 
 
-local psc_sw_env_root_dir = table.concat({base_install_dir, cluster, host_arch_name, data_tag}, "/")
-local psc_sw_env_clusarchdate = table.concat({cluster, host_arch_namearch, data_tag}, "/")
+local psc_sw_env_root_dir = table.concat({base_install_dir, cluster, data_tag}, "/")
+local psc_sw_env_clusarchdate = table.concat({cluster, data_tag}, "/")
 -- 
 local psc_sw_env_custom_modules_dir = "CUSTOM_MODULES_DIR"
 local psc_sw_env_utilities_modules_dir = "UTILITIES_MODULES_DIR"
@@ -83,7 +90,7 @@ local psc_sw_env_user_modules_root =  "USER_PERMANENT_FILES_PREFIX/" .. table.co
 prepend_path("LMOD_CUSTOM_COMPILER_GNU_12_0_PREFIX", psc_sw_env_user_modules_root .. "/gcc/" .. psc_sw_env_gcc_version .. "/" .. psc_sw_env_user_modules_suffix)
 prepend_path("LMOD_CUSTOM_COMPILER_CRAYCLANG_17_0_PREFIX", psc_sw_env_user_modules_root .. "/cce/" .. psc_sw_env_cce_version .. "/" .. psc_sw_env_user_modules_suffix)
 prepend_path("LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX", psc_sw_env_user_modules_root .. "/aocc/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_user_modules_suffix)
-prepend_path("LMOD_CUSTOM_COMPILER_NVIDIA_PREFIX", psc_sw_env_user_modules_root .. "/nvidia/" .. psc_sw_env_aocc_version .. "/" .. psc_sw_env_user_modules_suffix)
+prepend_path("LMOD_CUSTOM_COMPILER_NVIDIA_PREFIX", psc_sw_env_user_modules_root .. "/nvidia/" .. psc_sw_env_nvidia_version .. "/" .. psc_sw_env_user_modules_suffix)
 
 -- Add User SHPC modules to MODULEPATH
 local psc_sw_env_shpc_user_root = "USER_PERMANENT_FILES_PREFIX/" .. table.concat({psc_sw_env_project, psc_sw_env_user, psc_sw_env_clusarchdate, psc_sw_env_shpc_containers_modules_dir}, "/")
@@ -134,6 +141,15 @@ prepend_path("LMOD_CUSTOM_COMPILER_NVIDIA_PREFIX", psc_sw_env_custom_modules_roo
 
 -- Let scripts know which version of the software stack is loaded
 setenv("PAWSEY_STACK_VERSION", "DATE_TAG")
+
+-- Load default modules if on ARM (workaround until set as defaults by platforms)
+if mode() == "load" and host_arch_name == "aarch64" then
+  local gcc_version_major_minor = string.match(psc_sw_env_gcc_version, "(%d+%.%d+)")
+  load("PrgEnv-nvidia")
+  load("craype-arm-grace")
+  load("gcc-native-mixed/" .. gcc_version_major_minor)
+  unload("cray-libsci")
+end
 
 end
 -- if not root
