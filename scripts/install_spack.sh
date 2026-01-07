@@ -139,7 +139,8 @@ for mod_cat in $module_cat_list ; do
 done
 
 sed \
-  -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g"\
+  -e "s|BASE_INSTALL_PREFIX|${INSTALL_PREFIX}|g"\
+  -e "s|CLUSTER|${SYSTEM}|g"\
   -e "s|DATE_TAG|$DATE_TAG|g"\
   -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
   -e "s;CUSTOM_MODULES_DIR;${custom_modules_dir};g" \
@@ -155,3 +156,4 @@ sed \
   -e "s;MODULE_LUA_CAT_LIST;${module_lua_cat_list};g" \
   ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/pawseyenv.lua \
   > "${INSTALL_PREFIX}/staff_modulefiles/pawseyenv/${pawseyenv_version}.lua"
+
