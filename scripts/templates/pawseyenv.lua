@@ -11,6 +11,10 @@
 
 ]]--
 
+
+-- Only one pawseyenv version can be loaded at a time
+family("pawseyenv")
+
 --------------------------------------------------------------------------------
 -- Runtime Detection
 --------------------------------------------------------------------------------
@@ -124,6 +128,7 @@ end
 if not (shl_user == "root") then
 
 -- Remove x86 setonix paths if on ARM
+-- Required until all deployed pawseyenv modules are in the "pawseyenv" family (Line 16)
 if host_arch_name == "aarch64" then
   local modulepath = os.getenv("MODULEPATH") or ""
   for path in string.gmatch(modulepath, "[^:]+") do
@@ -158,6 +163,9 @@ for _ in pairs(psc_sw_env_module_categories) do num_categories = num_categories 
 local psc_sw_env_user_modules_root = user_permanent_files_prefix .. "/" .. table.concat({psc_sw_env_project, psc_sw_env_user, psc_sw_env_clusarchdate, "modules", arch}, "/")
 prepend_compiler_paths(psc_sw_env_user_modules_root, psc_sw_env_user_modules_suffix)
 
+-- Which version of the software stack is loaded, here to duplicate prior behaviour
+setenv("PAWSEY_STACK_VERSION", data_tag)
+
 -- User SHPC container modules
 local psc_sw_env_shpc_user_root = user_permanent_files_prefix .. "/" .. table.concat({psc_sw_env_project, psc_sw_env_user, psc_sw_env_clusarchdate, psc_sw_env_shpc_containers_modules_dir}, "/")
 prepend_path("MODULEPATH", psc_sw_env_shpc_user_root)
@@ -187,10 +195,6 @@ prepend_path("MODULEPATH", psc_sw_env_shpc_root)
 -- Pawsey custom modules (manually installed software)
 local psc_sw_env_custom_modules_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_custom_modules_dir .. "/" .. arch
 prepend_compiler_paths(psc_sw_env_custom_modules_root, psc_sw_env_custom_modules_suffix)
-
--- Which version of the software stack is loaded
-setenv("PAWSEY_STACK_VERSION", data_tag)
-
 --------------------------------------------------------------------------------
 -- Default Module Loading
 --------------------------------------------------------------------------------
