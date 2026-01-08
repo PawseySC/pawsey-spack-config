@@ -38,17 +38,18 @@ else
   arch = "zen2"
 end
 
--- On unload, use the arch from when module was loaded
--- This ensures correct path reversal if module is unloaded on a different arch
-if mode() == "unload" then
-  local stored_arch = os.getenv("PAWSEYENV_ARCH")
-  if stored_arch and stored_arch ~= "" then
-    arch = stored_arch
-    if arch == "neoverse_v2" then
-      host_arch_name = "aarch64"
-    else
-      host_arch_name = "x86_64"
-    end
+-- Handle cross-architecture transitions
+-- If arch mismatch detected, clear all LMOD_CUSTOM_COMPILER* path variables completely
+local stored_arch = os.getenv("PAWSEYENV_ARCH") or ""
+if stored_arch ~= "" and stored_arch ~= arch then
+  local compiler_vars = {
+    "LMOD_CUSTOM_COMPILER_GNU_12_0_PREFIX",
+    "LMOD_CUSTOM_COMPILER_CRAYCLANG_17_0_PREFIX",
+    "LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX",
+    "LMOD_CUSTOM_COMPILER_NVIDIA_PREFIX"
+  }
+  for _, var in ipairs(compiler_vars) do
+    unsetenv(var)
   end
 end
 
