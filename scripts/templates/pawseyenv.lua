@@ -38,6 +38,20 @@ else
   arch = "zen2"
 end
 
+-- On unload, use the arch from when module was loaded
+-- This ensures correct path reversal if module is unloaded on a different arch
+if mode() == "unload" then
+  local stored_arch = os.getenv("PAWSEYENV_ARCH")
+  if stored_arch and stored_arch ~= "" then
+    arch = stored_arch
+    if arch == "neoverse_v2" then
+      host_arch_name = "aarch64"
+    else
+      host_arch_name = "x86_64"
+    end
+  end
+end
+
 --------------------------------------------------------------------------------
 -- Configuration: sed-replaced template values
 -- These are replaced by install_spack.sh when generating the module
@@ -127,7 +141,10 @@ end
 --------------------------------------------------------------------------------
 if not (shl_user == "root") then
 
--- Remove x86 setonix paths if on ARM
+-- Track which architecture this module is loaded on (used by unload logic above)
+setenv("PAWSEYENV_ARCH", arch)
+
+-- Remove x86 setonix paths from MODULEPATH if on ARM
 -- Required until all deployed pawseyenv modules are in the "pawseyenv" family (Line 16)
 if host_arch_name == "aarch64" then
   local x86_patterns = {"/software/setonix/", "/zen3/", "/zen2/"}
