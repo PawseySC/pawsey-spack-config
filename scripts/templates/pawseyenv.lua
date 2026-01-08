@@ -130,10 +130,14 @@ if not (shl_user == "root") then
 -- Remove x86 setonix paths if on ARM
 -- Required until all deployed pawseyenv modules are in the "pawseyenv" family (Line 16)
 if host_arch_name == "aarch64" then
+  local x86_patterns = {"/software/setonix/", "/zen3/", "/zen2/"}
   local modulepath = os.getenv("MODULEPATH") or ""
   for path in string.gmatch(modulepath, "[^:]+") do
-    if string.match(path, "/software/setonix/") then
-      remove_path("MODULEPATH", path)
+    for _, pattern in ipairs(x86_patterns) do
+      if string.match(path, pattern) then
+        remove_path("MODULEPATH", path)
+        break
+      end
     end
   end
 end
@@ -195,18 +199,5 @@ prepend_path("MODULEPATH", psc_sw_env_shpc_root)
 -- Pawsey custom modules (manually installed software)
 local psc_sw_env_custom_modules_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_custom_modules_dir .. "/" .. arch
 prepend_compiler_paths(psc_sw_env_custom_modules_root, psc_sw_env_custom_modules_suffix)
---------------------------------------------------------------------------------
--- Default Module Loading
---------------------------------------------------------------------------------
-
--- Load default modules on ARM (workaround until set as defaults by platforms)
-if mode() == "load" and host_arch_name == "aarch64" then
-  local gcc_version_major_minor = string.match(psc_sw_env_gcc_version, "(%d+%.%d+)")
-  load("PrgEnv-nvidia")
-  load("craype-arm-grace")
-  load("gcc-native-mixed/" .. gcc_version_major_minor)
-  unload("cray-libsci")
-end
-
 end
 -- if not root
