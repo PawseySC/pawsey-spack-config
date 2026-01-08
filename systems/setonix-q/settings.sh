@@ -89,16 +89,16 @@ reframe_version="3.12.0"
 
 # list of module categories
 module_cat_list="
-apps
-bench
-devel
-io_libs
-langs
-num_libs
-python
-s3_clients
-singluarity_env
-utils
+astro-applications
+bio-applications
+applications
+libraries
+programming-languages
+utilities
+visualisation
+python-packages
+benchmarking
+developer-tools
 dependencies
 "
 
