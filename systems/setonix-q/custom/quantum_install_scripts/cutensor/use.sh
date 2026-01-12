@@ -22,12 +22,14 @@ fi
 # Use versions from settings.sh (fallback to defaults if not set)
 nvhpc_ver="${nvidia_version:-24.11}"
 gcc_ver="${gcc_version:-12.3.0}"
+# Extract major.minor from gcc version (e.g., 12.3.0 -> 12.3) for module loading
+gcc_module_ver="${gcc_ver%.*}"
 
 # load modules
 export dependencies=(
 PrgEnv-nvidia \
 craype-arm-grace \
-gcc-native-mixed/${gcc_ver} \
+gcc-native-mixed/${gcc_module_ver} \
 )
 
 # Paths derived from settings.sh variables
