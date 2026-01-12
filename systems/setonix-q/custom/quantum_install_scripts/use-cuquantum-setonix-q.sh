@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# essential for reproducibility of installation
+tool_name="cuquantum"
+tool_ver="24.11.0"
+cuquantum_build="5"
+
+# description
+brief="NVIDIA cuQuantum SDK - GPU-accelerated quantum computing libraries"
+descrip="NVIDIA cuQuantum SDK provides optimized libraries for quantum circuit simulation. \
+It includes cuStateVec for state vector simulation on GPU and cuTensorNet for tensor network \
+contraction on GPU. cuQuantum enables high-performance quantum computing research and development \
+by leveraging NVIDIA GPU acceleration."
+
+# Architecture (sbsa for ARM/Grace, x86_64 for AMD/Intel)
+if [[ "$(uname -m)" == "aarch64" ]]; then
+    cuquantum_arch="sbsa"
+else
+    cuquantum_arch="x86_64"
+fi
+
+# dependency versions
+nvhpc_ver="24.11"
+gcc_ver="12.3.0"
+cutensor_ver="2.0.2"
+
+# load modules
+export dependencies=(
+PrgEnv-nvidia \
+craype-arm-grace \
+gcc-native-mixed/${gcc_ver} \
+cutensor/${cutensor_ver} \
+)
+
+export MODULE_DIR=/software/setonix-q/2026.01/custom/modules/neoverse_v2/nvidia/${nvhpc_ver}/custom
+export base_dir=/software/setonix-q/2026.01/custom/software/linux-sles15-neoverse_v2/nvidia-${nvhpc_ver}
+
+# internal variables - do not edit
+script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+install_dir="${base_dir}/${tool_name}/${tool_ver}"
+
+# cuQuantum specific
+cuquantum_archive="cuquantum-linux-${cuquantum_arch}-${tool_ver}.${cuquantum_build}-archive"
+cuquantum_url="https://developer.download.nvidia.com/compute/cuquantum/redist/cuquantum/linux-${cuquantum_arch}/${cuquantum_archive}.tar.xz"
