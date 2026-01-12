@@ -7,11 +7,12 @@ function install_module()
     local VERSION=$3
     local BRIEF=$4
     local DESCRIP=$5
+    local TEMPLATE=${6:-sample.lua}  # Optional template, defaults to sample.lua
 
     echo "${MODULE_DIR}/${NAME}/"
     mkdir -p ${MODULE_DIR}/${NAME}/
     local modname=${MODULE_DIR}/${NAME}/${VERSION}.lua
-    cp ${script_dir}/sample.lua ${modname}
+    cp ${script_dir}/${TEMPLATE} ${modname}
 
     # update lua module
     local fields=(INSTALL_PATH NAME VERSION BRIEF DESCRIP)
