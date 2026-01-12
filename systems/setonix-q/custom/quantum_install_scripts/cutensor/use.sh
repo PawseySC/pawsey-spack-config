@@ -19,9 +19,9 @@ else
     cutensor_arch="x86_64"
 fi
 
-# dependency versions
-nvhpc_ver="24.11"
-gcc_ver="12.3.0"
+# Use versions from settings.sh (fallback to defaults if not set)
+nvhpc_ver="${nvidia_version:-24.11}"
+gcc_ver="${gcc_version:-12.3.0}"
 
 # load modules
 export dependencies=(
@@ -30,8 +30,9 @@ craype-arm-grace \
 gcc-native-mixed/${gcc_ver} \
 )
 
-export MODULE_DIR=/software/setonix-q/2026.01/custom/modules/neoverse_v2/nvidia/${nvhpc_ver}/custom
-export base_dir=/software/setonix-q/2026.01/custom/software/linux-sles15-neoverse_v2/nvidia-${nvhpc_ver}
+# Paths derived from settings.sh variables
+export MODULE_DIR=${INSTALL_PREFIX:-/software/setonix-q/2026.01}/custom/modules/neoverse_v2/nvhpc/${nvhpc_ver}/custom
+export base_dir=${INSTALL_PREFIX:-/software/setonix-q/2026.01}/custom/software/linux-sles15-neoverse_v2/nvhpc-${nvhpc_ver}
 
 # internal variables - do not edit
 script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
