@@ -170,7 +170,8 @@ fh:close()
 local psc_sw_env_user = os.getenv("USER")
 
 -- Derived paths
-local psc_sw_env_root_dir = table.concat({base_install_dir, cluster, data_tag}, "/")
+-- Note: base_install_dir already includes cluster and date_tag (e.g., /software/setonix-q/2026.01)
+local psc_sw_env_root_dir = base_install_dir
 local psc_sw_env_clusarchdate = table.concat({cluster, data_tag}, "/")
 
 -- Count module categories
