@@ -1,6 +1,37 @@
 #!/bin/bash 
 
 # ============================================================================
+# Environment validation
+# ============================================================================
+
+function check_settings()
+{
+    local missing=""
+    
+    if [[ -z "${DATE_TAG+x}" ]]; then
+        missing+="  DATE_TAG\n"
+    fi
+    if [[ -z "${INSTALL_PREFIX+x}" ]]; then
+        missing+="  INSTALL_PREFIX\n"
+    fi
+    if [[ -z "${gcc_version+x}" ]]; then
+        missing+="  gcc_version\n"
+    fi
+    if [[ -z "${nvidia_version+x}" ]]; then
+        missing+="  nvidia_version\n"
+    fi
+    
+    if [[ -n "$missing" ]]; then
+        echo "Error: Required environment variables are not set."
+        echo "Missing variables:"
+        echo -e "$missing"
+        echo "Please source settings.sh before running this script:"
+        echo "  source /path/to/systems/setonix-q/settings.sh"
+        exit 1
+    fi
+}
+
+# ============================================================================
 # Argument parsing helpers
 # ============================================================================
 
@@ -9,6 +40,9 @@ function show_usage()
     echo "Usage: $0 [OPTIONS]"
     echo "  --module-only  Skip software installation, only create/update module file"
     echo "  -h, --help     Show this help message"
+    echo ""
+    echo "Prerequisites:"
+    echo "  source /path/to/systems/setonix-q/settings.sh"
     exit 0
 }
 
@@ -25,6 +59,9 @@ function parse_args()
                 ;;
         esac
     done
+    
+    # Validate environment after parsing args
+    check_settings
 }
 
 function should_install_software()
@@ -51,9 +88,15 @@ function download_archive()
     
     if [[ ! -f "${archive}" ]]; then
         echo "Downloading ${tool_name} ${tool_ver}..."
-        wget -q "${url}" || { echo "Error: Download failed"; return 1; }
+        wget -q "${url}" || { echo "Error: Download failed from ${url}"; exit 1; }
     else
         echo "Archive already present: ${archive}"
+        # Verify the archive is valid
+        if ! xz -t "${archive}" 2>/dev/null && ! gzip -t "${archive}" 2>/dev/null; then
+            echo "Warning: Existing archive may be corrupt, re-downloading..."
+            rm -f "${archive}"
+            wget -q "${url}" || { echo "Error: Download failed from ${url}"; exit 1; }
+        fi
     fi
 }
 
@@ -63,20 +106,24 @@ function extract_archive()
     echo "Extracting ${archive}..."
     
     if [[ "${archive}" == *.tar.xz ]]; then
-        tar -xf "${archive}"
+        tar -xf "${archive}" || { echo "Error: Failed to extract ${archive}"; exit 1; }
     elif [[ "${archive}" == *.tar.gz ]]; then
-        tar -xzf "${archive}"
+        tar -xzf "${archive}" || { echo "Error: Failed to extract ${archive}"; exit 1; }
     elif [[ "${archive}" == *.tar.bz2 ]]; then
-        tar -xjf "${archive}"
+        tar -xjf "${archive}" || { echo "Error: Failed to extract ${archive}"; exit 1; }
     else
         echo "Error: Unknown archive format"
-        return 1
+        exit 1
     fi
 }
 
 function install_files()
 {
     local source_dir=$1
+    if [[ ! -d "${source_dir}" ]]; then
+        echo "Error: Source directory ${source_dir} does not exist"
+        exit 1
+    fi
     echo "Installing to ${install_dir}..."
     mkdir -p "${install_dir}"
     cp -r ${source_dir}/* "${install_dir}/"
@@ -124,14 +171,18 @@ function install_module()
     fi
 
     # update lua module
-    local fields=(INSTALL_PATH NAME VERSION BRIEF DESCRIP COMPILER_VERSION BUILD_DATE)
+    # NOTE: Order matters! Longer patterns first to avoid partial matches
+    # (e.g., COMPILER_VERSION before VERSION, INSTALL_PATH before PATH)
     local build_date=$(date +%Y-%m-%d)
     local compiler_ver="${nvhpc_ver:-unknown}"
-    local values=("${INSTALL_DIR}" "${NAME}" "${VERSION}" "${BRIEF}" "${DESCRIP}" "nvidia@${compiler_ver}" "${build_date}")
-    for ((i=0;i<7;i++))
-    do
-        sed -i "s:${fields[${i}]}:${values[${i}]}:g" ${modname}
-    done
+    
+    sed -i "s:COMPILER_VERSION:nvhpc@${compiler_ver}:g" ${modname}
+    sed -i "s:INSTALL_PATH:${INSTALL_DIR}:g" ${modname}
+    sed -i "s:BUILD_DATE:${build_date}:g" ${modname}
+    sed -i "s:VERSION:${VERSION}:g" ${modname}
+    sed -i "s:DESCRIP:${DESCRIP}:g" ${modname}
+    sed -i "s:BRIEF:${BRIEF}:g" ${modname}
+    sed -i "s:NAME:${NAME}:g" ${modname}
 
     # add the dependencies
     local dstring=""
