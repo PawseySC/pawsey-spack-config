@@ -27,4 +27,4 @@ script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 install_dir="${base_dir}/${tool_name}/${tool_ver}"
 
 qiskit_aer_repo="https://github.com/Qiskit/qiskit-aer.git"
-qiskit_aer_tag="v${tool_ver}"
+qiskit_aer_tag="${tool_ver}"
