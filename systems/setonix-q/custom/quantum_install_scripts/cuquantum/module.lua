@@ -9,7 +9,7 @@ whatis([[Path : INSTALL_PATH ]])
 
 help([[ DESCRIP ]])
 
-depends_on("cutensor/2.0.2")
+depends_on("cutensor/2.4.1.4")
 family("cuquantum")
 
 local root = "INSTALL_PATH"
