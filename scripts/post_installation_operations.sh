@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-# this script goes through 5 steps
+# this script goes through the following steps:
 # 1. refresh spack modules
 # 2. create all missing module directories
 # 3. update singularity modules
@@ -8,6 +8,7 @@
 # 5. create hpc-python view and module
 # 6. apply licensing permissions
 # 7. customise shpc symlink modules
+# 8. deploy custom utility modules
 
 # source setup variables
 # if copy/pasting these commands, need to run from this directory
@@ -67,7 +68,11 @@ echo "Apply licensing permissions.."
 echo "Customising shpc container modules.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/patch_shpc_pawsey_modules.sh"
 
-# step 8, run previous manual steps outlined in 2024.05 deployment CRs
+# step 8. deploy custom utility modules
+echo "Deploying custom utility modules.."
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_utility_modules.sh"
+
+# step 9, run previous manual steps outlined in 2024.05 deployment CRs
 echo "Executing CRs"
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/cr_operations.sh"
 

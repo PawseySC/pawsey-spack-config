@@ -133,6 +133,12 @@ container_list_mpi="
 
 #hpc-python containers need to be rebuild due to security bugs
 
+# Custom utility modules to deploy from systems/${SYSTEM}/templates/modules/
+# These are installed to ${utilities_modules_dir} and visible after loading pawseyenv
+utility_module_list="
+PrgEnv-gnu-nvidia
+"
+
 ### TYPICALLY NO EDIT NEEDED PAST THIS POIINT
 
 # python version info (no editing needed)

@@ -187,6 +187,11 @@ quay.io/pawsey/namd:3.0.1-rocm6.3.0
 
 #hpc-python containers need to be rebuild due to security bugs
 
+# Custom utility modules to deploy from systems/${SYSTEM}/templates/modules/
+# These are installed to ${utilities_modules_dir} and visible after loading pawseyenv
+utility_module_list="
+"
+
 ### TYPICALLY NO EDIT NEEDED PAST THIS POIINT
 
 # python version info (no editing needed)
