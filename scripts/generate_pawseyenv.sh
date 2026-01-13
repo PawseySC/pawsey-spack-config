@@ -63,10 +63,10 @@ aocc_lmod_ver="${aocc_lmod_ver//./_}"
 nvidia_lmod_ver="${nvidia_version//./_}"  # nvidia is already major.minor
 
 sed \
-    -e "s|BASE_INSTALL_PREFIX|${INSTALL_PREFIX}|g" \
-    -e "s|CLUSTER|${SYSTEM}|g" \
-    -e "s|DATE_TAG|${DATE_TAG}|g" \
-    -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g" \
+    -e "s;INSTALL_PREFIX;${INSTALL_PREFIX};g" \
+    -e "s;SYSTEM;${SYSTEM};g" \
+    -e "s;DATE_TAG;${DATE_TAG};g" \
+    -e "s;USER_PERMANENT_FILES_PREFIX;${USER_PERMANENT_FILES_PREFIX};g" \
     -e "s;CUSTOM_MODULES_DIR;${custom_modules_dir};g" \
     -e "s;UTILITIES_MODULES_DIR;${utilities_modules_dir};g" \
     -e "s;SHPC_CONTAINERS_MODULES_DIR;${shpc_containers_modules_dir};g" \

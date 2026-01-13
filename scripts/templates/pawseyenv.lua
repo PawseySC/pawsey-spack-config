@@ -55,12 +55,12 @@ end
 
 --------------------------------------------------------------------------------
 -- Configuration: sed-replaced template values
--- These are replaced by install_spack.sh when generating the module
+-- These are replaced by generate_pawseyenv.sh when generating the module
 --------------------------------------------------------------------------------
 -- Install paths
-local base_install_dir = "BASE_INSTALL_PREFIX"
-local cluster = "CLUSTER"
-local data_tag = "DATE_TAG"
+local install_prefix = "INSTALL_PREFIX"
+local system = "SYSTEM"
+local date_tag = "DATE_TAG"
 local user_permanent_files_prefix = "USER_PERMANENT_FILES_PREFIX"
 
 -- Directory names
@@ -161,7 +161,7 @@ if host_arch_name == "aarch64" then
 end
 
 -- Add Pawsey Lmod extensions (custom hooks, helper functions)
-prepend_path('LMOD_PACKAGE_PATH', "/software/" .. cluster .. "/lmod-extras")
+prepend_path('LMOD_PACKAGE_PATH', "/software/" .. system .. "/lmod-extras")
 
 -- Read user's project allocation
 local fh = assert(io.open(os.getenv("HOME") .. "/.pawsey_project", "r"))
@@ -170,9 +170,9 @@ fh:close()
 local psc_sw_env_user = os.getenv("USER")
 
 -- Derived paths
--- Note: base_install_dir already includes cluster and date_tag (e.g., /software/setonix-q/2026.01)
-local psc_sw_env_root_dir = base_install_dir
-local psc_sw_env_clusarchdate = table.concat({cluster, data_tag}, "/")
+-- Note: install_prefix already includes system and date_tag (e.g., /software/setonix-q/2026.01)
+local psc_sw_env_root_dir = install_prefix
+local psc_sw_env_system_datetag = table.concat({system, date_tag}, "/")
 
 -- Count module categories
 local num_categories = 0
@@ -183,22 +183,22 @@ for _ in pairs(psc_sw_env_module_categories) do num_categories = num_categories 
 --------------------------------------------------------------------------------
 
 -- User modules (per-user Spack installs)
-local psc_sw_env_user_modules_root = user_permanent_files_prefix .. "/" .. table.concat({psc_sw_env_project, psc_sw_env_user, psc_sw_env_clusarchdate, "modules", arch}, "/")
+local psc_sw_env_user_modules_root = user_permanent_files_prefix .. "/" .. table.concat({psc_sw_env_project, psc_sw_env_user, psc_sw_env_system_datetag, "modules", arch}, "/")
 prepend_compiler_paths(psc_sw_env_user_modules_root, psc_sw_env_user_modules_suffix)
 
 -- Which version of the software stack is loaded, here to duplicate prior behaviour
-setenv("PAWSEY_STACK_VERSION", data_tag)
+setenv("PAWSEY_STACK_VERSION", date_tag)
 
 -- User SHPC container modules
-local psc_sw_env_shpc_user_root = user_permanent_files_prefix .. "/" .. table.concat({psc_sw_env_project, psc_sw_env_user, psc_sw_env_clusarchdate, psc_sw_env_shpc_containers_modules_dir}, "/")
+local psc_sw_env_shpc_user_root = user_permanent_files_prefix .. "/" .. table.concat({psc_sw_env_project, psc_sw_env_user, psc_sw_env_system_datetag, psc_sw_env_shpc_containers_modules_dir}, "/")
 prepend_path("MODULEPATH", psc_sw_env_shpc_user_root)
 
 -- Project-wide SHPC container modules
-local psc_sw_env_shpc_project_root = user_permanent_files_prefix .. "/" .. table.concat({psc_sw_env_project, psc_sw_env_clusarchdate, psc_sw_env_shpc_containers_modules_dir}, "/")
+local psc_sw_env_shpc_project_root = user_permanent_files_prefix .. "/" .. table.concat({psc_sw_env_project, psc_sw_env_system_datetag, psc_sw_env_shpc_containers_modules_dir}, "/")
 prepend_path("MODULEPATH", psc_sw_env_shpc_project_root)
 
 -- Project modules (project-wide Spack installs)
-local psc_sw_env_project_modules_root = user_permanent_files_prefix .. "/" .. table.concat({psc_sw_env_project, psc_sw_env_clusarchdate, "modules", arch}, "/")
+local psc_sw_env_project_modules_root = user_permanent_files_prefix .. "/" .. table.concat({psc_sw_env_project, psc_sw_env_system_datetag, "modules", arch}, "/")
 prepend_compiler_paths(psc_sw_env_project_modules_root, psc_sw_env_project_modules_suffix)
 
 -- Pawsey utility modules (Spack, SHPC tools)
