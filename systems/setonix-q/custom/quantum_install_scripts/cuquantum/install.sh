@@ -16,13 +16,13 @@ if should_install_software; then
     extract_archive "${cuquantum_archive}.tar.xz"
 
     # Build MPI distributed interface if MPI is available
-    if [[ -n "${MPI_HOME}" ]] || command -v mpicc &>/dev/null; then
+    if [[ -n "${CRAY_MPICH_DIR}" ]] || [[ -n "${MPI_HOME}" ]] || command -v mpicc &>/dev/null; then
         echo "Building MPI distributed interface..."
         cd "${cuquantum_archive}/distributed_interfaces"
         
-        MPI_INCLUDE="${MPI_HOME:-/usr}/include"
-        MPI_LIB="${MPI_HOME:-/usr}/lib"
-        CUDA_INCLUDE="${CUDA_HOME:-${NVHPC_ROOT}/cuda}/include"
+        MPI_INCLUDE="${CRAY_MPICH_DIR:-${MPI_HOME:-/usr}}/include"
+        MPI_LIB="${CRAY_MPICH_DIR:-${MPI_HOME:-/usr}}/lib"
+        CUDA_INCLUDE="${CUDA_HOME}/include"
         
         gcc -shared -std=c99 -fPIC \
             -I"${CUDA_INCLUDE}" -I../include -I"${MPI_INCLUDE}" \
