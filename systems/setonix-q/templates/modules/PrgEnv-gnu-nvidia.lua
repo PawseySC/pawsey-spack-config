@@ -36,6 +36,11 @@ load("xpmem")
 
 unload("cray-libsci")
 
+-- Set CUDA_HOME from NVIDIA HPC SDK path (set by nvhpc module)
+local nvidia_path = os.getenv("NVIDIA_PATH")
+local cuda_home = pathJoin(nvidia_path, "cuda")
+setenv("CUDA_HOME", cuda_home)
+
 -- Add GCC spack modules (NVIDIA path added by PrgEnv-nvidia handshake)
 local gcc_spack_path = os.getenv("LMOD_CUSTOM_COMPILER_GNU_@GCC_COMPAT_VERSION@_PREFIX")
 if gcc_spack_path and gcc_spack_path ~= "" then
