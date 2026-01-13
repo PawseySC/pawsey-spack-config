@@ -20,6 +20,11 @@ if should_install_software; then
 
     cd qiskit-aer || exit 1
 
+    # Force GCC for all builds (avoid Cray wrappers picking up nvc)
+    export CC=gcc
+    export CXX=g++
+    export CUDACXX=nvcc
+
     python3 -m venv ${build_dir}/venv
     source ${build_dir}/venv/bin/activate
 
@@ -31,6 +36,9 @@ if should_install_software; then
     python ./setup.py bdist_wheel -- \
         -DCMAKE_C_COMPILER=gcc \
         -DCMAKE_CXX_COMPILER=g++ \
+        -DCMAKE_CUDA_COMPILER=nvcc \
+        -DCUDA_TOOLKIT_ROOT_DIR="${CUDA_HOME}" \
+        -DCUDAToolkit_ROOT="${CUDA_HOME}" \
         -DAER_THRUST_BACKEND=CUDA \
         -DAER_ENABLE_CUQUANTUM=true \
         -DCUQUANTUM_ROOT="${CUQUANTUM_ROOT}" \
