@@ -21,31 +21,39 @@ if should_install_software; then
     cd qiskit-aer || exit 1
 
     # Force GCC for all builds (avoid Cray wrappers picking up nvc)
-    export CC=gcc
-    export CXX=g++
-    export CUDACXX=nvcc
+    export CC=$(which gcc)
+    export CXX=$(which g++)
+    export CUDACXX=$(which nvcc)
+
+    # Set CUDA_PATH for CMake (from NVHPC)
+    export CUDA_PATH="${NVIDIA_PATH}/cuda"
+
+    # Conan home for build dependencies
+    export CONAN_USER_HOME="${build_dir}/conan"
+    mkdir -p "${CONAN_USER_HOME}"
 
     python3 -m venv ${build_dir}/venv
     source ${build_dir}/venv/bin/activate
 
     pip install --upgrade pip
     pip install -r requirements-dev.txt
-    pip install scikit-build cmake ninja pybind11
+    # Build tools not available as modules
+    pip install --force-reinstall "scikit-build>=0.11.0"
+    pip install --force-reinstall conan==1.65.0
+    pip install --force-reinstall pybind11==2.13.4
+    pip install cmake ninja
+    # numpy, scipy, cython, mpi4py, setuptools loaded as modules
 
     echo "Building with CUDA and cuQuantum..."
-    python ./setup.py bdist_wheel -- \
-        -DCMAKE_C_COMPILER=gcc \
-        -DCMAKE_CXX_COMPILER=g++ \
-        -DCMAKE_CUDA_COMPILER=nvcc \
-        -DCUDA_TOOLKIT_ROOT_DIR="${CUDA_HOME}" \
-        -DCUDAToolkit_ROOT="${CUDA_HOME}" \
+    python ./setup.py bdist_wheel -vvv -- \
         -DAER_THRUST_BACKEND=CUDA \
-        -DAER_ENABLE_CUQUANTUM=true \
         -DCUQUANTUM_ROOT="${CUQUANTUM_ROOT}" \
         -DCUTENSOR_ROOT="${CUTENSOR_ROOT}" \
         -DAER_MPI=True \
-        -DAER_DISABLE_GDR=True \
-        -- -j$(nproc)
+        -DAER_ENABLE_CUQUANTUM=true \
+        --
+
+    rm -rf "${CONAN_USER_HOME}"
 
     mkdir -p "${install_dir}"
     pip install --target="${install_dir}" dist/qiskit_aer*.whl
