@@ -41,12 +41,3 @@ local gcc_spack_path = os.getenv("LMOD_CUSTOM_COMPILER_GNU_@GCC_COMPAT_VERSION@_
 if gcc_spack_path and gcc_spack_path ~= "" then
     prepend_path("MODULEPATH", gcc_spack_path)
 end
-
-if (mode() == "load") then
-    if (myModuleUsrName() ~= myModuleFullName()) then
-        LmodError(
-            "Default module versions are disabled by your systems administrator.\n\n",
-            "\tPlease load this module as <name>/<version>.\n"
-        )
-    end
-end

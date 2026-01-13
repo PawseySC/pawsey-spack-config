@@ -44,7 +44,7 @@ aocc_version="${aocc_version:-}"
 nvidia_version="${nvidia_version:-}"
 
 # Cray PE compat versions - these are used for LMOD_CUSTOM_COMPILER variable names
-# They must match what CRAY_LMOD_COMPILER returns (e.g., gnu/12.0, nvidia/20)
+# They must match what CRAY_LMOD_COMPILER returns (e.g., gnu/12.0, nvidia/23.11)
 gcc_compat_version="${gcc_compat_version:-}"
 cce_compat_version="${cce_compat_version:-}"
 aocc_compat_version="${aocc_compat_version:-}"
@@ -62,11 +62,10 @@ echo ""
 
 # Generate LMOD variable version strings from compat versions
 # These become the suffix for LMOD_CUSTOM_COMPILER_* variable names
-# Must match Cray PE expectations (e.g., GNU_12_0, NVIDIA_20)
 gcc_lmod_ver="${gcc_compat_version//./_}"       # 12.0 -> 12_0
 cce_lmod_ver="${cce_compat_version//./_}"
 aocc_lmod_ver="${aocc_compat_version//./_}"
-nvidia_lmod_ver="${nvidia_compat_version//./_}"  # 20 -> 20
+nvidia_lmod_ver="${nvidia_compat_version//./_}"  # 23.11 -> 23_11
 
 sed \
     -e "s;INSTALL_PREFIX;${INSTALL_PREFIX};g" \
