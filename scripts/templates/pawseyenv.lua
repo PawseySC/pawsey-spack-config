@@ -35,22 +35,6 @@ else
   arch = "zen2"
 end
 
--- Handle cross-architecture transitions by clearing stale compiler paths
-local stored_arch = os.getenv("PAWSEYENV_ARCH") or ""
-local arch_mismatch = stored_arch ~= "" and stored_arch ~= arch
-
-if arch_mismatch then
-  local compiler_vars = {
-    "LMOD_CUSTOM_COMPILER_GNU_GCC_LMOD_VERSION_PREFIX",
-    "LMOD_CUSTOM_COMPILER_CRAYCLANG_CCE_LMOD_VERSION_PREFIX",
-    "LMOD_CUSTOM_COMPILER_AOCC_AOCC_LMOD_VERSION_PREFIX",
-    "LMOD_CUSTOM_COMPILER_NVIDIA_NVIDIA_LMOD_VERSION_PREFIX"
-  }
-  for _, var in ipairs(compiler_vars) do
-    unsetenv(var)
-  end
-end
-
 --------------------------------------------------------------------------------
 -- Configuration: sed-replaced template values
 --------------------------------------------------------------------------------
@@ -97,6 +81,13 @@ local compilers = {
   {var = "LMOD_CUSTOM_COMPILER_AOCC_AOCC_LMOD_VERSION_PREFIX", dir = "aocc", version = psc_sw_env_aocc_version, archs = {"zen"}},
   {var = "LMOD_CUSTOM_COMPILER_NVIDIA_NVIDIA_LMOD_VERSION_PREFIX", dir = "nvhpc", version = psc_sw_env_nvidia_version, archs = {"neoverse"}},
 }
+
+-- Clear any stale paths from previous sessions
+for _, c in ipairs(compilers) do
+  if c.version ~= "" then
+    unsetenv(c.var)
+  end
+end
 
 --------------------------------------------------------------------------------
 -- Helper Functions
