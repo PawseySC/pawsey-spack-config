@@ -120,10 +120,13 @@ local compilers = {
 -- Prepend compiler paths for matching architectures (with suffix)
 local function prepend_compiler_paths(base_path, suffix)
   for _, c in ipairs(compilers) do
-    for _, grp in ipairs(c.archs) do
-      if is_arch(grp) then
-        prepend_path(c.var, base_path .. "/" .. c.dir .. "/" .. c.version .. "/" .. suffix)
-        break
+    -- Skip compilers with empty versions (not configured for this system)
+    if c.version ~= "" then
+      for _, grp in ipairs(c.archs) do
+        if is_arch(grp) then
+          prepend_path(c.var, base_path .. "/" .. c.dir .. "/" .. c.version .. "/" .. suffix)
+          break
+        end
       end
     end
   end
@@ -132,10 +135,13 @@ end
 -- Prepend compiler paths for Spack module categories
 local function prepend_compiler_category_paths(base_path, category)
   for _, c in ipairs(compilers) do
-    for _, grp in ipairs(c.archs) do
-      if is_arch(grp) then
-        prepend_path(c.var, base_path .. "/" .. c.dir .. "/" .. c.version .. "/" .. category)
-        break
+    -- Skip compilers with empty versions (not configured for this system)
+    if c.version ~= "" then
+      for _, grp in ipairs(c.archs) do
+        if is_arch(grp) then
+          prepend_path(c.var, base_path .. "/" .. c.dir .. "/" .. c.version .. "/" .. category)
+          break
+        end
       end
     end
   end
@@ -169,7 +175,7 @@ prepend_path('LMOD_PACKAGE_PATH', "/software/" .. system .. "/lmod-extras")
 
 -- Read user's project allocation
 local fh = assert(io.open(os.getenv("HOME") .. "/.pawsey_project", "r"))
-local psc_sw_env_project = fh:read("l")
+local psc_sw_env_project = fh:read("*l")
 fh:close()
 local psc_sw_env_user = os.getenv("USER")
 
