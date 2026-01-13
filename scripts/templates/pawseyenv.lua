@@ -46,7 +46,7 @@ if stored_arch ~= "" and stored_arch ~= arch then
     "LMOD_CUSTOM_COMPILER_GNU_12_0_PREFIX",
     "LMOD_CUSTOM_COMPILER_CRAYCLANG_17_0_PREFIX",
     "LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX",
-    "LMOD_CUSTOM_COMPILER_NVIDIA_PREFIX"
+    "LMOD_CUSTOM_COMPILER_NVIDIA_24_11_PREFIX"
   }
   for _, var in ipairs(compiler_vars) do
     unsetenv(var)
