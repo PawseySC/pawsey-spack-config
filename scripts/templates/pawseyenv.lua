@@ -177,11 +177,9 @@ prepend_path('LMOD_PACKAGE_PATH', "/software/" .. system .. "/lmod-extras")
 local fh = assert(io.open(os.getenv("HOME") .. "/.pawsey_project", "r"))
 local psc_sw_env_project = fh:read("*l")
 fh:close()
-local psc_sw_env_user = os.getenv("USER")
 
 -- Derived paths
 -- Note: install_prefix already includes system and date_tag (e.g., /software/setonix-q/2026.01)
-local psc_sw_env_root_dir = install_prefix
 local psc_sw_env_system_datetag = table.concat({system, date_tag}, "/")
 
 -- Count module categories
@@ -193,14 +191,14 @@ for _ in pairs(psc_sw_env_module_categories) do num_categories = num_categories 
 --------------------------------------------------------------------------------
 
 -- User modules (per-user Spack installs)
-local psc_sw_env_user_modules_root = user_permanent_files_prefix .. "/" .. table.concat({psc_sw_env_project, psc_sw_env_user, psc_sw_env_system_datetag, "modules", arch}, "/")
+local psc_sw_env_user_modules_root = user_permanent_files_prefix .. "/" .. table.concat({psc_sw_env_project, shl_user, psc_sw_env_system_datetag, "modules", arch}, "/")
 prepend_compiler_paths(psc_sw_env_user_modules_root, psc_sw_env_user_modules_suffix)
 
 -- Which version of the software stack is loaded, here to duplicate prior behaviour
 setenv("PAWSEY_STACK_VERSION", date_tag)
 
 -- User SHPC container modules
-local psc_sw_env_shpc_user_root = user_permanent_files_prefix .. "/" .. table.concat({psc_sw_env_project, psc_sw_env_user, psc_sw_env_system_datetag, psc_sw_env_shpc_containers_modules_dir}, "/")
+local psc_sw_env_shpc_user_root = user_permanent_files_prefix .. "/" .. table.concat({psc_sw_env_project, shl_user, psc_sw_env_system_datetag, psc_sw_env_shpc_containers_modules_dir}, "/")
 prepend_path("MODULEPATH", psc_sw_env_shpc_user_root)
 
 -- Project-wide SHPC container modules
@@ -212,21 +210,21 @@ local psc_sw_env_project_modules_root = user_permanent_files_prefix .. "/" .. ta
 prepend_compiler_paths(psc_sw_env_project_modules_root, psc_sw_env_project_modules_suffix)
 
 -- Pawsey utility modules (Spack, SHPC tools)
-local psc_sw_env_utilities_modules_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_utilities_modules_dir
+local psc_sw_env_utilities_modules_root = install_prefix .. "/" .. psc_sw_env_utilities_modules_dir
 prepend_path("MODULEPATH", psc_sw_env_utilities_modules_root)
 
 -- Spack-installed software modules (per category)
-local psc_sw_env_spack_root = psc_sw_env_root_dir .. "/modules/" .. arch
+local psc_sw_env_spack_root = install_prefix .. "/modules/" .. arch
 for index = 1, num_categories do
   prepend_compiler_category_paths(psc_sw_env_spack_root, psc_sw_env_module_categories[index])
 end
 
 -- System SHPC container modules
-local psc_sw_env_shpc_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_shpc_containers_modules_dir
+local psc_sw_env_shpc_root = install_prefix .. "/" .. psc_sw_env_shpc_containers_modules_dir
 prepend_path("MODULEPATH", psc_sw_env_shpc_root)
 
 -- Pawsey custom modules (manually installed software)
-local psc_sw_env_custom_modules_root = psc_sw_env_root_dir .. "/" .. psc_sw_env_custom_modules_dir .. "/" .. arch
+local psc_sw_env_custom_modules_root = install_prefix .. "/" .. psc_sw_env_custom_modules_dir .. "/" .. arch
 prepend_compiler_paths(psc_sw_env_custom_modules_root, psc_sw_env_custom_modules_suffix)
 end
 -- if not root
