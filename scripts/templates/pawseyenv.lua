@@ -132,6 +132,7 @@ end
 --------------------------------------------------------------------------------
 if not (shl_user == "root") then
 
+setenv("PAWSEY_STACK_VERSION", date_tag)
 setenv("PAWSEYENV_ARCH", arch)
 
 -- Remove stale x86 paths if on ARM (temporary until all pawseyenv use family())
@@ -166,8 +167,6 @@ for _ in pairs(psc_sw_env_module_categories) do num_categories = num_categories 
 -- User modules
 local psc_sw_env_user_modules_root = user_permanent_files_prefix .. "/" .. table.concat({psc_sw_env_project, shl_user, psc_sw_env_system_datetag, "modules", arch}, "/")
 prepend_compiler_paths(psc_sw_env_user_modules_root, psc_sw_env_user_modules_suffix)
-
-setenv("PAWSEY_STACK_VERSION", date_tag)
 
 -- User SHPC containers
 local psc_sw_env_shpc_user_root = user_permanent_files_prefix .. "/" .. table.concat({psc_sw_env_project, shl_user, psc_sw_env_system_datetag, psc_sw_env_shpc_containers_modules_dir}, "/")
