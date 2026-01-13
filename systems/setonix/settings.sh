@@ -63,6 +63,11 @@ gcc_version="14.2.0"
 gcc_versionO="14.2.1"
 cce_version="19.0.0"
 aocc_version="5.0.0"
+# Cray PE compatibility versions (used for LMOD_CUSTOM_COMPILER variable names)
+# These must match the CRAY_LMOD_COMPILER values set by PrgEnv-* modules
+gcc_compat_version="14.0"
+cce_compat_version="17.0"
+aocc_compat_version="4.0"
 main_compiler="gcc"
 main_arch="zen3"
 
