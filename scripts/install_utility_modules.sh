@@ -17,6 +17,7 @@ if [[ -z "${utility_module_list}" ]]; then
 fi
 
 gcc_compat_ver="${gcc_compat_version//./_}"
+gcc_version_majorminor="${gcc_version%.*}"
 
 echo "Deploying custom utility modules for ${SYSTEM}..."
 echo ""
@@ -39,6 +40,7 @@ for module_name in ${utility_module_list}; do
     mkdir -p "${MODULE_DIR}"
 
     sed \
+        -e "s;@GCC_VERSION_MAJORMINOR@;${gcc_version_majorminor};g" \
         -e "s;@GCC_COMPAT_VERSION@;${gcc_compat_ver};g" \
         -e "s;@GCC_VERSION@;${gcc_version};g" \
         -e "s;@NVIDIA_VERSION@;${nvidia_version};g" \
