@@ -130,30 +130,7 @@ mkdir -p ${INSTALL_PREFIX}/${utilities_software_dir}
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_system_moduletree.sh"
 
 
-# create a template for the pawsey module, inside ${INSTALL_PREFIX},
-# containing the software stack related snippet, to be handed over to the Platforms team
-mkdir -p "${INSTALL_PREFIX}/staff_modulefiles/pawseyenv/"
-module_lua_cat_list=""
-for mod_cat in $module_cat_list ; do
-  module_lua_cat_list+="\"$mod_cat\", "
-done
-
-sed \
-  -e "s|BASE_INSTALL_PREFIX|${INSTALL_PREFIX}|g"\
-  -e "s|CLUSTER|${SYSTEM}|g"\
-  -e "s|DATE_TAG|$DATE_TAG|g"\
-  -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
-  -e "s;CUSTOM_MODULES_DIR;${custom_modules_dir};g" \
-  -e "s;UTILITIES_MODULES_DIR;${utilities_modules_dir};g" \
-  -e "s;SHPC_CONTAINERS_MODULES_DIR;${shpc_containers_modules_dir};g" \
-  -e "s;CUSTOM_MODULES_SUFFIX;${custom_modules_suffix};g" \
-  -e "s;PROJECT_MODULES_SUFFIX;${project_modules_suffix};g" \
-  -e "s;USER_MODULES_SUFFIX;${user_modules_suffix};g" \
-  -e "s;GCC_VERSION;${gcc_version};g" \
-  -e "s;CCE_VERSION;${cce_version};g" \
-  -e "s;AOCC_VERSION;${aocc_version};g" \
-  -e "s;NVIDIA_VERSION;${nvidia_version};g" \
-  -e "s;MODULE_LUA_CAT_LIST;${module_lua_cat_list};g" \
-  ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/pawseyenv.lua \
-  > "${INSTALL_PREFIX}/staff_modulefiles/pawseyenv/${pawseyenv_version}.lua"
+# Generate pawseyenv module
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/generate_pawseyenv.sh" \
+  "${INSTALL_PREFIX}/staff_modulefiles/pawseyenv/${pawseyenv_version}.lua"
 

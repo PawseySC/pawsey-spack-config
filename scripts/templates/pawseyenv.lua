@@ -43,10 +43,10 @@ end
 local stored_arch = os.getenv("PAWSEYENV_ARCH") or ""
 if stored_arch ~= "" and stored_arch ~= arch then
   local compiler_vars = {
-    "LMOD_CUSTOM_COMPILER_GNU_12_0_PREFIX",
-    "LMOD_CUSTOM_COMPILER_CRAYCLANG_17_0_PREFIX",
-    "LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX",
-    "LMOD_CUSTOM_COMPILER_NVIDIA_24_11_PREFIX"
+    "LMOD_CUSTOM_COMPILER_GNU_GCC_LMOD_VERSION_PREFIX",
+    "LMOD_CUSTOM_COMPILER_CRAYCLANG_CCE_LMOD_VERSION_PREFIX",
+    "LMOD_CUSTOM_COMPILER_AOCC_AOCC_LMOD_VERSION_PREFIX",
+    "LMOD_CUSTOM_COMPILER_NVIDIA_NVIDIA_LMOD_VERSION_PREFIX"
   }
   for _, var in ipairs(compiler_vars) do
     unsetenv(var)
@@ -104,10 +104,10 @@ end
 
 -- Compiler configurations: {lmod_var, directory, version, arch_groups}
 local compilers = {
-  {var = "LMOD_CUSTOM_COMPILER_GNU_12_0_PREFIX", dir = "gcc", version = psc_sw_env_gcc_version, archs = {"zen", "neoverse"}},
-  {var = "LMOD_CUSTOM_COMPILER_CRAYCLANG_17_0_PREFIX", dir = "cce", version = psc_sw_env_cce_version, archs = {"zen"}},
-  {var = "LMOD_CUSTOM_COMPILER_AOCC_4_1_PREFIX", dir = "aocc", version = psc_sw_env_aocc_version, archs = {"zen"}},
-  {var = "LMOD_CUSTOM_COMPILER_NVIDIA_24_11_PREFIX", dir = "nvhpc", version = psc_sw_env_nvidia_version, archs = {"neoverse"}},
+  {var = "LMOD_CUSTOM_COMPILER_GNU_GCC_LMOD_VERSION_PREFIX", dir = "gcc", version = psc_sw_env_gcc_version, archs = {"zen", "neoverse"}},
+  {var = "LMOD_CUSTOM_COMPILER_CRAYCLANG_CCE_LMOD_VERSION_PREFIX", dir = "cce", version = psc_sw_env_cce_version, archs = {"zen"}},
+  {var = "LMOD_CUSTOM_COMPILER_AOCC_AOCC_LMOD_VERSION_PREFIX", dir = "aocc", version = psc_sw_env_aocc_version, archs = {"zen"}},
+  {var = "LMOD_CUSTOM_COMPILER_NVIDIA_NVIDIA_LMOD_VERSION_PREFIX", dir = "nvhpc", version = psc_sw_env_nvidia_version, archs = {"neoverse"}},
 }
 
 --------------------------------------------------------------------------------
