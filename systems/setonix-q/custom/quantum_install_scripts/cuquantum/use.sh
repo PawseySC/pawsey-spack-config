@@ -2,7 +2,8 @@
 
 # essential for reproducibility of installation
 tool_name="cuquantum"
-tool_ver="25.11.1.11"
+tool_ver="25.11.1"
+archive_ver="25.11.1.11"
 cuda_ver="cuda12"
 
 # description
@@ -43,5 +44,5 @@ script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 install_dir="${base_dir}/${tool_name}/${tool_ver}"
 
 # cuQuantum specific
-cuquantum_archive="cuquantum-linux-${cuquantum_arch}-${tool_ver}_${cuda_ver}-archive"
+cuquantum_archive="cuquantum-linux-${cuquantum_arch}-${archive_ver}_${cuda_ver}-archive"
 cuquantum_url="https://developer.download.nvidia.com/compute/cuquantum/redist/cuquantum/linux-${cuquantum_arch}/${cuquantum_archive}.tar.xz"

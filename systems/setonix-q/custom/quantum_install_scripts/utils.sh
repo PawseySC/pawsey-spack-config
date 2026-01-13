@@ -48,6 +48,9 @@ function show_usage()
 
 function parse_args()
 {
+    # Save starting directory for restoration at end
+    export _UTILS_START_DIR="$PWD"
+    
     export MODULE_ONLY=false
     for arg in "$@"; do
         case $arg in
@@ -132,7 +135,6 @@ function install_files()
 function cleanup_build()
 {
     echo "Cleaning up build directory..."
-    cd ${script_dir}
     rm -rf ${build_dir}
 }
 
@@ -141,6 +143,11 @@ function finalize_install()
     local template=${1:-module.lua}
     install_module ${install_dir} ${tool_name} ${tool_ver} "${brief}" "${descrip}" "${template}"
     echo "${tool_name} ${tool_ver} installation complete!"
+    
+    # Restore starting directory
+    if [[ -n "${_UTILS_START_DIR}" ]]; then
+        cd "${_UTILS_START_DIR}"
+    fi
 }
 
 # ============================================================================

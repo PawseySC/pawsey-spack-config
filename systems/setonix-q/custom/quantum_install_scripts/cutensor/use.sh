@@ -2,7 +2,8 @@
 
 # essential for reproducibility of installation
 tool_name="cutensor"
-tool_ver="2.4.1.4"
+tool_ver="2.4.1"
+archive_ver="2.4.1.4"
 cuda_ver="cuda12"
 
 # description
@@ -41,5 +42,5 @@ script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 install_dir="${base_dir}/${tool_name}/${tool_ver}"
 
 # cuTensor specific
-cutensor_archive="libcutensor-linux-${cutensor_arch}-${tool_ver}_${cuda_ver}-archive"
+cutensor_archive="libcutensor-linux-${cutensor_arch}-${archive_ver}_${cuda_ver}-archive"
 cutensor_url="https://developer.download.nvidia.com/compute/cutensor/redist/libcutensor/linux-${cutensor_arch}/${cutensor_archive}.tar.xz"
