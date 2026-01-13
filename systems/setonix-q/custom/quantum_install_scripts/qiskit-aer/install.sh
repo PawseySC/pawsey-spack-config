@@ -23,12 +23,14 @@ if should_install_software; then
     python3 -m venv ${build_dir}/venv
     source ${build_dir}/venv/bin/activate
 
-    pip install -v --upgrade pip
-    pip install -v -r requirements-dev.txt
-    pip install -v scikit-build cmake ninja pybind11
+    pip install --upgrade pip
+    pip install -r requirements-dev.txt
+    pip install scikit-build cmake ninja pybind11
 
     echo "Building with CUDA and cuQuantum..."
     python ./setup.py bdist_wheel -- \
+        -DCMAKE_C_COMPILER=gcc \
+        -DCMAKE_CXX_COMPILER=g++ \
         -DAER_THRUST_BACKEND=CUDA \
         -DAER_ENABLE_CUQUANTUM=true \
         -DCUQUANTUM_ROOT="${CUQUANTUM_ROOT}" \
@@ -38,7 +40,7 @@ if should_install_software; then
         -- -j$(nproc)
 
     mkdir -p "${install_dir}"
-    pip install -v --target="${install_dir}" dist/qiskit_aer*.whl
+    pip install --target="${install_dir}" dist/qiskit_aer*.whl
 
     deactivate
     cleanup_build
