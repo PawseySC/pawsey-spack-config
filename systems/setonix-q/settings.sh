@@ -64,6 +64,10 @@ archs="aarch64"
 # compiler versions (needed for module trees with compiler dependency)
 gcc_version="12.3.0"
 nvidia_version="24.11"
+# Cray PE compatibility versions (used for LMOD_CUSTOM_COMPILER variable names)
+# These must match the CRAY_LMOD_COMPILER values set by PrgEnv-* modules
+gcc_compat_version="12.0"
+nvidia_compat_version="20"
 main_compiler="nvhpc"
 main_arch="aarch64"
 

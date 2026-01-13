@@ -43,24 +43,30 @@ cce_version="${cce_version:-}"
 aocc_version="${aocc_version:-}"
 nvidia_version="${nvidia_version:-}"
 
+# Cray PE compat versions - these are used for LMOD_CUSTOM_COMPILER variable names
+# They must match what CRAY_LMOD_COMPILER returns (e.g., gnu/12.0, nvidia/20)
+gcc_compat_version="${gcc_compat_version:-}"
+cce_compat_version="${cce_compat_version:-}"
+aocc_compat_version="${aocc_compat_version:-}"
+nvidia_compat_version="${nvidia_compat_version:-}"
+
 echo "Generating pawseyenv module for system: ${SYSTEM}"
 echo "  DATE_TAG: ${DATE_TAG}"
 echo "  INSTALL_PREFIX: ${INSTALL_PREFIX}"
-echo "  gcc_version: ${gcc_version}"
-echo "  cce_version: ${cce_version:-<not set>}"
-echo "  aocc_version: ${aocc_version:-<not set>}"
-echo "  nvidia_version: ${nvidia_version:-<not set>}"
+echo "  gcc_version: ${gcc_version} (compat: ${gcc_compat_version:-<not set>})"
+echo "  cce_version: ${cce_version:-<not set>} (compat: ${cce_compat_version:-<not set>})"
+echo "  aocc_version: ${aocc_version:-<not set>} (compat: ${aocc_compat_version:-<not set>})"
+echo "  nvidia_version: ${nvidia_version:-<not set>} (compat: ${nvidia_compat_version:-<not set>})"
 echo "  Output: ${OUTPUT_FILE}"
 echo ""
 
-# Generate LMOD variable version strings (e.g., 12.3.0 -> 12_3)
-gcc_lmod_ver="${gcc_version%.*}"       # 12.3.0 -> 12.3
-gcc_lmod_ver="${gcc_lmod_ver//./_}"    # 12.3 -> 12_3
-cce_lmod_ver="${cce_version%.*}"
-cce_lmod_ver="${cce_lmod_ver//./_}"
-aocc_lmod_ver="${aocc_version%.*}"
-aocc_lmod_ver="${aocc_lmod_ver//./_}"
-nvidia_lmod_ver="${nvidia_version//./_}"  # nvidia is already major.minor
+# Generate LMOD variable version strings from compat versions
+# These become the suffix for LMOD_CUSTOM_COMPILER_* variable names
+# Must match Cray PE expectations (e.g., GNU_12_0, NVIDIA_20)
+gcc_lmod_ver="${gcc_compat_version//./_}"       # 12.0 -> 12_0
+cce_lmod_ver="${cce_compat_version//./_}"
+aocc_lmod_ver="${aocc_compat_version//./_}"
+nvidia_lmod_ver="${nvidia_compat_version//./_}"  # 20 -> 20
 
 sed \
     -e "s;INSTALL_PREFIX;${INSTALL_PREFIX};g" \
