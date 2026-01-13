@@ -40,8 +40,12 @@ end
 
 -- Handle cross-architecture transitions
 -- If arch mismatch detected, clear all LMOD_CUSTOM_COMPILER* path variables completely
+-- This runs on both load and unload to handle cases where user switches architectures
+-- On unload, Lmod's reversal of prepend_path may try to remove non-existent paths (no-op)
 local stored_arch = os.getenv("PAWSEYENV_ARCH") or ""
-if stored_arch ~= "" and stored_arch ~= arch then
+local arch_mismatch = stored_arch ~= "" and stored_arch ~= arch
+
+if arch_mismatch then
   local compiler_vars = {
     "LMOD_CUSTOM_COMPILER_GNU_GCC_LMOD_VERSION_PREFIX",
     "LMOD_CUSTOM_COMPILER_CRAYCLANG_CCE_LMOD_VERSION_PREFIX",
