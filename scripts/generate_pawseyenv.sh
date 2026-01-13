@@ -50,16 +50,6 @@ cce_compat_version="${cce_compat_version:-}"
 aocc_compat_version="${aocc_compat_version:-}"
 nvidia_compat_version="${nvidia_compat_version:-}"
 
-echo "Generating pawseyenv module for system: ${SYSTEM}"
-echo "  DATE_TAG: ${DATE_TAG}"
-echo "  INSTALL_PREFIX: ${INSTALL_PREFIX}"
-echo "  gcc_version: ${gcc_version} (compat: ${gcc_compat_version:-<not set>})"
-echo "  cce_version: ${cce_version:-<not set>} (compat: ${cce_compat_version:-<not set>})"
-echo "  aocc_version: ${aocc_version:-<not set>} (compat: ${aocc_compat_version:-<not set>})"
-echo "  nvidia_version: ${nvidia_version:-<not set>} (compat: ${nvidia_compat_version:-<not set>})"
-echo "  Output: ${OUTPUT_FILE}"
-echo ""
-
 # Generate LMOD variable version strings from compat versions
 # These become the suffix for LMOD_CUSTOM_COMPILER_* variable names
 gcc_lmod_ver="${gcc_compat_version//./_}"       # 12.0 -> 12_0
@@ -89,5 +79,3 @@ sed \
     -e "s;MODULE_LUA_CAT_LIST;${module_lua_cat_list};g" \
     "${TEMPLATE_FILE}" \
     > "${OUTPUT_FILE}"
-
-echo "Generated: ${OUTPUT_FILE}"

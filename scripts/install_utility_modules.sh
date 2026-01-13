@@ -19,21 +19,13 @@ fi
 gcc_compat_ver="${gcc_compat_version//./_}"
 gcc_version_majorminor="${gcc_version%.*}"
 
-echo "Deploying custom utility modules for ${SYSTEM}..."
-echo ""
-
 for module_name in ${utility_module_list}; do
     TEMPLATE="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/templates/modules/${module_name}.lua"
     MODULE_DIR="${INSTALL_PREFIX}/${utilities_modules_dir}/${module_name}"
     MODULE_VERSION="${DATE_TAG}"
-    
-    echo "  Module: ${module_name}"
-    echo "    Template: ${TEMPLATE}"
-    echo "    Output: ${MODULE_DIR}/${MODULE_VERSION}.lua"
-    
+
     if [[ ! -f "${TEMPLATE}" ]]; then
-        echo "    WARNING: Template not found, skipping"
-        echo ""
+        echo "WARNING: Template not found for ${module_name}, skipping"
         continue
     fi
 
@@ -50,9 +42,4 @@ for module_name in ${utility_module_list}; do
         -e "s;@SYSTEM@;${SYSTEM};g" \
         "${TEMPLATE}" \
         > "${MODULE_DIR}/${MODULE_VERSION}.lua"
-    
-    echo "    Done"
-    echo ""
 done
-
-echo "Utility module deployment complete"
