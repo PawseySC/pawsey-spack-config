@@ -9,9 +9,9 @@ lightning_ver="${tool_ver}"
 brief="PennyLane quantum computing framework with GPU acceleration"
 descrip="PennyLane is a cross-platform Python library for quantum computing, \
 quantum machine learning, and quantum chemistry. This installation includes \
-PennyLane ${tool_ver} with Lightning-GPU (cuQuantum-accelerated state-vector \
-simulator) and Lightning-Tensor (cuQuantum tensor network simulator) for \
-high-performance GPU-accelerated quantum circuit simulation."
+PennyLane ${tool_ver} with Lightning-GPU built from source against the system \
+cuQuantum installation, with MPI support for distributed state-vector simulation \
+across multiple GPUs."
 
 nvhpc_ver="${nvidia_version:-24.11}"
 gcc_ver="${gcc_version:-12.3.0}"
