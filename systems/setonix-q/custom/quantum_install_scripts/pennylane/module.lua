@@ -12,24 +12,11 @@ help([[ DESCRIP ]])
 -- load dependencies
 -- dependencies
 
-family("cutensor")
+family("pennylane")
 
 local root = "INSTALL_PATH"
-setenv("CUTENSOR_ROOT", root)
-setenv("CUTENSOR_DIR", root)
 
-prepend_path("LIBRARY_PATH", pathJoin(root, "lib"))
-prepend_path("LD_LIBRARY_PATH", pathJoin(root, "lib"))
-
-prepend_path("CPATH", pathJoin(root, "include"))
-prepend_path("C_INCLUDE_PATH", pathJoin(root, "include"))
-prepend_path("CPLUS_INCLUDE_PATH", pathJoin(root, "include"))
-
-prepend_path("CMAKE_PREFIX_PATH", root)
-
-if isDir(pathJoin(root, "lib/pkgconfig")) then
-    prepend_path("PKG_CONFIG_PATH", pathJoin(root, "lib/pkgconfig"))
-end
+prepend_path("PYTHONPATH", root)
 
 if (mode() == "load") then
   if (myModuleUsrName() ~= myModuleFullName()) then
