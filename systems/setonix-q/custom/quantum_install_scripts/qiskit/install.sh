@@ -42,20 +42,22 @@ for version_string in "${QISKIT_VERSIONS[@]}"; do
             }
         fi
 
-        # Checkout the correct tags
+        # Checkout the correct tags (force to handle any dirty state)
         cd ${build_dir}/qiskit
         git fetch --tags
-        git checkout ${qiskit_tag} || {
+        git checkout --force ${qiskit_tag} || {
             echo "Error: Failed to checkout qiskit tag ${qiskit_tag}"
             exit 1
         }
+        git clean -fdx
         
         cd ${build_dir}/qiskit-aer
         git fetch --tags
-        git checkout ${qiskit_aer_tag} || {
+        git checkout --force ${qiskit_aer_tag} || {
             echo "Error: Failed to checkout qiskit-aer tag ${qiskit_aer_tag}"
             exit 1
         }
+        git clean -fdx
 
         # ====================================================================
         # Set up build environment
@@ -73,6 +75,8 @@ for version_string in "${QISKIT_VERSIONS[@]}"; do
         export CONAN_USER_HOME="${build_dir}/conan"
         mkdir -p "${CONAN_USER_HOME}"
 
+        # Create fresh venv for each version to avoid dependency conflicts
+        rm -rf ${build_dir}/venv
         python3 -m venv ${build_dir}/venv
         source ${build_dir}/venv/bin/activate
 
@@ -92,9 +96,10 @@ for version_string in "${QISKIT_VERSIONS[@]}"; do
         pip install -r requirements-dev.txt 2>/dev/null || true
         pip install build wheel
         
-        # Build and install qiskit to target directory
+        # Build and install qiskit with all dependencies to target directory
+        # This ensures runtime dependencies (rustworkx, symengine, etc.) are included
         mkdir -p "${install_dir}"
-        pip install --target="${install_dir}" . || {
+        pip install --target="${install_dir}" --upgrade . || {
             echo "Error: Failed to install qiskit"
             exit 1
         }
@@ -144,8 +149,8 @@ for version_string in "${QISKIT_VERSIONS[@]}"; do
     echo "${tool_name}/${tool_ver} installation complete!"
 done
 
-# Final cleanup
-if should_install_software; then
+# Final cleanup (only if we actually installed software and build_dir is set)
+if should_install_software && [[ -n "${build_dir}" ]]; then
     cleanup_build
 fi
 
