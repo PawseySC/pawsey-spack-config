@@ -31,6 +31,7 @@ export dependencies=(
 PrgEnv-nvidia \
 craype-arm-grace \
 gcc-native-mixed/${gcc_module_ver} \
+cudatoolkit/24.11_12.6 \
 )
 
 # Paths derived from settings.sh variables

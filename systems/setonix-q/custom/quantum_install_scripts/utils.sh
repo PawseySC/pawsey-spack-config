@@ -217,6 +217,9 @@ function install_module()
     done
 
     sed -i "s:-- dependencies:${dstring}:g" ${modname}
+    
+    # Set permissions on module file and directory
+    set_permissions "${MODULE_DIR}/${NAME}"
 }
 
 # ============================================================================

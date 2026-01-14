@@ -25,13 +25,14 @@ nvhpc_ver="${nvidia_version:-24.11}"
 gcc_ver="${gcc_version:-12.3.0}"
 # Extract major.minor from gcc version (e.g., 12.3.0 -> 12.3) for module loading
 gcc_module_ver="${gcc_ver%.*}"
-cutensor_ver="2.0.2"
+cutensor_ver="2.4.1"
 
 # load modules
 export dependencies=(
 PrgEnv-nvidia \
 craype-arm-grace \
 gcc-native-mixed/${gcc_module_ver} \
+cudatoolkit/24.11_12.6 \
 cutensor/${cutensor_ver} \
 )
 

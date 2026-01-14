@@ -9,7 +9,9 @@ whatis([[Path : INSTALL_PATH ]])
 
 help([[ DESCRIP ]])
 
-depends_on("cutensor/2.4.1")
+-- load dependencies
+-- dependencies
+
 family("cuquantum")
 
 local root = "INSTALL_PATH"
