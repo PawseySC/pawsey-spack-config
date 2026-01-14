@@ -29,20 +29,14 @@ if should_install_software; then
     pip install --upgrade pip
 
     # ========================================================================
-    # Install PennyLane from PyPI
+    # Clone and build PennyLane-Lightning-GPU from source FIRST
+    # This allows us to use our cuQuantum and enable MPI support
+    # We build lightning first, then install pennylane with --no-deps to avoid
+    # pulling the pre-built lightning from PyPI
     # ========================================================================
     
-    echo "Installing PennyLane ${tool_ver}..."
     mkdir -p "${install_dir}"
-    pip install --target="${install_dir}" "pennylane==${tool_ver}" || {
-        echo "Error: Failed to install pennylane"
-        exit 1
-    }
-
-    # ========================================================================
-    # Clone and build PennyLane-Lightning-GPU from source
-    # This allows us to use our cuQuantum and enable MPI support
-    # ========================================================================
+    cd ${build_dir}
     
     echo "Cloning pennylane-lightning ${lightning_ver}..."
     if [[ ! -d "pennylane-lightning" ]]; then
@@ -62,7 +56,7 @@ if should_install_software; then
 
     # Install build requirements
     pip install -r requirements.txt
-    pip install cmake ninja
+    pip install cmake ninja build
 
     # Set CUQUANTUM_SDK environment variable - this is how pennylane-lightning finds cuQuantum
     # The CMake build uses find_library to search CUQUANTUM_SDK/lib for custatevec
@@ -81,24 +75,54 @@ if should_install_software; then
         fi
     fi
     
-    echo "Building Lightning-Qubit (required dependency)..."
+    # Build Lightning-Qubit wheel (required dependency for lightning-gpu)
+    echo "Building Lightning-Qubit wheel..."
     PL_BACKEND="lightning_qubit" python scripts/configure_pyproject_toml.py
-    pip install . -vv
+    python -m build --wheel
+    cp dist/pennylane_lightning*.whl ${build_dir}/
+    
+    # Install lightning-qubit to venv (needed as build dependency for lightning-gpu)
+    pip install dist/pennylane_lightning*.whl
 
-    echo "Building Lightning-GPU with MPI support..."
+    # Build Lightning-GPU wheel with MPI support
+    echo "Building Lightning-GPU wheel with MPI support..."
     git clean -fdx
     PL_BACKEND="lightning_gpu" python scripts/configure_pyproject_toml.py
-    # ENABLE_MPI=ON enables MPI support; CMake uses find_package(MPI) for discovery
-    CMAKE_ARGS="-DENABLE_MPI=ON" pip install . -vv || {
-        echo "Error: Failed to build lightning-gpu"
+    CMAKE_ARGS="-DENABLE_MPI=ON" python -m build --wheel || {
+        echo "Error: Failed to build lightning-gpu wheel"
         exit 1
     }
+    cp dist/pennylane_lightning*.whl ${build_dir}/
 
-    # Install the built packages to target directory
-    pip install --target="${install_dir}" --upgrade pennylane-lightning pennylane-lightning-gpu || {
-        echo "Error: Failed to install lightning packages to target"
+    # ========================================================================
+    # Install all packages to target directory
+    # ========================================================================
+    
+    echo "Installing PennyLane and Lightning packages to ${install_dir}..."
+    
+    # Install pennylane WITHOUT its dependencies (we provide them via modules)
+    # This avoids pulling the pre-built pennylane-lightning from PyPI
+    pip install --target="${install_dir}" --no-deps "pennylane==${tool_ver}" || {
+        echo "Error: Failed to install pennylane"
         exit 1
     }
+    
+    # Install pennylane's other PyPI dependencies (excluding pennylane-lightning)
+    pip install --target="${install_dir}" \
+        networkx rustworkx autograd appdirs "autoray==0.8.2" \
+        cachetools requests tomlkit typing_extensions packaging diastatic-malt || {
+        echo "Error: Failed to install pennylane dependencies"
+        exit 1
+    }
+    
+    # Install our custom-built lightning wheels
+    pip install --target="${install_dir}" --no-deps ${build_dir}/pennylane_lightning*.whl || {
+        echo "Error: Failed to install lightning packages"
+        exit 1
+    }
+    
+    # Set proper permissions on installed files
+    set_permissions "${install_dir}"
 
     # ========================================================================
     # Cleanup
