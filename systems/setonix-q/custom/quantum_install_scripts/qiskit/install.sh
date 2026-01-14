@@ -23,17 +23,9 @@ for version_string in "${QISKIT_VERSIONS[@]}"; do
         setup_build_dir
 
         # ====================================================================
-        # Clone repositories (use full clone to allow switching branches)
+        # Clone qiskit-aer repository (qiskit installed from PyPI)
         # ====================================================================
         
-        if [[ ! -d "qiskit" ]]; then
-            echo "Cloning qiskit repository..."
-            git clone ${qiskit_repo} || {
-                echo "Error: Failed to clone qiskit"
-                exit 1
-            }
-        fi
-
         if [[ ! -d "qiskit-aer" ]]; then
             echo "Cloning qiskit-aer repository..."
             git clone ${qiskit_aer_repo} || {
@@ -42,15 +34,7 @@ for version_string in "${QISKIT_VERSIONS[@]}"; do
             }
         fi
 
-        # Checkout the correct tags (force to handle any dirty state)
-        cd ${build_dir}/qiskit
-        git fetch --tags
-        git checkout --force ${qiskit_tag} || {
-            echo "Error: Failed to checkout qiskit tag ${qiskit_tag}"
-            exit 1
-        }
-        git clean -fdx
-        
+        # Checkout the correct tag (force to handle any dirty state)
         cd ${build_dir}/qiskit-aer
         git fetch --tags
         git checkout --force ${qiskit_aer_tag} || {
@@ -83,23 +67,12 @@ for version_string in "${QISKIT_VERSIONS[@]}"; do
         pip install --upgrade pip
         
         # ====================================================================
-        # Install Qiskit first
+        # Install Qiskit from PyPI (pre-built wheels, no Rust needed)
         # ====================================================================
         
-        echo "Installing Qiskit ${tool_ver}..."
-        cd ${build_dir}/qiskit || exit 1
-        
-        # Clean any previous build artifacts
-        rm -rf build dist *.egg-info
-        
-        # Install build dependencies for qiskit
-        pip install -r requirements-dev.txt 2>/dev/null || true
-        pip install build wheel
-        
-        # Build and install qiskit with all dependencies to target directory
-        # This ensures runtime dependencies (rustworkx, symengine, etc.) are included
+        echo "Installing Qiskit ${tool_ver} from PyPI..."
         mkdir -p "${install_dir}"
-        pip install --target="${install_dir}" --upgrade . || {
+        pip install --target="${install_dir}" "qiskit==${tool_ver}" || {
             echo "Error: Failed to install qiskit"
             exit 1
         }

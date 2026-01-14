@@ -64,5 +64,6 @@ with improved performance and new features."
 
 script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-qiskit_repo="https://github.com/Qiskit/qiskit.git"
+# Only qiskit-aer is built from source (for CUDA/cuQuantum support)
+# Qiskit itself is installed from PyPI as pre-built wheels
 qiskit_aer_repo="https://github.com/Qiskit/qiskit-aer.git"
