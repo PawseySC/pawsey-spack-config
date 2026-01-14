@@ -95,6 +95,9 @@ for version_string in "${QISKIT_VERSIONS[@]}"; do
         pip install cmake ninja
         # numpy, scipy, cython, mpi4py, setuptools loaded as modules
 
+        # Enable GPU-aware MPI for Cray MPICH
+        export MPICH_GPU_SUPPORT_ENABLED=1
+
         python ./setup.py bdist_wheel -vvv -- \
             -DAER_THRUST_BACKEND=CUDA \
             -DCUQUANTUM_ROOT="${CUQUANTUM_ROOT}" \
