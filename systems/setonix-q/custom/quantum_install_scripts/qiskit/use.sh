@@ -9,8 +9,8 @@ tool_name="qiskit"
 
 # Versions to install: "major_version:qiskit_version:aer_version"
 QISKIT_VERSIONS=(
-    "1:1.4.2:0.17.0"
-    "2:2.0.0:0.17.2"
+    "1:1.4.5:0.17.1"
+    "2:2.3.0:0.17.2"
 )
 
 # Helper function to set version-specific variables
