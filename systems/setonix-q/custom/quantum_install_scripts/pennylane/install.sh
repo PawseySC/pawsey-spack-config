@@ -18,11 +18,11 @@ if should_install_software; then
     export CC=$(which gcc)
     export CXX=$(which g++)
 
+    # Temporary venv for build dependencies only
     python3 -m venv --system-site-packages ${build_dir}/venv
     source ${build_dir}/venv/bin/activate
     pip install --upgrade pip
 
-    mkdir -p "${install_dir}"
     cd ${build_dir}
     
     echo "Cloning pennylane-lightning ${lightning_ver}..."
@@ -59,7 +59,6 @@ if should_install_software; then
     PL_BACKEND="lightning_qubit" python scripts/configure_pyproject_toml.py
     python -m build --wheel
     cp dist/pennylane_lightning*.whl ${build_dir}/
-    pip install dist/pennylane_lightning*.whl
 
     echo "Building Lightning-GPU wheel with MPI support..."
     git clean -fdx
@@ -70,32 +69,22 @@ if should_install_software; then
     }
     cp dist/pennylane_lightning*.whl ${build_dir}/
 
-    echo "Installing PennyLane and Lightning packages to ${install_dir}..."
+    prefix_dir="${install_dir%/lib/*}"
+    echo "Installing PennyLane and Lightning packages to ${prefix_dir}..."
+    mkdir -p "${prefix_dir}"
     
-    pip install --target="${install_dir}" --no-deps "pennylane==${tool_ver}" || {
+    # Install with --prefix (respects environment, won't reinstall numpy/mpi4py)
+    pip install --prefix="${prefix_dir}" "pennylane==${tool_ver}" || {
         echo "Error: Failed to install pennylane"
         exit 1
     }
     
-    pip install --target="${install_dir}" --no-deps \
-        networkx rustworkx autograd appdirs "autoray==0.8.2" \
-        cachetools requests tomlkit typing_extensions packaging diastatic-malt || {
-        echo "Error: Failed to install pennylane dependencies"
-        exit 1
-    }
-    
-    # Install scipy (need numpy 2.x compatible version, scipy >= 1.14)
-    pip install --target="${install_dir}" --no-deps "scipy>=1.14" || {
-        echo "Error: Failed to install scipy"
-        exit 1
-    }
-    
-    pip install --target="${install_dir}" --no-deps ${build_dir}/pennylane_lightning*.whl || {
+    pip install --prefix="${prefix_dir}" ${build_dir}/pennylane_lightning*.whl || {
         echo "Error: Failed to install lightning packages"
         exit 1
     }
     
-    set_permissions "${install_dir}"
+    set_permissions "${prefix_dir}"
 
     deactivate
     cleanup_build
