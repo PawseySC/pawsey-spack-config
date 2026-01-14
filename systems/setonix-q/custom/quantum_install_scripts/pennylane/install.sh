@@ -23,7 +23,8 @@ if should_install_software; then
     export CC=$(which gcc)
     export CXX=$(which g++)
 
-    python3 -m venv ${build_dir}/venv
+    # Create venv with system site-packages to use numpy/scipy/mpi4py from modules
+    python3 -m venv --system-site-packages ${build_dir}/venv
     source ${build_dir}/venv/bin/activate
 
     pip install --upgrade pip
