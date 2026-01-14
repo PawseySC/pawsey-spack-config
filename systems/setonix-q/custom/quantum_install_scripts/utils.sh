@@ -130,6 +130,17 @@ function install_files()
     echo "Installing to ${install_dir}..."
     mkdir -p "${install_dir}"
     cp -r ${source_dir}/* "${install_dir}/"
+    set_permissions "${install_dir}"
+}
+
+function set_permissions()
+{
+    local target_dir=$1
+    if [[ -d "${target_dir}" ]]; then
+        echo "Setting permissions on ${target_dir}..."
+        # Match Spack packages.yaml policy: read=world, write=user
+        chmod -R u+rwX,go+rX,go-w "${target_dir}"
+    fi
 }
 
 function cleanup_build()
@@ -141,6 +152,13 @@ function cleanup_build()
 function finalize_install()
 {
     local template=${1:-module.lua}
+    
+    # Set permissions on install directory (for pip-installed packages)
+    # install_files already calls this, but pip installs don't use install_files
+    if [[ -d "${install_dir}" ]]; then
+        set_permissions "${install_dir}"
+    fi
+    
     install_module ${install_dir} ${tool_name} ${tool_ver} "${brief}" "${descrip}" "${template}"
     echo "${tool_name} ${tool_ver} installation complete!"
     
