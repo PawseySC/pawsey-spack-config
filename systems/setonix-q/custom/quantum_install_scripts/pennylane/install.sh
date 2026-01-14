@@ -69,6 +69,8 @@ if should_install_software; then
     }
     cp dist/pennylane_lightning*.whl ${build_dir}/
 
+    deactivate
+
     prefix_dir="${install_dir%/lib/*}"
     echo "Installing PennyLane and Lightning packages to ${prefix_dir}..."
     mkdir -p "${prefix_dir}"
@@ -86,7 +88,6 @@ if should_install_software; then
     
     set_permissions "${prefix_dir}"
 
-    deactivate
     cleanup_build
 fi
 
