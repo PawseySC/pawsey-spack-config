@@ -26,7 +26,6 @@ export dependencies=(
 cuquantum/${cuquantum_ver} \
 python/${python_ver} \
 py-numpy/2.1.2 \
-py-scipy/1.13.0 \
 py-mpi4py/3.1.5-py3.11.6 \
 )
 
