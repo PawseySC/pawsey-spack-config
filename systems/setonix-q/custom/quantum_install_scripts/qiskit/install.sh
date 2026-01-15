@@ -19,7 +19,10 @@ for version_string in "${QISKIT_VERSIONS[@]}"; do
     echo "========================================================================"
 
     if should_install_software; then
+
         set_dependencies
+        module load py-setuptools/70.1.0-py3.11.6
+
         setup_build_dir
 
         # ====================================================================

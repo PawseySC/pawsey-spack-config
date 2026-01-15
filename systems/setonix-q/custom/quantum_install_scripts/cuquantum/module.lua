@@ -13,6 +13,7 @@ help([[ DESCRIP ]])
 -- dependencies
 
 family("cuquantum")
+conflict("cuquantum")
 
 local root = "INSTALL_PATH"
 setenv("CUQUANTUM_ROOT", root)

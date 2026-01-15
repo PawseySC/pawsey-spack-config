@@ -13,6 +13,7 @@ help([[ DESCRIP ]])
 -- dependencies
 
 family("cutensor")
+conflict("cutensor")
 
 local root = "INSTALL_PATH"
 setenv("CUTENSOR_ROOT", root)

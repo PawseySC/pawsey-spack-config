@@ -13,6 +13,7 @@ help([[ DESCRIP ]])
 -- dependencies
 
 family("qiskit")
+conflict("qiskit")
 
 local root = "INSTALL_PATH"
 

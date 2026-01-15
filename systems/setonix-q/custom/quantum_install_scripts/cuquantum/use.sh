@@ -27,12 +27,10 @@ gcc_ver="${gcc_version:-12.3.0}"
 gcc_module_ver="${gcc_ver%.*}"
 cutensor_ver="2.4.1"
 
-# load modules
+# load modules (explicit toolchain + CUDA + cutensor)
 export dependencies=(
-PrgEnv-nvidia \
-craype-arm-grace \
-gcc-native-mixed/${gcc_module_ver} \
-cudatoolkit/24.11_12.6 \
+PrgEnv-gnu-nvidia \
+cudatoolkit-gnu-nvidia \
 cutensor/${cutensor_ver} \
 )
 

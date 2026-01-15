@@ -9,7 +9,10 @@ parse_args "$@"
 echo "Installing ${tool_name}/${tool_ver} with Lightning-GPU/Tensor support"
 
 if should_install_software; then
+
     set_dependencies
+    module load py-pip/23.1.2-py3.11.6
+
     setup_build_dir
 
     export CC=$(which gcc)
@@ -51,13 +54,13 @@ if should_install_software; then
         echo "Cray MPICH detected (${CRAY_MPICH_VERSION}) - enabling GPU-aware MPI"
         export MPICH_GPU_SUPPORT_ENABLED=1
         if [[ -z "$(find ${CRAY_LD_LIBRARY_PATH//:/ } -name 'libmpi_gtl_cuda.so*' 2>/dev/null | head -1)" ]]; then
-            echo "Warning: libmpi_gtl_cuda.so not found. Ensure craype-accel-nvidia80 is loaded."
+            echo "Warning: libmpi_gtl_cuda.so not found. Ensure craype-accel-nvidia90 is loaded."
         fi
     fi
     
-    echo "Building Lightning-Qubit wheel..."
+    echo "Building Lightning-Qubit wheel (OpenMP + BLAS)..."
     PL_BACKEND="lightning_qubit" python scripts/configure_pyproject_toml.py
-    python -m build --wheel
+    CMAKE_ARGS="-DENABLE_OPENMP=ON -DENABLE_BLAS=ON" python -m build --wheel
     cp dist/pennylane_lightning*.whl ${build_dir}/
 
     echo "Building Lightning-GPU wheel with MPI support..."
@@ -69,22 +72,26 @@ if should_install_software; then
     }
     cp dist/pennylane_lightning*.whl ${build_dir}/
 
+    echo "Building Lightning-Tensor wheel..."
+    git clean -fdx
+    PL_BACKEND="lightning_tensor" python scripts/configure_pyproject_toml.py
+    python -m build --wheel || {
+        echo "Error: Failed to build lightning-tensor wheel"
+        exit 1
+    }
+    cp dist/pennylane_lightning*.whl ${build_dir}/
+
     deactivate
 
     prefix_dir="${install_dir%/lib/*}"
     echo "Installing PennyLane and Lightning packages to ${prefix_dir}..."
     mkdir -p "${prefix_dir}"
     
-    # Install with --prefix (respects environment, won't reinstall numpy/mpi4py)
-    if ! pip install --prefix="${prefix_dir}" "pennylane==${tool_ver}"; then
-        echo "PyPI pennylane ${tool_ver} not found; installing from Git tag..."
-        pip install --prefix="${prefix_dir}" "https://github.com/PennyLaneAI/pennylane/archive/refs/tags/v${tool_ver}.tar.gz" || {
-            echo "Error: Failed to install pennylane ${tool_ver}"
-            exit 1
-        }
-    fi
+    python -m pip install --upgrade pip
+    python -m pip install --prefix="${prefix_dir}" --no-binary=pennylane "pennylane==${tool_ver}"
+
     
-    pip install --prefix="${prefix_dir}" ${build_dir}/pennylane_lightning*.whl || {
+    python -m pip install --prefix="${prefix_dir}" ${build_dir}/pennylane_lightning*.whl || {
         echo "Error: Failed to install lightning packages"
         exit 1
     }
@@ -96,4 +103,4 @@ fi
 
 finalize_install
 
-echo "PennyLane ${tool_ver} installation complete. Backends: lightning.gpu, lightning.qubit, default.qubit."
+echo "PennyLane ${tool_ver} installation complete. Backends: lightning.gpu, lightning.qubit, lightning.tensor, default.qubit."

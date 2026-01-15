@@ -13,6 +13,7 @@ help([[ DESCRIP ]])
 -- dependencies
 
 family("pennylane")
+conflict("pennylane")
 
 local root = "INSTALL_PATH"
 
