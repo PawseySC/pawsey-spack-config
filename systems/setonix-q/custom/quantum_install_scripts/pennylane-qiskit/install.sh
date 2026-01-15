@@ -16,7 +16,7 @@ if should_install_software; then
 
     python -m pip install --upgrade pip
     mkdir -p "${install_dir}"
-    python -m pip install --prefix="${install_dir%/lib/*}" --no-binary=:all: "pennylane-qiskit==${plugin_ver}" || {
+    python -m pip install --prefix="${install_dir%/lib/*}" "pennylane-qiskit==${plugin_ver}" || {
         echo "Error: Failed to install pennylane-qiskit ${plugin_ver}"
         exit 1
     }
