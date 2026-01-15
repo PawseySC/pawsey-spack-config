@@ -1,5 +1,4 @@
---[[ CUDA Toolkit (GNU/NVIDIA) minimal module
-     Paths-only: no compiler overrides, no NVHPC comm_libs/NCCL/nvshmem. ]]
+-- CUDA Toolkit (GNU/NVIDIA) minimal module: paths only, no compiler overrides.
 
 family("cudatoolkit")
 conflict("cudatoolkit")
@@ -16,22 +15,25 @@ local NVTARGET             = "Linux_aarch64"
 local SDK_PATH             = "/opt/nvidia/hpc_sdk/" .. NVTARGET .. "/" .. SDK_LEVEL
 local CUDATOOLKIT_CURPATH  = SDK_PATH .. "/cuda/" .. MOD_MAJOR_VERSION .. "." .. MOD_MINOR_VERSION
 local MATH_LIBS_PATH       = SDK_PATH .. "/math_libs/" .. MOD_MAJOR_VERSION .. "." .. MOD_MINOR_VERSION
+local COMM_LIBS_PATH       = SDK_PATH .. "/comm_libs"
 local NSIGHT_COMPUTE       = SDK_PATH .. "/profilers/Nsight_Compute/"
 local NSIGHT_SYSTEMS       = SDK_PATH .. "/profilers/Nsight_Systems/"
 
-help([[Lightweight CUDA Toolkit environment:
-- Sets CUDA paths (bin/lib/include) for version ]] .. MOD_LEVEL .. [[.
-- Does NOT change CC/CXX/FC or add NVHPC comm_libs/NCCL/nvshmem.
+help([[
+CUDA Toolkit ]] .. MOD_LEVEL .. [[ (GNU/NVIDIA)
+- Exposes CUDA bin/lib/include, math_libs, Nsight tools, NCCL/nvshmem.
+- Does NOT override CC/CXX/FC and keeps NVHPC MPI wrappers off PATH.
 ]])
 
-whatis("CUDA Toolkit " .. MOD_LEVEL .. " (paths only; no compiler/MPI overrides; no NVHPC comm_libs)")
+whatis("CUDA Toolkit " .. MOD_LEVEL .. " (CUDA + math/NCCL/nvshmem paths; no compiler or MPI wrapper overrides)")
 
 -- Core CUDA locations
 setenv("CUDATOOLKIT_HOME", CUDATOOLKIT_CURPATH)
 setenv("CUDA_HOME",        CUDATOOLKIT_CURPATH)
 setenv("NVHPC_CUDA_HOME",  CUDATOOLKIT_CURPATH)
+setenv("NVHPC_COMM_LIBS_HOME", COMM_LIBS_PATH)
 
--- Paths: CUDA binaries and tools only
+-- Paths: CUDA binaries and tools
 prepend_path("PATH",     CUDATOOLKIT_CURPATH .. "/bin")
 prepend_path("PATH",     CUDATOOLKIT_CURPATH .. "/libnvvp")
 prepend_path("PATH",     CUDATOOLKIT_CURPATH .. "/compute-sanitizer")
@@ -39,12 +41,15 @@ prepend_path("PATH",     NSIGHT_COMPUTE)
 prepend_path("PATH",     NSIGHT_SYSTEMS .. "bin")
 prepend_path("MANPATH",  CUDATOOLKIT_CURPATH .. "/doc/man")
 
--- Libraries: CUDA runtime/NVVM/CUPTI/math libs only
+-- Libraries: CUDA runtime/NVVM/CUPTI/math libs + NCCL/nvshmem
 prepend_path("LD_LIBRARY_PATH", CUDATOOLKIT_CURPATH .. "/lib64")
 prepend_path("LD_LIBRARY_PATH", CUDATOOLKIT_CURPATH .. "/nvvm/lib64")
 prepend_path("LD_LIBRARY_PATH", CUDATOOLKIT_CURPATH .. "/extras/Debugger/lib64")
 prepend_path("LD_LIBRARY_PATH", CUDATOOLKIT_CURPATH .. "/extras/CUPTI/lib64")
 prepend_path("LD_LIBRARY_PATH", MATH_LIBS_PATH .. "/lib64")
+-- NVIDIA comm libs (keep MPI wrappers off PATH)
+prepend_path("LD_LIBRARY_PATH", COMM_LIBS_PATH .. "/nvshmem/lib")
+prepend_path("LD_LIBRARY_PATH", COMM_LIBS_PATH .. "/nccl/lib")
 
 prepend_path("CRAY_LD_LIBRARY_PATH", CUDATOOLKIT_CURPATH .. "/lib64")
 prepend_path("CRAY_LD_LIBRARY_PATH", MATH_LIBS_PATH .. "/lib64")
@@ -55,8 +60,10 @@ prepend_path("CPATH", CUDATOOLKIT_CURPATH .. "/nvvm/include")
 prepend_path("CPATH", CUDATOOLKIT_CURPATH .. "/extras/Debugger/include")
 prepend_path("CPATH", CUDATOOLKIT_CURPATH .. "/extras/CUPTI/include")
 prepend_path("CPATH", MATH_LIBS_PATH .. "/include")
+prepend_path("CPATH", COMM_LIBS_PATH .. "/nvshmem/include")
+prepend_path("CPATH", COMM_LIBS_PATH .. "/nccl/include")
 
--- Cray compatibility helpers (no comm_libs)
+-- Cray compatibility helpers
 setenv("CRAY_CUDATOOLKIT_VERSION", MOD_LEVEL)
 setenv("CRAY_CUDATOOLKIT_DIR",     CUDATOOLKIT_CURPATH)
 setenv("CRAY_CUDATOOLKIT_PREFIX",  CUDATOOLKIT_CURPATH)
