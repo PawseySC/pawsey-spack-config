@@ -22,7 +22,10 @@ export MODULE_DIR=${INSTALL_PREFIX:-/software/setonix-q/2026.01}/custom/modules/
 export base_dir=${INSTALL_PREFIX:-/software/setonix-q/2026.01}/custom/software/linux-sles15-neoverse_v2/nvhpc-${nvhpc_ver}
 
 export dependencies=(
+PrgEnv-gnu-nvidia \
+cudatoolkit-gnu-nvidia \
 cuquantum/${cuquantum_ver} \
+cutensor/${cutensor_ver} \
 python/${python_ver} \
 py-numpy/2.1.2 \
 py-mpi4py/3.1.5-py3.11.6 \

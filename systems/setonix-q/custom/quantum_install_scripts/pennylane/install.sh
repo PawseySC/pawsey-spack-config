@@ -6,10 +6,7 @@ script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 parse_args "$@"
 
-echo ""
-echo "========================================================================"
 echo "Installing ${tool_name}/${tool_ver} with Lightning-GPU/Tensor support"
-echo "========================================================================"
 
 if should_install_software; then
     set_dependencies
@@ -44,6 +41,9 @@ if should_install_software; then
     pip install -r requirements.txt
     pip install cmake ninja build
 
+    CUDA_ARCHES=${CUDA_ARCHES:-90}
+    echo "Using CUDA architectures: ${CUDA_ARCHES}"
+
     export CUQUANTUM_SDK="${CUQUANTUM_ROOT}"
     echo "Using CUQUANTUM_SDK: ${CUQUANTUM_SDK}"
     
@@ -63,7 +63,7 @@ if should_install_software; then
     echo "Building Lightning-GPU wheel with MPI support..."
     git clean -fdx
     PL_BACKEND="lightning_gpu" python scripts/configure_pyproject_toml.py
-    CMAKE_ARGS="-DENABLE_MPI=ON" python -m build --wheel || {
+    CMAKE_ARGS="-DENABLE_MPI=ON -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHES}" python -m build --wheel || {
         echo "Error: Failed to build lightning-gpu wheel"
         exit 1
     }
@@ -93,13 +93,4 @@ fi
 
 finalize_install
 
-echo ""
-echo "========================================================================"
-echo "PennyLane ${tool_ver} installation complete!"
-echo "========================================================================"
-echo ""
-echo "Available backends:"
-echo "  - lightning.gpu    (CUDA/cuQuantum state-vector simulator with MPI)"
-echo "  - lightning.qubit  (CPU state-vector simulator)"
-echo "  - default.qubit    (NumPy-based simulator)"
-echo "========================================================================"
+echo "PennyLane ${tool_ver} installation complete. Backends: lightning.gpu, lightning.qubit, default.qubit."
