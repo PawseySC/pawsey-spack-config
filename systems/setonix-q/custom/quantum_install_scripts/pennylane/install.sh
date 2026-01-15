@@ -8,6 +8,12 @@ parse_args "$@"
 
 echo "Installing ${tool_name}/${tool_ver} with Lightning-GPU/Tensor support"
 
+# Set temporary build directories to user-writable space
+export TMPDIR=/scratch/pawsey0001/$USER/tmp
+mkdir -p "$TMPDIR"
+export TEMP="$TMPDIR"
+export TMP="$TMPDIR"
+
 if should_install_software; then
 
     set_dependencies
