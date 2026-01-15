@@ -101,8 +101,13 @@ for version_string in "${QISKIT_VERSIONS[@]}"; do
         # Enable GPU-aware MPI for Cray MPICH
         export MPICH_GPU_SUPPORT_ENABLED=1
 
+        # CUDA architecture (90 = H100)
+        AER_CUDA_ARCH=${AER_CUDA_ARCH:-90}
+        echo "Using CUDA architecture: ${AER_CUDA_ARCH}"
+
         python ./setup.py bdist_wheel -vvv -- \
             -DAER_THRUST_BACKEND=CUDA \
+            -DAER_CUDA_ARCH="${AER_CUDA_ARCH}" \
             -DCUQUANTUM_ROOT="${CUQUANTUM_ROOT}" \
             -DCUTENSOR_ROOT="${CUTENSOR_ROOT}" \
             -DAER_MPI=True \
