@@ -11,7 +11,7 @@ echo "Installing ${tool_name}/${tool_ver} with Lightning-GPU/Tensor support"
 if should_install_software; then
 
     set_dependencies
-    j
+    module load py-pip/23.1.2-py3.11.6
 
     setup_build_dir
 
