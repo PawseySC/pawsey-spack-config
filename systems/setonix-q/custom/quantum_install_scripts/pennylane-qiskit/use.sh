@@ -7,6 +7,8 @@ plugin_ver="${pennylane_qiskit_ver:-0.44.0}"
 qiskit_ver="${qiskit_version:-2.3.0}"
 # PennyLane version to pair with
 pennylane_ver="${pennylane_version:-0.44.0}"
+# Module version combines PennyLane and Qiskit versions
+tool_ver="${pennylane_ver}-${qiskit_ver}"
 
 brief="PennyLane-Qiskit plugin ${plugin_ver} for Qiskit ${qiskit_ver}"
 descrip="Registers Qiskit devices in PennyLane, enabling qiskit.aer and hardware backends."
@@ -26,4 +28,4 @@ python/${python_ver} \
 )
 
 script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-install_dir="${base_dir}/${tool_name}/${qiskit_ver}/lib/python${python_ver%.*}/site-packages"
+install_dir="${base_dir}/${tool_name}/${tool_ver}/lib/python${python_ver%.*}/site-packages"

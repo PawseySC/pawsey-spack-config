@@ -12,8 +12,8 @@ help([[ DESCRIP ]])
 -- load dependencies
 -- dependencies
 
-family("pennylane")
-conflict("pennylane-qiskit")
+family("pennylane_qiskit")
+conflict("pennylane_qiskit")
 
 local root = "INSTALL_PATH"
 

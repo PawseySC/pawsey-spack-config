@@ -10,20 +10,17 @@ echo "Installing ${tool_name}/${plugin_ver} for Qiskit ${qiskit_ver} and PennyLa
 
 if should_install_software; then
     set_dependencies
+    module load py-pip/23.1.2-py3.11.6
+
     setup_build_dir
 
-    python3 -m venv --system-site-packages ${build_dir}/venv
-    source ${build_dir}/venv/bin/activate
-    pip install --upgrade pip
-
+    python -m pip install --upgrade pip
     mkdir -p "${install_dir}"
-    python -m pip install --prefix="${install_dir%/lib/*}" --no-binary=:all: \
-        "pennylane-qiskit==${plugin_ver}" || {
+    python -m pip install --prefix="${install_dir%/lib/*}" --no-binary=:all: "pennylane-qiskit==${plugin_ver}" || {
         echo "Error: Failed to install pennylane-qiskit ${plugin_ver}"
         exit 1
     }
 
-    deactivate
     set_permissions "${install_dir%/lib/*}"
     cleanup_build
 fi
