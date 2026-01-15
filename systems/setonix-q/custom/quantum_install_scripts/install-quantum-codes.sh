@@ -2,7 +2,8 @@
 
 echo "Installing quantum packages"
 
-script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+# Use unique variable name to avoid being overwritten by sourced scripts
+_QUANTUM_INSTALL_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 # NVIDIA libraries (must be installed first as dependencies)
 nvidia_packages=(
@@ -23,11 +24,14 @@ for pkg in "${nvidia_packages[@]}"; do
     echo "========================================"
     echo "Installing ${pkg}"
     echo "========================================"
-    if [[ -f "${script_dir}/${pkg}/install.sh" ]]; then
-        source "${script_dir}/${pkg}/install.sh" "$@"
-    else
-        echo "Warning: ${script_dir}/${pkg}/install.sh not found"
+    if [[ ! -f "${_QUANTUM_INSTALL_DIR}/${pkg}/install.sh" ]]; then
+        echo "ERROR: ${_QUANTUM_INSTALL_DIR}/${pkg}/install.sh not found"
+        return 1 2>/dev/null || exit 1
     fi
+    source "${_QUANTUM_INSTALL_DIR}/${pkg}/install.sh" "$@" || {
+        echo "ERROR: Failed to install ${pkg}"
+        return 1 2>/dev/null || exit 1
+    }
 done
 
 # Install Python packages
@@ -36,14 +40,17 @@ for pkg in "${python_packages[@]}"; do
     echo "========================================"
     echo "Installing ${pkg}"
     echo "========================================"
-    if [[ -f "${script_dir}/${pkg}/install.sh" ]]; then
-        source "${script_dir}/${pkg}/install.sh" "$@"
-    else
-        echo "Warning: ${script_dir}/${pkg}/install.sh not found"
+    if [[ ! -f "${_QUANTUM_INSTALL_DIR}/${pkg}/install.sh" ]]; then
+        echo "ERROR: ${_QUANTUM_INSTALL_DIR}/${pkg}/install.sh not found"
+        return 1 2>/dev/null || exit 1
     fi
+    source "${_QUANTUM_INSTALL_DIR}/${pkg}/install.sh" "$@" || {
+        echo "ERROR: Failed to install ${pkg}"
+        return 1 2>/dev/null || exit 1
+    }
 done
 
 echo ""
 echo "========================================"
-echo "All quantum packages installed!"
+echo "All quantum packages installed successfully!"
 echo "========================================"
