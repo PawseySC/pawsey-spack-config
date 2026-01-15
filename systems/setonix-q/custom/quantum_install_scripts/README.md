@@ -1,17 +1,48 @@
-# Installation Scripts
+# Quantum Software Installation Scripts
 
-This directory contains custom installation scripts for Pennylane and Qiskit-AER. They may need modification
-for proper installation by the spack user. Initial tests indicate that these all of these work but there as 
-of yet, we do not have a full reframe set of tests to indicate that these installations are correct. 
+This directory contains custom installation scripts for quantum computing packages on Setonix-Q.
 
-## Scripts
+## Modules
 
-There are two main scripts:
-- `install-quantum-codes.sh`: run all the individual installation scripts (does require a node in which `rocm` modules are present)
-- `install-module.sh`: install a module (called internally by the installation scripts of each package)
+The following Python packages are installed with the `py-` prefix convention:
 
-These scripts might undergo further updates to clean-up the installation process.
+| Module | Description |
+|--------|-------------|
+| `py-qiskit` | Qiskit quantum computing SDK with Aer GPU simulator (CUDA + cuQuantum + MPI) |
+| `py-pennylane` | PennyLane quantum ML framework with Lightning-GPU/Tensor backends |
+| `py-pennylane-qiskit` | PennyLane-Qiskit plugin for using Qiskit backends in PennyLane |
 
+## Package Directories
 
+Each package has its own directory with:
+- `use.sh` - Configuration variables (versions, dependencies, paths)
+- `install.sh` - Build and installation logic
+- `module.lua` - Lmod module template
 
+## Installation
 
+Setup the environment:
+
+```bash
+module purge
+module load pawsey pawseyenv pawseytools
+module load PrgEnv-gnu-nvidia
+source ././settings.sh # settings for setonix-q
+
+```
+
+Run individual package installers:
+```bash
+./qiskit/install.sh
+./pennylane/install.sh
+./pennylane-qiskit/install.sh
+```
+
+Or use the master script (requires appropriate compute node):
+```bash
+./install-quantum-codes.sh
+```
+
+## Utilities
+
+- `utils.sh` - Common functions used by all install scripts
