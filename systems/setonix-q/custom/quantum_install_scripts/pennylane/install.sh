@@ -11,7 +11,7 @@ echo "Installing ${tool_name}/${tool_ver} with Lightning-GPU/Tensor support"
 if should_install_software; then
 
     set_dependencies
-    module load py-pip/23.1.2-py3.11.6
+    j
 
     setup_build_dir
 
@@ -42,6 +42,7 @@ if should_install_software; then
     git clean -fdx
 
     pip install -r requirements.txt
+    pip install --upgrade "setuptools>=75.8.0"
     pip install cmake ninja build
 
     CUDA_ARCHES=${CUDA_ARCHES:-90}
