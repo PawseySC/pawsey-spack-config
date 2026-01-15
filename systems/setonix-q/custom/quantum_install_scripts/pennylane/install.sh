@@ -76,10 +76,13 @@ if should_install_software; then
     mkdir -p "${prefix_dir}"
     
     # Install with --prefix (respects environment, won't reinstall numpy/mpi4py)
-    pip install --prefix="${prefix_dir}" "pennylane==${tool_ver}" || {
-        echo "Error: Failed to install pennylane"
-        exit 1
-    }
+    if ! pip install --prefix="${prefix_dir}" "pennylane==${tool_ver}"; then
+        echo "PyPI pennylane ${tool_ver} not found; installing from Git tag..."
+        pip install --prefix="${prefix_dir}" "https://github.com/PennyLaneAI/pennylane/archive/refs/tags/v${tool_ver}.tar.gz" || {
+            echo "Error: Failed to install pennylane ${tool_ver}"
+            exit 1
+        }
+    fi
     
     pip install --prefix="${prefix_dir}" ${build_dir}/pennylane_lightning*.whl || {
         echo "Error: Failed to install lightning packages"

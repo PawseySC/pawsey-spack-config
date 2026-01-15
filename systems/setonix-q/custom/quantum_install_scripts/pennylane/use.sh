@@ -16,6 +16,7 @@ across multiple GPUs."
 nvhpc_ver="${nvidia_version:-24.11}"
 gcc_ver="${gcc_version:-12.3.0}"
 cuquantum_ver="25.11.1"
+cutensor_ver="2.4.1"
 python_ver="3.11.6"
 
 export MODULE_DIR=${INSTALL_PREFIX:-/software/setonix-q/2026.01}/custom/modules/neoverse_v2/nvhpc/${nvhpc_ver}/custom
