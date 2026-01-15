@@ -4,22 +4,42 @@ echo "Installing quantum packages"
 
 script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-# Install Python quantum packages (py-* modules)
-packages=(
+# NVIDIA libraries (must be installed first as dependencies)
+nvidia_packages=(
+    cutensor
+    cuquantum
+)
+
+# Python quantum packages (py-* modules)
+python_packages=(
     qiskit
     pennylane
     pennylane-qiskit
 )
 
-for pkg in "${packages[@]}"; do
+# Install NVIDIA libraries first
+for pkg in "${nvidia_packages[@]}"; do
     echo ""
     echo "========================================"
     echo "Installing ${pkg}"
     echo "========================================"
-    if [[ -x "${script_dir}/${pkg}/install.sh" ]]; then
-        "${script_dir}/${pkg}/install.sh" "$@"
+    if [[ -f "${script_dir}/${pkg}/install.sh" ]]; then
+        source "${script_dir}/${pkg}/install.sh" "$@"
     else
-        echo "Warning: ${script_dir}/${pkg}/install.sh not found or not executable"
+        echo "Warning: ${script_dir}/${pkg}/install.sh not found"
+    fi
+done
+
+# Install Python packages
+for pkg in "${python_packages[@]}"; do
+    echo ""
+    echo "========================================"
+    echo "Installing ${pkg}"
+    echo "========================================"
+    if [[ -f "${script_dir}/${pkg}/install.sh" ]]; then
+        source "${script_dir}/${pkg}/install.sh" "$@"
+    else
+        echo "Warning: ${script_dir}/${pkg}/install.sh not found"
     fi
 done
 
