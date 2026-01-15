@@ -137,6 +137,7 @@ container_list_mpi="
 # These are installed to ${utilities_modules_dir} and visible after loading pawseyenv
 utility_module_list="
 PrgEnv-gnu-nvidia
+cudatoolkit-gnu-nvidia
 "
 
 ### TYPICALLY NO EDIT NEEDED PAST THIS POIINT
