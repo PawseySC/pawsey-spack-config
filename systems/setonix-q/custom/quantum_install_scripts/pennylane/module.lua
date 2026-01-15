@@ -12,8 +12,8 @@ help([[ DESCRIP ]])
 -- load dependencies
 -- dependencies
 
-family("pennylane")
-conflict("pennylane")
+family("py_pennylane")
+conflict("py_pennylane")
 
 local root = "INSTALL_PATH"
 

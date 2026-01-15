@@ -1,6 +1,6 @@
 #!/bin/bash
 
-tool_name="pennylane"
+tool_name="py-pennylane"
 tool_ver="0.44.0"
 
 # PennyLane-Lightning GPU version (should match pennylane version)

@@ -12,8 +12,8 @@ help([[ DESCRIP ]])
 -- load dependencies
 -- dependencies
 
-family("qiskit")
-conflict("qiskit")
+family("py_qiskit")
+conflict("py_qiskit")
 
 local root = "INSTALL_PATH"
 

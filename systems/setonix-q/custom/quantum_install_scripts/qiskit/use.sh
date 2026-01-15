@@ -1,6 +1,6 @@
 #!/bin/bash
 
-tool_name="qiskit"
+tool_name="py-qiskit"
 
 # ============================================================================
 # Version configuration

@@ -12,8 +12,8 @@ help([[ DESCRIP ]])
 -- load dependencies
 -- dependencies
 
-family("pennylane_qiskit")
-conflict("pennylane_qiskit")
+family("py_pennylane_qiskit")
+conflict("py_pennylane_qiskit")
 
 local root = "INSTALL_PATH"
 

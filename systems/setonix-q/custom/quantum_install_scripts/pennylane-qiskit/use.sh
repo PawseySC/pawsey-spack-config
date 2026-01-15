@@ -1,6 +1,6 @@
 #!/bin/bash
 
-tool_name="pennylane-qiskit"
+tool_name="py-pennylane-qiskit"
 # Plugin version; override with pennylane_qiskit_ver if needed
 plugin_ver="${pennylane_qiskit_ver:-0.44.0}"
 # Qiskit version this plugin module targets
@@ -22,8 +22,8 @@ export base_dir=${INSTALL_PREFIX:-/software/setonix-q/2026.01}/custom/software/l
 export dependencies=(
 PrgEnv-gnu-nvidia \
 cudatoolkit-gnu-nvidia \
-qiskit/${qiskit_ver} \
-pennylane/${pennylane_ver} \
+py-qiskit/${qiskit_ver} \
+py-pennylane/${pennylane_ver} \
 python/${python_ver} \
 )
 
