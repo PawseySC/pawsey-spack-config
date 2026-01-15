@@ -228,6 +228,11 @@ function install_module()
 
 function set_dependencies()
 {
+    # Ensure a consistent environment for each installation
+    module purge
+    module load pawsey pawseytools "pawseyenv/${DATE_TAG}"
+    module load PrgEnv-gnu-nvidia
+
     for d in ${dependencies[@]}
     do
         module load ${d}
