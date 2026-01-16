@@ -108,15 +108,29 @@ for version_string in "${QISKIT_VERSIONS[@]}"; do
         export MPICH_GPU_SUPPORT_ENABLED=1
 
         # Link against GTL library for GPU-aware MPI on Cray systems (assume present)
-        GTL_LIB_PATH="${GTL_LIB_PATH:-${CRAY_MPICH_DIR}/gtl/lib}"
+        GTL_LIB_PATH="${GTL_LIB_PATH:-${cray_mpich_dir_gnu}/gtl/lib}"
         GTL_LIB="${GTL_LIB_PATH}/libmpi_gtl_cuda.so"
-        GTL_LINKER_FLAGS="-L${GTL_LIB_PATH} -lmpi_gtl_cuda -Wl,-rpath,${GTL_LIB_PATH}"
-        echo "Assuming GTL library at ${GTL_LIB}"
-        if [[ ! -f "${GTL_LIB}" ]]; then
-            echo "ERROR: Expected GTL library not found at ${GTL_LIB}"
-            echo "Set CRAY_MPICH_DIR or update GTL_LIB_PATH in this script."
+        if [[ ! -f "${GTL_LIB}" && -d "${CRAY_MPICH_DIR}" ]]; then
+            # Search within CRAY_MPICH_DIR if the simple path is missing
+            GTL_LIB="$(find "${CRAY_MPICH_DIR}" -maxdepth 4 -name libmpi_gtl_cuda.so 2>/dev/null | head -1 || true)"
+            if [[ -n "${GTL_LIB}" ]]; then
+                GTL_LIB_PATH="$(dirname "${GTL_LIB}")"
+            fi
+        fi
+        if [[ -z "${GTL_LIB}" || ! -f "${GTL_LIB}" ]]; then
+            # Try the hardcoded GNU path as a fallback
+            FALLBACK_GTL="/opt/cray/pe/mpich/${cray_mpich_ver}/ofi/gnu/${gcc_module_ver}/gtl/lib/libmpi_gtl_cuda.so"
+            if [[ -f "${FALLBACK_GTL}" ]]; then
+                GTL_LIB="${FALLBACK_GTL}"
+                GTL_LIB_PATH="$(dirname "${GTL_LIB}")"
+            fi
+        fi
+        echo "Using GTL library at ${GTL_LIB}"
+        if [[ -z "${GTL_LIB}" || ! -f "${GTL_LIB}" ]]; then
+            echo "ERROR: Expected GTL library not found. Set GTL_LIB_PATH or CRAY_MPICH_DIR to a path containing libmpi_gtl_cuda.so."
             exit 1
         fi
+        GTL_LINKER_FLAGS="-L${GTL_LIB_PATH} -lmpi_gtl_cuda -Wl,-rpath,${GTL_LIB_PATH}"
         export LD_LIBRARY_PATH="${GTL_LIB_PATH}:${LD_LIBRARY_PATH}"
 
         # CUDA architecture (90 = H100/GH200)
