@@ -19,6 +19,16 @@ local root = "INSTALL_PATH"
 
 prepend_path("PYTHONPATH", root)
 
+-- Enable GPU-aware MPI for Cray MPICH (required for multi-GPU/multi-node simulations)
+setenv("MPICH_GPU_SUPPORT_ENABLED", "1")
+-- Disable CUDA IPC fast path to avoid cuIpcOpenMemHandle errors on this platform
+setenv("MPICH_GPU_IPC_ENABLED", "0")
+
+-- Ensure GTL library is available for GPU-aware MPI at runtime
+local cray_mpich_dir = os.getenv("CRAY_MPICH_DIR") or "/opt/cray/pe/mpich/8.1.33/ofi/gnu/12"
+local gtl_lib_path = os.getenv("GTL_LIB_PATH") or pathJoin(cray_mpich_dir, "gtl", "lib")
+prepend_path("LD_LIBRARY_PATH", gtl_lib_path)
+
 if (mode() == "load") then
   if (myModuleUsrName() ~= myModuleFullName()) then
     LmodError(

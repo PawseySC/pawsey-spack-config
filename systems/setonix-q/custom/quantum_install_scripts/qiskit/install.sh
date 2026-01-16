@@ -10,6 +10,11 @@ parse_args "$@"
 # Install each Qiskit version
 # ============================================================================
 
+export TMP=$MYSCRATCH/tmp
+export TEMP=$MYSCRATCH/tmp
+export TMPDIR=$MYSCRATCH/tmp
+mkdir -p "$TMPDIR"
+
 for version_string in "${QISKIT_VERSIONS[@]}"; do
     set_qiskit_version "${version_string}"
     
@@ -93,27 +98,67 @@ for version_string in "${QISKIT_VERSIONS[@]}"; do
 
         pip install -r requirements-dev.txt
         # Build tools not available as modules
-        pip install --force-reinstall "scikit-build>=0.11.0"
-        pip install --force-reinstall conan==1.65.0
-        pip install --force-reinstall pybind11==2.13.4
+        pip install "scikit-build>=0.11.0"
+        pip install conan==1.65.0
+        pip install pybind11==2.13.4
         pip install cmake ninja
         # numpy, scipy, cython, mpi4py, setuptools loaded as modules
 
         # Enable GPU-aware MPI for Cray MPICH
         export MPICH_GPU_SUPPORT_ENABLED=1
 
-        # CUDA architecture (90 = H100)
-        AER_CUDA_ARCH=${AER_CUDA_ARCH:-90}
-        echo "Using CUDA architecture: ${AER_CUDA_ARCH}"
+        # Link against GTL library for GPU-aware MPI on Cray systems (assume present)
+        GTL_LIB_PATH="${GTL_LIB_PATH:-${CRAY_MPICH_DIR}/gtl/lib}"
+        GTL_LIB="${GTL_LIB_PATH}/libmpi_gtl_cuda.so"
+        GTL_LINKER_FLAGS="-L${GTL_LIB_PATH} -lmpi_gtl_cuda -Wl,-rpath,${GTL_LIB_PATH}"
+        echo "Assuming GTL library at ${GTL_LIB}"
+        if [[ ! -f "${GTL_LIB}" ]]; then
+            echo "ERROR: Expected GTL library not found at ${GTL_LIB}"
+            echo "Set CRAY_MPICH_DIR or update GTL_LIB_PATH in this script."
+            exit 1
+        fi
+        export LD_LIBRARY_PATH="${GTL_LIB_PATH}:${LD_LIBRARY_PATH}"
 
-        python ./setup.py bdist_wheel -vvv -- \
-            -DAER_THRUST_BACKEND=CUDA \
-            -DAER_CUDA_ARCH="${AER_CUDA_ARCH}" \
-            -DCUQUANTUM_ROOT="${CUQUANTUM_ROOT}" \
-            -DCUTENSOR_ROOT="${CUTENSOR_ROOT}" \
-            -DAER_MPI=True \
-            -DAER_ENABLE_CUQUANTUM=true \
-            --
+        # CUDA architecture (90 = H100/GH200)
+        # Use CMAKE_CUDA_ARCHITECTURES (modern CMake) instead of AER_CUDA_ARCH
+        # to bypass deprecated cuda_select_nvcc_arch_flags which doesn't know sm_90
+        CUDA_ARCH=${CUDA_ARCH:-90}
+        echo "Using CUDA architecture: ${CUDA_ARCH}"
+        export CUDAARCHS="${CUDA_ARCH}"
+
+        # Build CMake flags array
+        CMAKE_ARGS=(
+            -DAER_THRUST_BACKEND=CUDA
+            -DCMAKE_CUDA_ARCHITECTURES="${CUDA_ARCH}"
+            -DCUQUANTUM_ROOT="${CUQUANTUM_ROOT}"
+            -DCUTENSOR_ROOT="${CUTENSOR_ROOT}"
+            -DAER_MPI=True
+            -DAER_ENABLE_CUQUANTUM=true
+            -DAER_LINKER_FLAGS="${GTL_LINKER_FLAGS}"
+            -DCMAKE_SHARED_LINKER_FLAGS="${GTL_LINKER_FLAGS}"
+            -DCMAKE_MODULE_LINKER_FLAGS="${GTL_LINKER_FLAGS}"
+        )
+
+        # Build wheel
+        python ./setup.py bdist_wheel -vvv -- "${CMAKE_ARGS[@]}" --
+
+        # Verify GTL library is linked (if we expected it)
+        if [[ -n "${GTL_LINKER_FLAGS}" ]]; then
+            echo "Verifying GTL library linkage..."
+            CONTROLLER_SO=$(find _skbuild -name "controller_wrappers*.so" 2>/dev/null | head -1)
+            if [[ -n "${CONTROLLER_SO}" ]]; then
+                if ldd "${CONTROLLER_SO}" | grep -q "libmpi_gtl_cuda"; then
+                    echo "SUCCESS: GTL library (libmpi_gtl_cuda.so) is linked"
+                else
+                    echo "ERROR: GTL library is NOT linked to ${CONTROLLER_SO}"
+                    echo "Linked MPI libraries:"
+                    ldd "${CONTROLLER_SO}" | grep -E "mpi|gtl"
+                    exit 1
+                fi
+            else
+                echo "WARNING: Could not find controller_wrappers.so to verify linkage"
+            fi
+        fi
 
         pip install --target="${install_dir}" dist/qiskit_aer*.whl || {
             echo "Error: Failed to install qiskit-aer"
