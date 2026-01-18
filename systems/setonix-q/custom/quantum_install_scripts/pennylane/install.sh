@@ -23,7 +23,7 @@ if should_install_software; then
 
     # Prefer GNU MPICH GTL path; enable GPU-aware MPI and disable IPC
     export CRAY_MPICH_DIR="${CRAY_MPICH_DIR:-${cray_mpich_dir_gnu}}"
-    export GTL_LIB_PATH="${GTL_LIB_PATH:-${cray_mpich_dir_gnu}/gtl/lib}"
+    export GTL_LIB_PATH="${GTL_LIB_PATH:-${cray_mpich_dir_gnu}/lib}"
     GTL_LIB="${GTL_LIB_PATH}/libmpi_gtl_cuda.so"
     echo "Using GTL library path: ${GTL_LIB}"
     if [[ ! -f "${GTL_LIB}" ]]; then

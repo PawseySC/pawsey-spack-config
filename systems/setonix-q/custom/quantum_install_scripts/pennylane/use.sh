@@ -40,4 +40,4 @@ install_dir="${base_dir}/${tool_name}/${tool_ver}/lib/python${python_ver%.*}/sit
 # Prefer the GNU MPICH stack for GTL unless explicitly overridden
 cray_mpich_dir_gnu="/opt/cray/pe/mpich/${cray_mpich_ver}/ofi/gnu/${gcc_module_ver}"
 export CRAY_MPICH_DIR="${CRAY_MPICH_DIR:-${cray_mpich_dir_gnu}}"
-export GTL_LIB_PATH="${GTL_LIB_PATH:-${cray_mpich_dir_gnu}/gtl/lib}"
+export GTL_LIB_PATH="${GTL_LIB_PATH:-${cray_mpich_dir_gnu}/lib}"
