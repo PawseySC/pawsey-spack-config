@@ -21,6 +21,23 @@ if should_install_software; then
 
     setup_build_dir
 
+    # Prefer GNU MPICH GTL path; enable GPU-aware MPI and disable IPC
+    export CRAY_MPICH_DIR="${CRAY_MPICH_DIR:-${cray_mpich_dir_gnu}}"
+    export GTL_LIB_PATH="${GTL_LIB_PATH:-${cray_mpich_dir_gnu}/gtl/lib}"
+    GTL_LIB="${GTL_LIB_PATH}/libmpi_gtl_cuda.so"
+    echo "Using GTL library path: ${GTL_LIB}"
+    if [[ ! -f "${GTL_LIB}" ]]; then
+        echo "ERROR: Expected GTL library not found at ${GTL_LIB}"
+        echo "Set GTL_LIB_PATH or CRAY_MPICH_DIR to the directory containing libmpi_gtl_cuda.so"
+        exit 1
+    fi
+    export LD_LIBRARY_PATH="${GTL_LIB_PATH}:${LD_LIBRARY_PATH}"
+    export CRAY_LD_LIBRARY_PATH="${GTL_LIB_PATH}:${CRAY_LD_LIBRARY_PATH}"
+    GTL_LINKER_FLAGS="-L${GTL_LIB_PATH} -lmpi_gtl_cuda -Wl,-rpath,${GTL_LIB_PATH}"
+    export LDFLAGS="${GTL_LINKER_FLAGS} ${LDFLAGS}"
+    export MPICH_GPU_SUPPORT_ENABLED=1
+    export MPICH_GPU_IPC_ENABLED=0
+
     export CC=$(which gcc)
     export CXX=$(which g++)
 
