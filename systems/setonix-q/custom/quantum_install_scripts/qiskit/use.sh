@@ -28,7 +28,6 @@ cuquantum/${cuquantum_ver} \
 python/${python_ver} \
 py-numpy/2.1.2 \
 py-cython/3.0.11 \
-py-mpi4py/4.0.1-py3.11.6 \
 )
 
 export CRAY_MPICH_DIR="${CRAY_MPICH_DIR:-${cray_mpich_dir_gnu}}"
