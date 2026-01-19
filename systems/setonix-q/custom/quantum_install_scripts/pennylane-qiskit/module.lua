@@ -17,18 +17,7 @@ conflict("py_pennylane_qiskit")
 
 local root = "INSTALL_PATH"
 
-prepend_path("LIBRARY_PATH", pathJoin(root, "lib"))
-prepend_path("LD_LIBRARY_PATH", pathJoin(root, "lib"))
-
-prepend_path("CPATH", pathJoin(root, "include"))
-prepend_path("C_INCLUDE_PATH", pathJoin(root, "include"))
-prepend_path("CPLUS_INCLUDE_PATH", pathJoin(root, "include"))
-
 prepend_path("PYTHONPATH", root)
-
-if isDir(pathJoin(root, "lib/pkgconfig")) then
-    prepend_path("PKG_CONFIG_PATH", pathJoin(root, "lib/pkgconfig"))
-end
 
 if (mode() == "load") then
   if (myModuleUsrName() ~= myModuleFullName()) then
