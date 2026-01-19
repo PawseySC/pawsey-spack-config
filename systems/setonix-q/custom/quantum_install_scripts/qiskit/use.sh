@@ -2,19 +2,14 @@
 
 tool_name="py-qiskit"
 
-# ============================================================================
-# Version configuration
-# Both Qiskit 1.x and 2.x are installed by default
-# ============================================================================
-
 # Versions to install: "major_version:qiskit_version:aer_version"
 QISKIT_VERSIONS=(
     "1:1.4.5:0.17.1"
     "2:2.3.0:0.17.2"
 )
 
-nvhpc_ver="${nvidia_version:-24.11}"
-gcc_ver="${gcc_version:-12.3.0}"
+nvhpc_ver="${nvidia_version}"
+gcc_ver="${gcc_version}"
 gcc_module_ver="${gcc_ver%.*}"
 cutensor_ver="2.4.1"
 cuquantum_ver="25.11.1"
@@ -22,8 +17,8 @@ python_ver="3.11.6"
 cray_mpich_ver="8.1.33"
 cray_mpich_dir_gnu="/opt/cray/pe/mpich/${cray_mpich_ver}/ofi/gnu/${gcc_module_ver}"
 
-export MODULE_DIR=${INSTALL_PREFIX:-/software/setonix-q/2026.01}/custom/modules/neoverse_v2/nvhpc/${nvhpc_ver}/custom
-export base_dir=${INSTALL_PREFIX:-/software/setonix-q/2026.01}/custom/software/linux-sles15-neoverse_v2/nvhpc-${nvhpc_ver}
+export MODULE_DIR=${INSTALL_PREFIX}/custom/modules/neoverse_v2/nvhpc/${nvhpc_ver}/custom
+export base_dir=${INSTALL_PREFIX}/custom/software/linux-sles15-neoverse_v2/nvhpc-${nvhpc_ver}
 
 export dependencies=(
 PrgEnv-gnu-nvidia \
@@ -33,14 +28,12 @@ cuquantum/${cuquantum_ver} \
 python/${python_ver} \
 py-numpy/2.1.2 \
 py-cython/3.0.11 \
-py-mpi4py/3.1.5-py3.11.6 \
+py-mpi4py/4.0.1-py3.11.6 \
 )
 
-# Hardcode Cray MPICH (GNU) path for GTL library discovery; ignore module-set CRAY_MPICH_DIR unless overridden explicitly
 export CRAY_MPICH_DIR="${CRAY_MPICH_DIR:-${cray_mpich_dir_gnu}}"
-export GTL_LIB_PATH="${GTL_LIB_PATH:-${cray_mpich_dir_gnu}/gtl/lib}"
+export GTL_LIB_PATH="${GTL_LIB_PATH:-${cray_mpich_dir_gnu}/lib}"
 
-# Helper function to set version-specific variables
 function set_qiskit_version() {
     local version_string=$1
     IFS=':' read -r major_ver tool_ver qiskit_aer_ver <<< "${version_string}"
@@ -71,6 +64,4 @@ with improved performance and new features."
 
 script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-# Only qiskit-aer is built from source (for CUDA/cuQuantum support)
-# Qiskit itself is installed from PyPI as pre-built wheels
 qiskit_aer_repo="https://github.com/Qiskit/qiskit-aer.git"
