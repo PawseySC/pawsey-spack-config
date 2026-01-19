@@ -1,28 +1,27 @@
 #!/bin/bash
 
 tool_name="py-pennylane-qiskit"
-# Plugin version; override with pennylane_qiskit_ver if needed
-plugin_ver="${pennylane_qiskit_ver:-0.44.0}"
-# Qiskit version this plugin module targets
-qiskit_ver="${qiskit_version:-2.3.0}"
-# PennyLane version to pair with
-pennylane_ver="${pennylane_version:-0.44.0}"
-# Module version combines PennyLane and Qiskit versions
-tool_ver="${pennylane_ver}-${qiskit_ver}"
+
+# Version configuration - these are the ground truth for this installation
+plugin_ver="0.44.0"
+qiskit_ver="2.3.0"
+pennylane_ver="0.44.0"
+
+tool_ver="${plugin_ver}"
 
 brief="PennyLane-Qiskit plugin ${plugin_ver} for Qiskit ${qiskit_ver}"
 descrip="Registers Qiskit devices in PennyLane, enabling qiskit.aer and hardware backends."
 
-nvhpc_ver="${nvidia_version:-24.11}"
+nvhpc_ver="${nvidia_version}"
 python_ver="3.11.6"
 
-export MODULE_DIR=${INSTALL_PREFIX:-/software/setonix-q/2026.01}/custom/modules/neoverse_v2/nvhpc/${nvhpc_ver}/custom
-export base_dir=${INSTALL_PREFIX:-/software/setonix-q/2026.01}/custom/software/linux-sles15-neoverse_v2/nvhpc-${nvhpc_ver}
+export MODULE_DIR=${INSTALL_PREFIX}/custom/modules/neoverse_v2/nvhpc/${nvhpc_ver}/custom
+export base_dir=${INSTALL_PREFIX}/custom/software/linux-sles15-neoverse_v2/nvhpc-${nvhpc_ver}
 
 export dependencies=(
 PrgEnv-gnu-nvidia \
 cudatoolkit-gnu-nvidia \
-py-qiskit/${qiskit_ver} \
+py-qiskit-nompi/${qiskit_ver} \
 py-pennylane/${pennylane_ver} \
 python/${python_ver} \
 )
