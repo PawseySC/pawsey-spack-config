@@ -11,6 +11,7 @@ QISKIT_VERSIONS=(
 nvhpc_ver="${nvidia_version}"
 gcc_ver="${gcc_version}"
 gcc_module_ver="${gcc_ver%.*}"
+build_compiler="gcc@${gcc_ver}"
 cutensor_ver="2.4.1"
 cuquantum_ver="25.11.1"
 python_ver="3.11.6"

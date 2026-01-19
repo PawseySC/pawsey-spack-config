@@ -25,6 +25,7 @@ nvhpc_ver="${nvidia_version}"
 gcc_ver="${gcc_version}"
 # Extract major.minor from gcc version (e.g., 12.3.0 -> 12.3) for module loading
 gcc_module_ver="${gcc_ver%.*}"
+build_compiler="nvhpc@${nvhpc_ver}"
 cutensor_ver="2.4.1"
 
 # load modules (explicit toolchain + CUDA + cutensor)

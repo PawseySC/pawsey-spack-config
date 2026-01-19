@@ -13,6 +13,8 @@ brief="PennyLane-Qiskit plugin ${plugin_ver} for Qiskit ${qiskit_ver}"
 descrip="Registers Qiskit devices in PennyLane, enabling qiskit.aer and hardware backends."
 
 nvhpc_ver="${nvidia_version}"
+gcc_ver="${gcc_version}"
+build_compiler="gcc@${gcc_ver}"
 python_ver="3.11.6"
 
 export MODULE_DIR=${INSTALL_PREFIX}/custom/modules/neoverse_v2/nvhpc/${nvhpc_ver}/custom

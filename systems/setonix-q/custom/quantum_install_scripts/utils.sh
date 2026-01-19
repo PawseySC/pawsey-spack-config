@@ -203,7 +203,8 @@ function install_module()
     # (e.g., COMPILER_VERSION before VERSION, INSTALL_PATH before PATH)
     local build_date=$(date +%Y-%m-%d)
     
-    sed -i "s:COMPILER_VERSION:nvhpc@${nvhpc_ver}:g" ${modname}
+    # build_compiler should be set in use.sh (e.g., "gcc@12.3.0" or "nvhpc@24.11")
+    sed -i "s:COMPILER_VERSION:${build_compiler}:g" ${modname}
     sed -i "s:INSTALL_PATH:${INSTALL_DIR}:g" ${modname}
     sed -i "s:BUILD_DATE:${build_date}:g" ${modname}
     sed -i "s:CRAY_MPICH_VER:${cray_mpich_ver}:g" ${modname}
