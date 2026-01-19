@@ -20,6 +20,9 @@ function check_settings()
     if [[ -z "${nvidia_version+x}" ]]; then
         missing+="  nvidia_version\n"
     fi
+    if [[ -z "${spack_version+x}" ]]; then
+        missing+="  spack_version\n"
+    fi
     
     if [[ -n "$missing" ]]; then
         echo "Error: Required environment variables are not set."
@@ -199,11 +202,12 @@ function install_module()
     # NOTE: Order matters! Longer patterns first to avoid partial matches
     # (e.g., COMPILER_VERSION before VERSION, INSTALL_PATH before PATH)
     local build_date=$(date +%Y-%m-%d)
-    local compiler_ver="${nvhpc_ver:-unknown}"
     
-    sed -i "s:COMPILER_VERSION:nvhpc@${compiler_ver}:g" ${modname}
+    sed -i "s:COMPILER_VERSION:nvhpc@${nvhpc_ver}:g" ${modname}
     sed -i "s:INSTALL_PATH:${INSTALL_DIR}:g" ${modname}
     sed -i "s:BUILD_DATE:${build_date}:g" ${modname}
+    sed -i "s:CRAY_MPICH_VER:${cray_mpich_ver}:g" ${modname}
+    sed -i "s:GCC_MODULE_VER:${gcc_module_ver}:g" ${modname}
     sed -i "s:VERSION:${VERSION}:g" ${modname}
     sed -i "s:DESCRIP:${DESCRIP}:g" ${modname}
     sed -i "s:BRIEF:${BRIEF}:g" ${modname}
