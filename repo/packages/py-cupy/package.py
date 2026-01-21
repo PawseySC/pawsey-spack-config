@@ -6,6 +6,7 @@
 
 import os
 
+from spack.util.environment import EnvironmentModifications
 from spack.package import *
 
 
