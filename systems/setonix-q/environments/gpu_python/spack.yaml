@@ -1,0 +1,39 @@
+spack:
+# GPU-accelerated Python packages for setonix-q (NVIDIA Grace-Hopper)
+# Uses numpy 2.x and GPU-aware mpi4py with GTL library
+  definitions:
+  - gpu-packages:
+    - cutensor@2.4.1.4
+    - py-cuda-python@12.9.5
+    - py-cupy@13.4.0 +cuda cuda_arch=90
+    - py-mpi4py@4.0.1 +gtl gtl_backend=cuda gtl_lib_path=/opt/cray/pe/mpich/8.1.33/ofi/gnu/12.3/lib
+    - py-numba
+    - py-numba-cuda@0.24:
+    - py-nvmath-python@0.6.0 +cu12 +distributed +dx
+
+  - packages:
+    - py-cython@3.2.0
+    - py-h5py@3.12.1
+    - py-ipython@8.28.0
+    - py-matplotlib@3.9.2 +movies
+    - py-numpy@2.1.2
+    - py-pandas@2.2.3
+    - py-plotly@5.20.0
+    - py-scikit-learn@1.5.2
+    - py-scipy@1.14.1
+
+  # need these here, too, for the python collection
+  - utilities:
+    - py-pip@23.1.2
+    - py-setuptools@80.0.0
+
+  specs:
+  - matrix:
+    - [$gpu-packages]
+    - [^python@3.11.6 +optimizations+zlib]
+    - ['%gcc@12.3.0']
+  - matrix:
+    - [$packages, $utilities]
+    - [^python@3.11.6 +optimizations+zlib]
+    - ['%gcc@12.3.0']
+  view: false
