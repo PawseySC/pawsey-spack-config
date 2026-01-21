@@ -9,7 +9,7 @@ spack:
     - py-h5py@3.11.0
     - py-ipython@8.14.0
     - py-matplotlib@3.8.4 +movies
-    - py-mpi4py@3.1.5
+    - py-mpi4py@4.0.1 +gtl gtl_backend=cuda gtl_lib_path=/opt/cray/pe/mpich/8.1.33/ofi/gnu/12.3/lib
     # py-numpy: using spack's recipe
     - py-numpy@1.26.4
     - py-numpy@2.1.2
