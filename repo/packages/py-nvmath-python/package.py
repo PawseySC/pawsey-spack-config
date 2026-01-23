@@ -25,6 +25,7 @@ class PyNvmathPython(PythonPackage):
     variant("cpu", default=False, description="Enable CPU fallback support")
 
     conflicts("+cu12", when="+cu13", msg="Cannot enable both CUDA 12 and CUDA 13 support")
+    conflicts("~cu12~cu13", msg="Must enable either +cu12 or +cu13")
 
     depends_on("python@3.10:3.13", type=("build", "run"))
     depends_on("py-setuptools@77:", type="build")
