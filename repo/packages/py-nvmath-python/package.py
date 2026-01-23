@@ -35,12 +35,6 @@ class PyNvmathPython(PythonPackage):
     depends_on("py-cuda-python", type=("build", "run"))
     depends_on("cuda@12:12", when="+cu12", type=("build", "run"))
     depends_on("cuda@13:", when="+cu13", type=("build", "run"))
-
-    depends_on("cublas", type=("build", "run"))
-    depends_on("cufft", type=("build", "run"))
-    depends_on("curand", type=("build", "run"))
-    depends_on("cusolver", type=("build", "run"))
-    depends_on("cusparse", type=("build", "run"))
     depends_on("cutensor@2.3.1:", type=("build", "run"))
 
     # Device extensions dependencies
