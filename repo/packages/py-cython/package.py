@@ -46,6 +46,7 @@ class PyCython(PythonPackage):
     version("0.29.21", sha256="e57acb89bd55943c8d8bf813763d20b9099cc7165c0f16b707631a7654be9cad")
 
     depends_on("python@:3.14", type=("build", "link", "run"))
+    depends_on("python@3.8:", when="@3.2:", type=("build", "link", "run"))
     depends_on("python@:3.13", when="@:3.1.2", type=("build", "link", "run"))
     depends_on("python@:3.12", when="@:3.0.10", type=("build", "link", "run"))
     depends_on("python@:3.11", when="@:3.0.3", type=("build", "link", "run"))
