@@ -128,6 +128,24 @@ class PyCupy(PythonPackage, CudaPackage, ROCmPackage):
             env.append_path("CPATH", join_path(cuda_prefix, "include"))
             env.append_path("LIBRARY_PATH", join_path(cuda_prefix, "lib64"))
             env.append_path("LD_LIBRARY_PATH", join_path(cuda_prefix, "lib64"))
+            # NVIDIA HPC SDK splits math libs (cublas/cufft/...) under math_libs/<ver>
+            ml_prefix = join_path(os.path.dirname(os.path.dirname(cuda_prefix)), "math_libs", os.path.basename(cuda_prefix))
+            # fall back to NVHPC env var if set and the derived path doesn't exist
+            if not os.path.isdir(ml_prefix):
+                nvhpc_root = os.environ.get("NVHPC") or os.environ.get("NVHPC_ROOT") or os.environ.get("NVIDIA_HPC_SDK")
+                if nvhpc_root:
+                    # e.g. NVHPC=/opt/nvidia/hpc_sdk; infer platform/version from cuda_prefix tail
+                    platform = cuda_prefix.split(os.sep)[-3:-2] or []
+                    version = os.path.basename(cuda_prefix)
+                    if platform:
+                        ml_prefix = join_path(nvhpc_root, platform[0], version, "math_libs", version)
+            ml_inc = join_path(ml_prefix, "include")
+            ml_lib = join_path(ml_prefix, "lib64")
+            if os.path.isdir(ml_inc):
+                env.append_path("CPATH", ml_inc)
+            if os.path.isdir(ml_lib):
+                env.append_path("LIBRARY_PATH", ml_lib)
+                env.append_path("LD_LIBRARY_PATH", ml_lib)
         elif self.spec.satisfies("+rocm"):
             spec = self.spec
 
