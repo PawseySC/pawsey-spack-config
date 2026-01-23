@@ -1,13 +1,13 @@
 from spack.package import *
 
-class NumbaCuda(PythonPackage):
+class PyNumbaCuda(PythonPackage):
     """
     Numba-CUDA: Python bindings for CUDA, enabling GPU programming with Numba.
     """
     homepage = "https://github.com/numba/numba-cuda"
-    pypi = "numba-cuda/numba-cuda-0.24.tar.gz"
+    pypi = "numba_cuda/numba_cuda-0.24.0.tar.gz"
 
-    version('0.24', sha256='0019dfc4b32d63c1392aa264aed2253c1e0c2fb09216f8e2cc269bbfb8bb49b5')
+    version("0.24.0", sha256="f15a11a8d224e160e9cb2345049c5fa0bbd49eb255b2e8f661086746a7feb378")
 
     depends_on('python@3.7:', type=('build', 'run'))
     depends_on('py-setuptools', type='build')
