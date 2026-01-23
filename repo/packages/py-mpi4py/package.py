@@ -68,8 +68,9 @@ class PyMpi4py(PythonPackage):
     )
     variant(
         "gtl_lib_path",
-        default="",
-        description="Path to GTL library directory",
+        default="auto",
+        values=str,
+        description="Path to GTL library directory (required when +gtl)",
         when="+gtl",
     )
 
@@ -86,7 +87,7 @@ class PyMpi4py(PythonPackage):
         """Validate GTL library path exists when +gtl is enabled."""
         if "+gtl" in self.spec:
             gtl_path = self.spec.variants["gtl_lib_path"].value
-            if not gtl_path:
+            if gtl_path in ("auto", "", None):
                 raise InstallError(
                     "gtl_lib_path must be specified when +gtl is enabled. "
                     "Example: py-mpi4py +gtl gtl_lib_path=/opt/cray/pe/mpich/8.1.33/ofi/gnu/12.3/lib"
@@ -128,7 +129,7 @@ class PyMpi4py(PythonPackage):
             backend = self.spec.variants["gtl_backend"].value
             gtl_library = "mpi_gtl_cuda" if backend == "cuda" else "mpi_gtl_hsa"
             gtl_path = self.spec.variants["gtl_lib_path"].value
-            if gtl_path:
+            if gtl_path not in ("auto", "", None):
                 gtl_lib_dirs = gtl_path
                 gtl_runtime_dirs = gtl_path
 
