@@ -9,7 +9,7 @@ class PyNvmathPython(PythonPackage):
     """NVIDIA Math Python libraries - high-performance mathematical computing on GPUs."""
 
     homepage = "https://developer.nvidia.com/nvmath-python"
-    pypi = "nvmath-python/nvmath_python-0.6.0.tar.gz"
+    url = "https://github.com/NVIDIA/nvmath-python/archive/refs/tags/v0.6.0.tar.gz"
     git = "https://github.com/NVIDIA/nvmath-python.git"
 
     maintainers("Edric-Matwiejew")
