@@ -117,7 +117,7 @@ class PyCupy(PythonPackage, CudaPackage, ROCmPackage):
     def setup_build_environment(self, env: EnvironmentModifications) -> None:
         env.set("CUPY_NUM_BUILD_JOBS", str(make_jobs))
         if self.spec.satisfies("+cuda"):
-            cuda_prefix = self.spec["cuda"].prefix
+            cuda_prefix = os.path.normpath(self.spec["cuda"].prefix)
             cuda_arch = self.spec.variants["cuda_arch"].value
             arch_str = ";".join("arch=compute_{0},code=sm_{0}".format(i) for i in cuda_arch)
             env.set("CUPY_NVCC_GENERATE_CODE", arch_str)
@@ -125,9 +125,13 @@ class PyCupy(PythonPackage, CudaPackage, ROCmPackage):
             env.set("CUDA_HOME", cuda_prefix)
             env.set("CUDA_PATH", cuda_prefix)
             env.set("CUPY_CUDA_PATH", cuda_prefix)
-            env.append_path("CPATH", join_path(cuda_prefix, "include"))
-            env.append_path("LIBRARY_PATH", join_path(cuda_prefix, "lib64"))
-            env.append_path("LD_LIBRARY_PATH", join_path(cuda_prefix, "lib64"))
+            cuda_inc = join_path(cuda_prefix, "include")
+            cuda_lib = join_path(cuda_prefix, "lib64")
+            env.append_path("CPATH", cuda_inc)
+            env.append_path("LIBRARY_PATH", cuda_lib)
+            env.append_path("LD_LIBRARY_PATH", cuda_lib)
+            cupy_incs = [cuda_inc]
+            cupy_libs = [cuda_lib]
             # NVIDIA HPC SDK splits math libs (cublas/cufft/...) under math_libs/<ver>
             ml_prefix = join_path(os.path.dirname(os.path.dirname(cuda_prefix)), "math_libs", os.path.basename(cuda_prefix))
             # fall back to NVHPC env var if set and the derived path doesn't exist
@@ -143,9 +147,15 @@ class PyCupy(PythonPackage, CudaPackage, ROCmPackage):
             ml_lib = join_path(ml_prefix, "lib64")
             if os.path.isdir(ml_inc):
                 env.append_path("CPATH", ml_inc)
+                env.append_flags("CFLAGS", f"-I{ml_inc}")
+                env.append_flags("CXXFLAGS", f"-I{ml_inc}")
+                cupy_incs.append(ml_inc)
             if os.path.isdir(ml_lib):
                 env.append_path("LIBRARY_PATH", ml_lib)
                 env.append_path("LD_LIBRARY_PATH", ml_lib)
+                cupy_libs.append(ml_lib)
+            env.set("CUPY_INCLUDE_PATH", ":".join(cupy_incs))
+            env.set("CUPY_LIBRARY_PATH", ":".join(cupy_libs))
         elif self.spec.satisfies("+rocm"):
             spec = self.spec
 
