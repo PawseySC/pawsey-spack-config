@@ -43,7 +43,7 @@ class PyCudaPython(PythonPackage):
 
     # Build dependencies
     depends_on("py-setuptools@80:", type="build")
-    depends_on("py-setuptools-scm@8:+simple", type="build")
+    depends_on("py-setuptools-scm@8:", type="build")
     depends_on("py-packaging@24.2:", type="build")
 
     # CUDA toolkit - cuda-python works with CUDA 11.x and 12.x
