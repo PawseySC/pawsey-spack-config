@@ -1,14 +1,28 @@
-# Copyright Spack Project Developers. See COPYRIGHT file for details.
-#
+# Copyright Spack Project Developers.
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
+#
 # Pawsey: Added +gtl variant for GPU Transport Layer support (GPU-aware MPI).
 #         Enables linking against libmpi_gtl_cuda (NVIDIA) or libmpi_gtl_hsa (AMD).
-#         Usage: py-mpi4py +gtl gtl_backend=cuda gtl_lib_path=/path/to/gtl/lib
+#         Usage:
+#           py-mpi4py +gtl gtl_backend=cuda gtl_lib_path=/path/to/gtl/lib
+#
+# Notes:
+# - This recipe assumes mpi4py will discover mpi.cfg in the project root (source tree).
+# - The +gtl logic generates mpi.cfg with:
+#     - libraries = mpi_gtl_{cuda,hsa} [+ cudart for cuda]
+#     - library_dirs includes MPI lib dirs + GTL dir + (CUDA lib dirs if cuda backend)
+#     - runtime_library_dirs includes GTL dir (+ CUDA lib dirs if cuda backend)
+# - It validates GTL library existence, supports gtl_lib_path=auto detection, and
+#   prints mpi.cfg before install for debugging.
+#
+# Important: On some MPI stacks, you may need "libraries = mpi mpi_gtl_cuda cudart"
+#            instead of "mpi_gtl_cuda cudart". See comment in create_mpi_config_file.
 
 import os
 
-from spack.util.environment import EnvironmentModifications
 from spack.package import *
+from spack.util.environment import EnvironmentModifications
+from llnl.util.tty import warn
 
 
 class PyMpi4py(PythonPackage):
@@ -51,9 +65,11 @@ class PyMpi4py(PythonPackage):
     depends_on("py-cython@3:", when="@4:", type="build")
     depends_on("py-cython@0.27:2", when="@:3.1.6", type="build")
     depends_on("py-cython@0.27:3", when="@master", type="build")
+
     depends_on("mpi")
 
-    # GTL (GPU Transport Layer) support for GPU-aware MPI
+    depends_on("cuda", when="+gtl gtl_backend=cuda")
+
     variant(
         "gtl",
         default=False,
@@ -70,42 +86,105 @@ class PyMpi4py(PythonPackage):
         "gtl_lib_path",
         default="auto",
         values=str,
-        description="Path to GTL library directory (required when +gtl)",
+        description="Path to GTL library directory (or 'auto' to detect from MPI libs)",
         when="+gtl",
     )
 
-    # GTL requires mpi4py 4.0+ for the mpi.cfg support
+    # GTL requires mpi4py 4.0+ for mpi.cfg support
     conflicts("+gtl", when="@:3", msg="Building with GTL support requires mpi4py 4.0 or later")
 
+    @staticmethod
+    def _pathlist(x):
+        """Convert list/tuple/None/str -> os.pathsep-separated string."""
+        if not x:
+            return ""
+        if isinstance(x, (list, tuple)):
+            return os.pathsep.join(str(p) for p in x if p)
+        return str(x)
+
+    def _gtl_soname(self):
+        backend = self.spec.variants["gtl_backend"].value
+        return "libmpi_gtl_cuda.so" if backend == "cuda" else "libmpi_gtl_hsa.so"
+
+    def _gtl_libname(self):
+        backend = self.spec.variants["gtl_backend"].value
+        return "mpi_gtl_cuda" if backend == "cuda" else "mpi_gtl_hsa"
+
+    def _detect_gtl_dir(self):
+        """Try to locate the GTL .so in reasonable locations."""
+        mpi_spec = self.spec["mpi"]
+        candidates = []
+
+        gtl_path = self.spec.variants["gtl_lib_path"].value
+        if gtl_path and gtl_path not in ("auto", "", None):
+            candidates.append(gtl_path)
+
+        try:
+            candidates.extend(list(mpi_spec.libs.directories))
+        except Exception:
+            pass
+
+        candidates.extend(
+            [
+                join_path(mpi_spec.prefix, "lib"),
+                join_path(mpi_spec.prefix, "lib64"),
+            ]
+        )
+
+        soname = self._gtl_soname()
+        for d in candidates:
+            if d and os.path.isfile(join_path(d, soname)):
+                return d
+        return None
+
     def setup_build_environment(self, env: EnvironmentModifications) -> None:
+        # Always build with the MPI wrapper from the dependency (Spack-managed).
         env.set("MPICC", self.spec["mpi"].mpicc)
+
+        if "+gtl" in self.spec:
+            # Matches the manual build approach for MPICH
+            env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
+            # Useful for diagnosing what link flags are used
+            env.set("MPI4PY_BUILD_VERBOSE", "1")
+
+    def setup_run_environment(self, env: EnvironmentModifications) -> None:
         if "+gtl" in self.spec:
             env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
 
     @run_before("install")
     def validate_gtl_path(self):
-        """Validate GTL library path exists when +gtl is enabled."""
-        if "+gtl" in self.spec:
-            gtl_path = self.spec.variants["gtl_lib_path"].value
-            if gtl_path in ("auto", "", None):
-                raise InstallError(
-                    "gtl_lib_path must be specified when +gtl is enabled. "
-                    "Example: py-mpi4py +gtl gtl_lib_path=/opt/cray/pe/mpich/8.1.33/ofi/gnu/12.3/lib"
-                )
-            backend = self.spec.variants["gtl_backend"].value
-            lib_name = "libmpi_gtl_cuda.so" if backend == "cuda" else "libmpi_gtl_hsa.so"
-            expected_lib = os.path.join(gtl_path, lib_name)
-            if not os.path.isfile(expected_lib):
-                raise InstallError(
-                    f"GTL library not found at {expected_lib}. "
-                    f"Verify gtl_lib_path points to a directory containing {lib_name}"
-                )
+        """Validate GTL library path exists when +gtl is enabled (or auto-detect it)."""
+        if "+gtl" not in self.spec:
+            return
 
-    @run_before("build")
-    def write_mpi_cfg_for_build(self):
-        """Generate mpi.cfg in the source tree so the build/extension picks it up."""
+        gtl_dir = self._detect_gtl_dir()
+        if not gtl_dir:
+            soname = self._gtl_soname()
+            raise InstallError(
+                "Could not locate GTL library ({0}). "
+                "Set gtl_lib_path explicitly, e.g.\n"
+                "  py-mpi4py +gtl gtl_backend=cuda gtl_lib_path=/opt/cray/pe/mpich/.../lib".format(soname)
+            )
+
+        self._resolved_gtl_dir = gtl_dir  # noqa: B010
+        warn(f"[mpi4py +gtl] resolved GTL dir = {gtl_dir}")
+
+        expected_lib = join_path(gtl_dir, self._gtl_soname())
+        if not os.path.isfile(expected_lib):
+            raise InstallError(
+                "GTL library not found at {0}. "
+                "Verify gtl_lib_path points to a directory containing {1}".format(expected_lib, self._gtl_soname())
+            )
+
+    @run_before("install")
+    def write_and_dump_mpi_cfg_for_install(self):
+        """Generate mpi.cfg in the source tree so the install picks it up; dump for debug."""
         cfg_fn = join_path(self.stage.source_path, "mpi.cfg")
         self.create_mpi_config_file(cfg_fn)
+
+        warn("===== mpi.cfg (debug) =====")
+        warn(open(cfg_fn, "r").read())
+        warn("===== end mpi.cfg =====")
 
     @run_before("install")
     def cythonize(self):
@@ -114,44 +193,78 @@ class PyMpi4py(PythonPackage):
 
     def create_mpi_config_file(self, cfg_fn):
         """
-        create mpi.cfg file introduced since version 4.0.0.
-        see https://mpi4py.readthedocs.io/en/stable/mpi4py.html#mpi4py.get_config
+        Create mpi.cfg file introduced since version 4.0.0.
         """
         mpi_spec = self.spec["mpi"]
-        include_dirs = mpi_spec.headers.directories
-        library_dirs = mpi_spec.libs.directories
+        backend = self.spec.variants["gtl_backend"].value
 
-        # Handle GTL library for GPU-aware MPI
-        gtl_library = ""
-        gtl_lib_dirs = ""
-        gtl_runtime_dirs = ""
+        include_dirs = self._pathlist(mpi_spec.headers.directories)
+        mpi_libdirs = self._pathlist(mpi_spec.libs.directories)
+
+        gtl_library = None
+        gtl_dir = None
         if "+gtl" in self.spec:
-            backend = self.spec.variants["gtl_backend"].value
-            gtl_library = "mpi_gtl_cuda" if backend == "cuda" else "mpi_gtl_hsa"
-            gtl_path = self.spec.variants["gtl_lib_path"].value
-            if gtl_path not in ("auto", "", None):
-                gtl_lib_dirs = gtl_path
-                gtl_runtime_dirs = gtl_path
+            gtl_library = self._gtl_libname()
+            gtl_dir = getattr(self, "_resolved_gtl_dir", None) or self._detect_gtl_dir()
+
+        cuda_libdirs = ""
+        if "+gtl" in self.spec and backend == "cuda":
+            cuda_libdirs = self._pathlist(self.spec["cuda"].libs.directories)
+
+        libs = []
+        if gtl_library:
+            libs.append(gtl_library)
+            if backend == "cuda":
+                libs.append("cudart")
+
+        libdirs = []
+        if mpi_libdirs:
+            libdirs.append(mpi_libdirs)
+        if gtl_dir:
+            libdirs.append(gtl_dir)
+        if cuda_libdirs:
+            libdirs.append(cuda_libdirs)
+
+        library_dirs = os.pathsep.join([d for d in libdirs if d])
+
+        rdirs = []
+        if gtl_dir:
+            rdirs.append(gtl_dir)
+        if cuda_libdirs:
+            rdirs.append(cuda_libdirs)
+
+        runtime_dirs = os.pathsep.join([d for d in rdirs if d])
 
         with open(cfg_fn, "w") as cfg:
             cfg.write("[mpi]\n")
-            cfg.write("mpi_dir              = {}\n".format(mpi_spec.prefix))
-            cfg.write("mpicc                = {}\n".format(mpi_spec.mpicc))
-            cfg.write("mpicxx               = {}\n".format(mpi_spec.mpicxx))
+            cfg.write("mpi_dir              = {0}\n".format(mpi_spec.prefix))
+            cfg.write("mpicc                = {0}\n".format(mpi_spec.mpicc))
+            cfg.write("mpicxx               = {0}\n".format(mpi_spec.mpicxx))
             cfg.write("\n")
+
             cfg.write("## define_macros        =\n")
             cfg.write("## undef_macros         =\n")
-            cfg.write("include_dirs         = {}\n".format(include_dirs))
-            if gtl_library:
-                cfg.write("libraries            = {}\n".format(gtl_library))
+
+            if include_dirs:
+                cfg.write("include_dirs         = {0}\n".format(include_dirs))
+            else:
+                cfg.write("## include_dirs         =\n")
+
+            if libs:
+                cfg.write("libraries            = {0}\n".format(" ".join(libs)))
             else:
                 cfg.write("## libraries            = mpi\n")
-            if gtl_lib_dirs:
-                cfg.write("library_dirs         = {}:{}\n".format(library_dirs, gtl_lib_dirs))
-                cfg.write("runtime_library_dirs = {}\n".format(gtl_runtime_dirs))
+
+            if library_dirs:
+                cfg.write("library_dirs         = {0}\n".format(library_dirs))
             else:
-                cfg.write("library_dirs         = {}\n".format(library_dirs))
+                cfg.write("## library_dirs         = %(mpi_dir)s/lib\n")
+
+            if runtime_dirs:
+                cfg.write("runtime_library_dirs = {0}\n".format(runtime_dirs))
+            else:
                 cfg.write("## runtime_library_dirs = %(mpi_dir)s/lib\n")
+
             cfg.write("\n")
             cfg.write("## extra_compile_args   =\n")
             cfg.write("## extra_link_args      =\n")
@@ -167,5 +280,3 @@ class PyMpi4py(PythonPackage):
             copy(staged_cfg, cfg_fn)
         else:
             self.create_mpi_config_file(cfg_fn)
-                                                                                                                                                                                                                                                                                                                                                                         
-                                                                                                                                                                                                                                                                                                                                                                 
