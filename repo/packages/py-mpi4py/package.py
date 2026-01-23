@@ -100,6 +100,12 @@ class PyMpi4py(PythonPackage):
                     f"Verify gtl_lib_path points to a directory containing {lib_name}"
                 )
 
+    @run_before("build")
+    def write_mpi_cfg_for_build(self):
+        """Generate mpi.cfg in the source tree so the build/extension picks it up."""
+        cfg_fn = join_path(self.stage.source_path, "mpi.cfg")
+        self.create_mpi_config_file(cfg_fn)
+
     @run_before("install")
     def cythonize(self):
         with working_dir(self.build_directory):
@@ -154,7 +160,11 @@ class PyMpi4py(PythonPackage):
     def install_cfg(self):
         python_dir = join_path(self.prefix, python_platlib, "mpi4py")
         cfg_fn = join_path(python_dir, "mpi.cfg")
-        if not os.path.isfile(cfg_fn):
+        staged_cfg = join_path(self.stage.source_path, "mpi.cfg")
+        if os.path.isfile(staged_cfg):
+            mkdirp(python_dir)
+            copy(staged_cfg, cfg_fn)
+        else:
             self.create_mpi_config_file(cfg_fn)
                                                                                                                                                                                                                                                                                                                                                                          
                                                                                                                                                                                                                                                                                                                                                                  
