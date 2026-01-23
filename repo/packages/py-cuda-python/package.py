@@ -25,6 +25,8 @@ class PyCudaPython(PythonPackage):
     maintainers("nvidia")
 
     license("LicenseRef-NVIDIA-SOFTWARE-LICENSE")
+    # Sources are multi-project; actual python package lives in cuda_python/
+    build_directory = "cuda_python"
 
     # Version 13.x releases
     version("13.1.0", sha256="63cc2823bb73bfe1e7e697457364d626f8e7705d6c3dc93a7d120dd788e2a93e", preferred=True)
