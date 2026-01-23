@@ -117,9 +117,17 @@ class PyCupy(PythonPackage, CudaPackage, ROCmPackage):
     def setup_build_environment(self, env: EnvironmentModifications) -> None:
         env.set("CUPY_NUM_BUILD_JOBS", str(make_jobs))
         if self.spec.satisfies("+cuda"):
+            cuda_prefix = self.spec["cuda"].prefix
             cuda_arch = self.spec.variants["cuda_arch"].value
             arch_str = ";".join("arch=compute_{0},code=sm_{0}".format(i) for i in cuda_arch)
             env.set("CUPY_NVCC_GENERATE_CODE", arch_str)
+            # Help CuPy find CUDA headers/libs during its build checks
+            env.set("CUDA_HOME", cuda_prefix)
+            env.set("CUDA_PATH", cuda_prefix)
+            env.set("CUPY_CUDA_PATH", cuda_prefix)
+            env.append_path("CPATH", join_path(cuda_prefix, "include"))
+            env.append_path("LIBRARY_PATH", join_path(cuda_prefix, "lib64"))
+            env.append_path("LD_LIBRARY_PATH", join_path(cuda_prefix, "lib64"))
         elif self.spec.satisfies("+rocm"):
             spec = self.spec
 
