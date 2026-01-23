@@ -57,7 +57,7 @@ class PyNvmathPython(PythonPackage):
             env.set("CUDA_PATH", self.spec["cuda"].prefix)
 
         # Make cuda-python headers (Cython .pxd) visible to the build
-        pyver = ".".join(self.spec["python"].version.up_to(2))
+        pyver = ".".join(str(x) for x in self.spec["python"].version.up_to(2))
         cuda_py_path = join_path(
             self.spec["py-cuda-python"].prefix, "lib", f"python{pyver}", "site-packages"
         )
