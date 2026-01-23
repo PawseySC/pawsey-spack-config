@@ -55,3 +55,11 @@ class PyNvmathPython(PythonPackage):
         if self.spec.satisfies("+cu12") or self.spec.satisfies("+cu13"):
             env.set("CUDA_HOME", self.spec["cuda"].prefix)
             env.set("CUDA_PATH", self.spec["cuda"].prefix)
+
+        # Make cuda-python headers (Cython .pxd) visible to the build
+        pyver = ".".join(self.spec["python"].version.up_to(2))
+        cuda_py_path = join_path(
+            self.spec["py-cuda-python"].prefix, "lib", f"python{pyver}", "site-packages"
+        )
+        env.prepend_path("PYTHONPATH", cuda_py_path)
+        env.prepend_path("CYTHON_INCLUDE_PATH", cuda_py_path)
