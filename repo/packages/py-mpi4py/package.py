@@ -1,0 +1,160 @@
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
+#
+# SPDX-License-Identifier: (Apache-2.0 OR MIT)
+# Pawsey: Added +gtl variant for GPU Transport Layer support (GPU-aware MPI).
+#         Enables linking against libmpi_gtl_cuda (NVIDIA) or libmpi_gtl_hsa (AMD).
+#         Usage: py-mpi4py +gtl gtl_backend=cuda gtl_lib_path=/path/to/gtl/lib
+
+import os
+
+from spack.util.environment import EnvironmentModifications
+from spack.package import *
+
+
+class PyMpi4py(PythonPackage):
+    """This package provides Python bindings for the Message Passing
+    Interface (MPI) standard. It is implemented on top of the
+    MPI-1/MPI-2 specification and exposes an API which grounds on the
+    standard MPI-2 C++ bindings.
+    """
+
+    pypi = "mpi4py/mpi4py-3.0.3.tar.gz"
+    git = "https://github.com/mpi4py/mpi4py.git"
+
+    license("BSD-3-Clause", when="@4:")
+    license("BSD-2-Clause", when="@:3")
+
+    version("master", branch="master")
+    version("4.1.1", sha256="eb2c8489bdbc47fdc6b26ca7576e927a11b070b6de196a443132766b3d0a2a22")
+    version("4.1.0", sha256="817492796bce771ccd809a6051cf68d48689815493b567a696ce7679260449cd")
+    version("4.0.3", sha256="de2710d73e25e115865a3ab63d34a54b2d8608b724f761c567b6ad58dd475609")
+    version("4.0.2", sha256="86085436d3ea3587323321b9e661e4df60eabbcf11c2c9cf63d0873ca111cc8b")
+    version("4.0.1", sha256="f3174b245775d556f4fddb32519a2066ef0592edc810c5b5a59238f9a0a40c89")
+    version("4.0.0", sha256="820d31ae184d69c17d9b5d55b1d524d56be47d2e6cb318ea4f3e7007feff2ccc")
+    version("3.1.6", sha256="c8fa625e0f92b082ef955bfb52f19fa6691d29273d7d71135d295aa143dee6cb")
+    version("3.1.5", sha256="a706e76db9255135c2fb5d1ef54cb4f7b0e4ad9e33cbada7de27626205f2a153")
+    version("3.1.4", sha256="17858f2ebc623220d0120d1fa8d428d033dde749c4bc35b33d81a66ad7f93480")
+    version("3.1.3", sha256="f1e9fae1079f43eafdd9f817cdb3fd30d709edc093b5d5dada57a461b2db3008")
+    version("3.1.2", sha256="40dd546bece8f63e1131c3ceaa7c18f8e8e93191a762cd446a8cfcf7f9cce770")
+    version("3.1.1", sha256="e11f8587a3b93bb24c8526addec664b586b965d83c0882b884c14dc3fd6b9f5c")
+    version("3.1.0", sha256="134fa2b2fe6d8f91bcfcc2824cfd74b55ca3dcbff4d185b1bda009beea9232ec")
+    version("3.0.3", sha256="012d716c8b9ed1e513fcc4b18e5af16a8791f51e6d1716baccf988ad355c5a1f")
+    version("3.0.1", sha256="6549a5b81931303baf6600fa2e3bc04d8bd1d5c82f3c21379d0d64a9abcca851")
+    version("3.0.0", sha256="b457b02d85bdd9a4775a097fac5234a20397b43e073f14d9e29b6cd78c68efd7")
+    version("2.0.0", sha256="6543a05851a7aa1e6d165e673d422ba24e45c41e4221f0993fe1e5924a00cb81")
+    version("1.3.1", sha256="e7bd2044aaac5a6ea87a87b2ecc73b310bb6efe5026031e33067ea3c2efc3507")
+
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+
+    depends_on("py-setuptools@40.9:", type="build")
+    depends_on("py-cython@3:", when="@4:", type="build")
+    depends_on("py-cython@0.27:2", when="@:3.1.6", type="build")
+    depends_on("py-cython@0.27:3", when="@master", type="build")
+    depends_on("mpi")
+
+    # GTL (GPU Transport Layer) support for GPU-aware MPI
+    variant(
+        "gtl",
+        default=False,
+        description="Enable GPU Transport Layer for GPU-aware MPI communication",
+    )
+    variant(
+        "gtl_backend",
+        default="cuda",
+        values=("cuda", "hsa"),
+        description="GTL backend: cuda for NVIDIA GPUs, hsa for AMD GPUs",
+        when="+gtl",
+    )
+    variant(
+        "gtl_lib_path",
+        default="",
+        description="Path to GTL library directory",
+        when="+gtl",
+    )
+
+    # GTL requires mpi4py 4.0+ for the mpi.cfg support
+    conflicts("+gtl", when="@:3", msg="Building with GTL support requires mpi4py 4.0 or later")
+
+    def setup_build_environment(self, env: EnvironmentModifications) -> None:
+        env.set("MPICC", self.spec["mpi"].mpicc)
+        if "+gtl" in self.spec:
+            env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
+
+    @run_before("install")
+    def validate_gtl_path(self):
+        """Validate GTL library path exists when +gtl is enabled."""
+        if "+gtl" in self.spec:
+            gtl_path = self.spec.variants["gtl_lib_path"].value
+            if not gtl_path:
+                raise InstallError(
+                    "gtl_lib_path must be specified when +gtl is enabled. "
+                    "Example: py-mpi4py +gtl gtl_lib_path=/opt/cray/pe/mpich/8.1.33/ofi/gnu/12.3/lib"
+                )
+            backend = self.spec.variants["gtl_backend"].value
+            lib_name = "libmpi_gtl_cuda.so" if backend == "cuda" else "libmpi_gtl_hsa.so"
+            expected_lib = os.path.join(gtl_path, lib_name)
+            if not os.path.isfile(expected_lib):
+                raise InstallError(
+                    f"GTL library not found at {expected_lib}. "
+                    f"Verify gtl_lib_path points to a directory containing {lib_name}"
+                )
+
+    @run_before("install")
+    def cythonize(self):
+        with working_dir(self.build_directory):
+            python(join_path("conf", "cythonize.py"))
+
+    def create_mpi_config_file(self, cfg_fn):
+        """
+        create mpi.cfg file introduced since version 4.0.0.
+        see https://mpi4py.readthedocs.io/en/stable/mpi4py.html#mpi4py.get_config
+        """
+        mpi_spec = self.spec["mpi"]
+        include_dirs = mpi_spec.headers.directories
+        library_dirs = mpi_spec.libs.directories
+
+        # Handle GTL library for GPU-aware MPI
+        gtl_library = ""
+        gtl_lib_dirs = ""
+        gtl_runtime_dirs = ""
+        if "+gtl" in self.spec:
+            backend = self.spec.variants["gtl_backend"].value
+            gtl_library = "mpi_gtl_cuda" if backend == "cuda" else "mpi_gtl_hsa"
+            gtl_path = self.spec.variants["gtl_lib_path"].value
+            if gtl_path:
+                gtl_lib_dirs = gtl_path
+                gtl_runtime_dirs = gtl_path
+
+        with open(cfg_fn, "w") as cfg:
+            cfg.write("[mpi]\n")
+            cfg.write("mpi_dir              = {}\n".format(mpi_spec.prefix))
+            cfg.write("mpicc                = {}\n".format(mpi_spec.mpicc))
+            cfg.write("mpicxx               = {}\n".format(mpi_spec.mpicxx))
+            cfg.write("\n")
+            cfg.write("## define_macros        =\n")
+            cfg.write("## undef_macros         =\n")
+            cfg.write("include_dirs         = {}\n".format(include_dirs))
+            if gtl_library:
+                cfg.write("libraries            = {}\n".format(gtl_library))
+            else:
+                cfg.write("## libraries            = mpi\n")
+            if gtl_lib_dirs:
+                cfg.write("library_dirs         = {}:{}\n".format(library_dirs, gtl_lib_dirs))
+                cfg.write("runtime_library_dirs = {}\n".format(gtl_runtime_dirs))
+            else:
+                cfg.write("library_dirs         = {}\n".format(library_dirs))
+                cfg.write("## runtime_library_dirs = %(mpi_dir)s/lib\n")
+            cfg.write("\n")
+            cfg.write("## extra_compile_args   =\n")
+            cfg.write("## extra_link_args      =\n")
+            cfg.write("## extra_objects        =\n")
+
+    @run_after("install", when="@4:")
+    def install_cfg(self):
+        python_dir = join_path(self.prefix, python_platlib, "mpi4py")
+        cfg_fn = join_path(python_dir, "mpi.cfg")
+        if not os.path.isfile(cfg_fn):
+            self.create_mpi_config_file(cfg_fn)
+                                                                                                                                                                                                                                                                                                                                                                         
+                                                                                                                                                                                                                                                                                                                                                                 

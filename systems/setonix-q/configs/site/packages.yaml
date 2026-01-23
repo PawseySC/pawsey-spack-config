@@ -492,7 +492,7 @@ packages:
       prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/24.11/cuda/12.6/
     
   cutensor:
-      buildable: false
+      buildable: true
       externals:
       - spec: cutensor@2.0.2
         prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/24.11/math_libs/12.6/targets/sbsa-linux/
@@ -512,6 +512,36 @@ packages:
   nccl:
       buildable: false
       externals:
-      - spec: nccl@2.19.3
+      - spec: nccl@2.19
         prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/24.11/comm_libs/12.6/nccl
+
+  cublas:
+      buildable: false
+      externals:
+      - spec: cublas@12.6
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/24.11/math_libs/12.6/
+
+  cufft:
+      buildable: false
+      externals:
+      - spec: cufft@11.3
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/24.11/math_libs/12.6/
+
+  curand:
+      buildable: false
+      externals:
+      - spec: curand@10.3
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/24.11/math_libs/12.6/
+
+  cusolver:
+      buildable: false
+      externals:
+      - spec: cusolver@11.7
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/24.11/math_libs/12.6/
+
+  cusparse:
+      buildable: false
+      externals:
+      - spec: cusparse@12.5
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/24.11/math_libs/12.6/
 
