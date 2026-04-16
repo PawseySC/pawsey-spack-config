@@ -22,9 +22,9 @@ mkdir -p $INSTALL_DIR_PREFIX/bin
 mkdir -p $MODULEFILE_DIR
 
 cd $MYSCRATCH/setonix/2025.08
-wget https://github.com/PawseySC/pshell/archive/refs/tags/v1.2.0.tar.gz
-tar -xvf v1.2.0.tar.gz
-cd pshell-1.2.0
+wget https://github.com/PawseySC/pshell/archive/refs/tags/v$PROGRAM_VERSION.tar.gz
+tar -xvf v$PROGRAM_VERSION.tar.gz
+cd pshell-$PROGRAM_VERSION
 ./build_release
 cp release/pshell $INSTALL_DIR_PREFIX/bin
 
