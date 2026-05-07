@@ -36,6 +36,16 @@ if (mode() ~= 'whatis') then
     prepend_path('PATH', root_dir .. '/bin')
     setenv('PAWSEY_PSHELL_HOME', '$INSTALL_DIR_PREFIX')
 end
+
+-- Enforce explicit usage of versions by requiring full module name
+if (mode() == 'load') then
+  if (myModuleUsrName() ~= myModuleFullName()) then
+    LmodError(
+        'Default module versions are disabled by your systems administrator.\n\n',
+        '\tPlease load this module as <name>/<version>.\n'
+    )
+  end
+end
     " > "$MODULEFILE_DIR/${PROGRAM_VERSION}.lua"
 
 
