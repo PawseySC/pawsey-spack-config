@@ -43,7 +43,7 @@ for ARCH in "${ARCH_LIST[@]}"; do
     mkdir -p "${INSTALL_DIR_PREFIX}/bin"
     mkdir -p "${MODULEFILE_DIR}"
 
-    cd "$MYSCRATCH/setonix/2025.08/pshell-${PROGRAM_VERSION}"
+    cd "$MYSCRATCH/setonix/${STACK_VERSION}/pshell-${PROGRAM_VERSION}"
 
     # Clean previous build if needed
     rm -rf release
