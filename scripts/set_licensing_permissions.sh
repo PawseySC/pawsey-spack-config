@@ -57,7 +57,7 @@ else
 fi
 
 # Spack installations
-for package in amber ansys-fluids cpmd namd vasp@5 vasp@6 ; do
+for package in amber ansys-fluids namd vasp@5 vasp@6 ; do
   software_dirs=$( spack find -p $package |grep ^${package} |tr -s ' ' |cut -d ' ' -f 2 )
   module_dirs=""
   if [ "${package}" == "vasp@6" ] ; then
