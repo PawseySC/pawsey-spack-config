@@ -10,6 +10,7 @@ class Birli(Package):
     maintainers = ["d3v-null", "gsleap"]
 
     version("main", branch="main")
+    version("0.19.0", tag="v0.19.0")
     version("0.18.2", tag="v0.18.2")
     version("0.17.1", tag="v0.17.1")
     version("0.16.0", tag="v0.16.0")
@@ -26,6 +27,7 @@ class Birli(Package):
 
     depends_on("rust@1.64.0:", type="build")
     depends_on("rust@1.65.0:", type="build", when="@0.16.0:")
+    depends_on("rust@1.85.0:", type="build", when="@0.19.0:")
     depends_on("cmake", type="build")
 
     # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.
