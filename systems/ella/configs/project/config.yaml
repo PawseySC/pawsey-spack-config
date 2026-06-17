@@ -1,0 +1,5 @@
+# project_wide: use appropriate install locations
+
+config:
+  install_tree:
+    root: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/ella/DATE_TAG/software

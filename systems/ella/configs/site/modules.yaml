@@ -1,0 +1,71 @@
+modules:
+
+  # ensure that environment paths are properly updated 
+  # based on what is installed
+  prefix_inspections:
+    bin:
+      - PATH
+    lib:
+      - LIBRARY_PATH
+      - LD_LIBRARY_PATH
+    lib64:
+      - LIBRARY_PATH
+      - LD_LIBRARY_PATH
+    include:
+      - CPATH
+    '':
+      - CMAKE_PREFIX_PATH
+
+  default:
+    enable::
+      - lmod 
+    roots:
+      lmod: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/$USER/ella/DATE_TAG/modules
+    lmod:
+      # set the hierarchy. Typical start point is mpi 
+      # however, since there will only be a single 
+      # mpi we do not use this hierarchy
+      # instead use compiler (name and version)
+      hierarchy::
+        - compiler
+
+      # set the core compilers for lmod
+      # these are placed in core 
+      core_compilers::
+        - gcc@12.3.0
+
+      # remove hashes from module name, can lead to more conflicts 
+      # this can be addressed in other ways
+      hash_length: 0
+
+      # for all packages
+      all:
+        # to be consistent with module setup on Magnus, 
+        # add to environment a PAWSEY_{name}_HOME 
+        # which stores the prefix to the package
+        # NOTE: we trialled {name}_HOME, but ditched it, 
+        # because it conflicts with some packages, 
+        # eg Singularity and R
+        # We may find that some specific packages benefit 
+        # from also having {home}_HOME 
+        # (eg libraries to compile against)
+        # we can add it for these specific cases
+        environment:
+          set:
+            'PAWSEY_{name}_HOME': '{prefix}'
+          # for backwards compatibility we could implement
+          # the following environment variable 
+          # this may be required for installs on Topaz
+          #set:
+          #  'MAALI_{name}_HOME': '{prefix}'
+        # autoload none by default: limits unnecessary module loading
+        # good for majority of end users 
+        # autoload+upstream currently does not work, 
+        # so better to turn off autoload completely for user installations
+        autoload: none
+
+      projections:
+        # we want to keep these simple for user-specific installations
+        # name, version, hash to avoid conflicts, no categories
+        # explicit usage of versions now enforced in lua template
+        all: '{name}/{version}-{hash:7}'

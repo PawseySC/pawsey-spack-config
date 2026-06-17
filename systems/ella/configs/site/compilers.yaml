@@ -1,0 +1,72 @@
+compilers:
+# compilers automatically found by spack compiler find 
+# on cray list a lot of unused and not useful 
+# compilers hence we do not here 
+# list all that are found. 
+
+# cray stack is not built with this one (eg libsci), 
+# so using it results in link errors
+#- compiler:
+#    spec: gcc@7.5.0
+#    paths:
+#      cc: /usr/bin/gcc
+#      cxx: /usr/bin/g++
+#      f77: /usr/bin/gfortran
+#      fc: /usr/bin/gfortran
+#    flags: {}
+#    operating_system: sles15
+#    target: any
+#    modules:
+#    - craype-network-ofi
+#    environment: {}
+#    extra_rpaths: []
+
+# On Shasta, need to list explicit paths 
+# as well as default modules 
+# note that the defaults are 
+# craype craype-<arch> craype-network-ofi
+# for testing, craype-x86-rome
+# Might also want to limit arch as by default
+# cray wrapper is always adding -march=znver2
+# 
+# Note also the addition of default flags
+
+# ===================================================================
+#                        GNU 12.2.0
+# ===================================================================
+- compiler:
+    spec: gcc@12.3.0
+    paths:
+      cc: gcc-12
+      cxx: g++-12
+      f77: gfortran-12
+      fc: gfortran-12
+    flags:
+      cflags: -O3
+      cxxflags: -O3
+      cppflags: -O3
+      fflags: -O3 -fallow-argument-mismatch
+    operating_system: ubuntu
+    target: any
+    modules: {}
+    environment: {}
+    extra_rpaths: []
+
+- compiler:
+    spec: gcc@11.4.1
+    paths:
+      cc: gcc
+      cxx: g++
+      f77: gfortran
+      fc: gfortran
+    flags:
+      cflags: -O3
+      cxxflags: -O3
+      cppflags: -O3
+      fflags: -O3 -fallow-argument-mismatch
+    operating_system: rocky
+    target: any
+    modules: {}
+    environment: {}
+    extra_rpaths: []
+
