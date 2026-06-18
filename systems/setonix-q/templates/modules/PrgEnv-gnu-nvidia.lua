@@ -28,6 +28,7 @@ Unloaded modules:
 ]])
 
 load("PrgEnv-nvidia")
+load("cuda/@CUDA_VERSION@")
 load("gcc-native-mixed/@GCC_VERSION_MAJORMINOR@")
 load("craype")
 load("craype-arm-grace")
@@ -35,11 +36,6 @@ load("craype-network-ofi")
 load("xpmem")
 
 unload("cray-libsci")
-
--- Set CUDA_HOME from NVIDIA HPC SDK path (set by nvhpc module)
-local nvidia_path = os.getenv("NVIDIA_PATH")
-local cuda_home = pathJoin(nvidia_path, "cuda")
-setenv("CUDA_HOME", cuda_home)
 
 -- Add GCC spack modules (NVIDIA path added by PrgEnv-nvidia handshake)
 local gcc_spack_path = os.getenv("LMOD_CUSTOM_COMPILER_GNU_@GCC_COMPAT_VERSION@_PREFIX")
