@@ -46,9 +46,30 @@ function check_installation_environment() {
 
 function set_spack_config_repo()
 {
-    PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
-. "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
+    local repo_candidate
+    local source_file
+    local source_candidates=("${BASH_SOURCE[@]}" "$0" "$PWD")
 
+    for source_file in "${source_candidates[@]}"; do
+        if [ -z "${source_file}" ] || [ "${source_file}" = "environment" ]; then
+            continue
+        fi
+
+        if [ -d "${source_file}" ]; then
+            repo_candidate="${source_file}"
+        else
+            repo_candidate=$( cd -- "$( dirname -- "${source_file}" )/.." &> /dev/null && pwd )
+        fi
+
+        if [ -f "${repo_candidate}/systems/${SYSTEM}/settings.sh" ]; then
+            export PAWSEY_SPACK_CONFIG_REPO="${repo_candidate}"
+            . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
+            return
+        fi
+    done
+
+    echo "Could not find systems/${SYSTEM}/settings.sh."
+    exit 1
 }
 
 function set_compilation_sets_for_arch()
