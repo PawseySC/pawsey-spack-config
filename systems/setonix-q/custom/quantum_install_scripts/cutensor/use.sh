@@ -30,7 +30,6 @@ build_compiler="nvhpc@${nvhpc_ver}"
 # load modules (explicit toolchain + CUDA)
 export dependencies=(
 PrgEnv-gnu-nvidia \
-cudatoolkit-gnu-nvidia \
 )
 
 # Paths derived from settings.sh variables

@@ -23,7 +23,6 @@ export base_dir=${INSTALL_PREFIX}/custom/software/linux-sles15-neoverse_v2/nvhpc
 
 export dependencies=(
 PrgEnv-gnu-nvidia \
-cudatoolkit-gnu-nvidia \
 cutensor/${cutensor_ver} \
 cuquantum/${cuquantum_ver} \
 python/${python_ver} \

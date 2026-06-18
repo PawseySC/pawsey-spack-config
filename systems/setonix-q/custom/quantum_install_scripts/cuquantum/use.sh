@@ -31,7 +31,6 @@ cutensor_ver="2.4.1"
 # load modules (explicit toolchain + CUDA + cutensor)
 export dependencies=(
 PrgEnv-gnu-nvidia \
-cudatoolkit-gnu-nvidia \
 cutensor/${cutensor_ver} \
 )
 
