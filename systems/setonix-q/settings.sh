@@ -62,11 +62,12 @@ RFM_TEST_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_checks
 
 archs="aarch64"
 # compiler versions (needed for module trees with compiler dependency)
-gcc_version="12.3.0"
-nvidia_version="24.11"
+gcc_version="13.3.1"
+nvidia_version="25.9"
+cuda_version="13.0"
 # Cray PE compatibility versions (used for LMOD_CUSTOM_COMPILER variable names)
 # These must match the CRAY_LMOD_COMPILER values set by PrgEnv-* modules
-gcc_compat_version="12.0"
+gcc_compat_version="13.0"
 nvidia_compat_version="23.11"
 main_compiler="nvhpc"
 main_arch="aarch64"

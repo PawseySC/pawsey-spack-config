@@ -16,7 +16,7 @@ module load PrgEnv-gnu-nvidia
 module load spack/${spack_ver}
 module load gcc-native/${gcc_ver}
 module load cray-mpich/${cray_mpich_ver}
-module load cuda
+module load cuda/${cuda_ver}
 module load python/${python_ver}
 
 # Verify GTL library exists
