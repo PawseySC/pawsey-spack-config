@@ -36,6 +36,7 @@ for module_name in ${utility_module_list}; do
         -e "s;@GCC_COMPAT_VERSION@;${gcc_compat_ver};g" \
         -e "s;@GCC_VERSION@;${gcc_version};g" \
         -e "s;@NVIDIA_VERSION@;${nvidia_version};g" \
+        -e "s;@CUDA_VERSION@;${cuda_version};g" \
         -e "s;@INSTALL_PREFIX@;${INSTALL_PREFIX};g" \
         -e "s;@BUILD_DATE@;$(date +%Y-%m-%d);g" \
         -e "s;@VERSION@;${MODULE_VERSION};g" \
