@@ -24,7 +24,7 @@ function check_installation_environment() {
         if [ -z ${DATE_TAG+x} ]; then
             DATE_TAG=$( date +%Y.%m )
         fi
-        ARCH =$( uname -m )
+        ARCH=$( uname -m )
         if [ "$ARCH" == "x86_64" ]; then
             HOST_ARCH_NAME=""
         elif [ "$ARCH" == "aarch64" ]; then
