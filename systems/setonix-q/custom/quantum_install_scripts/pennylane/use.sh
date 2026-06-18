@@ -20,7 +20,7 @@ build_compiler="gcc@${gcc_ver}"
 cuquantum_ver="25.11.1"
 cutensor_ver="2.4.1"
 python_ver="3.11.6"
-cray_mpich_ver="8.1.33"
+cray_mpich_ver="9.1.0"
 
 export MODULE_DIR=${INSTALL_PREFIX}/custom/modules/neoverse_v2/nvhpc/${nvhpc_ver}/custom
 export base_dir=${INSTALL_PREFIX}/custom/software/linux-sles15-neoverse_v2/nvhpc-${nvhpc_ver}

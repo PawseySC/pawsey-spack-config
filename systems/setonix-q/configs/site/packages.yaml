@@ -339,21 +339,21 @@ packages:
   # ----- 
   cray-mpich:
     externals:
-    - spec: cray-mpich@8.1.33%gcc
+    - spec: cray-mpich@9.1.0%gcc
       modules:
-      - cray-mpich/8.1.33
+      - cray-mpich/9.1.0
       - craype-network-ofi
-      prefix: /opt/cray/pe/mpich/8.1.33/ofi/gnu/12.3
-    - spec: cray-mpich@8.1.33%cce
+      prefix: /opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3
+    - spec: cray-mpich@9.1.0%cce
       modules:
-      - cray-mpich/8.1.33
+      - cray-mpich/9.1.0
       - craype-network-ofi
-      prefix: /opt/cray/pe/mpich/8.1.33/ofi/crayclang/17.0
-    - spec: cray-mpich@8.1.33%aocc
+      prefix: /opt/cray/pe/mpich/9.1.0/ofi/crayclang/17.0
+    - spec: cray-mpich@9.1.0%aocc
       modules:
-      - cray-mpich/8.1.33
+      - cray-mpich/9.1.0
       - craype-network-ofi
-      prefix: /opt/cray/pe/mpich/8.1.33/ofi/aocc/4.1
+      prefix: /opt/cray/pe/mpich/9.1.0/ofi/aocc/4.1
     buildable: false
 
   cray-pmi:

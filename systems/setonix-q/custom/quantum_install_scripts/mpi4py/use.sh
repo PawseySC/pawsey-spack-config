@@ -15,7 +15,7 @@ gcc_ver="${gcc_version}"
 gcc_module_ver="${gcc_ver%.*}"
 cuda_ver="${cuda_version}"
 python_ver="3.11.6"
-cray_mpich_ver="8.1.33"
+cray_mpich_ver="9.1.0"
 spack_ver="${spack_version}"
 
 cray_mpich_dir_gnu="/opt/cray/pe/mpich/${cray_mpich_ver}/ofi/gnu/${gcc_module_ver}"
