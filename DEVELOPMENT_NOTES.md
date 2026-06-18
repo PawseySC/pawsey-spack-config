@@ -14,7 +14,7 @@ export DATE_TAG="2026.08"
 
 mkdir -p "${INSTALL_PREFIX}"
 
-module load PrgEnv-nvidia gcc-native-mixed/12.3 craype craype-arm-grace craype-network-ofi xpmem
+module load PrgEnv-nvidia gcc-native-mixed/13 craype craype-arm-grace craype-network-ofi xpmem
 module unload cray-libsci
 ````
 
