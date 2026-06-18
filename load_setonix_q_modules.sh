@@ -12,7 +12,7 @@ shpc_containers_modules_dir="${containers_root_dir}/views/modules"
 custom_modules_suffix="custom"
 
 # Remove paths to x86 modules
-MODULEPATH=$(echo "$MODULEPATH" | tr ':' '\n' | grep -v "/software/setonix/2025.08" | tr '\n' ':' | sed 's/:$//')
+MODULEPATH=$(echo "$MODULEPATH" | tr ':' '\n' | grep -v "/software/setonix/2026.08" | tr '\n' ':' | sed 's/:$//')
 
 echo "${INSTALL_PREFIX/$DATE_TAG}/modules/${cpu_arch}/nvhpc/${nvidia_version}/${category}"
 export LMOD_PACKAGE_PATH="/software/setonix-q/lmod-extras:${LMOD_PACKAGE_PATH}"
