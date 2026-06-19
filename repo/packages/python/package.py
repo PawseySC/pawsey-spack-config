@@ -572,7 +572,7 @@ class Python(Package):
         cflags = []
 
         arch = platform.machine()
-        if arch == "x86_64":
+        if arch in ("x86_64", "neoverse_v2"):
           config_args.append("--with-platlibdir=lib64")
 
         # setup.py needs to be able to read the CPPFLAGS and LDFLAGS
