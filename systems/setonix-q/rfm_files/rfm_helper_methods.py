@@ -15,7 +15,7 @@ def get_env_vars():
     env_dict['python_version'] = os.getenv('python_version')
     env_dict['gcc_version'] = os.getenv('gcc_version')
     env_dict['cce_version'] = os.getenv('cce_version')
-    env_dict['system'] = os.getenv('SYSTEM') or 'setonix'
+    env_dict['system'] = os.getenv('SYSTEM') or 'setonix-q'
 
     return env_dict
 
@@ -198,8 +198,8 @@ def get_library_path(pkg_name_ver):
                 lib_path = f'{install_prefix}/software/linux-sles15-{arch}/{comp}/{name}-{ver}-{h}'
                 break
         else:
-            # Ensure name and version match - account for GPU packages with -amd-gfx90a suffix
-            if ((name == pkg_name) or (name + '-amd-gfx90a' == pkg_name)) and (ver == pkg_ver):
+            # Ensure name and version match.
+            if (name == pkg_name) and (ver == pkg_ver):
                 comp = conc_data['concrete_specs'][h]['compiler']['name'] + '-' + conc_data['concrete_specs'][h]['compiler']['version']
                 arch = conc_data['concrete_specs'][h]['arch']['target']['name']
                 lib_path = f'{install_prefix}/software/linux-sles15-{arch}/{comp}/{name}-{ver}-{h}'
