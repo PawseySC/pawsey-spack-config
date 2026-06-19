@@ -67,8 +67,8 @@ nvidia_version="25.9"
 cuda_version="13.0"
 # Cray PE compatibility versions (used for LMOD_CUSTOM_COMPILER variable names)
 # These must match the CRAY_LMOD_COMPILER values set by PrgEnv-* modules
-gcc_compat_version="13.0"
-nvidia_compat_version="25.9"
+gcc_compat_version="12.0"
+nvidia_compat_version="23.11"
 main_compiler="nvhpc"
 main_arch="aarch64"
 
