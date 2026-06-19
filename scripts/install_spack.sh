@@ -72,17 +72,24 @@ sed -i \
 # Instantiate utility scripts and copy them within the spack installation directory.
 
 # spack_create_user_moduletree.sh: as the name says, the following script is used to create a user module tree directory.
+module_tree_arch_list="${module_tree_arch_list:-${archs[*]}}"
+if [ -z "${module_tree_compiler_list+x}" ]; then
+  module_tree_compiler_list=""
+  for comp in "${compilers[@]}"; do
+    module_tree_compiler_list+="${comp/@/\/} "
+  done
+fi
+
 sed \
-  -e "s;GCC_VERSION;${gcc_version};g" \
-  -e "s;AOCC_VERSION;${aocc_version};g" \
-  -e "s;CCE_VERSION;${cce_version};g" \
-  -e "s;NVIDIA_VERSION;${nvidia_version};g" \
   -e "s;PROJECT_MODULES_SUFFIX;${project_modules_suffix};g" \
   -e "s;USER_MODULES_SUFFIX;${user_modules_suffix};g" \
   -e "s|DATE_TAG|$DATE_TAG|g"\
   -e "s;SHPC_CONTAINERS_MODULES_DIR;${shpc_containers_modules_dir};g" \
   -e "s;R_VERSION_MAJORMINOR;${r_version_majorminor};g" \
   -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
+  -e "s|PAWSEY_SYSTEM|${SYSTEM}|g"\
+  -e "s;MODULE_TREE_ARCH_LIST;${module_tree_arch_list};g" \
+  -e "s;MODULE_TREE_COMPILER_LIST;${module_tree_compiler_list};g" \
   ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_create_user_moduletree.sh \
   >${INSTALL_PREFIX}/spack/bin/spack_create_user_moduletree.sh
 
@@ -113,6 +120,7 @@ mkdir -p ${INSTALL_PREFIX}/${spack_module_dir}
 sed \
   -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g"\
   -e "s|DATE_TAG|$DATE_TAG|g"\
+  -e "s|PAWSEY_SYSTEM|${SYSTEM}|g"\
   -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
   -e "s/SPACK_VERSION/${spack_version}/g" \
   -e "s/PYTHON_MODULEFILE/${python_name}\/${python_version}/g" \
@@ -133,4 +141,3 @@ mkdir -p ${INSTALL_PREFIX}/${utilities_software_dir}
 # Generate pawseyenv module
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/generate_pawseyenv.sh" \
   "${INSTALL_PREFIX}/staff_modulefiles/pawseyenv/${pawseyenv_version}.lua"
-
