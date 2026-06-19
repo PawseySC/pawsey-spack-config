@@ -60,7 +60,7 @@ RFM_SETTINGS_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_se
 RFM_STORAGE_DIR=${INSTALL_PREFIX}/rfm_results
 RFM_TEST_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_checks.py
 
-archs="aarch64"
+archs="neoverse_v2"
 # compiler versions (needed for module trees with compiler dependency)
 gcc_version="13.3.1"
 nvidia_version="25.9"
@@ -70,10 +70,14 @@ cuda_version="13.0"
 gcc_compat_version="12.0"
 nvidia_compat_version="23.11"
 main_compiler="nvhpc"
-main_arch="aarch64"
+main_arch="neoverse_v2"
 
-# architecture of login/compute nodes (needed by Singularity symlink module)
-cpu_arch="aarch64"
+# module-tree paths to create for user/project installations
+module_tree_arch_list="neoverse_v2"
+module_tree_compiler_list="gcc/${gcc_version} nvhpc/${nvidia_version}"
+
+# architecture used in module-tree paths (needed by Singularity symlink module)
+cpu_arch="neoverse_v2"
 
 # tool versions
 spack_version="0.23.1" # the prefix "v" is added in setup_spack.sh
@@ -121,8 +125,6 @@ nvidia_bench
 nvidia_num_libs
 "
 
-#quay.io/sarahbeecroft9/alphafold:2.2.3
-#quay.io/pawsey/alphafold2-amd-gpu:rocm6.1.1
 container_list="
 "
 
@@ -198,15 +200,5 @@ singularity_symlink_module_dir="${utilities_modules_dir}/${singularity_name}"
 
 # location for Spack modulefile
 spack_module_dir="${utilities_modules_dir}/spack"
-
-# Use the Cray provided ROCm until we have a stable custom build.
-
-#ROCM_VERSIONS=(
-#"6.3.0"
-#)
-
-#ROCM_PATHS=(
-#"/opt/rocm-6.3.0"
-#)
 
 fi # end include guard
