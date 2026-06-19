@@ -3,7 +3,7 @@ packages:
   # note the compiler and providers specifications
   # only suggest a priority order, they do not exclude other options
   # suggested priority for compilers.
-    compiler: [ nvhpc@24.11, gcc@12.3.0 ]
+    compiler: [ nvhpc@25.9, gcc@13.3.1 ]
     providers:
       mpi: [ cray-mpich ]
       blas: [ openblas, amdblis ] #, cray-libsci ] # commenting out cray-libsci as bug was identified
@@ -489,59 +489,59 @@ packages:
     buildable: false
     externals:
     - spec: cuda@12.6.0
-      prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/24.11/cuda/12.6/
+      prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/cuda/12.6/
     
   cutensor:
       buildable: true
       externals:
       - spec: cutensor@2.0.2
-        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/24.11/math_libs/12.6/targets/sbsa-linux/
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/12.6/targets/sbsa-linux/
 
   # nvhpc:
   #     buildable: false
   #     externals:
-  #     - spec: nvhpc@24.11
-  #       prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/24.11/
+  #     - spec: nvhpc@25.9
+  #       prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/
 
   nvidia-nsight-systems:
       buildable: false
       externals:
       - spec: nvidia-nsight-systems@2024.3.2
-        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/24.11/compilers/
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/
 
   nccl:
       buildable: false
       externals:
       - spec: nccl@2.19
-        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/24.11/comm_libs/12.6/nccl
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/comm_libs/12.6/nccl
 
   cublas:
       buildable: false
       externals:
       - spec: cublas@12.6
-        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/24.11/math_libs/12.6/
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/12.6/
 
   cufft:
       buildable: false
       externals:
       - spec: cufft@11.3
-        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/24.11/math_libs/12.6/
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/12.6/
 
   curand:
       buildable: false
       externals:
       - spec: curand@10.3
-        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/24.11/math_libs/12.6/
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/12.6/
 
   cusolver:
       buildable: false
       externals:
       - spec: cusolver@11.7
-        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/24.11/math_libs/12.6/
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/12.6/
 
   cusparse:
       buildable: false
       externals:
       - spec: cusparse@12.5
-        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/24.11/math_libs/12.6/
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/12.6/
 
