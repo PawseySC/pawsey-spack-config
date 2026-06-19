@@ -39,8 +39,12 @@ function check_installation_environment() {
             DATE_TAG=$( date +%Y.%m )
             echo "The 'DATE_TAG' variable is not set. Using current date tag '$DATE_TAG'."
         fi
-        
-        export INSTALL_PREFIX="${INSTALL_PREFIX}/${DATE_TAG}"
+
+        if [ "${INSTALL_PREFIX%/${DATE_TAG}}" = "${INSTALL_PREFIX}" ]; then
+            export INSTALL_PREFIX="${INSTALL_PREFIX}/${DATE_TAG}"
+        else
+            export INSTALL_PREFIX
+        fi
     fi
 }
 
