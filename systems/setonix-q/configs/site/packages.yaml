@@ -6,10 +6,10 @@ packages:
     compiler: [ nvhpc@25.9, gcc@13.3.1 ]
     providers:
       mpi: [ cray-mpich ]
-      blas: [ openblas, amdblis ] #, cray-libsci ] # commenting out cray-libsci as bug was identified
-      lapack: [ openblas, netlib-lapack, amdlibflame ] #, cray-libsci ]
-      scalapack: [ netlib-scalapack, amdscalapack ] #, cray-libsci ]
-      fftw-api: [ fftw, amdfftw ] #, cray-fftw ] # commenting out cray-fftw for now, similar to cray-libsci
+      blas: [ openblas ] #, cray-libsci ] # commenting out cray-libsci as bug was identified
+      lapack: [ openblas, netlib-lapack ] #, cray-libsci ]
+      scalapack: [ netlib-scalapack ] #, cray-libsci ]
+      fftw-api: [ fftw ] #, cray-fftw ] # commenting out cray-fftw for now, similar to cray-libsci
       pkgconfig: [ pkg-config ]
       zlib-api: [ zlib-ng ]
     permissions:
@@ -43,8 +43,6 @@ packages:
   cce:
     buildable: false
   gcc:
-    buildable: false
-  aocc:
     buildable: false
   intel:
     buildable: false
@@ -349,11 +347,6 @@ packages:
       - cray-mpich/9.1.0
       - craype-network-ofi
       prefix: /opt/cray/pe/mpich/9.1.0/ofi/crayclang/17.0
-    - spec: cray-mpich@9.1.0%aocc
-      modules:
-      - cray-mpich/9.1.0
-      - craype-network-ofi
-      prefix: /opt/cray/pe/mpich/9.1.0/ofi/aocc/4.1
     buildable: false
 
   cray-pmi:
