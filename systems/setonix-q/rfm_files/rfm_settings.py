@@ -28,7 +28,6 @@ site_configuration = {
                     'environs': [
                         'PrgEnv-gnu',
                         'PrgEnv-cray',
-                        'PrgEnv-aocc',
                     ],
                     'processor': {
                         'num_cpus': 256,
@@ -46,6 +45,7 @@ site_configuration = {
                     'access': ['--partition=quantum'],
                     'max_jobs': 32,
                     'environs': [
+                        'PrgEnv-gnu',
                         'PrgEnv-nvidia',
                     ],
                     'processor': {
@@ -66,7 +66,6 @@ site_configuration = {
                     'environs': [
                         'PrgEnv-gnu',
                         'PrgEnv-cray',
-                        'PrgEnv-aocc',
                     ],
                 },
             ]
@@ -74,27 +73,12 @@ site_configuration = {
     ],
     'environments': [
         {
-            'name': 'PrgEnv-cray',
-            'target_systems': ['setonix', 'joey'],
-            'modules': [
-                'PrgEnv-cray',
-                'cray-mpich/8.1.30',
-            ]
-        },
-        {
             'name': 'PrgEnv-gnu',
-            'target_systems': ['setonix', 'joey'],
+            'target_systems': ['setonix-q'],
             'modules': [
                 'PrgEnv-gnu',
-                'cray-mpich/8.1.30',
-            ]
-        },
-        {
-            'name': 'PrgEnv-aocc',
-            'target_systems': ['setonix', 'joey'],
-            'modules': [
-                'PrgEnv-aocc',
-                'cray-mpich/8.1.30',
+                'cray-mpich',
+                'craype-arm-grace',
             ]
         },
         {
@@ -105,30 +89,6 @@ site_configuration = {
                 'cray-mpich',
                 'craype-arm-grace',
             ]
-        },
-        {
-            'name': 'PrgEnv-cray',
-            'target_systems': ['lumi'],
-            'modules': [
-                'PrgEnv-cray',
-                'cray-mpich'
-            ],
-        },
-        {
-            'name': 'PrgEnv-gnu',
-            'target_systems': ['lumi'],
-            'modules': [
-                'PrgEnv-gnu',
-                'cray-mpich'
-            ],
-        },
-        {
-            'name': 'PrgEnv-aocc',
-            'target_systems': ['lumi'],
-            'modules': [
-                'PrgEnv-aocc',
-                'cray-mpich'
-            ],
         },
     ],
     'logging': [
