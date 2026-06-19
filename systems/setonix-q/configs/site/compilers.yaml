@@ -4,6 +4,31 @@ compilers:
 #                        NVIDIA 
 # ===================================================================
 - compiler:
+    spec: nvhpc@25.9
+    paths:
+      cc: cc
+      cxx: CC
+      f77: ftn
+      fc: ftn
+    flags:
+      cflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/13/bin/gcc
+      cxxflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/13/bin/gcc
+      cppflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/13/bin/gcc
+      fflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/13/bin/gcc
+    operating_system: sles15
+    target: aarch64
+    modules:
+    - PrgEnv-nvidia
+    - gcc-native-mixed/13
+    - craype
+    - craype-arm-grace
+    - craype-network-ofi
+    - xpmem
+    environment:
+      set:
+        PE_ENV: "NVIDIA"
+    extra_rpaths: []
+- compiler:
     spec: nvhpc@24.11
     paths:
       cc: cc
@@ -28,6 +53,36 @@ compilers:
     environment:
       set:
         PE_ENV: "NVIDIA"
+    extra_rpaths: []
+
+# ===================================================================
+#                        GNU
+# ===================================================================
+- compiler:
+    spec: gcc@13.3.1
+    paths:
+      cc: cc
+      cxx: CC
+      f77: ftn
+      fc: ftn
+    flags:
+      # might not need permissive, this was done to get around a cmake+curl bug but that should be fixed in cmake 3.31.7
+      cflags: -O3
+      cxxflags: -O3
+      cppflags: -O3
+      fflags: -O3 -fallow-argument-mismatch
+    operating_system: sles15
+    target: aarch64
+    modules:
+    - PrgEnv-gnu
+    - gcc-native/13.3
+    - craype
+    - craype-arm-grace
+    - craype-network-ofi
+    - xpmem
+    environment:
+      set:
+        PE_ENV: "GNU"
     extra_rpaths: []
 - compiler:
     spec: gcc@12.3.0
