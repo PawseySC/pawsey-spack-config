@@ -21,8 +21,8 @@ spack:
   specs:
   - matrix:
     - [$packages]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.1']
   - matrix:
     - [$gpu-packages]
-    - ['%nvhpc@24.11']
+    - ['%nvhpc@25.9']
   view: false

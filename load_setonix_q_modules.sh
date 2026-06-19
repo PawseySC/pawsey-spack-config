@@ -2,8 +2,8 @@ source setup_script.sh
 
 cpu_arch="neoverse_v2"
 
-gcc_version="12.3.0"
-nvidia_version="24.11"
+gcc_version="13.3.1"
+nvidia_version="25.9"
 
 utilities_root_dir="pawsey"
 containers_root_dir="containers"

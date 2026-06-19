@@ -29,5 +29,5 @@ spack:
   specs:
   - matrix:
     - [$numerical-cpu]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.1']
   view: false

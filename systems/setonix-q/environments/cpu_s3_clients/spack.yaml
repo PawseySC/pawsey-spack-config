@@ -15,9 +15,9 @@ spack:
   - matrix:
     - [$s3-python-set]
     - [^python@3.11.6 +optimizations+zlib]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.1']
   - matrix:
     - [$s3-go-set]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.1']
   view: false
 

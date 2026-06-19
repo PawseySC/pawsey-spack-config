@@ -343,7 +343,7 @@ packages:
       modules:
       - cray-mpich/9.1.0
       - craype-network-ofi
-      prefix: /opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3
+      prefix: /opt/cray/pe/mpich/9.1.0/ofi/gnu/13.3
     - spec: cray-mpich@9.1.0%cce
       modules:
       - cray-mpich/9.1.0
@@ -488,14 +488,14 @@ packages:
   cuda:
     buildable: false
     externals:
-    - spec: cuda@12.6.0
-      prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/cuda/12.6/
+    - spec: cuda@13.0.0
+      prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/cuda/13.0/
     
   cutensor:
       buildable: true
       externals:
-      - spec: cutensor@2.0.2
-        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/12.6/targets/sbsa-linux/
+      - spec: cutensor@2.3.0
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/13.0/targets/sbsa-linux/
 
   # nvhpc:
   #     buildable: false
@@ -512,36 +512,35 @@ packages:
   nccl:
       buildable: false
       externals:
-      - spec: nccl@2.19
-        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/comm_libs/12.6/nccl
+      - spec: nccl@2.27.7
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/comm_libs/13.0/nccl
 
   cublas:
       buildable: false
       externals:
-      - spec: cublas@12.6
-        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/12.6/
+      - spec: cublas@13.0.0
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/13.0/
 
   cufft:
       buildable: false
       externals:
-      - spec: cufft@11.3
-        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/12.6/
+      - spec: cufft@12.0.0
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/13.0/
 
   curand:
       buildable: false
       externals:
-      - spec: curand@10.3
-        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/12.6/
+      - spec: curand@10.4.0
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/13.0/
 
   cusolver:
       buildable: false
       externals:
-      - spec: cusolver@11.7
-        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/12.6/
+      - spec: cusolver@12.0.3
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/13.0/
 
   cusparse:
       buildable: false
       externals:
-      - spec: cusparse@12.5
-        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/12.6/
-
+      - spec: cusparse@12.6.2
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/13.0/

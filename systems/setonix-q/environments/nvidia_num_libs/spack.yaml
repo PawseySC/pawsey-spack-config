@@ -22,7 +22,7 @@ spack:
     - magma ~rocm +cuda cuda_arch=90
     # seems like slate can't compile with cuda due to openmp taskloops not implemented in cuda compiler. And needs nvcc,nvc++ for cuda to be enabled.
     # - slate@2024.10.29 +cuda cuda_arch=90 build_type=Release
-    # plasma relies on taskloops and other openmp that is not available with cuda 12.6 and gcc 12.3:
+    # plasma relies on taskloops and other openmp that is not available with cuda 13.0 and gcc 13.3:
     #- plasma@23.8.2 build_type=Release ^openblas
     # some heavier numerical library builds
     # open has cmake error with cuda?! and master can't be patched  
@@ -44,6 +44,6 @@ spack:
   specs:
   - matrix:
     - [$parallel]
-    - ['%nvhpc@24.11']
-    - [^python@3.11.6%gcc@12.3.0]
+    - ['%nvhpc@25.9']
+    - [^python@3.11.6%gcc@13.3.1]
   view: false

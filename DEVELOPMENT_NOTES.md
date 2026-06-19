@@ -8,9 +8,9 @@
 #!/bin/bash
 
 export INSTALL_GROUP="pawsey0001"
-export INSTALL_PREFIX="${MYSCRATCH}/setonix-q-tests"
 export SYSTEM="setonix-q"
 export DATE_TAG="2026.08"
+export INSTALL_PREFIX="${MYSCRATCH}/setonix-q-tests"
 
 mkdir -p "${INSTALL_PREFIX}"
 

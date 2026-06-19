@@ -101,7 +101,7 @@ local singularity_ld_path = ""
 -- COS 25.3
 singularity_ld_path = singularity_ld_path .. ":/host_lib64"
 -- add CRAY_PATHS START
-singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/mpich/8.1.32/ofi/gnu/12.3/lib-abi-mpich:/opt/cray/pe/mpich/8.1.32/gtl/lib:/opt/cray/xpmem/default/lib64:/opt/cray/pe/pmi/default/lib:/opt/cray/pe/pals/default/lib"
+singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/mpich/8.1.32/ofi/gnu/13.3/lib-abi-mpich:/opt/cray/pe/mpich/8.1.32/gtl/lib:/opt/cray/xpmem/default/lib64:/opt/cray/pe/pmi/default/lib:/opt/cray/pe/pals/default/lib"
 --singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/gcc-libs"
 -- add CRAY_PATHS END
 -- add MPI START
@@ -174,14 +174,14 @@ singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/mpich/8.1.32/g
 -- add GPUMPI END
 -- add GPUGH200MPI START
 singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/lib64/libmpi_nvidia.so.12"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/24.11/compilers/lib/libacchost.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/24.11/compilers/lib/libaccdevaux.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/24.11/compilers/lib/libaccdevice.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/24.11/cuda/12.6/lib64/libcudart.so.12"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/24.11/compilers/lib/libcudadevice.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/24.11/compilers/lib/libcudanvhpc.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/24.11/compilers/lib/libnvf.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/24.11/compilers/lib/libnvhpcatm.so"
+singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libacchost.so"
+singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libaccdevaux.so"
+singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libaccdevice.so"
+singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/cuda/13.0/lib64/libcudart.so.12"
+singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libcudadevice.so"
+singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libcudanvhpc.so"
+singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libnvf.so"
+singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libnvhpcatm.so"
 singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/lib64/libsci_nvidia_mpi.so.6"
 singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/lib64/libsci_nvidia.so.6"
 -- add GPUGH200MPI END
