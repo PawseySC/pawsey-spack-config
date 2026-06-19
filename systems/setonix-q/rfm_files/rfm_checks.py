@@ -130,9 +130,6 @@ class module_load_check(rfm.RunOnlyRegressionTest):
         # Valid systems and PEs
         self.valid_systems = ['setonix-q:quantum']
         # Choose PE based on the module path
-        # NOTE: May need to edit zen2_path in future updates
-        cce_version = os.environ.get('nvidia_version')
-        gcc_version = os.environ.get('gcc_version')
         if 'nvidia' in self.mod:
             self.valid_prog_environs = ['PrgEnv-nvidia']
         elif 'gcc' in self.mod:
@@ -172,7 +169,7 @@ class module_load_check(rfm.RunOnlyRegressionTest):
         for i in range(nloads):
             if '++' in self.load_lines[i]:
                 l = self.load_lines[i]
-                self.load_lines[i] = l.replace('++', '\+\+')
+                self.load_lines[i] = l.replace('++', '\\+\\+')
         # Check all dependencies are loaded
         self.postrun_cmds += [f'if module is-loaded {dep_mod} ; then echo "dependency is loaded"; fi' for dep_mod in self.load_lines]
 
@@ -180,9 +177,9 @@ class module_load_check(rfm.RunOnlyRegressionTest):
     def assert_module_loaded(self):
         # '+' breaks regex search, need to replace with '\+' in all modules it is present
         if '+' in self.mod:
-            self.mod = self.mod.replace('+', '\+')
+            self.mod = self.mod.replace('+', '\\+')
         if '+' in self.name_ver:
-            self.name_ver = self.name_ver.replace('+', '\+')
+            self.name_ver = self.name_ver.replace('+', '\\+')
         
         return sn.all([
             sn.assert_found("main package is loaded", self.stdout),
@@ -204,16 +201,10 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
         # Valid systems and PEs
         self.valid_systems = ['setonix-q:quantum']
         # Choose PE based on the module
-        # NOTE: May need to edit zen2_path in future updates
-        if 'cce' in self.mod:
+        if 'nvidia' in self.mod:
             self.valid_prog_environs = ['PrgEnv-nvidia']
         elif 'gcc' in self.mod:
             self.valid_prog_environs = ['PrgEnv-gnu']
-        # Since zen3 is default, alter MODULEPATH variable if the module is zen2
-        if 'zen2' in self.mod:
-            install_prefix = os.environ.get('INSTALL_PREFIX')
-            modpath = zen2_path.replace('{basepath}', install_prefix)
-            self.prerun_cmds = [f'export MODULEPATH={modpath}']
 
         # Load the module we are testing
         self.name_ver = '/'.join(self.mod.split('/')[-2:])[:-4]
