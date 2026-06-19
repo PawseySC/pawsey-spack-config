@@ -4,7 +4,7 @@ if (( $# > 0 )) && [ "$1" = "project" ]; then
     # enable group access and writing to the stack
     umask g+rwx
 
-    BASE_PATH=USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/setonix/DATE_TAG
+    BASE_PATH=USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/PAWSEY_SYSTEM/DATE_TAG
 
     SHPC_OPTIONS="-c set:wrapper_base:${BASE_PATH}/containers/wrappers
          -c set:container_base:${BASE_PATH}/containers/sifs
