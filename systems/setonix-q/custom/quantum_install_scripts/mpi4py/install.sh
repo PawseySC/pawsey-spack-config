@@ -14,7 +14,7 @@ module purge
 module load pawsey pawseytools pawseyenv/${DATE_TAG}
 module load PrgEnv-gnu-nvidia
 module load spack/${spack_ver}
-module load gcc-native/${gcc_ver}
+module load gcc-native/${gcc_module_ver}
 module load cray-mpich/${cray_mpich_ver}
 module load cuda/${cuda_ver}
 module load python/${python_ver}
@@ -38,6 +38,6 @@ EOF
 # Install mpi4py via spack with GTL linkage
 MPICH_GPU_SUPPORT_ENABLED=1 \
 MPI4PY_BUILD_MPICFG="${MPI_CFG}" \
-spack install --reuse -vvv -j 72 py-mpi4py@${tool_ver} %gcc@${gcc_module_ver}
+spack install --reuse -vvv -j 72 py-mpi4py@${tool_ver} %gcc@${gcc_ver}
 
 spack module lmod refresh -y py-mpi4py@${tool_ver}

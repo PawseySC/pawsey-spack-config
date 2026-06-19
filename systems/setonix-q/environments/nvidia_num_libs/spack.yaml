@@ -19,7 +19,7 @@ spack:
     # for hpx must explicitly set openmp off 
     - kokkos@4.4.01 +cuda cuda_arch=90 +wrapper +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ~openmp
       build_type=Release ^hpx@1.9.1 +async_mpi max_cpu_count=128 networking=mpi build_type=Release ^cmake ~doc~qtgui %gcc
-    - magma ~rocm +cuda cuda_arch=90
+    - magma@master ~rocm +cuda cuda_arch=90
     # seems like slate can't compile with cuda due to openmp taskloops not implemented in cuda compiler. And needs nvcc,nvc++ for cuda to be enabled.
     # - slate@2024.10.29 +cuda cuda_arch=90 build_type=Release
     # plasma relies on taskloops and other openmp that is not available with cuda 13.0 and gcc 13.3:

@@ -22,10 +22,10 @@ spack:
     - py-h5py@3.12.1 +mpi
     - py-h5netcdf@1.3.0 ^py-setuptools-scm@8.0.4 ^py-setuptools@69.2.0
     - py-numba@0.61.0
-    - py-cuda-python@12.9.5
-    - py-cupy@13.4.0 +cuda cuda_arch=90
+    - py-cuda-python@13.1.0
+    - py-cupy@14.0.0a1 +cuda cuda_arch=90
     - py-numba-cuda@0.24
-    - py-nvmath-python@0.6.0 +cu12 +distributed +dx
+    - py-nvmath-python@0.6.0 +cu13 +distributed +dx
     - py-pandas@2.2.3
     - py-pydantic@2.7.4
     - py-rich@13.7.1

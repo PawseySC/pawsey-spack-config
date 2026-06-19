@@ -4,7 +4,7 @@
 tool_name="cutensor"
 tool_ver="2.4.1"
 archive_ver="2.4.1.4"
-cuda_ver="cuda12"
+cuda_ver="cuda13"
 
 # description
 brief="NVIDIA cuTENSOR - GPU-accelerated tensor linear algebra library"
@@ -23,7 +23,7 @@ fi
 # Use versions from settings.sh (must be sourced before running)
 nvhpc_ver="${nvidia_version}"
 gcc_ver="${gcc_version}"
-# Extract major.minor from gcc version (e.g., 12.3.0 -> 12.3) for module loading
+# Extract major.minor from gcc version (e.g., 13.3.1 -> 13.3) for module loading
 gcc_module_ver="${gcc_ver%.*}"
 build_compiler="nvhpc@${nvhpc_ver}"
 

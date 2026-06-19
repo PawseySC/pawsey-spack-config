@@ -1,7 +1,7 @@
 # Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-# Pawsey: Added version 2.4.1.4 with CUDA 12 support for setonix-q.
+# Pawsey: Added version 2.4.1.4 with CUDA 12/13 support for setonix-q.
 
 import platform
 
@@ -19,7 +19,7 @@ _versions = {
         "Linux-ppc64le": "7176083a4dad44cb0176771be6efb3775748ad30a39292bf7b4584510f1dd811",
         "Linux-aarch64": "4214a0f7b44747c738f2b643be06b2b24826bd1bae6af27f29f3c6dec131bdeb",
     },
-    # cuTensor 2.4.1 - requires CUDA 12
+    # cuTensor 2.4.1 - requires CUDA 12+
     "2.4.1.4": {
         "Linux-x86_64": "032904fb8bba341e24aa45a8cc7b5afc63e4c28e22474530ccc97cfa546d0442",
         "Linux-aarch64": "afcf1bd3a50b729bcd5d1ddb0a3e90ca2631d7048d51bdeafe49c650e162ebc1",
@@ -57,14 +57,13 @@ class Cutensor(Package):
         sys_key = sys.lower()
         sys_key = sys_key.replace("aarch64", "sbsa")
 
-        # cuTensor 2.4+ uses different URL format with _cuda12 suffix
+        # cuTensor 2.4+ uses different URL format with CUDA-version suffixes
         ver_str = str(version)
         if ver_str.startswith("2.4"):
-            url = "https://developer.download.nvidia.com/compute/cutensor/redist/libcutensor/{0}/libcutensor-{0}-{1}_cuda12-archive.tar.xz"
+            url = "https://developer.download.nvidia.com/compute/cutensor/redist/libcutensor/{0}/libcutensor-{0}-{1}_cuda13-archive.tar.xz"
         else:
             url = "https://developer.download.nvidia.com/compute/cutensor/redist/libcutensor/{0}/libcutensor-{0}-{1}-archive.tar.xz"
         return url.format(sys_key, version)
 
     def install(self, spec, prefix):
         install_tree(".", prefix)
-

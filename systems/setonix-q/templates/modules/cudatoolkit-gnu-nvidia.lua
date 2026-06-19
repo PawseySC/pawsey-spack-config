@@ -4,10 +4,10 @@ family("cudatoolkit")
 conflict("cudatoolkit")
 
 -- Version metadata
-local MOD_MAJOR_VERSION    = "12"
-local MOD_MINOR_VERSION    = "6"
-local SDK_MAJOR_VERSION    = "24"
-local SDK_MINOR_VERSION    = "11"
+local MOD_MAJOR_VERSION    = "13"
+local MOD_MINOR_VERSION    = "0"
+local SDK_MAJOR_VERSION    = "25"
+local SDK_MINOR_VERSION    = "9"
 local MOD_LEVEL            = MOD_MAJOR_VERSION .. "." .. MOD_MINOR_VERSION
 local SDK_LEVEL            = SDK_MAJOR_VERSION .. "." .. SDK_MINOR_VERSION
 
@@ -15,7 +15,7 @@ local NVTARGET             = "Linux_aarch64"
 local SDK_PATH             = "/opt/nvidia/hpc_sdk/" .. NVTARGET .. "/" .. SDK_LEVEL
 local CUDATOOLKIT_CURPATH  = SDK_PATH .. "/cuda/" .. MOD_MAJOR_VERSION .. "." .. MOD_MINOR_VERSION
 local MATH_LIBS_PATH       = SDK_PATH .. "/math_libs/" .. MOD_MAJOR_VERSION .. "." .. MOD_MINOR_VERSION
-local COMM_LIBS_PATH       = SDK_PATH .. "/comm_libs"
+local COMM_LIBS_PATH       = SDK_PATH .. "/comm_libs/" .. MOD_MAJOR_VERSION .. "." .. MOD_MINOR_VERSION
 local NSIGHT_COMPUTE       = SDK_PATH .. "/profilers/Nsight_Compute/"
 local NSIGHT_SYSTEMS       = SDK_PATH .. "/profilers/Nsight_Systems/"
 

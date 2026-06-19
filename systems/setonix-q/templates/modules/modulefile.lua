@@ -101,7 +101,7 @@ local singularity_ld_path = ""
 -- COS 25.3
 singularity_ld_path = singularity_ld_path .. ":/host_lib64"
 -- add CRAY_PATHS START
-singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/mpich/8.1.32/ofi/gnu/13.3/lib-abi-mpich:/opt/cray/pe/mpich/8.1.32/gtl/lib:/opt/cray/xpmem/default/lib64:/opt/cray/pe/pmi/default/lib:/opt/cray/pe/pals/default/lib"
+singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/mpich/9.1.0/ofi/gnu/13.3/lib:/opt/cray/pe/mpich/9.1.0/ofi/gnu/13.3/gtl/lib:/opt/cray/xpmem/default/lib64:/opt/cray/pe/pmi/default/lib:/opt/cray/pe/pals/default/lib"
 --singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/gcc-libs"
 -- add CRAY_PATHS END
 -- add MPI START
@@ -170,7 +170,7 @@ singularity_ld_preload = singularity_ld_preload .. ":/usr/lib64/libmunge.so.2"
 singularity_ld_preload = singularity_ld_preload .. ":/usr/lib64/liblustreapi.so.1:/usr/lib64/liblnetconfig.so.4:/usr/lib64/libyaml-0.so.2:/usr/lib64/libnl-genl-3.so.200:/usr/lib64/libnl-3.so.200"
 -- add MPI END
 -- add GPUMPI START
-singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/mpich/8.1.32/gtl/lib/libmpi_gtl_hsa.so.0"
+singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/mpich/9.1.0/ofi/gnu/13.3/lib/libmpi_gtl_cuda.so"
 -- add GPUMPI END
 -- add GPUGH200MPI START
 singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/lib64/libmpi_nvidia.so.12"
