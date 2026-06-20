@@ -17,6 +17,7 @@ export gcc_version=${gcc_version}
 export python_version=${python_version}
 export reframe_version=${reframe_version}
 
+mkdir -p "${RFM_STORAGE_DIR}"
 
 # If running on compute node, Add node this job is running on to host list of ReFrame, allowing it to run from this node
 hn=$(hostname)
