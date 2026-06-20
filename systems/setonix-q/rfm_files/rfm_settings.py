@@ -18,25 +18,6 @@ site_configuration = {
             'modules_system': 'lmod',
             'partitions': [
                 {
-                    'name': 'login',
-                    'descr': 'Setonix login node',
-                    'scheduler': 'local',
-                    'launcher': 'local',
-                    'modules': [],
-                    'access': [],
-                    'max_jobs': 1,
-                    'environs': [
-                        'PrgEnv-gnu',
-                        'PrgEnv-cray',
-                    ],
-                    'processor': {
-                        'num_cpus': 256,
-                        'num_cpus_per_core': 2,
-                        'num_cpus_per_socket': 128,
-                        'num_sockets': 2
-                    },
-                },
-                {
                     'name': 'quantum',
                     'descr': 'Setonix-Q GH200 (compute nodes) partition',
                     'scheduler': 'slurm',
@@ -45,8 +26,7 @@ site_configuration = {
                     'access': ['--partition=quantum'],
                     'max_jobs': 32,
                     'environs': [
-                        'PrgEnv-gnu',
-                        'PrgEnv-nvidia',
+                        'PrgEnv-gnu-nvidia',
                     ],
                     'processor': {
                         'num_cpus': 256,
@@ -55,39 +35,15 @@ site_configuration = {
                         'num_sockets': 2
                     },
                 },
-                {
-                    'name': 'copy',
-                    'descr': 'Setonix copy (data mover) nodes',
-                    'scheduler': 'slurm',
-                    'launcher': 'srun',
-                    'modules': [],
-                    'access': ['--partition=copy'],
-                    'max_jobs': 1,
-                    'environs': [
-                        'PrgEnv-gnu',
-                        'PrgEnv-cray',
-                    ],
-                },
             ]
         },
     ],
     'environments': [
         {
-            'name': 'PrgEnv-gnu',
+            'name': 'PrgEnv-gnu-nvidia',
             'target_systems': ['setonix-q'],
             'modules': [
-                'PrgEnv-gnu',
-                'cray-mpich',
-                'craype-arm-grace',
-            ]
-        },
-        {
-            'name': 'PrgEnv-nvidia',
-            'target_systems': ['setonix-q'],
-            'modules': [
-                'PrgEnv-nvidia',
-                'cray-mpich',
-                'craype-arm-grace',
+                'PrgEnv-gnu-nvidia',
             ]
         },
     ],
