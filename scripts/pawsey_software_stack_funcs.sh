@@ -92,6 +92,9 @@ function set_spack_config_repo()
         if [ -f "${repo_candidate}/systems/${SYSTEM}/settings.sh" ]; then
             export PAWSEY_SPACK_CONFIG_REPO="${repo_candidate}"
             . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
+            if [ -z "${NCPUS+x}" ] && [ -n "${NPROCS+x}" ]; then
+                export NCPUS="${NPROCS}"
+            fi
             prepare_system_utility_modules
             return
         fi
@@ -119,7 +122,7 @@ function set_compilation_sets_for_arch()
         export archs=("zen2" "zen3")
         export maincompiler="gcc@${gcc_version}"
         export compilers=("gcc@${gcc_version}" "cce@${cce_version}" "aocc@${aocc_version}")
-	export pythoncompilers=("gcc@${gcc_version}" "cce@${cce_version}" "aocc@${aocc_version}")
+	export pythoncompilers=("gcc@${gcc_version}" "cce@${cce_version}")
     elif [ "${host_arch}" == "aarch64" ]; then
         export mainarch="neoverse_v2"
         export archs=("neoverse_v2")
