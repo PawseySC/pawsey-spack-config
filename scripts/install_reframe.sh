@@ -21,24 +21,26 @@ fi
 echo "Running 'spack spec nano' to bootstrap Clingo.."
 spack spec nano
 
-# # spec gcc
-# echo "Concretization of Reframe.."
-# spack spec reframe@${reframe_version} %gcc@${gcc_version}
-# spack spec reframe@${reframe_version} %cce@${cce_version}
+if [ "${SYSTEM}" = "setonix" ]; then
+    # Preserve the Setonix/main ReFrame bootstrap behaviour: check GCC and CCE
+    # concretization, but install the GCC build only.
+    echo "Concretization of Reframe.."
+    spack spec reframe@${reframe_version} %gcc@${gcc_version}
+    spack spec reframe@${reframe_version} %cce@${cce_version}
 
-# echo "Installing Reframe with default compilers.."
-# for arch in $archs; do
-#     sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %gcc@${gcc_version} target=$arch"
-#     #sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %cce@18.0.1 ^py-maturin@1.1.0%gcc@14.2.0 target=$arch"
-#     #sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %cce@${cce_version} target=$arch"
-# done
-
-
-for comp in ${pythoncompilers[@]}; do
-    for arch in ${archs[@]}; do
-        echo "Concretization of Python.."
-        spack spec --reuse reframe@${reframe_version} %$comp target=$arch
-        echo "Installing Python with $comp for $arch.."
-        sg $INSTALL_GROUP -c "spack install -j${NCPUS} --no-checksum --reuse reframe@${reframe_version} %$comp target=$arch"
+    echo "Installing Reframe with default compilers.."
+    for arch in $archs; do
+        sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %gcc@${gcc_version} target=$arch"
+        #sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %cce@18.0.1 ^py-maturin@1.1.0%gcc@14.2.0 target=$arch"
+        #sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %cce@${cce_version} target=$arch"
     done
-done
+else
+    for comp in ${pythoncompilers[@]}; do
+        for arch in ${archs[@]}; do
+            echo "Concretization of ReFrame with $comp for $arch.."
+            spack spec --reuse reframe@${reframe_version} %$comp target=$arch
+            echo "Installing ReFrame with $comp for $arch.."
+            sg $INSTALL_GROUP -c "spack install -j${NCPUS} --no-checksum --reuse reframe@${reframe_version} %$comp target=$arch"
+        done
+    done
+fi
