@@ -19,23 +19,24 @@ set_modulepaths_for_arch
 # module use $INSTALL_PREFIX/modules/zen3/gcc/14.2.0/programming-languages
 # module load spack/${spack_version}
 
-# We are forced to install openblas outside an environment because its build fails
-# in a nondeterministic way. So we just keep trying.
-
-# here script altered to just build openblas in envirnoment with appropriate version
-openblas_not_installed=0
-counter=0
-while (( openblas_not_installed > 0 ));
-do
-if (( counter > 5 )); then
-	echo "Tried to install openblas 5 times, and it didn't work. Stopping here.."
-	exit 1
+# We are forced to install openblas outside an environment on Setonix because
+# its build fails in a nondeterministic way. Setonix-Q environments select the
+# desired OpenBLAS compiler/version explicitly, so do not pre-install it here.
+if [ "${SYSTEM}" = "setonix" ]; then
+  openblas_not_installed=0
+  counter=0
+  while (( openblas_not_installed > 0 ));
+  do
+    if (( counter > 5 )); then
+      echo "Tried to install openblas 5 times, and it didn't work. Stopping here.."
+      exit 1
+    fi
+    spack spec ${SPACK_SPEC_ARGS} openblas@0.3.24 %${main_compiler} threads=openmp
+    sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} openblas@0.3.24 %${main_compiler} threads=openmp"
+    openblas_not_installed=$?
+    (( counter = counter + 1 ))
+  done
 fi
-spack spec ${SPACK_SPEC_ARGS} openblas@0.3.24 %${main_compiler} threads=openmp
-sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} openblas@0.3.24 %${main_compiler} threads=openmp"
-openblas_not_installed=$?
-(( counter = counter + 1 ))
-done
 
 # list of environments included in variables.sh (sourced above)
 envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"

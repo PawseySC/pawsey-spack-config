@@ -5,19 +5,14 @@ set_spack_config_repo
 set_compilation_sets_for_arch
 . "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh"
 
-# swap is needed for the pawsey_temp module to work
-module swap PrgEnv-gnu PrgEnv-cray
-module swap PrgEnv-cray PrgEnv-gnu
-module load cpe/25.03
-module use ${INSTALL_PREFIX}/staff_modulefiles
-# we need the python module to be available in order to run spack
-module --ignore-cache load pawseyenv/${pawseyenv_version}
-module load gcc-native/${gcc_version}
-# swap is needed for the pawsey_temp module to work
-#module swap PrgEnv-gnu PrgEnv-cray
-#module swap PrgEnv-cray PrgEnv-gnu
-module use ${INSTALL_PREFIX}/modules/${mainarch}/gcc/${gcc_version}/programming-languages
-module load spack/${spack_version}
+# Preserve the Setonix/x86 PrgEnv refresh used by the previous concretization
+# setup. Setonix-Q gets its compiler/module setup from set_modulepaths_for_arch.
+if [ "$( uname -m )" == "x86_64" ]; then
+  module swap PrgEnv-gnu PrgEnv-cray
+  module swap PrgEnv-cray PrgEnv-gnu
+fi
+
+set_modulepaths_for_arch
 
 # list of environments included in variables.sh (sourced above)
 envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
@@ -41,4 +36,3 @@ for env in $cray_env_list ; do
   spack concretize -f
   spack env deactivate
 done
-

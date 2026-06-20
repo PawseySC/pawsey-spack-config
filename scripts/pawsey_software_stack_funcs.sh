@@ -48,6 +48,30 @@ function check_installation_environment() {
     fi
 }
 
+function prepare_system_utility_modules()
+{
+    # Setonix-Q needs its combined PrgEnv wrapper before Spack evaluates the
+    # nvhpc compiler entry.
+    if [ "${SYSTEM}" != "setonix-q" ]; then
+        return
+    fi
+
+    if [ "$( uname -m )" != "aarch64" ]; then
+        echo "The setonix-q software stack must be built on aarch64; detected '$( uname -m )'."
+        exit 1
+    fi
+
+    if [ -z "${utility_module_list//[[:space:]]/}" ]; then
+        return
+    fi
+
+    . "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_utility_modules.sh"
+
+    if type module &> /dev/null; then
+        module use "${INSTALL_PREFIX}/${utilities_modules_dir}"
+    fi
+}
+
 function set_spack_config_repo()
 {
     local repo_candidate
@@ -68,6 +92,7 @@ function set_spack_config_repo()
         if [ -f "${repo_candidate}/systems/${SYSTEM}/settings.sh" ]; then
             export PAWSEY_SPACK_CONFIG_REPO="${repo_candidate}"
             . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
+            prepare_system_utility_modules
             return
         fi
     done
@@ -81,20 +106,28 @@ function set_compilation_sets_for_arch()
     # Set compilation sets based on architecture of the system on which the script is run.
     # This is used to determine which compilers and architectures to use when installing software.
     # Allows for launching of installation process on 
-    if [ "$( uname -m )" == "x86_64" ]; then
+    local host_arch
+    host_arch="$( uname -m )"
+
+    if [ "${SYSTEM}" = "setonix-q" ] && [ "${host_arch}" != "aarch64" ]; then
+        echo "The setonix-q software stack must be built on aarch64; detected '${host_arch}'."
+        exit 1
+    fi
+
+    if [ "${host_arch}" == "x86_64" ]; then
         export mainarch="zen3"
         export archs=("zen2" "zen3")
         export maincompiler="gcc@${gcc_version}"
         export compilers=("gcc@${gcc_version}" "cce@${cce_version}" "aocc@${aocc_version}")
 	export pythoncompilers=("gcc@${gcc_version}" "cce@${cce_version}" "aocc@${aocc_version}")
-    elif [ "$( uname -m )" == "aarch64" ]; then
+    elif [ "${host_arch}" == "aarch64" ]; then
         export mainarch="neoverse_v2"
         export archs=("neoverse_v2")
         export maincompiler="nvhpc@${nvidia_version}"
         export compilers=("nvhpc@${nvidia_version}")
 	export pythoncompilers=("gcc@${gcc_version}")
     else
-        echo "The architecture '$( uname -m )' is not supported."
+        echo "The architecture '${host_arch}' is not supported."
         exit 1
     fi   
 }
@@ -114,10 +147,16 @@ function set_modulepaths_for_arch()
         module use $INSTALL_PREFIX/modules/${mainarch}/gcc/${gcc_version}/programming-languages
         module load spack/${spack_version}
     elif [ "$( uname -m )" == "aarch64" ]; then
+        if [ "${SYSTEM}" != "setonix-q" ]; then
+            echo "The aarch64 module path setup is only configured for SYSTEM=setonix-q."
+            exit 1
+        fi
+
         module load cpe/25.03
         module use ${INSTALL_PREFIX}/staff_modulefiles
         # we need the python module to be available in order to run spack
         module --ignore-cache load pawseyenv/${pawseyenv_version}
+        module load PrgEnv-gnu-nvidia
         module use $INSTALL_PREFIX/modules/${mainarch}/nvhpc/${nvidia_version}/programming-languages
         module load spack/${spack_version}
     else
@@ -184,6 +223,7 @@ function build_environment() {
 
 # export relevant functions
 export -f check_installation_environment
+export -f prepare_system_utility_modules
 export -f set_spack_config_repo
 export -f set_compilation_sets_for_arch
 export -f set_modulepaths_for_arch

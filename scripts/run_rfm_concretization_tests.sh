@@ -2,38 +2,20 @@
 
 # This script runs Reframe tests across ALL environments to check that concretization was successful
 
+scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+. "${scriptdir}/pawsey_software_stack_funcs.sh"
 
-if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
-    SYSTEM="$PAWSEY_CLUSTER"
-fi
-
-if [ -z ${SYSTEM+x} ]; then
-    echo "The 'SYSTEM' variable is not set. Please specify the system you want to
-    build Spack for."
-    exit 1
-fi
-
-# Set to repo of deployed stack (otherwise hashes of some packages may not match)
-# This should most often be the repo where this script is located
-PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
-. "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
-
-module use ${INSTALL_PREFIX}/staff_modulefiles
-# we need the python module to be available in order to run spack
-module --ignore-cache load pawseyenv/${pawseyenv_version}
-# swap is needed for the pawsey_temp module to work
-#module swap PrgEnv-gnu PrgEnv-cray
-#module swap PrgEnv-cray PrgEnv-gnu
-module load cpe/25.03
-module load gcc-native/14.2
-module load spack/${spack_version}
+check_installation_environment
+set_spack_config_repo
+set_compilation_sets_for_arch
+set_modulepaths_for_arch
 
 # These need to be exported to be visible within Reframe
 export PAWSEY_SPACK_CONFIG_REPO=${PAWSEY_SPACK_CONFIG_REPO}
 export cce_version=${cce_version}
 export gcc_version=${gcc_version}
 export python_version=${python_version}
-export reframe_version=3.12.0
+export reframe_version=${reframe_version}
 
 
 # If running on compute node, Add node this job is running on to host list of ReFrame, allowing it to run from this node

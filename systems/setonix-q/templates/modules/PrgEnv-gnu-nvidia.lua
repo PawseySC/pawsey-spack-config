@@ -19,8 +19,8 @@ This module provides:
   - Access to both NVIDIA and GCC spack-installed modules
 
 Loaded modules:
-  PrgEnv-nvidia, gcc-native-mixed/@GCC_VERSION_MAJORMINOR@, craype, craype-arm-grace, 
-  craype-network-ofi, xpmem
+  PrgEnv-nvidia, cuda/@CUDA_VERSION@, gcc-native-mixed/@GCC_VERSION_MAJOR@,
+  craype, craype-arm-grace, craype-network-ofi, xpmem
 
 Unloaded modules:
   cray-libsci (may conflict with some packages)
@@ -29,7 +29,7 @@ Unloaded modules:
 
 load("PrgEnv-nvidia")
 load("cuda/@CUDA_VERSION@")
-load("gcc-native-mixed/@GCC_VERSION_MAJORMINOR@")
+load("gcc-native-mixed/@GCC_VERSION_MAJOR@")
 load("craype")
 load("craype-arm-grace")
 load("craype-network-ofi")

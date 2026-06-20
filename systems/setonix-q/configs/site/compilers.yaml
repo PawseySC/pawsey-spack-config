@@ -18,12 +18,7 @@ compilers:
     operating_system: sles15
     target: aarch64
     modules:
-    - PrgEnv-nvidia
-    - gcc-native-mixed/13
-    - craype
-    - craype-arm-grace
-    - craype-network-ofi
-    - xpmem
+    - PrgEnv-gnu-nvidia
     environment:
       set:
         PE_ENV: "NVIDIA"

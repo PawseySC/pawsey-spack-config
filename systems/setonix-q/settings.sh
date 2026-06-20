@@ -113,7 +113,7 @@ dependencies
 
 # list of spack build environments
 env_list="
-cpu_python
+python
 cpu_s3_clients
 cpu_io_libs
 container_engines

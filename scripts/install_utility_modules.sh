@@ -11,12 +11,13 @@ fi
 
 PAWSEY_SPACK_CONFIG_REPO="${PAWSEY_SPACK_CONFIG_REPO:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 
-if [[ -z "${utility_module_list}" ]]; then
+if [[ -z "${utility_module_list//[[:space:]]/}" ]]; then
     echo "No utility modules to deploy (utility_module_list is empty)"
     exit 0
 fi
 
 gcc_compat_ver="${gcc_compat_version//./_}"
+gcc_version_major="${gcc_version%%.*}"
 gcc_version_majorminor="${gcc_version%.*}"
 
 for module_name in ${utility_module_list}; do
@@ -32,6 +33,7 @@ for module_name in ${utility_module_list}; do
     mkdir -p "${MODULE_DIR}"
 
     sed \
+        -e "s;@GCC_VERSION_MAJOR@;${gcc_version_major};g" \
         -e "s;@GCC_VERSION_MAJORMINOR@;${gcc_version_majorminor};g" \
         -e "s;@GCC_COMPAT_VERSION@;${gcc_compat_ver};g" \
         -e "s;@GCC_VERSION@;${gcc_version};g" \
