@@ -23,7 +23,7 @@ set_modulepaths_for_arch
 # its build fails in a nondeterministic way. Setonix-Q environments select the
 # desired OpenBLAS compiler/version explicitly, so do not pre-install it here.
 if [ "${SYSTEM}" = "setonix" ]; then
-  openblas_not_installed=0
+  openblas_not_installed=1
   counter=0
   while (( openblas_not_installed > 0 ));
   do

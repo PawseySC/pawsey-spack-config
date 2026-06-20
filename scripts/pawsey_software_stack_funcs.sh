@@ -72,8 +72,18 @@ function prepare_system_utility_modules()
     fi
 }
 
-function set_spack_config_repo()
+function load_system_settings()
 {
+    if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
+        SYSTEM="$PAWSEY_CLUSTER"
+    fi
+
+    if [ -z ${SYSTEM+x} ]; then
+        echo "The 'SYSTEM' variable is not set. Please specify the system you want to
+        build Spack for."
+        exit 1
+    fi
+
     local repo_candidate
     local source_file
     local source_candidates=("${BASH_SOURCE[@]}" "$0" "$PWD")
@@ -95,13 +105,18 @@ function set_spack_config_repo()
             if [ -z "${NCPUS+x}" ] && [ -n "${NPROCS+x}" ]; then
                 export NCPUS="${NPROCS}"
             fi
-            prepare_system_utility_modules
             return
         fi
     done
 
     echo "Could not find systems/${SYSTEM}/settings.sh."
     exit 1
+}
+
+function set_spack_config_repo()
+{
+    load_system_settings
+    prepare_system_utility_modules
 }
 
 function set_compilation_sets_for_arch()
@@ -227,6 +242,7 @@ function build_environment() {
 # export relevant functions
 export -f check_installation_environment
 export -f prepare_system_utility_modules
+export -f load_system_settings
 export -f set_spack_config_repo
 export -f set_compilation_sets_for_arch
 export -f set_modulepaths_for_arch
