@@ -35,7 +35,7 @@ class concretise_check(rfm.RunOnlyRegressionTest):
 
         # Valid systems and PEs
         self.valid_systems = ['setonix-q:quantum']
-        self.valid_prog_environs = ['PrgEnv-gnu', 'PrgEnv-nvidia']
+        self.valid_prog_environs = ['PrgEnv-gnu-nvidia']
 
         # Execution
         self.executable = 'echo'
@@ -93,12 +93,9 @@ class module_existence_check(rfm.RunOnlyRegressionTest):
         self.descr = 'Test to check for existence of a module during software stack installation'
         self.maintainers = ['Craig Meyer']
 
-        # Valid systems and PEs - set PE based on module path
+        # Valid systems and PEs
         self.valid_systems = ['setonix-q:quantum']
-        if 'nvidia' in self.mod:
-            self.valid_prog_environs = ['PrgEnv-nvidia']
-        elif 'gcc' in self.mod:
-            self.valid_prog_environs = ['PrgEnv-gnu']
+        self.valid_prog_environs = ['PrgEnv-gnu-nvidia']
 
         # Execution - ls to check the module exists
         self.executable = 'ls'
@@ -129,11 +126,7 @@ class module_load_check(rfm.RunOnlyRegressionTest):
 
         # Valid systems and PEs
         self.valid_systems = ['setonix-q:quantum']
-        # Choose PE based on the module path
-        if 'nvidia' in self.mod:
-            self.valid_prog_environs = ['PrgEnv-nvidia']
-        elif 'gcc' in self.mod:
-            self.valid_prog_environs = ['PrgEnv-gnu']
+        self.valid_prog_environs = ['PrgEnv-gnu-nvidia']
 
         # Execution
         self.executable = 'module'
@@ -200,11 +193,7 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
 
         # Valid systems and PEs
         self.valid_systems = ['setonix-q:quantum']
-        # Choose PE based on the module
-        if 'nvidia' in self.mod:
-            self.valid_prog_environs = ['PrgEnv-nvidia']
-        elif 'gcc' in self.mod:
-            self.valid_prog_environs = ['PrgEnv-gnu']
+        self.valid_prog_environs = ['PrgEnv-gnu-nvidia']
 
         # Load the module we are testing
         self.name_ver = '/'.join(self.mod.split('/')[-2:])[:-4]
