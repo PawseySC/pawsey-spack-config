@@ -170,7 +170,6 @@ function set_modulepaths_for_arch()
             exit 1
         fi
 
-        module load cpe/25.03
         module use ${INSTALL_PREFIX}/staff_modulefiles
         # we need the python module to be available in order to run spack
         module --ignore-cache load pawseyenv/${pawseyenv_version}
