@@ -2,12 +2,59 @@
 
 SPACK_DIR=INSTALL_PREFIX/spack
 REALSPACK="${SPACK_DIR}/bin/realspack"
+PAWSEY_STACK_SYSTEM="PAWSEY_SYSTEM"
+PAWSEY_STACK_VERSION="DATE_TAG"
+PAWSEY_PROJECT_FILES_PREFIX="USER_PERMANENT_FILES_PREFIX"
+
+function pawsey_project()
+{
+    if [ -n "${PAWSEY_PROJECT}" ]; then
+        echo "${PAWSEY_PROJECT}"
+    elif [ -r "${HOME}/.pawsey_project" ]; then
+        head -n 1 "${HOME}/.pawsey_project"
+    fi
+}
+
+function pawsey_runtime_config()
+{
+    local project
+    local config_dir
+    local user_repo
+    local project_repo
+
+    project="$(pawsey_project)"
+    if [ -n "${project}" ]; then
+        export PAWSEY_PROJECT="${project}"
+    fi
+
+    config_dir="${HOME}/.spack/pawsey/${PAWSEY_STACK_SYSTEM}/${PAWSEY_STACK_VERSION}"
+    mkdir -p "${config_dir}"
+
+    {
+        echo "repos:"
+        if [ -n "${project}" ]; then
+            user_repo="${PAWSEY_PROJECT_FILES_PREFIX}/${project}/${USER}/${PAWSEY_STACK_SYSTEM}/${PAWSEY_STACK_VERSION}/spack_repo"
+            project_repo="${PAWSEY_PROJECT_FILES_PREFIX}/${project}/${PAWSEY_STACK_SYSTEM}/${PAWSEY_STACK_VERSION}/spack_repo"
+
+            if [ -f "${user_repo}/repo.yaml" ]; then
+                echo "- ${user_repo}"
+            fi
+            if [ -f "${project_repo}/repo.yaml" ]; then
+                echo "- ${project_repo}"
+            fi
+        fi
+        echo "- ${SPACK_DIR}/var/spack/repos/pawsey"
+    } > "${config_dir}/repos.yaml"
+
+    echo "${config_dir}"
+}
+
+PAWSEY_RUNTIME_CONFIG="$(pawsey_runtime_config)"
 
 if (( $# > 0 )) && [ "$1" = "project" ]; then
     # enable group access and writing to the stack
     umask g+rwx
-    ${REALSPACK} -C "${SPACK_DIR}/etc/spack/project" ${@:2}
+    "${REALSPACK}" -C "${PAWSEY_RUNTIME_CONFIG}" -C "${SPACK_DIR}/etc/spack/project" "${@:2}"
 else
-    ${REALSPACK} ${@}
+    "${REALSPACK}" -C "${PAWSEY_RUNTIME_CONFIG}" "$@"
 fi
-
