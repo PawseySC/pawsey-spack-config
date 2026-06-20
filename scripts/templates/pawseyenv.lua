@@ -145,6 +145,7 @@ prepend_path('LMOD_PACKAGE_PATH', "/software/" .. system .. "/lmod-extras")
 local fh = assert(io.open(os.getenv("HOME") .. "/.pawsey_project", "r"))
 local psc_sw_env_project = fh:read("*l")
 fh:close()
+setenv("PAWSEY_PROJECT", psc_sw_env_project)
 
 local psc_sw_env_system_datetag = table.concat({system, date_tag}, "/")
 
