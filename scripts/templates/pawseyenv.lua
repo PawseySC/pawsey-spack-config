@@ -97,7 +97,10 @@ local function prepend_compiler_paths(base_path, suffix)
     if c.version ~= "" then
       for _, grp in ipairs(c.archs) do
         if is_arch(grp) then
-          prepend_path(c.var, base_path .. "/" .. c.dir .. "/" .. c.version .. "/" .. suffix)
+          local path = base_path .. "/" .. c.dir .. "/" .. c.version .. "/" .. suffix
+          if isDir(path) then
+            prepend_path(c.var, path)
+          end
           break
         end
       end
@@ -110,7 +113,10 @@ local function prepend_compiler_category_paths(base_path, category)
     if c.version ~= "" then
       for _, grp in ipairs(c.archs) do
         if is_arch(grp) then
-          prepend_path(c.var, base_path .. "/" .. c.dir .. "/" .. c.version .. "/" .. category)
+          local path = base_path .. "/" .. c.dir .. "/" .. c.version .. "/" .. category
+          if isDir(path) then
+            prepend_path(c.var, path)
+          end
           break
         end
       end
@@ -145,6 +151,7 @@ prepend_path('LMOD_PACKAGE_PATH', "/software/" .. system .. "/lmod-extras")
 local fh = assert(io.open(os.getenv("HOME") .. "/.pawsey_project", "r"))
 local psc_sw_env_project = fh:read("*l")
 fh:close()
+setenv("PAWSEY_PROJECT", psc_sw_env_project)
 
 local psc_sw_env_system_datetag = table.concat({system, date_tag}, "/")
 
