@@ -65,11 +65,11 @@ class AnsysFluidstructures(Package):
 
         # change internal wrapper for launching fluent from mpirun to srun and also alter the platform using sed
         sed=which('sed')
-        sed('/# start job/ i my_cmdline=\"srun --export=ALL -n \$FS_NPROC \$FS_CMD\"',"{0}/{1}/v221/fluent/fluent22.1.0/multiport/mpi_wrapper/bin/mpirun.fl".format(tmp_install_path, 'fluidstructures'))
+        sed('/# start job/ i my_cmdline=\"srun --export=ALL -n \\$FS_NPROC \\$FS_CMD\"',"{0}/{1}/v221/fluent/fluent22.1.0/multiport/mpi_wrapper/bin/mpirun.fl".format(tmp_install_path, 'fluidstructures'))
         sed("s/platform = None/platform = \'linx64\'/g","{0}/{1}/v221/commonfiles/CPython/3_7/linx64/Release/Ansys/Util/Platform.py".format(tmp_install_path, 'fluidstructures'))
         sed('s/distcmd="mpirun"/distcmd="srun --export=ALL"/g',"{0}/{1}/v221/ansys/bin/anssh.ini".format(tmp_install_path, 'fluidstructures'))
         sed('/distcmd/ s/ -np / -n /g',"{0}/{1}/v221/ansys/bin/ansys221".format(tmp_install_path, 'fluidstructures'))
-        sed('/distcmd/ s/ \${extra_mpi_args} / /g',"{0}/{1}/v221/ansys/bin/ansys221".format(tmp_install_path, 'fluidstructures'))
+        sed('/distcmd/ s/ \\${extra_mpi_args} / /g',"{0}/{1}/v221/ansys/bin/ansys221".format(tmp_install_path, 'fluidstructures'))
         sed('/KMP_AFFINITY/ s/norespect/disabled/g',"{0}/{1}/v221/ansys/bin/anssh.ini".format(tmp_install_path, 'fluidstructures'))
 
         # for some strange reason, ansys creates a read only file in the temp directory.
