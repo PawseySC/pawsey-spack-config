@@ -54,9 +54,9 @@ class PyCudaPython(PythonPackage):
     depends_on("py-setuptools@80:", type="build")
     depends_on("py-setuptools-scm@8:", type="build")
     depends_on("py-packaging@24.2:", type="build")
-    depends_on("py-pyclibrary", type="build")
+    depends_on("py-pyclibrary@0.1.7:", type="build")
     depends_on("py-wheel", type="build")
-    depends_on("py-cython", type="build")
+    depends_on("py-cython@3.2:3.2", type="build")
 
     # CUDA toolkit for building bindings
     # (Package version != CUDA version; this is a conservative, practical mapping.)
