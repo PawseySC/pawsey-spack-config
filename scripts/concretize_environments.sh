@@ -17,11 +17,33 @@ set_modulepaths_for_arch
 # list of environments included in variables.sh (sourced above)
 envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 
-for env in $env_list ; do
-  echo "Concretizing env $env.."
-  spack env activate ${envdir}/${env} 
-  spack concretize -f
+function concretize_environment()
+{
+  local env="$1"
+  local envpath="${envdir}/${env}"
+
+  if [ ! -f "${envpath}/spack.yaml" ]; then
+    echo "Environment '${env}' is missing ${envpath}/spack.yaml."
+    exit 1
+  fi
+
+  echo "Concretizing env ${env}.."
+  spack env activate "${envpath}"
+  if ! spack concretize -f; then
+    spack env deactivate || true
+    echo "Concretization failed for env ${env}."
+    exit 1
+  fi
   spack env deactivate
+
+  if [ ! -f "${envpath}/spack.lock" ]; then
+    echo "Concretization for env ${env} completed but did not create ${envpath}/spack.lock."
+    exit 1
+  fi
+}
+
+for env in $env_list ; do
+  concretize_environment "${env}"
 done
 
 #echo "Concretizing env rocm.."
@@ -31,8 +53,5 @@ done
 
 
 for env in $cray_env_list ; do
-  echo "Concretizing env $env.."
-  spack env activate ${envdir}/${env}
-  spack concretize -f
-  spack env deactivate
+  concretize_environment "${env}"
 done
