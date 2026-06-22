@@ -124,6 +124,7 @@ cpu_num_libs
 nvidia_utils
 nvidia_bench
 nvidia_num_libs
+quantum
 "
 
 # Quantum contains Spack-migrated quantum packages that still interoperate with
