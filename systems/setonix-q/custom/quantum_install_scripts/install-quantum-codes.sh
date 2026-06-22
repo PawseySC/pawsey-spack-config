@@ -4,6 +4,12 @@ echo "Installing quantum packages"
 
 # Use unique variable name to avoid being overwritten by sourced scripts
 _QUANTUM_INSTALL_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+_QUANTUM_REPO_DIR="${PAWSEY_SPACK_CONFIG_REPO:-$(cd "${_QUANTUM_INSTALL_DIR}/../../../.." && pwd)}"
+
+if [[ -z "${gcc_version+x}" || -z "${nvidia_version+x}" || -z "${spack_version+x}" ]]; then
+    export PAWSEY_SPACK_CONFIG_REPO="${_QUANTUM_REPO_DIR}"
+    source "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM:-setonix-q}/settings.sh"
+fi
 
 # Spack-owned prerequisites are installed through the setonix-q environments:
 #   python:  py-mpi4py, cutensor, Python stack
