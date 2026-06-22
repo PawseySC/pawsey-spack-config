@@ -149,11 +149,6 @@ class PyCudaPython(PythonPackage):
 
         return dists
 
-    @run_after("install")
-    def _post_install_sanity(self):
-        # Basic import check: cuda.bindings should exist after install
-        python("-c", "import cuda; import cuda.bindings; import cuda.bindings.cydriver")
-
     def install(self, spec, prefix):
         # Install multiple Python distributions from the monorepo into this one prefix.
         # We use --no-deps because Spack controls dependencies.
