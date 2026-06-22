@@ -21,6 +21,7 @@ utilities:
   libtool: ['libtool', '-h', 'Provide generalized library-building support services.']
   autoconf: ['autoconf', '-h', 'Generate a configuration script from a TEMPLATE-FILE if given']
   py-pip: ['pip', '-h', 'pip <command>']
+  singularityce: ['singularity', '-h', 'Linux container platform optimized for High Performance Computing']
 # no viz packages
 #visualisation:
 python-packages:
