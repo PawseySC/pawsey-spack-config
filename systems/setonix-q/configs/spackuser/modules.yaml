@@ -148,6 +148,7 @@ modules:
         # numerical or parallelisation libraries 
         arpack-ng: 'libraries/{name}/{version}'
         cuda: 'libraries/{name}/{version}-cuda-gh200'
+        cuquantum: 'libraries/{name}/{version}-cuda-gh200'
         cutensor: 'libraries/{name}/{version}-cuda-gh200'
         nccl: 'libraries/{name}/{version}-cuda-gh200'
         nvpl-blas: 'libraries/{name}/{version}-cuda-gh200'
@@ -374,4 +375,3 @@ modules:
         # but just to be careful to avoid name conflicts
         # added hash
         all: 'dependencies/.{name}/{version}-{hash:7}'
-

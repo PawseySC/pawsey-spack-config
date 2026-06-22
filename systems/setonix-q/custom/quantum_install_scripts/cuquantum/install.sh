@@ -1,42 +1,28 @@
-#!/bin/bash
+#!/bin/bash -e
 
 export script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 . $script_dir/use.sh
 . $script_dir/../utils.sh
 
-# Parse arguments
 parse_args "$@"
 
-# Install software (skip if --module-only)
-if should_install_software; then
-    echo "Installing ${tool_name}/${tool_ver}"
-    set_dependencies
-    setup_build_dir
-    download_archive "${cuquantum_archive}.tar.xz" "${cuquantum_url}"
-    extract_archive "${cuquantum_archive}.tar.xz"
-
-    # Build MPI distributed interface if MPI is available
-    if [[ -n "${CRAY_MPICH_DIR}" ]] || [[ -n "${MPI_HOME}" ]] || command -v mpicc &>/dev/null; then
-        echo "Building MPI distributed interface..."
-        cd "${cuquantum_archive}/distributed_interfaces"
-        
-        MPI_INCLUDE="${CRAY_MPICH_DIR:-${MPI_HOME:-/usr}}/include"
-        MPI_LIB="${CRAY_MPICH_DIR:-${MPI_HOME:-/usr}}/lib"
-        CUDA_INCLUDE="${CUDA_HOME}/include"
-        
-        gcc -shared -std=c99 -fPIC \
-            -I"${CUDA_INCLUDE}" -I../include -I"${MPI_INCLUDE}" \
-            cutensornet_distributed_interface_mpi.c \
-            -L"${MPI_LIB}" -lmpi \
-            -o libcutensornet_distributed_interface_mpi.so || \
-            echo "Warning: Failed to build MPI interface (non-fatal)"
-        
-        cd ${build_dir}
-    fi
-
-    install_files "${cuquantum_archive}"
-    cleanup_build
+if [[ -z "${DATE_TAG}" ]]; then
+    echo "Error: DATE_TAG not set. Please source settings.sh first."
+    exit 1
 fi
 
-# Install module
-finalize_install
+module purge
+module load pawsey pawseytools "pawseyenv/${DATE_TAG}"
+module load PrgEnv-gnu-nvidia
+module load "spack/${spack_version}"
+
+repo_dir="${PAWSEY_SPACK_CONFIG_REPO:-$(cd "${script_dir}/../../../../.." && pwd)}"
+quantum_env="${repo_dir}/systems/${SYSTEM:-setonix-q}/environments/quantum"
+
+if should_install_software; then
+    spack -e "${quantum_env}" install --reuse -vvv -j 72 "cuquantum@${tool_ver}+mpi" "%nvhpc@${nvhpc_ver}"
+fi
+spack -e "${quantum_env}" module lmod refresh -y "cuquantum@${tool_ver}"
+
+echo "Quantum environment cuQuantum ${tool_ver} installation complete."
+echo "Expected module: ${cuquantum_module}"

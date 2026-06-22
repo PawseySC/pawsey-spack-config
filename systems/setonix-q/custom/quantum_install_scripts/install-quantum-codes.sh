@@ -7,14 +7,14 @@ _QUANTUM_INSTALL_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/nul
 
 # Spack packages installed by this helper.
 # cuTENSOR is owned by the python Spack environment and loaded by the quantum packages.
+# cuQuantum is owned by the quantum Spack environment.
 spack_packages=(
     mpi4py
-)
-
-# Custom NVIDIA libraries (must be installed before Python packages)
-nvidia_packages=(
     cuquantum
 )
+
+# Custom NVIDIA libraries still installed outside Spack.
+nvidia_packages=()
 
 # Python quantum packages (py-* modules)
 python_packages=(

@@ -1,9 +1,21 @@
-# This environment is the landing area for quantum packages as the
-# Setonix-Q custom quantum installers are migrated to Spack recipes.
-#
-# Keep shared Python-stack dependencies, such as the cuTENSOR module used by
-# the current custom quantum installers, owned by the python environment unless
-# a migrated quantum recipe needs to make them root specs here.
 spack:
-  specs: []
+
+  packages:
+    cuda:
+      require: "@13.0.0"
+
+    cutensor:
+      require: "@2.4.1.4 %nvhpc@25.9"
+      buildable: true
+      externals: []
+
+  definitions:
+  - quantum_packages:
+    - cuquantum@25.11.1 +mpi
+
+  specs:
+  - matrix:
+    - [$quantum_packages]
+    - ['%nvhpc@25.9']
+
   view: false

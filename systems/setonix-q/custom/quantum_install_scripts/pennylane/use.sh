@@ -19,6 +19,7 @@ gcc_module_ver="${gcc_ver%.*}"
 cray_mpich_gnu_abi_ver="12.3"
 build_compiler="gcc@${gcc_ver}"
 cuquantum_ver="25.11.1"
+cuquantum_module="${CUQUANTUM_MODULE:-libraries/cuquantum/${cuquantum_ver}-cuda-gh200}"
 cutensor_ver="2.4.1.4"
 cutensor_module="${CUTENSOR_MODULE:-libraries/cutensor/${cutensor_ver}-cuda-gh200}"
 python_ver="3.11.6"
@@ -29,7 +30,7 @@ export base_dir=${INSTALL_PREFIX}/custom/software/linux-sles15-neoverse_v2/nvhpc
 
 export dependencies=(
 PrgEnv-gnu-nvidia \
-cuquantum/${cuquantum_ver} \
+"${cuquantum_module}" \
 "${cutensor_module}" \
 python/${python_ver} \
 py-numpy/2.1.2 \

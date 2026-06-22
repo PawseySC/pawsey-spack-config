@@ -114,6 +114,7 @@ dependencies
 # list of spack build environments
 env_list="
 python
+quantum
 cpu_s3_clients
 cpu_io_libs
 container_engines
@@ -125,8 +126,8 @@ nvidia_bench
 nvidia_num_libs
 "
 
-# The quantum environment exists as a migration target for the custom quantum
-# installers. Add it to env_list when it has its first root specs.
+# Quantum contains Spack-migrated quantum packages that still interoperate with
+# custom quantum installers.
 
 container_list="
 "
