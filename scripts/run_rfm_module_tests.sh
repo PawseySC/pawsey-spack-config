@@ -12,6 +12,11 @@ if [ -z ${SYSTEM+x} ]; then
     exit 1
 fi
 
+if [ "${SYSTEM}" = "setonix-q" ]; then
+    echo "run_rfm_module_tests.sh needs to be updated for setonix-q."
+    exit 0
+fi
+
 # Set to repo of deployed stack (otherwise hashes of some packages may not match)
 # This should most often be the repo where this script is located
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
