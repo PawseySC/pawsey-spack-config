@@ -29,9 +29,10 @@ class PyCudaPython(PythonPackage):
     license("LicenseRef-NVIDIA-SOFTWARE-LICENSE")
 
     # Version 13.x releases
+    version("13.1.0", sha256="63cc2823bb73bfe1e7e697457364d626f8e7705d6c3dc93a7d120dd788e2a93e")
     version(
-        "13.1.0",
-        sha256="63cc2823bb73bfe1e7e697457364d626f8e7705d6c3dc93a7d120dd788e2a93e",
+        "13.0.3",
+        sha256="4885b7898ba30735cdf8a07b52496ecfe2b8f7d119245f3ced190f9ad445ffd4",
         preferred=True,
     )
     version("13.0.0", sha256="606bb3202392eb1014c82023e44858dbdd13a6ad7e4529251a12e72c76c7171f")
@@ -58,10 +59,10 @@ class PyCudaPython(PythonPackage):
     depends_on("py-wheel", type="build")
     depends_on("py-cython@3.2:3.2", type="build")
 
-    # CUDA toolkit for building bindings
-    # (Package version != CUDA version; this is a conservative, practical mapping.)
-    depends_on("cuda@11.8:", when="@12:", type=("build", "link", "run"))
-    depends_on("cuda@12:", when="@13:", type=("build", "link", "run"))
+    # CUDA Python releases track the CUDA Toolkit major/minor API.
+    depends_on("cuda@11.8:12.999", when="@12:", type=("build", "link", "run"))
+    depends_on("cuda@13.0.0:13.0.999", when="@13.0.0:13.0.999", type=("build", "link", "run"))
+    depends_on("cuda@13.1.0:13.1.999", when="@13.1.0:13.1.999", type=("build", "link", "run"))
 
     variant("all", default=False, description="Install all CUDA Python component subpackages found in the repo")
     
