@@ -51,6 +51,10 @@ def quantum_allocation_pack(num_gpus_per_node=1):
     }
 
 
+def get_baseline_cmd(mod_category, base_name):
+    return (pkg_cmds.get(mod_category) or {}).get(base_name)
+
+
 @rfm.simple_test
 class concretise_check(rfm.RunOnlyRegressionTest):
     def __init__(self):
@@ -237,13 +241,22 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
         version_checks = [v in self.mod for v in version_cmds]
         if any(version_checks):
             self.base_name = self.name_ver
-        self.executable = pkg_cmds[self.mod_category][self.base_name][0]
+        self.baseline_cmd = get_baseline_cmd(self.mod_category, self.base_name)
+        if self.baseline_cmd is None:
+            self.skip_if(
+                True,
+                'Missing baseline sanity test coverage: '
+                f'no command configured in pkg_cmds.yaml for {self.mod}'
+            )
+            self.baseline_cmd = ['true', '', '']
+
+        self.executable = self.baseline_cmd[0]
         # Set the executable options, which depends on if it's software or library
         if (self.executable == 'ldd') or (self.base_name == 'hpx'):
             lib_path = get_library_path(self.mod.split('/')[-2:])
-            self.executable_opts = [lib_path + '/' + pkg_cmds[self.mod_category][self.base_name][1]]
+            self.executable_opts = [lib_path + '/' + self.baseline_cmd[1]]
         else:
-            self.executable_opts = [pkg_cmds[self.mod_category][self.base_name][1] + ' 2>&1']
+            self.executable_opts = [self.baseline_cmd[1] + ' 2>&1']
         
         self.tags = {'spack', 'installation', 'software_stack'}
 
@@ -266,4 +279,4 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
             return sn.assert_not_found('not found', self.stdout)
         # For software we do a basic check (e.g. --help or --version)
         else:
-            return sn.assert_found(pkg_cmds[self.mod_category][self.base_name][2], self.stdout)
+            return sn.assert_found(self.baseline_cmd[2], self.stdout)
