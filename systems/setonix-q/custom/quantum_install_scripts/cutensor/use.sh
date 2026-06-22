@@ -27,7 +27,7 @@ gcc_ver="${gcc_version}"
 gcc_module_ver="${gcc_ver%.*}"
 build_compiler="nvhpc@${nvhpc_ver}"
 spack_ver="${spack_version}"
-cutensor_module="${CUTENSOR_MODULE:-libraries/cutensor/${tool_ver}-cuda-gh200}"
+cutensor_module="${CUTENSOR_MODULE:-cutensor/${tool_ver}-cuda-gh200}"
 
 # load modules (explicit toolchain + CUDA)
 export dependencies=(
