@@ -125,6 +125,9 @@ nvidia_bench
 nvidia_num_libs
 "
 
+# The quantum environment exists as a migration target for the custom quantum
+# installers. Add it to env_list when it has its first root specs.
+
 container_list="
 "
 

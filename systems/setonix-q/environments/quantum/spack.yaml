@@ -1,0 +1,9 @@
+# This environment is the landing area for quantum packages as the
+# Setonix-Q custom quantum installers are migrated to Spack recipes.
+#
+# Keep shared Python-stack dependencies, such as the cuTENSOR module used by
+# the current custom quantum installers, owned by the python environment unless
+# a migrated quantum recipe needs to make them root specs here.
+spack:
+  specs: []
+  view: false
