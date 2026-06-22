@@ -24,15 +24,25 @@ site_configuration = {
                     'launcher': 'srun',
                     'modules': [],
                     'access': ['--partition=quantum'],
-                    'max_jobs': 32,
+                    'max_jobs': 16,
                     'environs': [
                         'PrgEnv-gnu-nvidia',
                     ],
+                    'resources': [
+                        {
+                            'name': 'gpu',
+                            'options': ['--gres=gpu:{num_gpus_per_node}']
+                        },
+                        {
+                            'name': 'gpu_nvme',
+                            'options': ['--gres=gpu:{num_gpus_per_node},tmp:{nvme_gb}G']
+                        }
+                    ],
                     'processor': {
-                        'num_cpus': 256,
-                        'num_cpus_per_core': 2,
-                        'num_cpus_per_socket': 128,
-                        'num_sockets': 2
+                        'num_cpus': 288,
+                        'num_cpus_per_core': 1,
+                        'num_cpus_per_socket': 72,
+                        'num_sockets': 4
                     },
                 },
             ]
