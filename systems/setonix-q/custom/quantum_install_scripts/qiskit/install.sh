@@ -86,7 +86,7 @@ for version_string in "${QISKIT_VERSIONS[@]}"; do
             fi
         fi
         if [[ -z "${GTL_LIB}" || ! -f "${GTL_LIB}" ]]; then
-            FALLBACK_GTL="/opt/cray/pe/mpich/${cray_mpich_ver}/ofi/gnu/${gcc_module_ver}/gtl/lib/libmpi_gtl_cuda.so"
+            FALLBACK_GTL="/opt/cray/pe/mpich/${cray_mpich_ver}/ofi/gnu/${cray_mpich_gnu_abi_ver:-12.3}/gtl/lib/libmpi_gtl_cuda.so"
             if [[ -f "${FALLBACK_GTL}" ]]; then
                 GTL_LIB="${FALLBACK_GTL}"
                 GTL_LIB_PATH="$(dirname "${GTL_LIB}")"

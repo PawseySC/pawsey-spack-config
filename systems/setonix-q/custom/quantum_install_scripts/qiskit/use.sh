@@ -11,12 +11,13 @@ QISKIT_VERSIONS=(
 nvhpc_ver="${nvidia_version}"
 gcc_ver="${gcc_version}"
 gcc_module_ver="${gcc_ver%.*}"
+cray_mpich_gnu_abi_ver="12.3"
 build_compiler="gcc@${gcc_ver}"
 cutensor_ver="2.4.1"
 cuquantum_ver="25.11.1"
 python_ver="3.11.6"
 cray_mpich_ver="9.1.0"
-cray_mpich_dir_gnu="/opt/cray/pe/mpich/${cray_mpich_ver}/ofi/gnu/${gcc_module_ver}"
+cray_mpich_dir_gnu="/opt/cray/pe/mpich/${cray_mpich_ver}/ofi/gnu/${cray_mpich_gnu_abi_ver}"
 
 export MODULE_DIR=${INSTALL_PREFIX}/custom/modules/neoverse_v2/nvhpc/${nvhpc_ver}/custom
 export base_dir=${INSTALL_PREFIX}/custom/software/linux-sles15-neoverse_v2/nvhpc-${nvhpc_ver}

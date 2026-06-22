@@ -24,7 +24,7 @@ setenv("MPICH_GPU_SUPPORT_ENABLED", "1")
 -- Disable CUDA IPC fast path to avoid cuIpcOpenMemHandle errors on this platform
 setenv("MPICH_GPU_IPC_ENABLED", "0")
 
-local mpich_gnu_lib = "/opt/cray/pe/mpich/CRAY_MPICH_VER/ofi/gnu/GCC_MODULE_VER/lib"
+local mpich_gnu_lib = "/opt/cray/pe/mpich/CRAY_MPICH_VER/ofi/gnu/CRAY_MPICH_GNU_ABI_VER/lib"
 setenv("MPICH_GNU", mpich_gnu_lib)
 prepend_path("LD_LIBRARY_PATH", mpich_gnu_lib)
 

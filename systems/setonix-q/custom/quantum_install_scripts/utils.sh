@@ -208,6 +208,7 @@ function install_module()
     sed -i "s:INSTALL_PATH:${INSTALL_DIR}:g" ${modname}
     sed -i "s:BUILD_DATE:${build_date}:g" ${modname}
     sed -i "s:CRAY_MPICH_VER:${cray_mpich_ver}:g" ${modname}
+    sed -i "s:CRAY_MPICH_GNU_ABI_VER:${cray_mpich_gnu_abi_ver:-12.3}:g" ${modname}
     sed -i "s:GCC_MODULE_VER:${gcc_module_ver}:g" ${modname}
     sed -i "s:VERSION:${VERSION}:g" ${modname}
     sed -i "s:DESCRIP:${DESCRIP}:g" ${modname}
