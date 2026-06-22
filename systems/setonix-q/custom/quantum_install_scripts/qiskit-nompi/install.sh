@@ -78,10 +78,22 @@ for version_string in "${QISKIT_VERSIONS[@]}"; do
         CUDA_ARCH=${CUDA_ARCH:-90}
         echo "Using CUDA architecture: ${CUDA_ARCH}"
         export CUDAARCHS="${CUDA_ARCH}"
+        if [[ "${CUDA_ARCH}" =~ ^[0-9][0-9]$ ]]; then
+            AER_CUDA_ARCH="${CUDA_ARCH:0:1}.${CUDA_ARCH:1:1}"
+        else
+            AER_CUDA_ARCH="${CUDA_ARCH}"
+        fi
+        export AER_CUDA_ARCH
+        echo "Using Qiskit Aer CUDA architecture: ${AER_CUDA_ARCH}"
 
         CMAKE_ARGS=(
             -DAER_THRUST_BACKEND=CUDA
+            -DAER_CUDA_ARCH="${AER_CUDA_ARCH}"
             -DCMAKE_CUDA_ARCHITECTURES="${CUDA_ARCH}"
+            -DCMAKE_CXX_STANDARD=17
+            -DCMAKE_CXX_STANDARD_REQUIRED=ON
+            -DCMAKE_CUDA_STANDARD=17
+            -DCMAKE_CUDA_STANDARD_REQUIRED=ON
             -DCUQUANTUM_ROOT="${CUQUANTUM_ROOT}"
             -DCUTENSOR_ROOT="${CUTENSOR_ROOT}"
             -DAER_MPI=False
