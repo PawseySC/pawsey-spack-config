@@ -65,8 +65,24 @@ class PyCudaPython(PythonPackage):
     depends_on("cuda@13.1.0:13.1.999", when="@13.1.0:13.1.999", type=("build", "link", "run"))
 
     variant("all", default=False, description="Install all CUDA Python component subpackages found in the repo")
+    variant("cufile", default=False, description="Build CUDA cuFile Python bindings")
     
+    def patch(self):
+        if "~cufile" in self.spec:
+            filter_file(
+                'if sys.platform == "win32":',
+                (
+                    'if sys.platform == "win32" '
+                    'or os.environ.get("CUDA_PYTHON_DISABLE_CUFILE") == "1":'
+                ),
+                join_path("cuda_bindings", "setup.py"),
+                string=True,
+            )
+
     def setup_build_environment(self, env):
+        if "~cufile" in self.spec:
+            env.set("CUDA_PYTHON_DISABLE_CUFILE", "1")
+
         if self.spec.satisfies("^cuda"):
             cuda = self.spec["cuda"].prefix
     
