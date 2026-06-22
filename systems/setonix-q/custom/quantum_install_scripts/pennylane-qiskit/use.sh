@@ -17,7 +17,7 @@ gcc_ver="${gcc_version}"
 build_compiler="gcc@${gcc_ver}"
 python_ver="3.11.6"
 pip_ver="23.1.2"
-pip_module="${PIP_MODULE:-python-packages/py-pip/${pip_ver}-py${python_ver}}"
+pip_module="${PIP_MODULE:-py-pip/${pip_ver}-py${python_ver}}"
 
 export MODULE_DIR=${INSTALL_PREFIX}/custom/modules/neoverse_v2/nvhpc/${nvhpc_ver}/custom
 export base_dir=${INSTALL_PREFIX}/custom/software/linux-sles15-neoverse_v2/nvhpc-${nvhpc_ver}

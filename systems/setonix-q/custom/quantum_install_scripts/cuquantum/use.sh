@@ -29,7 +29,7 @@ build_compiler="nvhpc@${nvhpc_ver}"
 spack_ver="${spack_version}"
 cutensor_ver="2.4.1.4"
 cutensor_module="${CUTENSOR_MODULE:-cutensor/${cutensor_ver}-cuda-gh200}"
-cuquantum_module="${CUQUANTUM_MODULE:-libraries/cuquantum/${tool_ver}-cuda-gh200}"
+cuquantum_module="${CUQUANTUM_MODULE:-cuquantum/${tool_ver}-cuda-gh200}"
 
 # load modules (explicit toolchain + CUDA + cutensor)
 export dependencies=(
