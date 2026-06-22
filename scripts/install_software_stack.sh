@@ -32,12 +32,14 @@ echo "Install environments.."
 # Next line is not required as it is included in install_environments.sh
 # "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_cray_environments.sh"
 
-if [ "${SYSTEM}" = "setonix" ]; then
+if [ "${SYSTEM}" = "setonix" ] || [ "${SYSTEM}" = "setonix-q" ]; then
     echo "Update singularity modules.."
     # note that moving forward using the singularityce recipes. Comment out the singularity_modules, kept for reference
     #"${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_custom_singularity_modules.sh"
     "${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_custom_singularity_modules_from_general_singularity_container_engine.sh"
+fi
 
+if [ "${SYSTEM}" = "setonix" ]; then
     echo "Installing shpc..."
     "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_shpc.sh"
 
@@ -47,5 +49,5 @@ if [ "${SYSTEM}" = "setonix" ]; then
     echo "Post installation operations.."
     "${PAWSEY_SPACK_CONFIG_REPO}/scripts/post_installation_operations.sh"
 else
-    echo "Skipping Setonix-only SHPC/container/post-install operations for ${SYSTEM}."
+    echo "Skipping Setonix-only SHPC registry/container/post-install operations for ${SYSTEM}."
 fi
