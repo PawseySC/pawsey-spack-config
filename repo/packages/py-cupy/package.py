@@ -22,6 +22,7 @@ class PyCupy(PythonPackage, CudaPackage, ROCmPackage):
     git = "https://github.com/cupy/cupy.git"
 
     version("main", branch="main")
+    version("14.1.1", sha256="3d4d193a5b028e1823d1d44fe6268364d8fb76c3793ad4e28e1427c56ceb2f80")
     version("14.0.0a1", sha256="12b6ba421bcd3eaf1f5bf9930cfbdcea50364aa8d5ebd1d3bd5808ea5a994ca9")
     version("13.5.1", sha256="3dba2f30258463482d52deb420862fbbbaf2c446165a5e8d67377ac6cb5c0870")
     version("13.4.0", sha256="d4b60e5a1d3b89be40fad0845bb9fc467a653abe8660f752416fd38d24ab7fdb")
@@ -76,6 +77,8 @@ class PyCupy(PythonPackage, CudaPackage, ROCmPackage):
     depends_on("cuda@:12.6", when="@13.3 +cuda")
     depends_on("cuda@:12.8", when="@13.4 +cuda")
     depends_on("cuda@:12.9", when="@13.5 +cuda")
+    depends_on("cuda@:12.8", when="@14.0.0a1 +cuda")
+    depends_on("cuda@12:13.2", when="@14.1.1 +cuda")
 
     for a in CudaPackage.cuda_arch_values:
         depends_on("nccl +cuda cuda_arch={0}".format(a), when="+cuda cuda_arch={0}".format(a))
