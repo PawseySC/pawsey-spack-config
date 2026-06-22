@@ -69,25 +69,23 @@ class Cutensor(Package):
     def install(self, spec, prefix):
         install_tree(".", prefix)
 
-    def _setup_environment(self, env):
+    def _setup_root_environment(self, env):
         env.set("CUTENSOR_ROOT", self.prefix)
         env.set("CUTENSOR_DIR", self.prefix)
 
-        env.prepend_path("LIBRARY_PATH", self.prefix.lib)
-        env.prepend_path("LD_LIBRARY_PATH", self.prefix.lib)
-
-        env.prepend_path("CPATH", self.prefix.include)
         env.prepend_path("C_INCLUDE_PATH", self.prefix.include)
         env.prepend_path("CPLUS_INCLUDE_PATH", self.prefix.include)
-
-        env.prepend_path("CMAKE_PREFIX_PATH", self.prefix)
 
         pkgconfig = join_path(self.prefix.lib, "pkgconfig")
         if os.path.isdir(pkgconfig):
             env.prepend_path("PKG_CONFIG_PATH", pkgconfig)
 
     def setup_run_environment(self, env):
-        self._setup_environment(env)
+        self._setup_root_environment(env)
 
     def setup_dependent_build_environment(self, env, dependent_spec):
-        self._setup_environment(env)
+        self._setup_root_environment(env)
+        env.prepend_path("LIBRARY_PATH", self.prefix.lib)
+        env.prepend_path("LD_LIBRARY_PATH", self.prefix.lib)
+        env.prepend_path("CPATH", self.prefix.include)
+        env.prepend_path("CMAKE_PREFIX_PATH", self.prefix)
