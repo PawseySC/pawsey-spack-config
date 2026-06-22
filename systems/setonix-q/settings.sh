@@ -81,8 +81,8 @@ cpu_arch="neoverse_v2"
 
 # tool versions
 spack_version="0.23.1" # the prefix "v" is added in setup_spack.sh
-singularity_version="4.1.0-nompi" # has to match the version in the Spack env yaml + nompi tag
-singularity_mpi_version="4.1.0-mpi" # has to match the version in the Spack env yaml + mpi tag
+singularity_version="4.3.5-nompi" # has to match the version in the Spack env yaml + nompi tag
+singularity_mpi_version="4.3.5-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.32"
 shpc_registry_version="bf0d6db12b1fe478e11c53dad966e25bb7d0a1b3"
 
