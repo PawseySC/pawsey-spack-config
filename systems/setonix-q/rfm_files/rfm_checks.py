@@ -21,8 +21,34 @@ from rfm_files.rfm_helper_methods import *
 
 # Dictionary holding commands for every package used in baseline sanity check
 pkg_cmds = get_pkg_cmds()
-# List of full absolute paths for every explicit module
-full_mod_paths = get_module_paths()
+
+
+def get_module_paths_if_concretized():
+    # ReFrame imports this file before applying tag filters. Do not let
+    # installation-test parameter generation hide concretization failures.
+    env = os.environ.get('SPACK_ENV')
+    repo_path = os.environ.get('PAWSEY_SPACK_CONFIG_REPO')
+    system = os.environ.get('SYSTEM') or 'setonix-q'
+    lock_file = f'{repo_path}/systems/{system}/environments/{env}/spack.lock'
+
+    if not os.path.exists(lock_file):
+        return []
+
+    return get_module_paths()
+
+
+# List of full absolute paths for every explicit module. This is empty until
+# the environment has been concretized and a spack.lock exists.
+full_mod_paths = get_module_paths_if_concretized()
+
+
+def quantum_allocation_pack(num_gpus_per_node=1):
+    # On Setonix-Q, --gres=gpu:N requests N GH200 allocation-packs.
+    return {
+        'gpu': {
+            'num_gpus_per_node': num_gpus_per_node,
+        },
+    }
 
 
 @rfm.simple_test
@@ -36,6 +62,7 @@ class concretise_check(rfm.RunOnlyRegressionTest):
         # Valid systems and PEs
         self.valid_systems = ['setonix-q:quantum']
         self.valid_prog_environs = ['PrgEnv-gnu-nvidia']
+        self.extra_resources = quantum_allocation_pack()
 
         # Execution
         self.executable = 'echo'
@@ -96,6 +123,7 @@ class module_existence_check(rfm.RunOnlyRegressionTest):
         # Valid systems and PEs
         self.valid_systems = ['setonix-q:quantum']
         self.valid_prog_environs = ['PrgEnv-gnu-nvidia']
+        self.extra_resources = quantum_allocation_pack()
 
         # Execution - ls to check the module exists
         self.executable = 'ls'
@@ -127,6 +155,7 @@ class module_load_check(rfm.RunOnlyRegressionTest):
         # Valid systems and PEs
         self.valid_systems = ['setonix-q:quantum']
         self.valid_prog_environs = ['PrgEnv-gnu-nvidia']
+        self.extra_resources = quantum_allocation_pack()
 
         # Execution
         self.executable = 'module'
@@ -194,6 +223,7 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
         # Valid systems and PEs
         self.valid_systems = ['setonix-q:quantum']
         self.valid_prog_environs = ['PrgEnv-gnu-nvidia']
+        self.extra_resources = quantum_allocation_pack()
 
         # Load the module we are testing
         self.name_ver = '/'.join(self.mod.split('/')[-2:])[:-4]
