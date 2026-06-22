@@ -19,6 +19,17 @@ export reframe_version=${reframe_version}
 
 mkdir -p "${RFM_STORAGE_DIR}"
 
+function check_concretized_environment()
+{
+  local env="$1"
+  local lock_file="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments/${env}/spack.lock"
+
+  if [ ! -f "${lock_file}" ]; then
+    echo "Missing ${lock_file}; run scripts/concretize_environments.sh before ReFrame concretization tests."
+    exit 1
+  fi
+}
+
 # If running on compute node, Add node this job is running on to host list of ReFrame, allowing it to run from this node
 hn=$(hostname)
 if [[ $hn == *"nid"* ]]; then
@@ -29,6 +40,7 @@ fi
 module load reframe/${reframe_version}
 for env in $env_list; do
   echo "Running ReFrame tests for concretization in env $env"
+  check_concretized_environment "${env}"
   export SPACK_ENV=${env}
   reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_conc_report_${env}.json -t concretization -r
   unset SPACK_ENV
@@ -38,6 +50,7 @@ done
 
 for env in $cray_env_list; do
   echo "Running ReFrame tests for concretization in env $env"
+  check_concretized_environment "${env}"
   export SPACK_ENV=${env}
   reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_conc_report_${env}.json -t concretization -l -v
   unset SPACK_ENV   
