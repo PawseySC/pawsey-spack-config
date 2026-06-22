@@ -23,7 +23,20 @@ if [ -z ${SYSTEM+x} ]; then
 fi
 
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
+. "${PAWSEY_SPACK_CONFIG_REPO}/scripts/pawsey_software_stack_funcs.sh"
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
+
+if [ "${SYSTEM}" = "setonix-q" ]; then
+    echo "Creating all missing module directories.."
+    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_system_moduletree.sh"
+
+    echo "Deploying custom utility modules.."
+    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_utility_modules.sh"
+
+    echo "Running spack reframe tests.."
+    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_rfm_module_tests.sh"
+    exit 0
+fi
 
 module use ${INSTALL_PREFIX}/staff_modulefiles
 # we need the python module to be available in order to run spack
