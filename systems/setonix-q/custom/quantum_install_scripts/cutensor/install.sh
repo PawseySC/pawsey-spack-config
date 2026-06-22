@@ -16,10 +16,13 @@ module load pawsey pawseytools "pawseyenv/${DATE_TAG}"
 module load PrgEnv-gnu-nvidia
 module load "spack/${spack_ver}"
 
-if should_install_software; then
-    spack install --reuse -vvv -j 72 "cutensor@${tool_ver}" "%nvhpc@${nvhpc_ver}"
-fi
-spack module lmod refresh -y "cutensor@${tool_ver}"
+repo_dir="${PAWSEY_SPACK_CONFIG_REPO:-$(cd "${script_dir}/../../../../.." && pwd)}"
+python_env="${repo_dir}/systems/${SYSTEM:-setonix-q}/environments/python"
 
-echo "Spack cutensor ${tool_ver} installation complete."
+if should_install_software; then
+    spack -e "${python_env}" install --reuse -vvv -j 72 "cutensor@${tool_ver}" "%nvhpc@${nvhpc_ver}"
+fi
+spack -e "${python_env}" module lmod refresh -y "cutensor@${tool_ver}"
+
+echo "Python environment cutensor ${tool_ver} installation complete."
 echo "Expected module: ${cutensor_module}"

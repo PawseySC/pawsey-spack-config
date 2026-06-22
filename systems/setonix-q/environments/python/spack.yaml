@@ -8,8 +8,8 @@ spack:
       require: "@2.1.2"
   
     cutensor:
+      require: "@2.4.1.4 %nvhpc@25.9"
       buildable: true
-      version: [2.4.1.4]
       externals: []
   
   definitions:
@@ -40,7 +40,8 @@ spack:
     - $utilities
 
   specs:
-  - cutensor@2.4.1.4
+  # Root spec used by the quantum custom installers via the generated module.
+  - cutensor@2.4.1.4 %nvhpc@25.9
 
   - matrix:
     - [$py_stack]

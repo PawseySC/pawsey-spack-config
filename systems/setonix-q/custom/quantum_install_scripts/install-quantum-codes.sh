@@ -5,10 +5,10 @@ echo "Installing quantum packages"
 # Use unique variable name to avoid being overwritten by sourced scripts
 _QUANTUM_INSTALL_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-# Spack packages (installed first, generates its own module)
+# Spack packages installed by this helper.
+# cuTENSOR is owned by the python Spack environment and loaded by the quantum packages.
 spack_packages=(
     mpi4py
-    cutensor
 )
 
 # Custom NVIDIA libraries (must be installed before Python packages)
