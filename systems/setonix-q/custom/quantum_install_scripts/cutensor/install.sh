@@ -1,22 +1,25 @@
-#!/bin/bash
+#!/bin/bash -e
 
 export script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 . $script_dir/use.sh
 . $script_dir/../utils.sh
 
-# Parse arguments
 parse_args "$@"
 
-# Install software (skip if --module-only)
-if should_install_software; then
-    echo "Installing ${tool_name}/${tool_ver}"
-    set_dependencies
-    setup_build_dir
-    download_archive "${cutensor_archive}.tar.xz" "${cutensor_url}"
-    extract_archive "${cutensor_archive}.tar.xz"
-    install_files "${cutensor_archive}"
-    cleanup_build
+if [[ -z "${DATE_TAG}" ]]; then
+    echo "Error: DATE_TAG not set. Please source settings.sh first."
+    exit 1
 fi
 
-# Install module
-finalize_install
+module purge
+module load pawsey pawseytools "pawseyenv/${DATE_TAG}"
+module load PrgEnv-gnu-nvidia
+module load "spack/${spack_ver}"
+
+if should_install_software; then
+    spack install --reuse -vvv -j 72 "cutensor@${tool_ver}" "%nvhpc@${nvhpc_ver}"
+fi
+spack module lmod refresh -y "cutensor@${tool_ver}"
+
+echo "Spack cutensor ${tool_ver} installation complete."
+echo "Expected module: ${cutensor_module}"

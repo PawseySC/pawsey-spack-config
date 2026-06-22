@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 # Pawsey: Added version 2.4.1.4 with CUDA 12/13 support for setonix-q.
 
+import os
 import platform
 
 from spack.package import *
@@ -48,7 +49,7 @@ class Cutensor(Package):
     # CUDA version requirements
     depends_on("cuda@11.0:", when="@1.5.0.3")
     depends_on("cuda@11.0:", when="@2.0.1.2")
-    depends_on("cuda@12.0:", when="@2.4:")
+    depends_on("cuda@13.0.0:13.0.999", when="@2.4.1.4")
 
     def url_for_version(self, version):
         # Get the system and machine arch for building the file path
@@ -67,3 +68,26 @@ class Cutensor(Package):
 
     def install(self, spec, prefix):
         install_tree(".", prefix)
+
+    def _setup_environment(self, env):
+        env.set("CUTENSOR_ROOT", self.prefix)
+        env.set("CUTENSOR_DIR", self.prefix)
+
+        env.prepend_path("LIBRARY_PATH", self.prefix.lib)
+        env.prepend_path("LD_LIBRARY_PATH", self.prefix.lib)
+
+        env.prepend_path("CPATH", self.prefix.include)
+        env.prepend_path("C_INCLUDE_PATH", self.prefix.include)
+        env.prepend_path("CPLUS_INCLUDE_PATH", self.prefix.include)
+
+        env.prepend_path("CMAKE_PREFIX_PATH", self.prefix)
+
+        pkgconfig = join_path(self.prefix.lib, "pkgconfig")
+        if os.path.isdir(pkgconfig):
+            env.prepend_path("PKG_CONFIG_PATH", pkgconfig)
+
+    def setup_run_environment(self, env):
+        self._setup_environment(env)
+
+    def setup_dependent_build_environment(self, env, dependent_spec):
+        self._setup_environment(env)

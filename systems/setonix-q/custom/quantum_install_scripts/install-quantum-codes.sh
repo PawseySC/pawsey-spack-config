@@ -8,11 +8,11 @@ _QUANTUM_INSTALL_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/nul
 # Spack packages (installed first, generates its own module)
 spack_packages=(
     mpi4py
+    cutensor
 )
 
-# NVIDIA libraries (must be installed before Python packages)
+# Custom NVIDIA libraries (must be installed before Python packages)
 nvidia_packages=(
-    cutensor
     cuquantum
 )
 

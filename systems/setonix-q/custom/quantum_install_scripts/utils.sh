@@ -239,8 +239,11 @@ function set_dependencies()
     module load pawsey pawseytools "pawseyenv/${DATE_TAG}"
     module load PrgEnv-gnu-nvidia
 
-    for d in ${dependencies[@]}
+    for d in "${dependencies[@]}"
     do
-        module load ${d}
+        module load "${d}" || {
+            echo "ERROR: Failed to load dependency module ${d}"
+            exit 1
+        }
     done
 }

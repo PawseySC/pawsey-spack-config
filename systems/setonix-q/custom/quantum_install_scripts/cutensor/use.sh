@@ -2,7 +2,7 @@
 
 # essential for reproducibility of installation
 tool_name="cutensor"
-tool_ver="2.4.1"
+tool_ver="2.4.1.4"
 archive_ver="2.4.1.4"
 cuda_ver="cuda13"
 
@@ -26,6 +26,8 @@ gcc_ver="${gcc_version}"
 # Extract major.minor from gcc version (e.g., 13.3.1 -> 13.3) for module loading
 gcc_module_ver="${gcc_ver%.*}"
 build_compiler="nvhpc@${nvhpc_ver}"
+spack_ver="${spack_version}"
+cutensor_module="${CUTENSOR_MODULE:-libraries/cutensor/${tool_ver}-cuda-gh200}"
 
 # load modules (explicit toolchain + CUDA)
 export dependencies=(

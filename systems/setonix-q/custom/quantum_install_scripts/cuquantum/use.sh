@@ -26,12 +26,13 @@ gcc_ver="${gcc_version}"
 # Extract major.minor from gcc version (e.g., 13.3.1 -> 13.3) for module loading
 gcc_module_ver="${gcc_ver%.*}"
 build_compiler="nvhpc@${nvhpc_ver}"
-cutensor_ver="2.4.1"
+cutensor_ver="2.4.1.4"
+cutensor_module="${CUTENSOR_MODULE:-libraries/cutensor/${cutensor_ver}-cuda-gh200}"
 
 # load modules (explicit toolchain + CUDA + cutensor)
 export dependencies=(
 PrgEnv-gnu-nvidia \
-cutensor/${cutensor_ver} \
+"${cutensor_module}" \
 )
 
 # Paths derived from settings.sh variables
