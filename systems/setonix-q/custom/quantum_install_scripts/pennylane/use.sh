@@ -23,6 +23,12 @@ cuquantum_module="${CUQUANTUM_MODULE:-libraries/cuquantum/${cuquantum_ver}-cuda-
 cutensor_ver="2.4.1.4"
 cutensor_module="${CUTENSOR_MODULE:-libraries/cutensor/${cutensor_ver}-cuda-gh200}"
 python_ver="3.11.6"
+mpi4py_ver="4.0.1"
+mpi4py_module="${MPI4PY_MODULE:-python-packages/py-mpi4py/${mpi4py_ver}-py${python_ver}}"
+numpy_ver="2.1.2"
+numpy_module="${NUMPY_MODULE:-python-packages/py-numpy/${numpy_ver}}"
+pip_ver="23.1.2"
+pip_module="${PIP_MODULE:-python-packages/py-pip/${pip_ver}-py${python_ver}}"
 cray_mpich_ver="9.1.0"
 
 export MODULE_DIR=${INSTALL_PREFIX}/custom/modules/neoverse_v2/nvhpc/${nvhpc_ver}/custom
@@ -33,8 +39,8 @@ PrgEnv-gnu-nvidia \
 "${cuquantum_module}" \
 "${cutensor_module}" \
 python/${python_ver} \
-py-numpy/2.1.2 \
-py-mpi4py/4.0.1-py3.11.6 \
+"${numpy_module}" \
+"${mpi4py_module}" \
 )
 
 script_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"

@@ -18,6 +18,7 @@ cuda_ver="${cuda_version}"
 python_ver="3.11.6"
 cray_mpich_ver="9.1.0"
 spack_ver="${spack_version}"
+mpi4py_module="${MPI4PY_MODULE:-python-packages/py-mpi4py/${tool_ver}-py${python_ver}}"
 
 cray_mpich_dir_gnu="/opt/cray/pe/mpich/${cray_mpich_ver}/ofi/gnu/${cray_mpich_gnu_abi_ver}"
 export GTL_LIB_PATH="${cray_mpich_dir_gnu}/lib"

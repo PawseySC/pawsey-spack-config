@@ -22,8 +22,8 @@ for version_string in "${QISKIT_VERSIONS[@]}"; do
     if should_install_software; then
 
         set_dependencies
-        module load py-pip/23.1.2-py3.11.6
-        module load py-setuptools/80.0.0-py3.11.6
+        module load "${pip_module}"
+        module load "${setuptools_module}"
 
         setup_build_dir
         

@@ -22,8 +22,8 @@ for version_string in "${QISKIT_VERSIONS[@]}"; do
     if should_install_software; then
 
         set_dependencies
-        module load py-pip/23.1.2-py3.11.6
-        module load py-setuptools/80.0.0-py3.11.6
+        module load "${pip_module}"
+        module load "${setuptools_module}"
 
         setup_build_dir
         
@@ -77,7 +77,7 @@ for version_string in "${QISKIT_VERSIONS[@]}"; do
 
         export MPICH_GPU_SUPPORT_ENABLED=1
 
-        GTL_LIB_PATH="${GTL_LIB_PATH:-${cray_mpich_dir_gnu}/gtl/lib}"
+        GTL_LIB_PATH="${GTL_LIB_PATH:-${cray_mpich_dir_gnu}/lib}"
         GTL_LIB="${GTL_LIB_PATH}/libmpi_gtl_cuda.so"
         if [[ ! -f "${GTL_LIB}" && -d "${CRAY_MPICH_DIR}" ]]; then
             GTL_LIB="$(find "${CRAY_MPICH_DIR}" -maxdepth 4 -name libmpi_gtl_cuda.so 2>/dev/null | head -1 || true)"
@@ -86,7 +86,7 @@ for version_string in "${QISKIT_VERSIONS[@]}"; do
             fi
         fi
         if [[ -z "${GTL_LIB}" || ! -f "${GTL_LIB}" ]]; then
-            FALLBACK_GTL="/opt/cray/pe/mpich/${cray_mpich_ver}/ofi/gnu/${cray_mpich_gnu_abi_ver:-12.3}/gtl/lib/libmpi_gtl_cuda.so"
+            FALLBACK_GTL="/opt/cray/pe/mpich/${cray_mpich_ver}/ofi/gnu/${cray_mpich_gnu_abi_ver:-12.3}/lib/libmpi_gtl_cuda.so"
             if [[ -f "${FALLBACK_GTL}" ]]; then
                 GTL_LIB="${FALLBACK_GTL}"
                 GTL_LIB_PATH="$(dirname "${GTL_LIB}")"

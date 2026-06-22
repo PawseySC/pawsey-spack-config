@@ -14,7 +14,7 @@ fi
 module purge
 module load pawsey pawseytools "pawseyenv/${DATE_TAG}"
 module load PrgEnv-gnu-nvidia
-module load "spack/${spack_version}"
+module load "spack/${spack_ver}"
 
 repo_dir="${PAWSEY_SPACK_CONFIG_REPO:-$(cd "${script_dir}/../../../../.." && pwd)}"
 quantum_env="${repo_dir}/systems/${SYSTEM:-setonix-q}/environments/quantum"

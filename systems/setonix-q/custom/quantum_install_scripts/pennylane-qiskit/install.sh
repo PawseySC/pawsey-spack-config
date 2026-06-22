@@ -10,7 +10,7 @@ echo "Installing ${tool_name}/${plugin_ver} for Qiskit ${qiskit_ver} and PennyLa
 
 if should_install_software; then
     set_dependencies
-    module load py-pip/23.1.2-py3.11.6
+    module load "${pip_module}"
 
     setup_build_dir
 

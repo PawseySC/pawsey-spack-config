@@ -17,6 +17,14 @@ cutensor_module="${CUTENSOR_MODULE:-libraries/cutensor/${cutensor_ver}-cuda-gh20
 cuquantum_ver="25.11.1"
 cuquantum_module="${CUQUANTUM_MODULE:-libraries/cuquantum/${cuquantum_ver}-cuda-gh200}"
 python_ver="3.11.6"
+numpy_ver="2.1.2"
+numpy_module="${NUMPY_MODULE:-python-packages/py-numpy/${numpy_ver}}"
+cython_ver="3.2.0"
+cython_module="${CYTHON_MODULE:-python-packages/py-cython/${cython_ver}}"
+pip_ver="23.1.2"
+pip_module="${PIP_MODULE:-python-packages/py-pip/${pip_ver}-py${python_ver}}"
+setuptools_ver="80.0.0"
+setuptools_module="${SETUPTOOLS_MODULE:-python-packages/py-setuptools/${setuptools_ver}-py${python_ver}}"
 
 export MODULE_DIR=${INSTALL_PREFIX}/custom/modules/neoverse_v2/nvhpc/${nvhpc_ver}/custom
 export base_dir=${INSTALL_PREFIX}/custom/software/linux-sles15-neoverse_v2/nvhpc-${nvhpc_ver}
@@ -26,8 +34,8 @@ PrgEnv-gnu-nvidia \
 "${cutensor_module}" \
 "${cuquantum_module}" \
 python/${python_ver} \
-py-numpy/2.1.2 \
-py-cython/3.0.11 \
+"${numpy_module}" \
+"${cython_module}" \
 )
 
 function set_qiskit_version() {
