@@ -66,7 +66,7 @@ class PyCudaPython(PythonPackage):
 
     variant("all", default=False, description="Install all CUDA Python component subpackages found in the repo")
     variant("cufile", default=False, description="Build CUDA cuFile Python bindings")
-    
+
     def patch(self):
         if "~cufile" in self.spec:
             filter_file(
@@ -74,6 +74,16 @@ class PyCudaPython(PythonPackage):
                 (
                     'if sys.platform == "win32" '
                     'or os.environ.get("CUDA_PYTHON_DISABLE_CUFILE") == "1":'
+                ),
+                join_path("cuda_bindings", "setup.py"),
+                string=True,
+            )
+            filter_file(
+                "dst_files = rename_architecture_specific_files()",
+                (
+                    "dst_files = rename_architecture_specific_files()\n"
+                    'if os.environ.get("CUDA_PYTHON_DISABLE_CUFILE") == "1":\n'
+                    '    dst_files = [f for f in dst_files if "cufile" not in f]'
                 ),
                 join_path("cuda_bindings", "setup.py"),
                 string=True,
