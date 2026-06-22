@@ -171,8 +171,6 @@ singularity_ld_preload = singularity_ld_preload .. ":/usr/lib64/liblustreapi.so.
 -- add MPI END
 -- add GPUMPI START
 singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3/lib/libmpi_gtl_cuda.so"
--- add GPUMPI END
--- add GPUGH200MPI START
 singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/lib64/libmpi_nvidia.so.12"
 singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libacchost.so"
 singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libaccdevaux.so"
@@ -184,17 +182,13 @@ singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_a
 singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libnvhpcatm.so"
 singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/lib64/libsci_nvidia_mpi.so.6"
 singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/lib64/libsci_nvidia.so.6"
--- add GPUGH200MPI END
+-- add GPUMPI END
 prepend_path("SINGULARITYENV_LD_PRELOAD", singularity_ld_preload)
 
 -- add GPUMPI START
 setenv("MPICH_GPU_SUPPORT_ENABLED","1")
 setenv("SINGULARITYENV_MPICH_GPU_SUPPORT_ENABLED","1")
 -- add GPUMPI END
--- add GPUGH200MPI START
-setenv("MPICH_GPU_SUPPORT_ENABLED","1")
-setenv("SINGULARITYENV_MPICH_GPU_SUPPORT_ENABLED","1")
--- add GPUGH200MPI END
 
 -- Patch lmod messages in singularity shells
 local patch_dir = os.getenv("INSTALL_PREFIX") .. "/pawsey/lmod-variable-fixes"
