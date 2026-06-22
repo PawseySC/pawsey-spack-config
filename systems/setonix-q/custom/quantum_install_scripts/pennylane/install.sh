@@ -109,10 +109,13 @@ if should_install_software; then
     prefix_dir="${install_dir%/lib/*}"
     echo "Installing PennyLane and Lightning packages to ${prefix_dir}..."
     mkdir -p "${prefix_dir}"
-    
-    # Install with --prefix (respects environment, won't reinstall numpy/mpi4py)
+
     python -m pip install --upgrade pip
-    python -m pip install --prefix="${prefix_dir}" ${build_dir}/pennylane_lightning*.whl || {
+    python -m pip install --prefix="${prefix_dir}" "pennylane==${tool_ver}" "scipy-openblas32>=0.3.26" || {
+        echo "Error: Failed to install PennyLane runtime dependencies"
+        exit 1
+    }
+    python -m pip install --prefix="${prefix_dir}" --no-deps ${build_dir}/pennylane_lightning*.whl || {
         echo "Error: Failed to install lightning packages"
         exit 1
     }
