@@ -60,7 +60,7 @@ class PyCudaPython(PythonPackage):
     depends_on("py-cython@3.2:3.2", type="build")
 
     # CUDA Python releases track the CUDA Toolkit major/minor API.
-    depends_on("cuda@11.8:12.999", when="@12:", type=("build", "link", "run"))
+    depends_on("cuda@11.8:12.999", when="@12:12.999", type=("build", "link", "run"))
     depends_on("cuda@13.0.0:13.0.999", when="@13.0.0:13.0.999", type=("build", "link", "run"))
     depends_on("cuda@13.1.0:13.1.999", when="@13.1.0:13.1.999", type=("build", "link", "run"))
 
