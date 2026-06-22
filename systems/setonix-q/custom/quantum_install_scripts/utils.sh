@@ -146,6 +146,36 @@ function set_permissions()
     fi
 }
 
+function patch_qiskit_aer_cuda13_thrust()
+{
+    local source_file="src/simulators/statevector/chunk/thrust_kernels.hpp"
+
+    if [[ ! -f "${source_file}" ]]; then
+        echo "ERROR: Expected Qiskit Aer source file not found: ${source_file}"
+        exit 1
+    fi
+
+    if ! grep -q "thrust::unary_function" "${source_file}"; then
+        return
+    fi
+
+    echo "Patching Qiskit Aer CUDA 13 Thrust compatibility..."
+    if ! perl -0pi -e '
+s/  struct stride_functor\n      : public thrust::unary_function<difference_type, difference_type> \{/  struct stride_functor {\n    typedef difference_type argument_type;\n    typedef difference_type result_type;/g;
+s/struct complex_dot_scan\n    : public thrust::unary_function<thrust::complex<data_t>,\n                                    thrust::complex<data_t>> \{/struct complex_dot_scan {\n  typedef thrust::complex<data_t> argument_type;\n  typedef thrust::complex<data_t> result_type;/g;
+s/struct complex_norm : public thrust::unary_function<thrust::complex<data_t>,\n                                                    thrust::complex<data_t>> \{/struct complex_norm {\n  typedef thrust::complex<data_t> argument_type;\n  typedef thrust::complex<data_t> result_type;/g;
+' "${source_file}"
+    then
+        echo "ERROR: Failed to patch Qiskit Aer Thrust compatibility"
+        exit 1
+    fi
+
+    if grep -q "thrust::unary_function" "${source_file}"; then
+        echo "ERROR: Qiskit Aer source still references thrust::unary_function"
+        exit 1
+    fi
+}
+
 function cleanup_build()
 {
     echo "Cleaning up build directory..."

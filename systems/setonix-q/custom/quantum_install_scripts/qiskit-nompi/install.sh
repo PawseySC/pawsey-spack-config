@@ -42,6 +42,7 @@ for version_string in "${QISKIT_VERSIONS[@]}"; do
             exit 1
         }
         git clean -fdx
+        patch_qiskit_aer_cuda13_thrust
 
         export CC=$(which gcc)
         export CXX=$(which g++)
