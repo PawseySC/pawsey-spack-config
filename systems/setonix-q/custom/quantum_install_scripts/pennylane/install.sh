@@ -110,39 +110,9 @@ if should_install_software; then
     echo "Installing PennyLane and Lightning packages to ${prefix_dir}..."
     mkdir -p "${prefix_dir}"
 
-    # everything except pennylane-lightning itself
-    runtime_requirements=(
-        "scipy-openblas32>=0.3.26"
-        "networkx"
-        "rustworkx>=0.14.0"
-        "autograd"
-        "appdirs"
-        "autoray==0.8.2"
-        "cachetools"
-        "requests"
-        "charset-normalizer<4,>=2"
-        "idna<4,>=2.5"
-        "urllib3<3,>=1.26"
-        "certifi>=2023.5.7"
-        "tomlkit"
-        "typing_extensions"
-        "packaging"
-        "diastatic-malt"
-        "gast"
-        "astunparse"
-        "termcolor"
-        "wrapt"
-        "six"
-        "wheel"
-    )
-
     python -m pip install --upgrade pip
-    python -m pip install --prefix="${prefix_dir}" --ignore-installed "${runtime_requirements[@]}" || {
-        echo "Error: Failed to install PennyLane runtime dependencies"
-        exit 1
-    }
-    python -m pip install --prefix="${prefix_dir}" --no-deps "pennylane==${tool_ver}" ${build_dir}/pennylane_lightning*.whl || {
-        echo "Error: Failed to install lightning packages"
+    python -m pip install --prefix="${prefix_dir}" "pennylane==${tool_ver}" ${build_dir}/pennylane_lightning*.whl || {
+        echo "Error: Failed to install PennyLane and Lightning packages"
         exit 1
     }
 
