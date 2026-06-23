@@ -120,15 +120,24 @@ if should_install_software; then
         "autoray==0.8.2"
         "cachetools"
         "requests"
+        "charset-normalizer<4,>=2"
+        "idna<4,>=2.5"
+        "urllib3<3,>=1.26"
+        "certifi>=2023.5.7"
         "tomlkit"
         "typing_extensions"
         "packaging"
         "diastatic-malt"
         "gast"
+        "astunparse"
+        "termcolor"
+        "wrapt"
+        "six"
+        "wheel"
     )
 
     python -m pip install --upgrade pip
-    python -m pip install --prefix="${prefix_dir}" "${runtime_requirements[@]}" || {
+    python -m pip install --prefix="${prefix_dir}" --ignore-installed "${runtime_requirements[@]}" || {
         echo "Error: Failed to install PennyLane runtime dependencies"
         exit 1
     }
