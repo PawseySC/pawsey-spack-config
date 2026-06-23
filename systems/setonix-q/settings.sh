@@ -144,6 +144,7 @@ container_list_mpi="
 # Custom utility modules to deploy from systems/${SYSTEM}/templates/modules/
 # These are installed to ${utilities_modules_dir} and visible after loading pawseyenv
 utility_module_list="
+cudatoolkit-gnu-nvidia
 PrgEnv-gnu-nvidia
 "
 

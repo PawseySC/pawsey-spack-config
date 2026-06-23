@@ -4,18 +4,15 @@ family("cudatoolkit")
 conflict("cudatoolkit")
 
 -- Version metadata
-local MOD_MAJOR_VERSION    = "13"
-local MOD_MINOR_VERSION    = "0"
-local SDK_MAJOR_VERSION    = "25"
-local SDK_MINOR_VERSION    = "9"
-local MOD_LEVEL            = MOD_MAJOR_VERSION .. "." .. MOD_MINOR_VERSION
-local SDK_LEVEL            = SDK_MAJOR_VERSION .. "." .. SDK_MINOR_VERSION
+local MODULE_VERSION       = "@VERSION@"
+local MOD_LEVEL            = "@CUDA_VERSION@"
+local SDK_LEVEL            = "@NVIDIA_VERSION@"
 
 local NVTARGET             = "Linux_aarch64"
 local SDK_PATH             = "/opt/nvidia/hpc_sdk/" .. NVTARGET .. "/" .. SDK_LEVEL
-local CUDATOOLKIT_CURPATH  = SDK_PATH .. "/cuda/" .. MOD_MAJOR_VERSION .. "." .. MOD_MINOR_VERSION
-local MATH_LIBS_PATH       = SDK_PATH .. "/math_libs/" .. MOD_MAJOR_VERSION .. "." .. MOD_MINOR_VERSION
-local COMM_LIBS_PATH       = SDK_PATH .. "/comm_libs/" .. MOD_MAJOR_VERSION .. "." .. MOD_MINOR_VERSION
+local CUDATOOLKIT_CURPATH  = SDK_PATH .. "/cuda/" .. MOD_LEVEL
+local MATH_LIBS_PATH       = SDK_PATH .. "/math_libs/" .. MOD_LEVEL
+local COMM_LIBS_PATH       = SDK_PATH .. "/comm_libs"
 local NSIGHT_COMPUTE       = SDK_PATH .. "/profilers/Nsight_Compute/"
 local NSIGHT_SYSTEMS       = SDK_PATH .. "/profilers/Nsight_Systems/"
 
@@ -26,10 +23,12 @@ CUDA Toolkit ]] .. MOD_LEVEL .. [[ (GNU/NVIDIA)
 ]])
 
 whatis("CUDA Toolkit " .. MOD_LEVEL .. " (CUDA + math/NCCL/nvshmem paths; no compiler or MPI wrapper overrides)")
+whatis("Version : " .. MODULE_VERSION)
 
 -- Core CUDA locations
 setenv("CUDATOOLKIT_HOME", CUDATOOLKIT_CURPATH)
 setenv("CUDA_HOME",        CUDATOOLKIT_CURPATH)
+setenv("CUDA_PATH",        CUDATOOLKIT_CURPATH)
 setenv("NVHPC_CUDA_HOME",  CUDATOOLKIT_CURPATH)
 setenv("NVHPC_COMM_LIBS_HOME", COMM_LIBS_PATH)
 
@@ -82,3 +81,5 @@ setenv("CRAY_CUDATOOLKIT_POST_LINK_OPTS",
 
 -- Keep pkg-config hint but omit comm_libs
 prepend_path("PKG_CONFIG_PATH", "/usr/lib64/pkgconfig")
+append_path("PE_PRODUCT_LIST", "CRAY_HPC_SDK")
+prepend_path("PE_PKGCONFIG_LIBS", "cray-sdk-cudatoolkit-" .. SDK_LEVEL .. "_" .. MOD_LEVEL)
