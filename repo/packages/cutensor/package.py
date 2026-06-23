@@ -23,7 +23,7 @@ _versions = {
     # cuTensor 2.4.1 - requires CUDA 12+
     "2.4.1.4": {
         "Linux-x86_64": "032904fb8bba341e24aa45a8cc7b5afc63e4c28e22474530ccc97cfa546d0442",
-        "Linux-aarch64": "afcf1bd3a50b729bcd5d1ddb0a3e90ca2631d7048d51bdeafe49c650e162ebc1",
+        "Linux-aarch64": "9baffd3658b7f4da2d2f94d23c3acddb6d12c62997d3da39a774a058fef04aa5",
     },
 }
 
