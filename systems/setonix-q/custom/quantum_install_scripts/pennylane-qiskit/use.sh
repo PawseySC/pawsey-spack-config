@@ -5,7 +5,7 @@ tool_name="py-pennylane-qiskit"
 # Version configuration - these are the ground truth for this installation
 plugin_ver="0.44.0"
 qiskit_ver="2.3.0"
-pennylane_ver="0.44.0"
+pennylane_ver="0.45.0"
 
 tool_ver="${plugin_ver}"
 

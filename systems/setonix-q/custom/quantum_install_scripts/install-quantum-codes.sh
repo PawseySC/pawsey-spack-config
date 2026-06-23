@@ -20,7 +20,6 @@ fi
 python_packages=(
     qiskit-nompi
     qiskit
-    pennylane
     pennylane-qiskit
 )
 

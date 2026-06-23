@@ -1,8 +1,20 @@
 spack:
 
   packages:
+    python:
+      require: "@3.11.6 ~ssl +optimizations +zlib %gcc@13.3.1"
+
+    py-numpy:
+      require: "@2.1.2"
+
+    py-scipy:
+      require: "@1.14.1"
+
     cuda:
       require: "@13.0.0"
+
+    cuquantum:
+      require: "@25.11.1 +mpi %nvhpc@25.9"
 
     cutensor:
       require: "@2.4.1.4 %nvhpc@25.9"
@@ -10,12 +22,19 @@ spack:
       externals: []
 
   definitions:
-  - quantum_packages:
+  - quantum_libraries:
     - cuquantum@25.11.1 +mpi
+  - quantum_python_packages:
+    - py-pennylane@0.45.0+cuda+gpu+tensor+mpi cuda_arch=90
+      ^py-mpi4py@4.0.1+gtl gtl_backend=cuda gtl_lib_path=/opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3/lib
 
   specs:
   - matrix:
-    - [$quantum_packages]
+    - [$quantum_libraries]
     - ['%nvhpc@25.9']
+  - matrix:
+    - [$quantum_python_packages]
+    - ['^python@3.11.6+optimizations+zlib~ssl']
+    - ['%gcc@13.3.1']
 
   view: false
