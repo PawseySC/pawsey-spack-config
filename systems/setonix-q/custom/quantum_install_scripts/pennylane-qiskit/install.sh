@@ -16,7 +16,26 @@ if should_install_software; then
 
     python -m pip install --upgrade pip
     mkdir -p "${install_dir}"
-    python -m pip install --prefix="${install_dir%/lib/*}" --no-deps "pennylane-qiskit==${plugin_ver}" || {
+
+    # Install dependencies that are unique to the plugin without letting pip
+    # replace our module-provided Qiskit, Qiskit Aer, or PennyLane installs.
+    python -m pip install --prefix="${install_dir%/lib/*}" \
+        "sympy" \
+        "networkx>=2.2" \
+        "requests>=2.19" \
+        "requests-ntlm>=1.1.0" \
+        "urllib3>=1.21.1" \
+        "python-dateutil>=2.8.0" \
+        "ibm-platform-services>=0.22.6" \
+        "pydantic>=2.5.0" \
+        "packaging" || {
+        echo "Error: Failed to install pennylane-qiskit runtime dependencies"
+        exit 1
+    }
+
+    python -m pip install --prefix="${install_dir%/lib/*}" --no-deps \
+        "qiskit-ibm-runtime~=0.43.0" \
+        "pennylane-qiskit==${plugin_ver}" || {
         echo "Error: Failed to install pennylane-qiskit ${plugin_ver}"
         exit 1
     }
