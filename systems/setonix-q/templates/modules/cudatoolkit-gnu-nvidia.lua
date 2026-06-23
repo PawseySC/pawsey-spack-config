@@ -12,7 +12,8 @@ local NVTARGET             = "Linux_aarch64"
 local SDK_PATH             = "/opt/nvidia/hpc_sdk/" .. NVTARGET .. "/" .. SDK_LEVEL
 local CUDATOOLKIT_CURPATH  = SDK_PATH .. "/cuda/" .. MOD_LEVEL
 local MATH_LIBS_PATH       = SDK_PATH .. "/math_libs/" .. MOD_LEVEL
-local COMM_LIBS_PATH       = SDK_PATH .. "/comm_libs"
+local COMM_LIBS_ROOT       = SDK_PATH .. "/comm_libs"
+local COMM_LIBS_PATH       = COMM_LIBS_ROOT .. "/" .. MOD_LEVEL
 local NSIGHT_COMPUTE       = SDK_PATH .. "/profilers/Nsight_Compute/"
 local NSIGHT_SYSTEMS       = SDK_PATH .. "/profilers/Nsight_Systems/"
 
@@ -30,7 +31,7 @@ setenv("CUDATOOLKIT_HOME", CUDATOOLKIT_CURPATH)
 setenv("CUDA_HOME",        CUDATOOLKIT_CURPATH)
 setenv("CUDA_PATH",        CUDATOOLKIT_CURPATH)
 setenv("NVHPC_CUDA_HOME",  CUDATOOLKIT_CURPATH)
-setenv("NVHPC_COMM_LIBS_HOME", COMM_LIBS_PATH)
+setenv("NVHPC_COMM_LIBS_HOME", COMM_LIBS_ROOT)
 
 -- Paths: CUDA binaries and tools
 prepend_path("PATH",     CUDATOOLKIT_CURPATH .. "/bin")
