@@ -22,6 +22,9 @@ spack:
     py-conan:
       require: "@1.65.0"
 
+    py-pydantic:
+      require: "@2.7.4"
+
     cuda:
       require: "@13.0.0"
 
