@@ -10,6 +10,18 @@ spack:
     py-scipy:
       require: "@1.14.1"
 
+    py-rustworkx:
+      require: "@0.15.1"
+
+    py-autograd:
+      require: "@1.8.0"
+
+    py-autoray:
+      require: "@0.8.4"
+
+    py-conan:
+      require: "@1.65.0"
+
     cuda:
       require: "@13.0.0"
 
@@ -27,6 +39,9 @@ spack:
   - quantum_python_packages:
     - py-pennylane@0.45.0+cuda+gpu+tensor+mpi cuda_arch=90
       ^py-mpi4py@4.0.1+gtl gtl_backend=cuda gtl_lib_path=/opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3/lib
+    - py-qiskit@2.3.0+cuda+mpi cuda_arch=90
+      ^py-mpi4py@4.0.1+gtl gtl_backend=cuda gtl_lib_path=/opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3/lib
+    - py-qiskit@2.3.0+cuda~mpi cuda_arch=90
 
   specs:
   - matrix:

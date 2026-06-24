@@ -18,8 +18,6 @@ fi
 
 # Python quantum packages (py-* modules)
 python_packages=(
-    qiskit-nompi
-    qiskit
     pennylane-qiskit
 )
 
