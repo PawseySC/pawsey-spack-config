@@ -12,34 +12,42 @@ if [ -z ${SYSTEM+x} ]; then
     exit 1
 fi
 
-if [ "${SYSTEM}" = "setonix-q" ]; then
-    echo "run_rfm_module_tests.sh needs to be updated for setonix-q."
-    exit 0
-fi
-
 # Set to repo of deployed stack (otherwise hashes of some packages may not match)
 # This should most often be the repo where this script is located
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
-. "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
-# Needed while 2023.08 stack is concurrent with 2024.05 due to ansys-fluids/2022R1
-# Can be removed/commented out after 2023.08 stack is gone
-# Comment this line if running tests over 2023.08 stack
-module unuse /software/setonix/2023.08/modules/zen3/gcc/12.2.0/applications
+if [ "${SYSTEM}" = "setonix-q" ]; then
+    # Setonix-Q (aarch64/GH200) sets up its PrgEnv-gnu-nvidia module
+    # environment through the shared stack helpers, mirroring the
+    # concretization runner. The manual x86 PrgEnv handling below does not
+    # apply on aarch64.
+    . "${PAWSEY_SPACK_CONFIG_REPO}/scripts/pawsey_software_stack_funcs.sh"
+    check_installation_environment
+    set_spack_config_repo
+    set_compilation_sets_for_arch
+    set_modulepaths_for_arch
+else
+    . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
-# Use the modules from the new stack
-module use ${INSTALL_PREFIX}/staff_modulefiles
-module --ignore-cache load pawseyenv/${pawseyenv_version}
-# swap is needed for the pawsey_temp module to work
-module swap PrgEnv-gnu PrgEnv-cray
-module swap PrgEnv-cray PrgEnv-gnu
+    # Needed while 2023.08 stack is concurrent with 2024.05 due to ansys-fluids/2022R1
+    # Can be removed/commented out after 2023.08 stack is gone
+    # Comment this line if running tests over 2023.08 stack
+    module unuse /software/setonix/2023.08/modules/zen3/gcc/12.2.0/applications
+
+    # Use the modules from the new stack
+    module use ${INSTALL_PREFIX}/staff_modulefiles
+    module --ignore-cache load pawseyenv/${pawseyenv_version}
+    # swap is needed for the pawsey_temp module to work
+    module swap PrgEnv-gnu PrgEnv-cray
+    module swap PrgEnv-cray PrgEnv-gnu
+fi
 
 # These need to be exported to be accessible within Reframe tests
 export PAWSEY_SPACK_CONFIG_REPO=${PAWSEY_SPACK_CONFIG_REPO}
 export cce_version=${cce_version}
 export gcc_version=${gcc_version}
 export python_version=${python_version}
-export reframe_version=3.12.0
+export reframe_version=${reframe_version}
 
 
 # If running on compute node, add node this job is running on to host list of ReFrame, allowing it to run from this node
@@ -51,9 +59,11 @@ fi
 # Reframe testing for modules
 module load reframe/${reframe_version}
 #module load reframe/3.12.0
-# Add rocm environment to environment list for testing
+# Add rocm environment to environment list for testing (x86 stack only)
 # Can't be added to setting.sh since spack tries to install those packages straightaway
-env_list+="rocm"
+if [ "${SYSTEM}" != "setonix-q" ]; then
+    env_list+="rocm"
+fi
 for env in $env_list; do
   echo "Running ReFrame tests for modules in env $env"
   export SPACK_ENV=${env}
