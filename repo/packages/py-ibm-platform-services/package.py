@@ -13,13 +13,20 @@ class PyIbmPlatformServices(PythonPackage):
     """Python client library to interact with various IBM Cloud Platform Service APIs."""
 
     homepage = "https://github.com/IBM/platform-services-python-sdk"
-    url = "https://files.pythonhosted.org/packages/6f/54/a20f5d88f920748fe3cc2df812dfcc2db5ff777a4836e5b778538e9af71a/ibm_platform_services-0.75.2.tar.gz"
+    url = "https://files.pythonhosted.org/packages/17/a3/1edc2d54b2fd3c31ef0339e101f72b662718494a0d51c50b79036cf4c2d6/ibm-platform-services-0.44.0.tar.gz"
 
     license("Apache-2.0")
 
-    version("0.75.2", sha256="38618dd49adf609c37d583b0758fb4ebf0943693089cf6f82002f11a8e5590e5")
+    # Pawsey: pinned to 0.44.0, the newest release that accepts the builtin-
+    # compatible py-ibm-cloud-sdk-core 3.16 series (newer releases require
+    # ibm-cloud-sdk-core>=3.17, which pulls PyJWT>=2.8 not present in the
+    # Spack 0.23.1 builtin repository).
+    version("0.44.0", sha256="ee432623095154013c4aaf978558424552e9e2573098949d9ad363d61d5a81c8")
 
-    depends_on("python@3.10:", type=("build", "run"))
-    depends_on("py-setuptools@67.7.2:", type="build")
+    depends_on("python@3.8:", type=("build", "run"))
+    depends_on("py-setuptools", type="build")
 
-    depends_on("py-ibm-cloud-sdk-core@3.24.4:3", type=("build", "run"))
+    depends_on("py-requests@2.31:2", type=("build", "run"))
+    depends_on("py-urllib3@1.26:1", type=("build", "run"))
+    depends_on("py-python-dateutil@2.5.3:2", type=("build", "run"))
+    depends_on("py-ibm-cloud-sdk-core@3.16.7:3", type=("build", "run"))
