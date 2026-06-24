@@ -46,7 +46,7 @@ compilers:
     target: aarch64
     modules:
     - PrgEnv-gnu
-    - gcc-native/13.3
+    - gcc-native/13
     - craype
     - craype-arm-grace
     - craype-network-ofi
