@@ -281,6 +281,7 @@ modules:
         py-numpy: 'python-packages/{name}/{version}'
         py-pandas: 'python-packages/{name}/{version}'
         py-pennylane: 'python-packages/{name}/{version}-cuda-gh200'
+        py-pennylane-qiskit: 'python-packages/{name}/{version}-cuda-gh200'
         'py-qiskit +mpi': 'python-packages/{name}/{version}-cuda-gh200'
         'py-qiskit ~mpi': 'python-packages/py-qiskit-nompi/{version}-cuda-gh200'
         py-scikit-learn: 'python-packages/{name}/{version}'

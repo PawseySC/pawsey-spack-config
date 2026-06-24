@@ -134,46 +134,48 @@ class PyQiskit(PythonPackage, CudaPackage):
         if not os.path.isfile(source_file):
             raise InstallError("Expected Qiskit Aer source file not found: {0}".format(source_file))
 
-        filter_file(
+        # CUDA 13's bundled Thrust removed thrust::unary_function. Drop the
+        # deprecated base class and provide the argument_type/result_type
+        # typedefs the functors actually rely on. These replacements span
+        # multiple lines, so they cannot use filter_file (which matches line
+        # by line in Spack 0.23.x) and are applied to the whole file instead.
+        replacements = [
             (
                 "  struct stride_functor\n"
-                "      : public thrust::unary_function<difference_type, difference_type> {"
-            ),
-            (
+                "      : public thrust::unary_function<difference_type, difference_type> {",
                 "  struct stride_functor {\n"
                 "    typedef difference_type argument_type;\n"
-                "    typedef difference_type result_type;"
+                "    typedef difference_type result_type;",
             ),
-            source_file,
-            string=True,
-        )
-        filter_file(
             (
                 "struct complex_dot_scan\n"
                 "    : public thrust::unary_function<thrust::complex<data_t>,\n"
-                "                                    thrust::complex<data_t>> {"
-            ),
-            (
+                "                                    thrust::complex<data_t>> {",
                 "struct complex_dot_scan {\n"
                 "  typedef thrust::complex<data_t> argument_type;\n"
-                "  typedef thrust::complex<data_t> result_type;"
+                "  typedef thrust::complex<data_t> result_type;",
             ),
-            source_file,
-            string=True,
-        )
-        filter_file(
             (
                 "struct complex_norm : public thrust::unary_function<thrust::complex<data_t>,\n"
-                "                                                    thrust::complex<data_t>> {"
-            ),
-            (
+                "                                                    thrust::complex<data_t>> {",
                 "struct complex_norm {\n"
                 "  typedef thrust::complex<data_t> argument_type;\n"
-                "  typedef thrust::complex<data_t> result_type;"
+                "  typedef thrust::complex<data_t> result_type;",
             ),
-            source_file,
-            string=True,
-        )
+        ]
+
+        with open(source_file, encoding="utf-8") as handle:
+            content = handle.read()
+
+        for needle, replacement in replacements:
+            if needle not in content:
+                raise InstallError(
+                    "Qiskit Aer thrust patch target not found in {0}".format(source_file)
+                )
+            content = content.replace(needle, replacement)
+
+        with open(source_file, "w", encoding="utf-8") as handle:
+            handle.write(content)
 
     def setup_build_environment(self, env):
         env.set("CUDAARCHS", self._cuda_arch())

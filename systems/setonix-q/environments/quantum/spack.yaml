@@ -42,6 +42,10 @@ spack:
     - py-qiskit@2.3.0+cuda+mpi cuda_arch=90
       ^py-mpi4py@4.0.1+gtl gtl_backend=cuda gtl_lib_path=/opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3/lib
     - py-qiskit@2.3.0+cuda~mpi cuda_arch=90
+    - py-pennylane-qiskit@0.44.0
+      ^py-qiskit@2.3.0+cuda~mpi cuda_arch=90
+      ^py-pennylane@0.45.0+cuda+gpu+tensor+mpi cuda_arch=90
+      ^py-mpi4py@4.0.1+gtl gtl_backend=cuda gtl_lib_path=/opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3/lib
 
   specs:
   - matrix:
