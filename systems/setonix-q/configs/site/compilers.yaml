@@ -22,6 +22,8 @@ compilers:
     environment:
       set:
         PE_ENV: "NVIDIA"
+        # Keep Rust/cargo build caches off $HOME.
+        CARGO_HOME: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/cargo
     extra_rpaths: []
 
 # ===================================================================
@@ -54,4 +56,6 @@ compilers:
     environment:
       set:
         PE_ENV: "GNU"
+        # Keep Rust/cargo build caches off $HOME.
+        CARGO_HOME: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/cargo
     extra_rpaths: []
