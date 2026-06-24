@@ -9,9 +9,19 @@ astro-applications:
 # No eigen (no suitable binary or library found), hpx (python script can't be called easily)
 libraries:
   fftw/3.3.10: ['fftw-wisdom', '-h', 'Usage: fftw-wisdom']
+  gsl: ['gsl-config', '--libs', 'gsl']
+  hdf5: ['h5dump', '--version', 'h5dump']
+# No cuquantum, cutensor, boost, openblas, netlib-lapack, plasma, blaspp, kokkos,
+# magma, petsc, eigen, metis, parmetis, scotch, fftw@2 or adios2 (no reliable
+# command-line/ldd sanity check identified yet)
 programming-languages:
   python: ['python', '-h', 'usage: python']
-# No py-setuptools or py-boto3 (no suitable command found yet for either one)
+  perl: ['perl', '--version', 'This is perl']
+  go: ['go', 'version', 'go version']
+  openjdk: ['java', '-version', 'openjdk version']
+  r: ['R', '--version', 'R version']
+  ruby: ['ruby', '--version', 'ruby']
+  rust: ['rustc', '--version', 'rustc']
 utilities:
   cmake: ['cmake', '--version', 'CMake suite maintained and supported by Kitware']
   rclone: ['rclone', '-h', 'Rclone syncs files']
@@ -22,6 +32,13 @@ utilities:
   autoconf: ['autoconf', '-h', 'Generate a configuration script from a TEMPLATE-FILE if given']
   py-pip: ['pip', '-h', 'pip <command>']
   singularityce: ['singularity', '-h', 'Linux container platform optimized for High Performance Computing']
+  awscli: ['aws', '--version', 'aws-cli']
+  py-boto3: ['python3', '-c "import boto3; print(boto3)"', "module 'boto3'"]
+  nextflow: ['nextflow', '-version', 'version']
+  feh: ['feh', '--version', 'feh']
+  nano: ['nano', '--version', 'GNU nano']
+  nvtop: ['nvtop', '--version', 'nvtop']
+# No mpifileutils, meson (no single reliable command/version check identified)
 # no viz packages
 #visualisation:
 python-packages:
@@ -35,6 +52,14 @@ python-packages:
   py-scikit-learn: ['python3', '-c "import sklearn; print(sklearn)"', "module 'sklearn'"]
   py-h5py: ['python3', '-c "import h5py; print(h5py)"', "module 'h5py"]
   py-mpi4py: ['python3', '-c "import mpi4py; print(mpi4py)"', "module 'mpi4py'"]
+  py-h5netcdf: ['python3', '-c "import h5netcdf; print(h5netcdf)"', "module 'h5netcdf'"]
+  py-pydantic: ['python3', '-c "import pydantic; print(pydantic)"', "module 'pydantic'"]
+  py-setuptools: ['python3', '-c "import setuptools; print(setuptools)"', "module 'setuptools'"]
+  py-pip: ['pip', '-h', 'pip <command>']
+  py-pennylane: ['python3', '-c "import pennylane; print(pennylane)"', "module 'pennylane'"]
+  py-pennylane-qiskit: ['python3', '-c "import pennylane_qiskit; print(pennylane_qiskit)"', "module 'pennylane_qiskit'"]
+  py-qiskit: ['python3', '-c "import qiskit; print(qiskit)"', "module 'qiskit'"]
+  py-qiskit-nompi: ['python3', '-c "import qiskit; print(qiskit)"', "module 'qiskit'"]
 benchmarking:
   osu-micro-benchmarks: ['osu_init', '', '# OSU MPI Init Test']
   # Want alternative command for hpl
