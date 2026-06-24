@@ -16,11 +16,11 @@ class PyPennylane(PythonPackage, CudaPackage):
     """PennyLane with locally built Lightning backends."""
 
     homepage = "https://pennylane.ai/"
-    pypi = "pennylane-lightning/pennylane_lightning-0.45.0.tar.gz"
+    url = "https://github.com/PennyLaneAI/pennylane-lightning/archive/refs/tags/v0.45.0.tar.gz"
 
     license("Apache-2.0")
 
-    version("0.45.0", sha256="fb146f1b8be30ae0d445c6a9cd646a29234e9ed81e7d92467a48e62c20691ede")
+    version("0.45.0", sha256="07ae6b465d8e57f61fb4dc8649c4ba3fc6d43bde4487937cb77075115a7b69d9")
 
     resource(
         name="pennylane-wheel",
