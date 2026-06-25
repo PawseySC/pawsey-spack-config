@@ -98,6 +98,10 @@ dependencies
 
 # list of spack build environments - missing vis
 env_list="
+singularity_env
+utils
+num_libs
+python
 io_libs
 langs
 apps
@@ -110,10 +114,6 @@ roms
 wrf
 "
 
-#singularity_env
-#utils
-#num_libs
-#python
 
 # list of cray build environments - can run in parallel with the above gcc env_list
 #cray_env_list="

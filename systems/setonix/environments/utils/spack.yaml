@@ -12,7 +12,7 @@ spack:
     - nextflow@24.10.0 #supports DSL-2
     - parallel@20240822
 # Reframe installation is not required since it is done via install_reframe.sh
-    #- reframe@3.12.0 ^python@3.11.11 +optimizations+zlib
+    - reframe@4.7.3 ^python@3.11.6 #+optimizations+zlib
     #- reframe@4.6.3 +docs ^python@3.11.11 +optimizations+zlib. New version is not required
     # now moving to singularityce rather than older singularity
     #- singularityce@4.1.0
@@ -34,7 +34,7 @@ spack:
   specs:
   - matrix:
     - [$packages]
-    - ['%gcc_compiler','%gcc_compiler_zen2']
+    - ['%%gcc_compiler','%%gcc_compiler_zen2']
 #  - matrix:
 #    - [$without_O3] 
 #    - ['%gcc@13.3.1']

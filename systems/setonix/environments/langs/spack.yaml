@@ -28,10 +28,10 @@ spack:
   - matrix:
     - [$py-utilities]
     - [^python@3.11.6 +optimizations+zlib]
-    - ['%gcc_compiler']
+    - ['%%gcc_compiler']
     # - [target=zen3]
   - matrix:
     - [$packages]
-    - ['%gcc_compiler']
+    - ['%%gcc_compiler']
     # - [target=zen3]
   view: false

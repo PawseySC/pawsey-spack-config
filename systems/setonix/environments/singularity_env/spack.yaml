@@ -8,7 +8,7 @@ spack:
   specs:
   - matrix:
     - [$packages]
-    - ['%gcc_compiler_O0','%gcc_compiler_zen2_O0']
+    - ['%%gcc_compiler_O0','%%gcc_compiler_zen2_O0']
   view: false
   concretizer:
     unify: when_possible

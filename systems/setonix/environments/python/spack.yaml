@@ -27,5 +27,5 @@ spack:
   - matrix:
     - [$packages, $utilities]
     - [^python@3.11.6 +optimizations+zlib]
-    - ['%gcc_compiler']
+    - ['%%gcc_compiler']
   view: false

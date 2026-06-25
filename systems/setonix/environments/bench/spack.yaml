@@ -21,6 +21,6 @@ spack:
   specs:
   - matrix:
     - [$math-tests, $mpi-tests, $io-tests]
-    - ['%gcc_compiler']
+    - ['%%gcc_compiler']
     # - [target=zen3]
   view: false
