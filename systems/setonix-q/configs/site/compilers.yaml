@@ -58,4 +58,10 @@ compilers:
         PE_ENV: "GNU"
         # Keep Rust/cargo build caches off $HOME.
         CARGO_HOME: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/cargo
+      unset:
+        # The cudatoolkit-gnu-nvidia module (loaded by the combined
+        # PrgEnv-gnu-nvidia base environment) sets CRAY_CUDATOOLKIT_POST_LINK_OPTS,
+        # which the Cray cc/CC/ftn wrappers append to every link line 
+        # Unset it so %gcc CPU builds do not pull in the CUDA runtime.
+        - CRAY_CUDATOOLKIT_POST_LINK_OPTS
     extra_rpaths: []
