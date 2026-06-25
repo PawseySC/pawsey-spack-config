@@ -173,8 +173,35 @@ function set_modulepaths_for_arch()
         module use ${INSTALL_PREFIX}/staff_modulefiles
         # we need the python module to be available in order to run spack
         module --ignore-cache load pawseyenv/${pawseyenv_version}
-        module load PrgEnv-gnu-nvidia
-        module use $INSTALL_PREFIX/modules/${mainarch}/nvhpc/${nvidia_version}/programming-languages
+        # CUDA-free base: load the plain GNU programming environment instead of
+        # the combined PrgEnv-gnu-nvidia. This keeps the CUDA toolkit
+        # (cudatoolkit-gnu-nvidia) OUT of the base environment that every build
+        # inherits, so pure %gcc CPU builds (e.g. openblas) do not pick up CUDA.
+        # The nvhpc compiler entry in compilers.yaml loads PrgEnv-gnu-nvidia
+        # per-build, which family-swaps up to the NVIDIA PE and pulls in the
+        # CUDA toolkit only for nvhpc (GPU) builds. gcc+CUDA packages (py-cupy,
+        # py-cuda-python, py-mpi4py +gtl, cuquantum, ...) still get CUDA via the
+        # non-buildable `cuda` external dependency in packages.yaml, independent
+        # of the loaded programming environment.
+        module load PrgEnv-gnu
+        # Pin the GNU compiler; plain PrgEnv-gnu otherwise defaults to a newer
+        # gcc-native (e.g. 14.x) than the gcc@${gcc_version} compiler entry.
+        # (Verified on a GH200 compute node: a bare `module load PrgEnv-gnu`
+        # brings in gcc-native/14.2.)
+        module load gcc-native/${gcc_version%%.*}
+        # Target the Grace ARM CPU; the cluster default is craype-x86-milan,
+        # which Lmod auto-replaces when craype-arm-grace is loaded. The other
+        # craype/network/xpmem modules are already pulled in by PrgEnv-gnu.
+        module load craype-arm-grace
+        # The gcc Spack module tree (which holds the python module that
+        # `module load spack` pulls in) is exposed automatically: pawseyenv sets
+        # LMOD_CUSTOM_COMPILER_GNU_${gcc_compat_version}_PREFIX to the gcc/${gcc_version}
+        # category paths, and the gcc-native Lmod hook prepends them to
+        # MODULEPATH. This handshake is driven by pawseyenv + gcc-native, NOT by
+        # the combined PrgEnv-gnu-nvidia module, so no explicit `module use` of
+        # the programming-languages trees is required here (verified on-cluster:
+        # python/${python_version} and spack/${spack_version} resolve under plain
+        # PrgEnv-gnu with cudatoolkit absent and CRAY_CUDATOOLKIT_POST_LINK_OPTS empty).
         module load spack/${spack_version}
     else
         echo "The architecture '$( uname -m )' is not supported."
