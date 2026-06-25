@@ -29,10 +29,10 @@ spack:
       require: "@13.0.0"
 
     cuquantum:
-      require: "@25.11.1 +mpi %nvhpc@25.9"
+      require: "@25.11.1 +mpi %gcc@13.3.1"
 
     cutensor:
-      require: "@2.4.1.4 %nvhpc@25.9"
+      require: "@2.4.1.4 %gcc@13.3.1"
       buildable: true
       externals: []
 
@@ -53,7 +53,7 @@ spack:
   specs:
   - matrix:
     - [$quantum_libraries]
-    - ['%nvhpc@25.9']
+    - ['%gcc@13.3.1']
   - matrix:
     - [$quantum_python_packages]
     - ['^python@3.11.6+optimizations+zlib~ssl']
