@@ -93,7 +93,7 @@ packages:
   llvm:
     # py-llvmlite (via py-numba) is the only llvm consumer on setonix-q and needs
     # just the LLVM libraries. 
-    require: '~clang ~lldb ~flang ~polly ~gold'
+    require: '~clang ~lldb ~flang ~polly ~gold targets=aarch64,nvptx'
   # preferred versions and variants, python
   python:
     version: [3.11.6]
