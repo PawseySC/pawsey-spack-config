@@ -13,7 +13,7 @@ spack:
       externals: []
 
     llvm:
-      require: "~clang ~lldb ~flang ~polly ~gold ~compiler-rt"
+      require: "~clang ~lldb ~flang ~polly ~gold"
   
   definitions:
   - py_packages:
