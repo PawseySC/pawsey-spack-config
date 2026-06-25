@@ -17,10 +17,9 @@ fi
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 
 if [ "${SYSTEM}" = "setonix-q" ]; then
-    # Setonix-Q (aarch64/GH200) sets up its PrgEnv-gnu-nvidia module
-    # environment through the shared stack helpers, mirroring the
-    # concretization runner. The manual x86 PrgEnv handling below does not
-    # apply on aarch64.
+    # Setonix-Q (aarch64/GH200) sets up its programming environment through the
+    # shared stack helpers, mirroring the concretization runner. The manual x86
+    # PrgEnv handling below does not apply on aarch64.
     . "${PAWSEY_SPACK_CONFIG_REPO}/scripts/pawsey_software_stack_funcs.sh"
     check_installation_environment
     set_spack_config_repo

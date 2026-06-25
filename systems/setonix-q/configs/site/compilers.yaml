@@ -18,7 +18,15 @@ compilers:
     operating_system: sles15
     target: aarch64
     modules:
-    - PrgEnv-gnu-nvidia
+    # Stock NVIDIA PE for nvhpc (GPU) builds. CUDA comes from the `cuda` external
+    # and GPU-aware MPICH from the cray-mpich external, not the PE.
+    - PrgEnv-nvidia
+    - nvidia/25.9
+    - gcc-native-mixed/13
+    - craype
+    - craype-arm-grace
+    - craype-network-ofi
+    - xpmem
     environment:
       set:
         PE_ENV: "NVIDIA"
@@ -42,7 +50,7 @@ compilers:
       cppflags: -O3
       # Keep package-specific -fallow-argument-mismatch handling local to the
       # packages that need it. Global GNU-only flag conflicts with mixed
-      # %gcc/%nvhpc concretization under PrgEnv-gnu-nvidia.
+      # %gcc/%nvhpc concretization in the shared stack.
       fflags: -O3
     operating_system: sles15
     target: aarch64
@@ -59,9 +67,7 @@ compilers:
         # Keep Rust/cargo build caches off $HOME.
         CARGO_HOME: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/cargo
       unset:
-        # The cudatoolkit-gnu-nvidia module (loaded by the combined
-        # PrgEnv-gnu-nvidia base environment) sets CRAY_CUDATOOLKIT_POST_LINK_OPTS,
-        # which the Cray cc/CC/ftn wrappers append to every link line 
-        # Unset it so %gcc CPU builds do not pull in the CUDA runtime.
+        # Guard against the Cray cudatoolkit forced-link options that broke %gcc
+        # CPU builds (e.g. openblas); normally already absent in the CUDA-free base.
         - CRAY_CUDATOOLKIT_POST_LINK_OPTS
     extra_rpaths: []

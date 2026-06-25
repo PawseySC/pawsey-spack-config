@@ -48,7 +48,7 @@ site_configuration = {
                     'access': quantum_access(),
                     'max_jobs': 16,
                     'environs': [
-                        'PrgEnv-gnu-nvidia',
+                        'PrgEnv-gnu',
                     ],
                     'resources': [
                         {
@@ -72,11 +72,12 @@ site_configuration = {
     ],
     'environments': [
         {
-            'name': 'PrgEnv-gnu-nvidia',
+            'name': 'PrgEnv-gnu',
             'target_systems': ['setonix-q'],
-            'modules': [
-                'PrgEnv-gnu-nvidia',
-            ]
+            # Base modules are set by set_modulepaths_for_arch before ReFrame
+            # runs; loading PrgEnv-gnu here (without the gcc-native/13 pin) would
+            # reset the GNU compiler to the PE default.
+            'modules': []
         },
     ],
     'logging': [

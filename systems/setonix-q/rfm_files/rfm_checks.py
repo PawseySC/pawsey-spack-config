@@ -65,7 +65,7 @@ class concretise_check(rfm.RunOnlyRegressionTest):
 
         # Valid systems and PEs
         self.valid_systems = ['setonix-q:quantum']
-        self.valid_prog_environs = ['PrgEnv-gnu-nvidia']
+        self.valid_prog_environs = ['PrgEnv-gnu']
         self.extra_resources = quantum_allocation_pack()
 
         # Execution
@@ -126,7 +126,7 @@ class module_existence_check(rfm.RunOnlyRegressionTest):
 
         # Valid systems and PEs
         self.valid_systems = ['setonix-q:quantum']
-        self.valid_prog_environs = ['PrgEnv-gnu-nvidia']
+        self.valid_prog_environs = ['PrgEnv-gnu']
         self.extra_resources = quantum_allocation_pack()
 
         # Execution - ls to check the module exists
@@ -158,7 +158,7 @@ class module_load_check(rfm.RunOnlyRegressionTest):
 
         # Valid systems and PEs
         self.valid_systems = ['setonix-q:quantum']
-        self.valid_prog_environs = ['PrgEnv-gnu-nvidia']
+        self.valid_prog_environs = ['PrgEnv-gnu']
         self.extra_resources = quantum_allocation_pack()
 
         # Execution
@@ -226,7 +226,7 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
 
         # Valid systems and PEs
         self.valid_systems = ['setonix-q:quantum']
-        self.valid_prog_environs = ['PrgEnv-gnu-nvidia']
+        self.valid_prog_environs = ['PrgEnv-gnu']
         self.extra_resources = quantum_allocation_pack()
 
         # Load the module we are testing
