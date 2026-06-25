@@ -15,12 +15,12 @@ spack:
   specs:
   - matrix:
     - [$s3-python-set]
-    - [^python@3.11.11 +optimizations+zlib]
-    - ['%gcc_compiler']
+    - [^python@3.11.14 +optimizations+zlib]
+    - ['%%gcc_compiler']
     # - [target=zen2, target=zen3]
   - matrix:
     - [$s3-go-set]
-    - ['%gcc_compiler']
+    - ['%%gcc_compiler']
     # - [target=zen2, target=zen3]
   view: false
 

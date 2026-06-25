@@ -37,8 +37,8 @@ spack:
     - opencv@4.10.0 build_type=Release
     
       #    - opencv@3.4.18 build_type=Release
-    - trilinos@15.0.0 ~rocm +adios2 +openmp +python ~cuda ^adios2@2.9.2 build_type=Release ^llvm@18.1.2 ~libomptarget build_type=Release
-      ^hdf5@1.14.3 build_type=Release
+    #I - trilinos@15.0.0 ~rocm +adios2 +openmp +python ~cuda ^adios2@2.9.2 build_type=Release ^llvm@18.1.2 ~libomptarget build_type=Release
+    - trilinos@15.0.0 ~rocm +adios2 +openmp +python ~cuda ^adios2@2.9.2 build_type=Release ^hdf5@1.14.3 build_type=Release
   - petsc-set:    
     - petsc@3.22.1
   - numerical:
@@ -65,24 +65,24 @@ spack:
   specs:
   - matrix:
     - [$parallel]
-    - ['%cce_compiler']
-    - [^python@3.11.11]
+    - ['%%cce_compiler']
+    - [^python@3.11.14]
     # - [target=zen3]
   - matrix:
     - [$petsc-set]
-    - ['%cce_compiler']
-    - [^python@3.11.11 ^fftw@3.3.10 ^netlib-lapack@3.11.0]
+    - ['%%cce_compiler']
+    - [^python@3.11.14 ^fftw@3.3.10 ^netlib-lapack@3.11.0]
     - [~complex] #+complex is throwing this error: unknown type name '__complex128'
     - [+fftw ~trilinos +hwloc +openmp ~cuda]
     # - [target=zen3]      
   - matrix:
     - [$numerical]
-    - ['%cce_compiler']
+    - ['%%cce_compiler']
     # - [target=zen3]
   - matrix:
     - [$numerical-with-python]
-    - ['%cce_compiler']
-    - [^python@3.11.11 +optimizations+zlib]
+    - ['%%cce_compiler']
+    - [^python@3.11.14 +optimizations+zlib]
     # - [target=zen3]
 # for now don't build amd math libraries
   #- matrix:

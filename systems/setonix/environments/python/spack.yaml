@@ -11,13 +11,13 @@ spack:
     - py-matplotlib@3.8.4 +movies
     - py-mpi4py@3.1.5
     - py-netcdf4@1.6.5
-    - py-numba@0.58.1
+    - py-numba@0.61.2
     
     # py-numpy: using spack's recipe
     - py-numpy@1.26.4
     - py-pandas@2.2.2
     - py-plotly@5.20.0
-    - py-scikit-learn@1.4.2
+    - py-scikit-learn@1.5.2
     - py-scipy@1.13.0
   # need these here, too, for the python collection
   - utilities:
@@ -26,6 +26,6 @@ spack:
   specs:
   - matrix:
     - [$packages, $utilities]
-    - [^python@3.11.11 +optimizations+zlib]
+    - [^python@3.11.14 +optimizations+zlib]
     - ['%gcc_compiler']
   view: false

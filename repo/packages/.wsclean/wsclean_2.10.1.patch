@@ -1,0 +1,13 @@
+diff --git a/aterms/dldmaterm.h b/aterms/dldmaterm.h
+index ba35f9f..81f7f87 100644
+--- a/aterms/dldmaterm.h
++++ b/aterms/dldmaterm.h
+@@ -6,7 +6,7 @@
+ #include "../fitsreader.h"
+ 
+ #include <complex>
+-
++#include <array>
+ #include <casacore/ms/MeasurementSets/MeasurementSet.h>
+ 
+ class DLDMATerm final : public FitsATermBase

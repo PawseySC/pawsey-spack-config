@@ -9,8 +9,8 @@ spack:
   specs:
   - matrix:
     - [$packages]
-    - ['%gcc_compiler']
-    - [^python@3.11.11]
+    - ['%%gcc_compiler']
+    - [^python@3.11.14]
     - [^netcdf-fortran@4.6.1 ~doc]
     # - [target=zen3]
   view: false

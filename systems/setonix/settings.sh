@@ -57,22 +57,23 @@ archs="zen2 zen3"
 # compiler versions (needed for module trees with compiler dependency)
 gcc_version="14.2.0"
 gcc_versionO="14.2.1"
-cce_version="19.0.0"
-aocc_version="5.0.0"
+cce_version="21.0.0"
+aocc_version="5.1.0"
 
 # architecture of login/compute nodes (needed by Singularity symlink module)
 cpu_arch="zen3"
 
 # tool versions
-spack_version="1.0.2" # the prefix "v" is added in setup_spack.sh
+spack_version="1.1.1" # the prefix "v" is added in setup_spack.sh
 singularity_version="4.1.0-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="4.1.0-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.32"
 shpc_registry_version="bf0d6db12b1fe478e11c53dad966e25bb7d0a1b3"
+cpe_version="26.03"
                      
 # python (and py tools) versions
 python_name="python" 
-python_version="3.11.11" # has to match the version in the Spack env yaml
+python_version="3.11.14" # has to match the version in the Spack env yaml
 setuptools_version="59.4.0" # has to match the version in the Spack env yaml
 pip_version="23.1.2" # has to match the version in the Spack env yaml
 # r major minor version
@@ -241,11 +242,11 @@ spack_module_dir="${utilities_modules_dir}/spack"
 # Use the Cray provided ROCm until we have a stable custom build.
 
 ROCM_VERSIONS=(
-"6.3.0"
+"7.0.1"
 )
 
 ROCM_PATHS=(
-"/opt/rocm-6.3.0"
+"/opt/rocm-7.0.1"
 )
 
 fi # end include guard

@@ -1,0 +1,11 @@
+--- a/src/fix_property_atom.cpp	2025-01-16 16:32:21.000000000 +0800
++++ b/src/fix_property_atom.cpp	2025-01-16 16:32:45.000000000 +0800
+@@ -530,7 +530,7 @@
+         icol += ncol;
+       }
+     }
+-    fmt::print(fp, line + "\n");
++    fmt::print(fp, "{}", line + "\n");
+   }
+ }
+ 

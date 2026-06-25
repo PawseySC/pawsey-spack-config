@@ -12,7 +12,15 @@ import spack.platforms
 import spack.util.environment
 import spack.util.executable
 from spack.build_environment import dso_suffix
-from spack.build_systems import cmake, makefile
+#from spack.build_systems import cmake, makefile
+
+
+from spack_repo.builtin.build_systems import cmake, makefile
+from spack_repo.builtin.build_systems.cmake import CMakePackage, generator
+from spack_repo.builtin.build_systems.cuda import CudaPackage
+from spack_repo.builtin.build_systems.makefile import MakefilePackage
+from spack_repo.builtin.build_systems.rocm import ROCmPackage
+
 from spack.package import *
 
 GPU_MAP = {
@@ -607,10 +615,15 @@ class MakefileBuilder(makefile.MakefileBuilder):
             fcflags += ["-I{0}".format(sirius.prefix.include.sirius)]
             libs += list(sirius.libs)
 
+#        if spec.satisfies("+plumed"):
+#            dflags.extend(["-D__PLUMED2"])
+#            cppflags.extend(["-D__PLUMED2"])
+#            libs += [join_path(spec["plumed"].prefix.lib64, "libplumed.{0}".format(dso_suffix))]
+
         if spec.satisfies("+plumed"):
             dflags.extend(["-D__PLUMED2"])
             cppflags.extend(["-D__PLUMED2"])
-            libs += [join_path(spec["plumed"].prefix.lib64, "libplumed.{0}".format(dso_suffix))]
+            libs += [str(spec["plumed"].libs[0])]
 
         if spec.satisfies("+libvori"):
             cppflags += ["-D__LIBVORI"]

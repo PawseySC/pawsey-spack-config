@@ -24,11 +24,11 @@ spack:
   specs:
   - matrix:
     - [$py-utilities]
-    - [^python@3.11.11 +optimizations+zlib]
-    - ['%cce_compiler']
+    - [^python@3.11.14 +optimizations+zlib]
+    - ['%%cce_compiler']
     # - [target=zen3]
   - matrix:
     - [$packages]
-    - ['%cce_compiler']
+    - ['%%cce_compiler']
     # - [target=zen3]
   view: false

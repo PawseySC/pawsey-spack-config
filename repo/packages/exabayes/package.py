@@ -39,6 +39,8 @@
 # < 
 # Contribute recipe and patch
 # Pawsey, Ilkhom: Added patch to #include <cstdint> to BlockRunParameters.hpp
+from spack.package import *
+
 class Exabayes(AutotoolsPackage):
     """ExaBayes is a software package for Bayesian tree inference. It is
        particularly suitable for large-scale analyses on computer clusters."""
@@ -83,6 +85,12 @@ class Exabayes(AutotoolsPackage):
     def autoreconf(self, spec, prefix):
        return
 
+    def setup_build_environment(self, env):
+        # Important: use MPI wrappers, otherwise mpi.h is not found
+        env.set("CC", self.spec["mpi"].mpicc)
+        env.set("CXX", self.spec["mpi"].mpicxx)
 
+        # Important for GCC 14: avoid std::byte ambiguity
+        env.append_flags("CXXFLAGS", "-std=gnu++11")
 
 

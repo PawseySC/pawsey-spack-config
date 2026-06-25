@@ -139,8 +139,10 @@ class Ncl(Package):
         filter_file("^#!/bin/csh", "#!{0}".format(csh), *files)
 
     def install(self, spec, prefix):
-        if (self.compiler.fc is None) or (self.compiler.cc is None):
-            raise InstallError("NCL package requires both " "C and Fortran compilers.")
+        #if (self.compiler.fc is None) or (self.compiler.cc is None):
+#        if (fc is None) or (cc is None):
+#            raise InstallError("NCL package requires both " "C and Fortran compilers.")
+# Compiler availability is handled by the Spack compiler-wrapper / Cray wrappers.
 
         self.prepare_site_config()
         self.prepare_install_config()
@@ -162,16 +164,22 @@ class Ncl(Package):
         c2f_flags = []
 
         if "+openmp" in self.spec:
-            fc_flags.append(self.compiler.openmp_flag)
-            cc_flags.append(self.compiler.openmp_flag)
+             fc_flags.append("-fopenmp")
+             cc_flags.append("-fopenmp")
+#            fc_flags.append(self.compiler.openmp_flag)
+#            cc_flags.append(self.compiler.openmp_flag)
 
         if self.spec.satisfies("^hdf5@1.11:"):
             cc_flags.append("-DH5_USE_110_API")
 
-        if self.compiler.name == "gcc":
+#        if self.compiler.name == "gcc":
+#        if spec.satisfies("%gcc") or spec.satisfies("%gcc_compiler"):
+        if self.spec.satisfies("%gcc") or self.spec.satisfies("%gcc_compiler"):
             fc_flags.append("-fno-range-check")
             c2f_flags.extend(["-lgfortran", "-lm"])
-        elif self.compiler.name == "intel":
+#        elif self.compiler.name == "intel":
+#        elif spec.satisfies("%intel") or spec.satisfies("%oneapi"):
+        elif self.spec.satisfies("%intel") or self.spec.satisfies("%oneapi"):
             fc_flags.append("-fp-model precise")
             cc_flags.extend(
                 ["-fp-model precise", "-std=c99", "-D_POSIX_C_SOURCE=2", "-D_GNU_SOURCE"]
@@ -194,13 +202,15 @@ class Ncl(Package):
         else:
             gribline = ""
 
+#                    "#define CCompiler {0}\n".format(spack_cc),
+#                    "#define FCompiler {0}\n".format(spack_fc),
         with open("./config/Spack", "w") as f:
             f.writelines(
                 [
                     "#define HdfDefines\n",
                     "#define CppCommand '/usr/bin/env cpp -traditional'\n",
-                    "#define CCompiler {0}\n".format(spack_cc),
-                    "#define FCompiler {0}\n".format(spack_fc),
+                    "#define CCompiler cc\n",
+                    "#define FCompiler ftn\n",
                     (
                         "#define CtoFLibraries " + " ".join(c2f_flags) + "\n"
                         if len(c2f_flags) > 0

@@ -63,7 +63,7 @@ toolchains:
 
 
 
-  # All-languages CCE 19.0.0 toolchain using your external cce package
+  # All-languages CCE 21.0.0 toolchain using your external cce package
   cce_compiler:
     # Optional: global flags, mirroring what you had on cce
     - spec: target=zen3 
@@ -72,15 +72,15 @@ toolchains:
     - spec: cppflags="-O3 -Wl,--undefined-version"
     - spec: fflags="-O3 -Wl,--undefined-version"
 
-    # Use cce@19.0.0 for all languages used by the package
-    - spec: "%c=cce@19.0.0"
+    # Use cce@21.0.0 for all languages used by the package
+    - spec: "%c=cce@21.0.0"
       when: "%c"
-    - spec: "%cxx=cce@19.0.0"
+    - spec: "%cxx=cce@21.0.0"
       when: "%cxx"
-    - spec: "%fortran=cce@19.0.0"
+    - spec: "%fortran=cce@21.0.0"
       when: "%fortran"
 
-  # All-languages CCE 19.0.0 toolchain using your external cce package
+  # All-languages CCE 21.0.0 toolchain using your external cce package
   cce_compiler_zen2:
     # Optional: global flags, mirroring what you had on cce
     - spec: target=zen2 
@@ -89,10 +89,10 @@ toolchains:
     - spec: cppflags="-O3 -Wl,--undefined-version"
     - spec: fflags="-O3 -Wl,--undefined-version"
 
-    # Use cce@19.0.0 for all languages used by the package
-    - spec: "%c=cce@19.0.0"
+    # Use cce@21.0.0 for all languages used by the package
+    - spec: "%c=cce@21.0.0"
       when: "%c"
-    - spec: "%cxx=cce@19.0.0"
+    - spec: "%cxx=cce@21.0.0"
       when: "%cxx"
-    - spec: "%fortran=cce@19.0.0"
+    - spec: "%fortran=cce@21.0.0"
       when: "%fortran"

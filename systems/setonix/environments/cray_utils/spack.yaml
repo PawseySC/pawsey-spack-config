@@ -19,10 +19,10 @@ spack:
     # now moving to singularityce rather than older singularity
     #- singularityce@4.1.0
     #- singularityce@4.0.3~conmon ^go@1.22.1
-    - mpifileutils@0.11.1+lustre
+#I    - mpifileutils@0.11.1+lustre
 ## for now    - feh@3.10
     - nano@8.2
-    - cmake@3.31.6
+    - cmake@3.31.9
 ## utilities for Nextflow Tower tower-agent and tower-cli are no longer needed. PR 41576
 #    - tower-agent@0.4.5
 #    - tower-cli@0.7.0
@@ -36,5 +36,8 @@ spack:
   specs:
   - matrix:
     - [$packages]
-    - ['%cce_compiler','%cce_compiler_zen2']
+    - ['%%cce_compiler']
+  - matrix:
+    - [$packages]
+    - ['%%cce_compiler_zen2']
   view: false

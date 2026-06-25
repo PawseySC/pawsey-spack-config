@@ -46,7 +46,13 @@ import re
 #AEG: Importing this module to use their tools for copying files
 import shutil
 
-import llnl.util.tty as tty
+try:
+    import llnl.util.tty as tty
+except ImportError:
+    try:
+        from spack.util import tty
+    except ImportError:
+        from spack.package import tty
 
 from spack.package import *
 from spack.util.environment import EnvironmentModifications
@@ -365,6 +371,8 @@ class Openfoam(Package):
     variant('source', default=True,
             description='Install library/application sources and tutorials')
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
     depends_on('mpi')
 
     # After 1712, could suggest openmpi+thread_multiple for collated output
@@ -953,11 +961,112 @@ class Openfoam(Package):
         self.foam_arch.has_rule(self.stage.source_path)
         self.foam_arch.create_rules(self.stage.source_path, self)
 
-        args = ['-silent']
-        if self.parallel:  # Build in parallel? - pass as an argument
-            args.append('-j{0}'.format(make_jobs))
+        args = ["-silent"]
+        if self.parallel:
+            args.append("-j{0}".format(make_jobs))
+
+
         builder = Executable(self.build_script)
         builder(*args)
+
+        solver_root = join_path("applications", "solvers")
+        solver_allwmake_dirs = []
+
+        if os.path.isdir(solver_root):
+            for name in sorted(os.listdir(solver_root)):
+                solver_dir = join_path(solver_root, name)
+                allwmake = join_path(solver_dir, "Allwmake")
+
+                if os.path.isdir(solver_dir) and os.path.isfile(allwmake):
+                    solver_allwmake_dirs.append(solver_dir)
+
+        if not solver_allwmake_dirs:
+            tty.warn("No solver Allwmake files found under {0}".format(solver_root))
+
+        bash = Executable("bash")
+        allwmake_args = " ".join(args)
+
+        for solver_dir in solver_allwmake_dirs:
+            tty.info("Building OpenFOAM solvers in {0}".format(solver_dir))
+            bash(
+                "-c",
+                "set -e; . ./etc/bashrc; cd {0}; ./Allwmake {1}".format(
+                    solver_dir,
+                    allwmake_args,
+                ),
+            )
+
+        required_bins = [
+            "blockMesh",
+            "decomposePar",
+            "reconstructPar",
+            "icoFoam",
+            "simpleFoam",
+            "pimpleFoam",
+            "interFoam",
+            "potentialFoam",
+            "rhoSimpleFoam",
+            "rhoPimpleFoam",
+        ]
+
+
+#        builder = Executable(self.build_script)
+#        builder(*args)
+#
+#        # The main Allwmake pass builds libraries and many utilities, but in
+#        # this Spack 1.1.1 setup it does not build the main solver tree.
+#        #
+#        # Do not run applications/Allwmake here: that also enters CGAL/Boost
+#        # utilities, which currently fail with the newer Boost/C++ standard mix.
+#        #
+#        # Instead, build the required solver directories explicitly.
+#        solver_targets = {
+#            "potentialFoam": "applications/solvers/basic/potentialFoam",
+#            "icoFoam": "applications/solvers/incompressible/icoFoam",
+#            "simpleFoam": "applications/solvers/incompressible/simpleFoam",
+#            "pimpleFoam": "applications/solvers/incompressible/pimpleFoam",
+#            "interFoam": "applications/solvers/multiphase/interFoam",
+#            "rhoSimpleFoam": "applications/solvers/compressible/rhoSimpleFoam",
+#            "rhoPimpleFoam": "applications/solvers/compressible/rhoPimpleFoam",
+#        }
+#
+#        bash = Executable("bash")
+#
+#        for exe, solver_path in solver_targets.items():
+#            if os.path.isdir(solver_path):
+#                tty.info("Building OpenFOAM solver {0} from {1}".format(exe, solver_path))
+#                bash(
+#                    "-c",
+#                    "set -e; . ./etc/bashrc; cd {0}; wmake".format(solver_path),
+#                )
+#            else:
+#                tty.warn("Expected OpenFOAM solver directory not found: {0}".format(solver_path))
+#
+#        required_bins = [
+#            "blockMesh",
+#            "decomposePar",
+#            "reconstructPar",
+#            "icoFoam",
+#            "simpleFoam",
+#            "pimpleFoam",
+#            "interFoam",
+#            "potentialFoam",
+#            "rhoSimpleFoam",
+#            "rhoPimpleFoam",
+#        ]
+#
+#        bin_dir = join_path(self.stage.source_path, self.archbin)
+#        missing = [
+#            exe for exe in required_bins
+#            if not os.path.isfile(join_path(bin_dir, exe))
+#        ]
+#
+#        if missing:
+#            raise InstallError(
+#                "OpenFOAM build incomplete. Missing binaries: {0}".format(
+#                    ", ".join(missing)
+#                )
+#            )
 
     def install_write_location(self):
         """Set the installation location (projectdir) in bashrc,cshrc."""
@@ -1081,7 +1190,8 @@ class OpenfoamArch(object):
     #: Map spack compiler names to OpenFOAM compiler names
     #  By default, simply capitalize the first letter
     compiler_mapping = {'aocc': 'Amd', 'fj': 'Fujitsu',
-                        'intel': 'Icc', 'oneapi': 'Icx'}
+                        'intel': 'Icc', 'oneapi': 'Icx',
+                        'intel-oneapi-compilers': 'Icx'}
 
     def __init__(self, spec, **kwargs):
         # Some user settings, to be adjusted manually or via variants
@@ -1112,8 +1222,35 @@ class OpenfoamArch(object):
 
         # Capitalize first letter of compiler name to obtain the
         # OpenFOAM naming (eg, gcc -> Gcc, clang -> Clang, etc).
-        # Use compiler_mapping[] for special cases
-        comp = spec.compiler.name
+        # Use compiler_mapping[] for special cases.
+        #
+        # Spack 1.1/toolchain specs may not expose the old-style
+        # spec.compiler object.  Fall back to the compiler wrappers
+        # selected by Spack, and finally to the toolchain name in the spec.
+        try:
+            comp = spec.compiler.name
+        except AttributeError:
+            cc = os.environ.get('SPACK_CC', '') or os.environ.get('CC', '')
+            cxx = os.environ.get('SPACK_CXX', '') or os.environ.get('CXX', '')
+            fc = os.environ.get('SPACK_FC', '') or os.environ.get('FC', '')
+            compiler_cmd = ' '.join([cc, cxx, fc]).lower()
+
+            if 'gcc' in compiler_cmd or 'g++' in compiler_cmd or 'gfortran' in compiler_cmd:
+                comp = 'gcc'
+            elif 'clang' in compiler_cmd:
+                comp = 'clang'
+            elif 'icx' in compiler_cmd or 'icpx' in compiler_cmd or 'ifx' in compiler_cmd:
+                comp = 'oneapi'
+            elif 'icc' in compiler_cmd or 'icpc' in compiler_cmd or 'ifort' in compiler_cmd:
+                comp = 'intel'
+            elif 'cce' in compiler_cmd or 'cray' in compiler_cmd:
+                comp = 'cce'
+            elif 'gcc_compiler' in str(spec):
+                comp = 'gcc'
+            else:
+                tty.warn('Could not determine compiler from spec.compiler; assuming gcc')
+                comp = 'gcc'
+
         if comp in self.compiler_mapping:
             comp = self.compiler_mapping[comp]
 
@@ -1274,9 +1411,18 @@ class OpenfoamArch(object):
         # Note: the 'c' rules normally don't need rpath, since they are just
         # used for some statically linked wmake tools, but left in anyhow.
 
-        # rpath for installed OpenFOAM libraries
+        # rpath for installed OpenFOAM libraries.
+        #
+        # Spack 1.1/toolchain adapter may not expose foam_pkg.compiler on
+        # the old-style package wrapper.  GCC/Clang/Cray wrappers accept
+        # the usual GNU linker rpath form used here.
+        try:
+            cxx_rpath_arg = foam_pkg.compiler.cxx_rpath_arg
+        except AttributeError:
+            cxx_rpath_arg = '-Wl,-rpath,'
+
         rpath = '{0}{1}'.format(
-            foam_pkg.compiler.cxx_rpath_arg,
+            cxx_rpath_arg,
             join_path(foam_pkg.projectdir, foam_pkg.archlib))
 
         user_mpi = mplib_content(foam_pkg.spec)
@@ -1306,3 +1452,4 @@ PLIBS   = {PLIBS}
 """.format(**user_mpi))
 
 # -----------------------------------------------------------------------------
+

@@ -1,0 +1,13 @@
+diff --git a/algorithms/antennaselector.h b/algorithms/antennaselector.h
+index 6353a4d..d8fad40 100644
+--- a/algorithms/antennaselector.h
++++ b/algorithms/antennaselector.h
+@@ -6,6 +6,8 @@ class DefaultStatistics;
+ 
+ #include <map>
+ #include <vector>
++#include <cstddef>
++using namespace std;
+ 
+ namespace rfiStrategy {
+ 

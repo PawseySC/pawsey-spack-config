@@ -37,9 +37,16 @@ echo "Concretization of Reframe.."
 spack spec reframe@${reframe_version} %gcc@${gcc_version}
 spack spec reframe@${reframe_version} %cce@${cce_version}
 
+spack spec reframe@${reframe_version} %gcc_compiler
+spack spec reframe@${reframe_version} %cce_compiler
+
 echo "Installing Reframe with default compilers.."
-for arch in $archs; do
-    sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %gcc@${gcc_version} target=$arch"
-    #sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %cce@18.0.1 ^py-maturin@1.1.0%gcc@14.2.0 target=$arch"
-    #sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %cce@${cce_version} target=$arch"
-done
+#for arch in $archs; do
+#    sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %gcc_compiler"
+#    #sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %cce@18.0.1 ^py-maturin@1.1.0%gcc@14.2.0 target=$arch"
+#    #sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %cce@${cce_version} target=$arch"
+#done
+
+
+sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %gcc_compiler"
+sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %gcc_compiler_zen2"

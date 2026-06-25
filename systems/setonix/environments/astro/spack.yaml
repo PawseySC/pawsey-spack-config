@@ -16,7 +16,7 @@ spack:
   # casacore variants
   # try running spack install --no-checksum
   - casacore-legacy:
-    - casacore@3.2.1 +python datapath=setonix build_type=Release ^python@3.11.11 # no checksum for this release
+    - casacore@3.2.1 +python datapath=setonix build_type=Release ^python@3.11.14 # no checksum for this release
   - casacore-set:
     - casacore@3.3.0 datapath=setonix
     - casacore@3.4.0 datapath=setonix
@@ -37,28 +37,30 @@ spack:
     - gsl
     - cppunit
     - log4cxx cxxstd=17
-    - log4cxx cxxstd=11 ^python@3.11.11
+    - log4cxx cxxstd=11 ^python@3.11.14
     - mcpp
     - xerces-c transcoder=gnuiconv
     - xerces-c transcoder=iconv
     - subversion
 
   - mwa-with-python:
-    - wsclean@3.4 +mpi +idg +everybeam build_type=Release target=zen3
-    - wsclean@3.4 ~mpi +idg +everybeam build_type=Release target=zen3
-    - wsclean@2.9 +idg build_type=Release target=zen3
+    - wsclean@3.4 +mpi +idg +everybeam #build_type=Release target=zen3
+    - wsclean@3.4 ~mpi +idg +everybeam #build_type=Release target=zen3
+    - wsclean@2.9 +idg #build_type=Release target=zen3
     - mwalib@1.8.7+python~portable
-    - aoflagger@3.4.0 build_type=Release target=zen3 ^cfitsio@3.49
+    - aoflagger@3.4.0 ^cfitsio@3.49 #build_type=Release target=zen3 ^cfitsio@3.49
     - hyperbeam@0.10.2 ~portable +python
     - hyperdrive@=0.6.1 ~portable
     - birli@0.18.2 +aoflagger ~portable
-    - calceph@3.5.5 target=zen3
-    - presto@5.0.1 target=zen3
+    - calceph@3.5.5 #target=zen3
+    - presto@5.0.1 #target=zen3
 
   - mwa-no-python:
-    - chgcentre build_type=Release target=zen3
-    - giant-squid@2.3.0 target=zen3
-    - giant-squid@2.3.0 target=zen2
+    - chgcentre
+    - giant-squid@2.3.0
+
+  - mwa-no-python-zen2:
+    - giant-squid@2.3.0
 
   # TODO add versions
   - python-astro-set:
@@ -71,40 +73,44 @@ spack:
   specs:
   - matrix:
     - [$casacore-set]
-    - ['%gcc_compiler']
+    - ['%%gcc_compiler']
     # - [target=zen3]
-    - [+python build_type=Release ^python@3.11.11]
+    - [+python build_type=Release ^python@3.11.14]
     - [+openmp, ~openmp]
     - [~adios2 ~hdf5, +adios2 +hdf5 ^adios2@2.8.3 +hdf5 ^hdf5@1.12.2 +hl +fortran
         build_type=Release +szip api=v112]
         # can't use hdf%@1.14.3 for casacore yet
   - matrix:
     - [$casacore-legacy]
-    - ['%gcc_compiler']
+    - ['%%gcc_compiler']
     # - [target=zen3]
   - matrix:
     - [$astro-util-set, $askap-util-set]
-    - ['%gcc_compiler']
+    - ['%%gcc_compiler']
     # - [target=zen3]
 
   - matrix:
     - [ $mwa-no-python]
-    - ['%gcc_compiler']
+    - ['%%gcc_compiler']
+
+  - matrix:
+    - [ $mwa-no-python-zen2]
+    - ['%%gcc_compiler_zen2']
 
   - matrix:
     - [$mwa-with-python]
-    - [^python@3.11.11]
-    - ['%gcc_compiler']
+    - [^python@3.11.14]
+    - ['%%gcc_compiler']
 
   - matrix:
     - [$python-astro-set]
-    - [^python@3.11.11]
-    - ['%gcc_compiler']
+    - [^python@3.11.14]
+    - ['%%gcc_compiler']
     # - [target=zen3]
   - matrix:
     - [$casacore-new-set]
-    - [^python@3.11.11]
+    - [^python@3.11.14]
     - [^boost@1.83.0]
-    - ['%gcc_compiler']
+    - ['%%gcc_compiler']
     # - [target=zen3]
   view: false
