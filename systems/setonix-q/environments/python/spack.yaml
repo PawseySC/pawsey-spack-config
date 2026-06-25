@@ -11,6 +11,9 @@ spack:
       require: "@2.4.1.4 %gcc@13.3.1"
       buildable: true
       externals: []
+
+    llvm:
+      require: "~clang ~lldb ~flang ~polly ~gold ~compiler-rt"
   
   definitions:
   - py_packages:
