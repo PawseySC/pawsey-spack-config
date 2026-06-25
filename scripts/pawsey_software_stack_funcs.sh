@@ -204,13 +204,6 @@ function build_environment() {
         testing_only=$3
     fi
     echo "Installing environment $env..."
-    # Allow a per-environment build-job cap (ENV_NCPUS[<env>], set in
-    # settings.sh) for environments whose dependencies OOM the build node at the
-    # full NCPUS parallelism; fall back to NCPUS when no override is defined.
-    local jobs="${ENV_NCPUS[$env]:-$NCPUS}"
-    if [ "${jobs}" != "${NCPUS}" ]; then
-        echo "Using a reduced build-job count for $env: -j${jobs} (default -j${NCPUS})"
-    fi
     cd ${envdir}/${env}
     spack env activate ${envdir}/${env}
     # standard practice is to concretize in environments, but this can result in lots of duplicates
@@ -224,9 +217,9 @@ function build_environment() {
             return
         fi
         if [ "${env}" == "roms" ] || [ "${env}" == "wrf" ] ; then
-            sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${jobs} --only dependencies"
+            sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} --only dependencies"
         else
-            sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${jobs}"
+            sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS}"
         fi
         spack env deactivate
     else
@@ -247,9 +240,9 @@ function build_environment() {
                 spack spec ${SPACK_SPEC_ARGS} ${p} >> spack.specs.output.txt
             else
                 if [ "${env}" == "roms" ] || [ "${env}" == "wrf" ] ; then
-                    sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${jobs} --only dependencies ${p}"
+                    sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} --only dependencies ${p}"
                 else
-                    sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${jobs} ${p}"
+                    sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} ${p}"
                 fi
             fi
         done < spack.specs.txt
