@@ -41,7 +41,9 @@ spack:
 
   specs:
   # Root spec used by the quantum custom installers via the generated module.
-  - cutensor@2.4.1.4 %nvhpc@25.9
+  - matrix:
+    - [cutensor@2.4.1.4]
+    - ["%nvhpc@25.9"]
 
   - matrix:
     - [$py_stack]
