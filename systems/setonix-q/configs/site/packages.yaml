@@ -91,7 +91,9 @@ packages:
     version: [6.0.0]
     variants: '+X'
   llvm:
-    variants: '~omp_as_runtime ~clang ~compiler-rt ~polly ~gold'
+    # py-llvmlite (via py-numba) is the only llvm consumer on setonix-q and needs
+    # just the LLVM libraries. 
+    require: '~clang ~lldb ~flang ~polly ~gold'
   # preferred versions and variants, python
   python:
     version: [3.11.6]
