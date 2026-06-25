@@ -54,16 +54,30 @@ def get_abstract_specs():
         if m[0][0][0] == '$':
             spec_categories.append(m[0][0][1:])
 
-    # Regex pattern to pick out valid package spec definitions
-    pattern = r'([\w-]+@*=*[\w.]+).*'
+    # Build a lookup of every definition group so that nested category
+    # references (e.g. py_stack: [$py_packages, $utilities]) can be expanded.
+    definitions = {}
     for entry in data['spack']['definitions']:
-        # Iterate over each group of packages
         for key, value in entry.items():
-            # Select only those categories which are listed in the matrices
-            if key in spec_categories:
-                # Add each individual packages spec in this group
-                for elem in value:
-                    abstract_specs.append(elem)
+            definitions[key] = value
+
+    # Recursively expand a category, following any '$'-prefixed references to
+    # other categories, so that only concrete package specs are returned.
+    def expand_category(name, seen=None):
+        seen = seen if seen is not None else set()
+        if name in seen:
+            return []
+        seen.add(name)
+        expanded = []
+        for elem in definitions.get(name, []):
+            if isinstance(elem, str) and elem.startswith('$'):
+                expanded.extend(expand_category(elem[1:], seen))
+            else:
+                expanded.append(elem)
+        return expanded
+
+    for category in spec_categories:
+        abstract_specs.extend(expand_category(category))
 
     # Handle cases where specs are defined within a matrix rather than with other packages (e.g. cmake in utils env)
     for entry in data['spack']['specs']:
