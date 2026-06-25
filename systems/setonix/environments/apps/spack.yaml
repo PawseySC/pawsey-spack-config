@@ -38,8 +38,8 @@ spack:
 #^kokkos@3.7.02
 
   - packages-with-oldpython:
-    - nwchem@7.2.3 +fftw3 +openmp ^python@3.11.14 ^netlib-lapack@3.11.0 ^netlib-scalapack@2.2.0
-    - nwchem@7.2.0 +fftw3 +openmp ^python@3.11.14 ^netlib-lapack@3.11.0 ^netlib-scalapack@2.2.0
+    - nwchem@7.2.3 +fftw3 +openmp ^python@3.11.6 ^netlib-lapack@3.11.0 ^netlib-scalapack@2.2.0
+    - nwchem@7.2.0 +fftw3 +openmp ^python@3.11.6 ^netlib-lapack@3.11.0 ^netlib-scalapack@2.2.0
 #I    - nwchem@7.2.3 +fftw3 +openmp ^python@3.9.15 ^netlib-lapack@3.11.0 ^netlib-scalapack@2.2.0
 #I    - nwchem@7.2.0 +fftw3 +openmp ^python@3.9.15 ^netlib-lapack@3.11.0 ^netlib-scalapack@2.2.0
 
@@ -72,7 +72,7 @@ spack:
   specs:
   - matrix:
     - [$packages-with-python]
-    - [^python@3.11.14 +optimizations+zlib~ssl]
+    - [^python@3.11.6 +optimizations+zlib~ssl]
     - ['%%gcc_compiler']
   - matrix:
     - [$packages-with-oldpython]

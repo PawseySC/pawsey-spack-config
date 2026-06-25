@@ -152,7 +152,7 @@ packages:
     variants: '~omp_as_runtime ~clang ~compiler-rt ~polly ~gold'
   # preferred versions and variants, python
   python:
-    version: [3.11.14]
+    version: [3.11.6]
     variants: '+optimizations +zlib ~ssl'
     buildable: true
   gdbm:

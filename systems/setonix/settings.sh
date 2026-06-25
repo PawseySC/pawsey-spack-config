@@ -73,8 +73,8 @@ cpe_version="26.03"
                      
 # python (and py tools) versions
 python_name="python" 
-python_version="3.11.14" # has to match the version in the Spack env yaml
-setuptools_version="59.4.0" # has to match the version in the Spack env yaml
+python_version="3.11.6" # has to match the version in the Spack env yaml
+setuptools_version="80.9.0" # has to match the version in the Spack env yaml
 pip_version="23.1.2" # has to match the version in the Spack env yaml
 # r major minor version
 r_version_majorminor="4.4.1"

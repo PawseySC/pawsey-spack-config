@@ -1,22 +1,22 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --exclusive
-#SBATCH --qos=pawseyoverride
-#SBATCH --time=4-00:00:00
-##SBATCH --reservation=GS_32584_CPU_TESTING
+##SBATCH --qos=pawseyoverride
+#SBATCH --time=1-00:00:00
+#SBATCH --reservation=PAWSEY_CPE26.03_CPU_TESTING
 #SBATCH -p work
 #SBATCH -A pawsey0001 
 ##SBATCH --gpus-per-node=8
 
 export SYSTEM=setonix
 export INSTALL_GROUP=pawsey0001
-export DATE_TAG="2026.05"
+export DATE_TAG="2026.06"
 export INSTALL_PREFIX=/scratch/pawsey0001/ilkhom/${DATE_TAG}
 
 
 export PKG_CONFIG_PATH=/usr/lib64/pkgconfig:$PKG_CONFIG_PATH
 
-#ml cray-pmi/6.1.15
+ml cray-pmi/6.1.17
 
 ./install_software_stack.sh
 

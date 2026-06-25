@@ -10,7 +10,7 @@ spack:
   - matrix:
     - [$packages]
     - ['%%gcc_compiler']
-    - [^python@3.11.14]
+    - [^python@3.11.6]
     - [^netcdf-fortran@4.6.1 ~doc]
     # - [target=zen3]
   view: false
