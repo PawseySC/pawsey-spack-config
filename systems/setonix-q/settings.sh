@@ -49,6 +49,10 @@ SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
 # Useful when building the stack on the test system.
 SPACK_POPULATE_CACHE=0
 NCPUS=288
+# Per-environment build-job overrides. Most packages build fine at the full
+# NCPUS, but a few (LLVM) carry memory-heavy dependencies that OOM the build node at
+# that parallelism. 
+declare -A ENV_NCPUS=( [python]=64 )
 SPACK_SPEC_ARGS=" --reuse "
 SPACK_INSTALL_ARGS=" --no-checksum "
 SPACK_CONCRETIZE_ARGS=" --reuse "
