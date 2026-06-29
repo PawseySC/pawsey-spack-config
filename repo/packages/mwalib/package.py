@@ -74,6 +74,7 @@ class Mwalib(Package):
     def setup_build_environment(self, env):
         build_dir = self.stage.source_path
         env.set("CARGO_HOME", f"{build_dir}/.cargo")
+        env.set("CARGO_BUILD_JOBS", str(make_jobs))
         # env.set('RUST_BACKTRACE', 1) # for debugging
         if self.spec.satisfies("+cfitsio-static"):
             env.set("MWALIB_LINK_STATIC_CFITSIO", 1)

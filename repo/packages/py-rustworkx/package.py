@@ -39,4 +39,5 @@ class PyRustworkx(PythonPackage):
 
     def setup_build_environment(self, env):
         env.set("CARGO_HOME", join_path(self.stage.source_path, ".cargo"))
+        env.set("CARGO_BUILD_JOBS", str(make_jobs))
         env.set("RUST_BACKTRACE", "1")

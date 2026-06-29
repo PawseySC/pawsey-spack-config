@@ -181,6 +181,7 @@ class PyQiskit(PythonPackage, CudaPackage):
         env.set("CUDAARCHS", self._cuda_arch())
         env.set("AER_CUDA_ARCH", self._aer_cuda_arch())
         env.set("CONAN_USER_HOME", join_path(self.stage.source_path, ".conan"))
+        env.set("CMAKE_BUILD_PARALLEL_LEVEL", str(make_jobs))
 
         if "+mpi" in self.spec:
             env.set("MPICC", self.spec["mpi"].mpicc)
