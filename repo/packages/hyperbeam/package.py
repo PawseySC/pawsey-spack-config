@@ -79,7 +79,7 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
                 env.set("HIP_PATH", rocm_dir)
                 env.set("ROCM_PATH", rocm_dir)
         if self.spec.satisfies("+cuda"):
-            cuda_arch = spec.variants["cuda_arch"].value
+            cuda_arch = self.spec.variants["cuda_arch"].value
             env.set("HYPERBEAM_CUDA_COMPUTE", cuda_arch)
             cuda_dir = self.spec["cuda"].prefix
             # print(f"cuda_dir: {cuda_dir}, cuda_arch: {cuda_arch}")
