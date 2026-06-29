@@ -163,7 +163,9 @@ class PyPennylane(PythonPackage, CudaPackage):
         for egg_info in glob.glob("*.egg-info"):
             shutil.rmtree(egg_info, ignore_errors=True)
 
-        with spack.util.environment.set_env(PL_BACKEND=backend, CMAKE_ARGS=cmake_args):
+        with spack.util.environment.set_env(PL_BACKEND=backend,
+                                            CMAKE_ARGS=cmake_args,
+                                            CMAKE_BUILD_PARALLEL_LEVEL=str(make_jobs)):
             python("scripts/configure_pyproject_toml.py")
             python("-m", "build", "--wheel", "--no-isolation", "--skip-dependency-check")
 
