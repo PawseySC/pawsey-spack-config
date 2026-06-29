@@ -48,11 +48,8 @@ SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
 # The operation will be executed after having installed the environments.
 # Useful when building the stack on the test system.
 SPACK_POPULATE_CACHE=0
-# Cap build parallelism well below the core count (288). Memory-heavy packages
-# (e.g. LLVM and other large C++ builds) run hundreds of ~1-2 GB compiler
-# processes at the full core count and OOM the build node (signal 9). 72 keeps
-# peak memory within the node's RAM while still building quickly.
-NCPUS=72
+# Cap build parallelism well below single node core count. To prevent OOM errors when building large packages (e.g. LLVM).
+NCPUS=32
 SPACK_SPEC_ARGS=" --reuse "
 SPACK_INSTALL_ARGS=" --no-checksum "
 SPACK_CONCRETIZE_ARGS=" --reuse "
