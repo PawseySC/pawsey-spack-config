@@ -7,10 +7,29 @@ packages:
     providers:
       mpi: [ cray-mpich ]
       blas: [ openblas, amdblis ] #, cray-libsci ] # commenting out cray-libsci as bug was identified
-      lapack: [ openblas, netlib-lapack, amdlibflame ] #, cray-libsci ]
+      lapack: [ openblas, netlib-lapack] #, amdlibflame ] #, cray-libsci ]
       scalapack: [ netlib-scalapack, amdscalapack ] #, cray-libsci ]
       fftw-api: [ fftw, amdfftw ] #, cray-fftw ] # commenting out cray-fftw for now, similar to cray-libsci
       pkgconfig: [ pkgconf ]
+
+  blas:
+    require:
+    - one_of:
+      - openblas
+      - amdblis
+
+  lapack:
+    require:
+    - one_of:
+      - openblas
+      - netlib-lapack
+
+  scalapack:
+    require:
+    - one_of:
+      - netlib-scalapack
+      - amdscalapack
+
     permissions:
       read: world
       # this should be user, we do not want pawsey0001 users 
@@ -118,6 +137,9 @@ packages:
   intel-oneapi-mkl:
     buildable: false
 
+  amdlibflame:
+    buildable: false
+
   libunwind:
     variants: '+pic'
   mbedtls:
@@ -216,9 +238,9 @@ packages:
   amdblis:
     version: [5.0]
     variants: 'threads=openmp'
-  amdlibflame:
-    version: [5.0]
-    variants: 'threads=openmp'
+#  amdlibflame:
+#    version: [5.0]
+#    variants: 'threads=openmp'
   amdscalapack:
     version: [5.0]
     variants: 'build_type=Release'
@@ -328,6 +350,7 @@ packages:
     require:
     - '@2.31.0:'
     - cflags="-Wno-error=incompatible-pointer-types -Wno-error=implicit-function-declaration -Wno-error=int-conversion"
+
 
   py-scikit-learn:
     require:
