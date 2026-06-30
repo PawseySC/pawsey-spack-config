@@ -96,19 +96,19 @@ developer-tools
 dependencies
 "
 
+#io_libs
+#astro
 # list of spack build environments - missing vis
 env_list="
 singularity_env
 utils
 num_libs
 python
-io_libs
 langs
 apps
 devel
 bench
 s3_clients
-astro
 bio
 roms
 wrf
@@ -116,15 +116,15 @@ wrf
 
 
 # list of cray build environments - can run in parallel with the above gcc env_list
-#cray_env_list="
-#"
-#cray_utils
-#cray_num_libs
-#cray_python
-#cray_io_libs
-#cray_langs
-#cray_devel
-#cray_s3_clients
+cray_env_list="
+cray_utils
+cray_num_libs
+cray_python
+cray_io_libs
+cray_langs
+cray_devel
+cray_s3_clients
+"
 
 #quay.io/sarahbeecroft9/alphafold:2.2.3
 #quay.io/pawsey/alphafold2-amd-gpu:rocm6.1.1
