@@ -1,5 +1,6 @@
 include:
-  # user configuration scope
+  # Normal user scope.
+  # submit_job can override this with SPACK_USER_CONFIG_PATH.
   - name: "user"
     path_override_env_var: SPACK_USER_CONFIG_PATH
     path: "~/.spack"
@@ -7,12 +8,13 @@ include:
     prefer_modify: true
     when: '"SPACK_DISABLE_LOCAL_CONFIG" not in env'
 
-  # site configuration scope
+  # Normal Pawsey site defaults.
+  # This is what ordinary users get.
   - name: "site"
     path: "$spack/etc/spack/site"
     optional: true
 
-  # system configuration scope
+  # Optional system scope.
   - name: "system"
     path_override_env_var: SPACK_SYSTEM_CONFIG_PATH
     path: "/etc/spack"

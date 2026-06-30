@@ -13,6 +13,8 @@ export INSTALL_GROUP=pawsey0001
 export DATE_TAG="2026.06"
 export INSTALL_PREFIX=/scratch/pawsey0001/ilkhom/${DATE_TAG}
 
+export SPACK_USER_CONFIG_PATH="${INSTALL_PREFIX}/spack/etc/spack/spackuser"
+
 
 export PKG_CONFIG_PATH=/usr/lib64/pkgconfig:$PKG_CONFIG_PATH
 

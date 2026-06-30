@@ -52,7 +52,10 @@ fi
 # process for both the Pawsey staff installations (spack user), and the user and 
 # project-wide ones.
 cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/site/*.yaml ${INSTALL_PREFIX}/spack/etc/spack/
+rm ${INSTALL_PREFIX}/spack/etc/spack/config.yaml   #IA
+cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/site/config.yaml ${INSTALL_PREFIX}/spack/etc/spack/site/.  #IA
 cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/spackuser/*.yaml ${SPACK_USER_CONFIG_PATH}/
+
 
 # copy project-wide configs into spack tree, too
 mkdir -p ${INSTALL_PREFIX}/spack/etc/spack/project
