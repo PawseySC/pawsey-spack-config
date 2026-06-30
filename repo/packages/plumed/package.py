@@ -195,6 +195,7 @@ class Plumed(AutotoolsPackage):
         values=("none", "cpu", "cuda", "opencl"),
         description="Activates FireArray support",
     )
+    variant("python", default=False, description="Build Python wrappers")
 
     # Dependencies. LAPACK and BLAS are recommended but not essential.
     depends_on("zlib-api")
@@ -214,6 +215,10 @@ class Plumed(AutotoolsPackage):
     depends_on("automake", type="build")
     depends_on("libtool", type="build")
     depends_on("m4", type="build")
+
+
+    depends_on("python", type=("build", "run"), when="+python")
+
     depends_on("py-cython", type="build", when="@2.5:")
 
     force_autoreconf = True
@@ -318,6 +323,10 @@ class Plumed(AutotoolsPackage):
 
         if extra_libs:
             configure_opts.append("LDFLAGS={0}".format(" ".join(extra_libs)))
+
+        if "+python" in spec:
+            configure_opts.append("PYTHON_BIN={0}".format(spec["python"].command.path))
+
 
         # Additional arguments
         configure_opts.extend(
