@@ -44,4 +44,9 @@ class PyPennylaneQiskit(PythonPackage):
     depends_on("py-sympy", type=("build", "run"))
     depends_on("py-networkx@3.1", type=("build", "run"))
 
-    depends_on("py-qiskit-aer@0.17.2", type=("build", "run"))
+    # py-qiskit is a Pawsey aggregate recipe that installs both qiskit and a
+    # locally built qiskit-aer wheel. Do not depend on py-qiskit-aer separately,
+    # or Spack may build/install a second Aer package from the builtin recipe.
+
+    def install(self, spec, prefix):
+        pip("install", "--no-deps", "--prefix={0}".format(prefix), self.stage.archive_file)
