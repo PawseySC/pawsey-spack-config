@@ -2,8 +2,7 @@ include:
   # Normal user scope.
   # submit_job can override this with SPACK_USER_CONFIG_PATH.
   - name: "user"
-    path_override_env_var: SPACK_USER_CONFIG_PATH
-    path: "~/.spack"
+    path: "USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix/DATE_TAG/.spack_user_config"
     optional: true
     prefer_modify: true
     when: '"SPACK_DISABLE_LOCAL_CONFIG" not in env'
@@ -13,10 +12,3 @@ include:
   - name: "site"
     path: "$spack/etc/spack/site"
     optional: true
-
-  # Optional system scope.
-  - name: "system"
-    path_override_env_var: SPACK_SYSTEM_CONFIG_PATH
-    path: "/etc/spack"
-    optional: true
-    when: '"SPACK_DISABLE_LOCAL_CONFIG" not in env'

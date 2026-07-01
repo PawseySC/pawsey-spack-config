@@ -80,6 +80,7 @@ sed -i \
   ${INSTALL_PREFIX}/spack/etc/spack/*.yaml \
   ${SPACK_USER_CONFIG_PATH}/*.yaml \
   ${INSTALL_PREFIX}/spack/etc/spack/project/*.yaml \
+  ${INSTALL_PREFIX}/spack/etc/spack/site/*.yaml \
   ${INSTALL_PREFIX}/spack/templates/modules/modulefile.lua
 
 
