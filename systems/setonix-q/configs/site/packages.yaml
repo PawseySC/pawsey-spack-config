@@ -489,9 +489,14 @@ packages:
   cuda:
     buildable: false
     externals:
+    # Provide cuda via the Cray PE module rather than a bare prefix. The NVIDIA
+    # HPC SDK splits the toolkit across cuda/<ver> (core runtime) and
+    # math_libs/<ver> (libcublas, libcufft, libcusolver, ...). 
+    # The Cray PE module ensures that both are on LD_LIBRARY_PATH/CPATH.
     - spec: cuda@13.0.0
-      prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/cuda/13.0/
-    
+      modules:
+      - cuda/13.0
+
   cutensor:
       buildable: true
       externals:
