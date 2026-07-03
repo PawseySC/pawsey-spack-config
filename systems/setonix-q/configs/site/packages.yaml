@@ -105,7 +105,7 @@ packages:
   gettext:
     version: [0.22.5]
   py-cython:
-    require: ['@3.0.11']
+    version: [3.2.3, 3.0.11]
   py-dask:
     version: [2024.7.1]
   py-h5py:
