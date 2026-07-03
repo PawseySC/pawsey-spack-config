@@ -320,7 +320,7 @@ packages:
 
   binutils:
     externals:
-    - spec: binutils@2.43
+    - spec: binutils@2.45
       prefix: /usr
     buildable: false
 
