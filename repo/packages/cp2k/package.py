@@ -317,6 +317,10 @@ class Cp2k(MakefilePackage, CMakePackage, CudaPackage, ROCmPackage):
         depends_on("hipblas")
         depends_on("hipfft")
 
+
+    depends_on("scalapack")  #, when="+mpi")
+
+
     # The CMake build system and AOCC are not compatible as of AOCC 5
     requires("build_system=makefile", when="%aocc")
 
