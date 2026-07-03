@@ -54,6 +54,8 @@ modules:
         autoload: direct
       cuda:
         autoload: direct
+        load:
+          - cuda/13.0
       openblas:
         autoload: direct
       netlib-lapack:
