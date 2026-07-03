@@ -946,6 +946,7 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
         args.append(self.define_from_variant("WITH_FFMPEG", "ffmpeg"))
         args.append(self.define_from_variant("WITH_CURL", "curl"))
 
+
         for pkg, params in self.supported_packages.items():
             if "when" not in params or spec.satisfies(params["when"]):
                 opt = "{0}_{1}".format(pkg_prefix, pkg.replace("-package", "").upper())
@@ -988,6 +989,132 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
                     args.append(self.define("HIP_PATH", spec["hip"].prefix))
 
         return args
+
+    def patch(self):
+        if self.spec.satisfies("@20240829.1"):
+            # dump_cfg.cpp
+            filter_file(
+                r"fmt::print\(fp,\s*header\);",
+                'fmt::print(fp, "{}", header);',
+                "src/dump_cfg.cpp",
+            )
+    
+            # dump_xyz.cpp
+            filter_file(
+                r"fmt::print\(fp,\s*header\);",
+                'fmt::print(fp, "{}", header);',
+                "src/dump_xyz.cpp",
+            )
+    
+            # fix_property_atom.cpp
+            filter_file(
+                r'fmt::print\(fp,\s*line \+ "\\n"\);',
+                'fmt::print(fp, "{}\\n", line);',
+                "src/fix_property_atom.cpp",
+            )
+    
+            # info.cpp
+            filter_file(
+                r"fmt::print\(out,\s*get_variable_info\(i\)\);",
+                'fmt::print(out, "{}", get_variable_info(i));',
+                "src/info.cpp",
+            )
+    
+            # lammps.cpp
+            filter_file(
+                r"fmt::print\(universe->uscreen,\s*fmt,\s*version,\s*universe->nworlds\);",
+                'fmt::print(universe->uscreen, fmt::runtime(fmt), version, universe->nworlds);',
+                "src/lammps.cpp",
+            )
+    
+            filter_file(
+                r"fmt::print\(universe->ulogfile,\s*fmt,\s*version,\s*universe->nworlds\);",
+                'fmt::print(universe->ulogfile, fmt::runtime(fmt), version, universe->nworlds);',
+                "src/lammps.cpp",
+            )
+    
+            # DPD-REACT/fix_rx.cpp
+            filter_file(
+                r'const std::string fmtstr = "\{\} \{\} property/atom ";',
+                'constexpr const char *fmtstr = "{} {} property/atom ";',
+                "src/DPD-REACT/fix_rx.cpp",
+            )
+    
+            # EXTRA-DUMP/dump_yaml.cpp
+            filter_file(
+                r"fmt::print\(fp,\s*thermo_data\);",
+                'fmt::print(fp, "{}", thermo_data);',
+                "src/EXTRA-DUMP/dump_yaml.cpp",
+            )
+
+
+            # REPLICA/fix_alchemy.cpp
+            filter_file(
+                r"fmt::print\(universe->uscreen,\s*msg\);",
+                'fmt::print(universe->uscreen, "{}", msg);',
+                "src/REPLICA/fix_alchemy.cpp",
+            )
+
+            filter_file(
+                r"fmt::print\(universe->ulogfile,\s*msg\);",
+                'fmt::print(universe->ulogfile, "{}", msg);',
+                "src/REPLICA/fix_alchemy.cpp",
+            )
+
+            # REPLICA/prd.cpp
+            filter_file(
+                r"fmt::print\(universe->uscreen,\s*mesg\);",
+                'fmt::print(universe->uscreen, "{}", mesg);',
+                "src/REPLICA/prd.cpp",
+            )
+
+            filter_file(
+                r"fmt::print\(universe->ulogfile,\s*mesg\);",
+                'fmt::print(universe->ulogfile, "{}", mesg);',
+                "src/REPLICA/prd.cpp",
+            )
+
+            # REPLICA/tad.cpp
+            filter_file(
+                r"fmt::print\(universe->uscreen,\s*mesg\);",
+                'fmt::print(universe->uscreen, "{}", mesg);',
+                "src/REPLICA/tad.cpp",
+            )
+
+            filter_file(
+                r"fmt::print\(universe->ulogfile,\s*mesg\);",
+                'fmt::print(universe->ulogfile, "{}", mesg);',
+                "src/REPLICA/tad.cpp",
+            )
+
+            # REAXFF/fix_reaxff_bonds.cpp
+            filter_file(
+                r"fmt::print\(fp,\s*mesg\);",
+                'fmt::print(fp, "{}", mesg);',
+                "src/REAXFF/fix_reaxff_bonds.cpp",
+            )
+
+            # REAXFF/reaxff_control.cpp
+            filter_file(
+                r"fmt::format\(format,\s*keyword\)",
+                "fmt::format(fmt::runtime(format), keyword)",
+                "src/REAXFF/reaxff_control.cpp",
+            )
+
+            # RIGID/fix_rigid.cpp
+            # These fmt::format() calls have "{}" but no argument.
+            # Keep the text literal instead of formatting it.
+            filter_file(
+                r'fmt::format\("fix \{\} custom"\)',
+                'std::string("fix {} custom")',
+                "src/RIGID/fix_rigid.cpp",
+            )
+
+            filter_file(
+                r'fmt::format\("fix \{\} group"\)',
+                'std::string("fix {} group")',
+                "src/RIGID/fix_rigid.cpp",
+            )
 
     def setup_build_environment(self, env):
         if self.spec.satisfies("+intel %aocc"):
