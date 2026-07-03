@@ -66,6 +66,9 @@ compilers:
         PE_ENV: "GNU"
         # Keep Rust/cargo build caches off $HOME.
         CARGO_HOME: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/cargo
+        # The system binutils (2.45, SLES15) ships only ld.bfd
+        # ld.gold is not installed (gold was dropped upstream). 
+        GOFLAGS: "-ldflags=-extldflags=-fuse-ld=bfd"
       unset:
         # Guard against the Cray cudatoolkit forced-link options that broke %gcc
         # CPU builds (e.g. openblas); normally already absent in the CUDA-free base.
