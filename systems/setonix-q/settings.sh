@@ -70,7 +70,7 @@ cuda_version="13.0"
 # These must match the CRAY_LMOD_COMPILER values set by PrgEnv-* modules
 gcc_compat_version="12.0"
 nvidia_compat_version="23.11"
-main_compiler="nvhpc"
+main_compiler="gcc"
 main_arch="neoverse_v2"
 
 # module-tree paths to create for user/project installations

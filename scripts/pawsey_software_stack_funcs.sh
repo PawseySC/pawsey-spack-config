@@ -141,8 +141,8 @@ function set_compilation_sets_for_arch()
     elif [ "${host_arch}" == "aarch64" ]; then
         export mainarch="neoverse_v2"
         export archs=("neoverse_v2")
-        export maincompiler="nvhpc@${nvidia_version}"
-        export compilers=("nvhpc@${nvidia_version}")
+        export maincompiler="gcc@${gcc_version}"
+        export compilers=("gcc@${gcc_version}" "nvhpc@${nvidia_version}")
 	export pythoncompilers=("gcc@${gcc_version}")
     else
         echo "The architecture '${host_arch}' is not supported."
