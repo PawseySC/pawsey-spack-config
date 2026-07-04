@@ -66,13 +66,11 @@ compilers:
     environment:
       set:
         PE_ENV: "GNU"
-        # Keep Rust/cargo build caches off $HOME.
+        # Keep build caches off $HOME.
         CARGO_HOME: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/cargo
-        # Keep Go build/module caches off $HOME (avoids $HOME quota failures).
         GOCACHE: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/go-cache/build
         GOMODCACHE: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/go-cache/mod
-        # The system binutils (2.45, SLES15) ships only ld.bfd
-        # ld.gold is not installed (gold was dropped upstream). 
+        # The system binutils ships only ld.bfd, no ld.gold.
         GOFLAGS: "-ldflags=-extldflags=-fuse-ld=bfd"
       unset:
         # Guard against the Cray cudatoolkit forced-link options that broke %gcc
