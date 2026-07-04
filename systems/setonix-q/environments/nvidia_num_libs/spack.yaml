@@ -42,8 +42,12 @@ spack:
     # - petsc@3.15.5 +fftw +trilinos +hwloc +openmp +complex ~cuda
     - petsc@3.21.1 +fftw +hwloc +openmp +cuda cuda_arch=90
   specs:
+  # Build the GPU numerical libraries with gcc as the host compiler and consume
+  # CUDA via the external cuda/13.0 module (configs/site/packages.yaml)
+  # Mirrors the quantum environment and avoids the nvhpc (nvc++) failures with 
+  # jemalloc, asio, boost and kokkos.
   - matrix:
     - [$parallel]
-    - ['%nvhpc@25.9']
+    - ['%gcc@13.3.1']
     - [^python@3.11.6%gcc@13.3.1]
   view: false
