@@ -140,6 +140,9 @@ packages:
   amdlibflame:
     buildable: false
 
+  atlas:
+    buildable: false
+
   libunwind:
     variants: '+pic'
   mbedtls:

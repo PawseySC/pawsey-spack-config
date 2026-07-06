@@ -21,6 +21,8 @@ config:
       py-pyproject-metadata:      "{architecture}/compilerless_python/{name}-{version}-{hash}"
       meson:                      "{architecture}/compilerless_python/{name}-{version}-{hash}"
 
+      ncl: "{architecture}/gcc-14.2.0/{name}-{version}-{hash}"
+
       # 3) Build deps / toolchain bits
       gcc:              "{architecture}/build-tools/{name}-{version}-{hash}"
       gcc-runtime:      "{architecture}/build-tools/{name}-{version}-{hash}"

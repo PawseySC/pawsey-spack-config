@@ -13,7 +13,7 @@ from spack.package import *
 class Ncl(Package):
     """NCL is an interpreted language designed specifically for
     scientific data analysis and visualization. Supports NetCDF 3/4,
-    GRIB 1/2, HDF 4/5, HDF-EOD 2/5, shapefile, ASCII, binary.
+    GRIB 1/2, HDF 4/5, HDF-EOS 2/5, shapefile, ASCII, binary.
     Numerous analysis functions are built-in."""
 
     homepage = "https://www.ncl.ucar.edu"
@@ -28,32 +28,31 @@ class Ncl(Package):
 
     patch("for_aarch64.patch", when="target=aarch64:")
 
-    # Use Spack config file, which we generate during the installation:
+    # Use Spack config file, generated during installation.
     patch("set_spack_config.patch")
-    # Make ncl compile with hdf5 1.10 (upstream as of 6.5.0)
+
+    # Make ncl compile with hdf5 1.10.
     patch("hdf5.patch", when="@6.4.0")
-    # ymake-filter's buffer may overflow (upstream as of 6.5.0)
+
+    # ymake-filter's buffer may overflow.
     patch("ymake-filter.patch", when="@6.4.0")
-    # ymake additional local library and includes will be filtered improperly
-    # WARNING: it is tempting to replace '-Dlinux=linux -Dx86_64=x86_64' with '-Ulinux -Ux86_64'
-    # to get rid of 'error: detected recursion whilst expanding macro "linux"' but that breaks
-    # the building because the Makefile generation logic depends on whether those macros are
-    # defined. Also, the errors can be ignored since "GCC detects when it is expanding recursive
-    # macros, emits an error message, and *continues* after the offending macro invocation"
-    # (see https://gcc.gnu.org/onlinedocs/cpp/Traditional-macros.html#Traditional-macros).
+
+    # ymake additional local library/includes handling.
+    #
+    # Do not replace '-Dlinux=linux -Dx86_64=x86_64' with '-Ulinux -Ux86_64'.
+    # The old NCL/ymake build system depends on those macros being defined.
     patch("ymake.patch", when="@6.4.0:")
-    # ncl does not build with gcc@10:
-    # https://github.com/NCAR/ncl/issues/123
+
+    # Old NCL code needs this with modern GCC.
+    # Apply unconditionally because Setonix compiler aliases such as
+    # %gcc_compiler or none-none may not match normal %gcc@10:.
     patch(
         "https://src.fedoraproject.org/rpms/ncl/raw/12778c55142b5b1ccc26dfbd7857da37332940c2/f/ncl-boz.patch",
-        when="%gcc@10:",
         sha256="64f3502c9deab48615a4cbc26073173081c0774faf75778b044d251e45d238f7",
     )
+
     # g2clib does not have a ymakefile. This patch avoids a benign ymake error.
     patch("ymake-grib.patch", when="+grib")
-
-    # This installation script is implemented according to this manual:
-    # http://www.ncl.ucar.edu/Download/build_from_src.shtml
 
     variant("hdf4", default=False, description="Enable HDF4 support.")
     variant("gdal", default=False, description="Enable GDAL support.")
@@ -62,55 +61,55 @@ class Ncl(Package):
     variant("openmp", default=True, description="Enable OpenMP support.")
     variant("grib", default=True, description="Enable GRIB support.")
 
-    # Non-optional dependencies according to the manual:
+#    depends_on("c", type="build")
+#    depends_on("cxx", type="build")
+#    depends_on("fortran", type="build")
+
+    # Core dependencies
     depends_on("jpeg")
+    depends_on("libpng")
+    depends_on("zlib")
     depends_on("netcdf-c")
     depends_on("cairo+X+ft+pdf")
 
-    # Extra dependencies that may be missing from build system:
+    # Build tools
+    depends_on("gmake", type="build")
     depends_on("bison", type="build")
     depends_on("flex+lex")
-    depends_on("iconv")
     depends_on("tcsh")
     depends_on("makedepend", type="build")
 
-    # Also, the manual says that ncl requires zlib, but that comes as a
-    # mandatory dependency of libpng, which is a mandatory dependency of cairo.
-
-    # The following dependencies are required, otherwise several components
-    # fail to compile:
+    # X / graphics / compression dependencies
     depends_on("curl")
     depends_on("iconv")
+    depends_on("expat")
     depends_on("libx11")
+    depends_on("libxt")
+    depends_on("libsm")
+    depends_on("libice")
     depends_on("libxaw")
     depends_on("libxmu")
+    depends_on("libxext")
+    depends_on("libxrender")
     depends_on("pixman")
     depends_on("bzip2")
     depends_on("freetype")
     depends_on("fontconfig")
     depends_on("zstd")
 
-    # In Spack, we do not have an option to compile netcdf-c without netcdf-4
-    # support, so we will tell the ncl configuration script that we want
-    # support for netcdf-4, but the script assumes that hdf5 is compiled with
-    # szip support. We introduce this restriction with the following dependency
-    # statement.
+    # NetCDF4/HDF5 support
     depends_on("hdf5+szip")
     depends_on("szip")
 
-    # ESMF is only required at runtime (for ESMF_regridding.ncl)
-    # There might be more requirements to ESMF but at least the NetCDF support is required to run
-    # the examples (see https://www.ncl.ucar.edu/Applications/ESMF.shtml)
+    # ESMF is runtime only
     depends_on("esmf+netcdf", type="run")
 
-    # Some of the optional dependencies according to the manual:
+    # Optional dependencies
     depends_on("hdf", when="+hdf4")
     depends_on("gdal@:2.4", when="+gdal")
     depends_on("udunits", when="+udunits2")
     depends_on("jasper@2.0.32", when="+grib")
 
-    # We need src files of triangle to appear in ncl's src tree if we want
-    # triangle's features.
     resource(
         name="triangle",
         url="https://www.netlib.org/voronoi/triangle.zip",
@@ -122,146 +121,325 @@ class Ncl(Package):
     sanity_check_is_file = ["bin/ncl"]
 
     def patch(self):
-        # Make configure scripts use Spack's tcsh
+        # Make configure scripts use Spack's tcsh.
         files = ["Configure"] + glob.glob("config/*")
-
         filter_file("^#!/bin/csh -f", "#!/usr/bin/env csh", *files)
+
+        # GRIB/g2clib fixes.
+        if "+grib" in self.spec:
+            filter_file("image.inmem_=1;", "", "external/g2clib-1.6.0/enc_jpeg2000.c")
+
+            filter_file(
+                "SUBDIRS = ",
+                "SUBDIRS = g2clib-1.6.0 ",
+                "external/yMakefile",
+            )
+
+            # Important: must be -I<jasper-include>, not the raw include path.
+            # Otherwise GCC treats the include directory as an input file and
+            # dec_jpeg2000.c cannot find jasper/jasper.h.
+            filter_file(
+                r"INC=.*",
+                "INC=-I%s" % self.spec["jasper"].prefix.include,
+                "external/g2clib-1.6.0/makefile",
+            )
+
+        # ictrans has an all-local target that does:
+        #     cat Copyright
+        # but the Copyright file is not always present.
+        filter_file(
+            r"@\$\(CAT\) Copyright",
+            r"@test ! -f Copyright || $(CAT) Copyright",
+            "ncarview/src/bin/ictrans/yMakefile",
+        )
 
     @run_before("install")
     def filter_sbang(self):
-        # Filter sbang before install so Spack's sbang hook can fix it up
         files = glob.glob("ncarg2d/src/bin/scripts/*")
         files += glob.glob("ncarview/src/bin/scripts/*")
         files += glob.glob("ni/src/scripts/*")
 
         csh = join_path(self.spec["tcsh"].prefix.bin, "csh")
-
         filter_file("^#!/bin/csh", "#!{0}".format(csh), *files)
 
     def install(self, spec, prefix):
-        #if (self.compiler.fc is None) or (self.compiler.cc is None):
-#        if (fc is None) or (cc is None):
-#            raise InstallError("NCL package requires both " "C and Fortran compilers.")
-# Compiler availability is handled by the Spack compiler-wrapper / Cray wrappers.
+        local_libs, local_includes = self.local_paths()
 
-        self.prepare_site_config()
-        self.prepare_install_config()
-        self.prepare_src_tree()
-        make("Everything", parallel=False)
+        compiler_wrapper_dir = self.create_compiler_wrappers(local_libs)
+        install_wrapper = self.create_install_wrapper()
 
-        # Build system may fail without errors, so check for main program.
-        exes = os.listdir(self.spec.prefix.bin)
-        if "ncl" not in exes:
-            raise RuntimeError("Installation failed (ncl executable was not created)")
+        old_path = os.environ["PATH"]
+        os.environ["PATH"] = compiler_wrapper_dir + os.pathsep + old_path
+
+        try:
+            self.prepare_site_config(install_wrapper)
+            self.prepare_install_config(local_libs, local_includes)
+            self.prepare_src_tree()
+
+            make("Everything", parallel=False)
+
+        finally:
+            os.environ["PATH"] = old_path
+
+        if not os.path.isdir(self.spec.prefix.bin):
+            raise RuntimeError("Installation failed: prefix/bin was not created")
+
+        if "ncl" not in os.listdir(self.spec.prefix.bin):
+            raise RuntimeError("Installation failed: ncl executable was not created")
+
+#    def install(self, spec, prefix):
+#        local_libs, local_includes = self.local_paths()
+#
+#        compiler_wrapper_dir = self.create_compiler_wrappers(local_libs)
+#        install_wrapper = self.create_install_wrapper()
+#
+#        saved_env = {}
+#        env_vars = [
+#            "PATH",
+#            "CC",
+#            "CXX",
+#            "FC",
+#            "F77",
+#            "F90",
+#            "CPP",
+#            "CFLAGS",
+#            "CXXFLAGS",
+#            "FFLAGS",
+#            "FCFLAGS",
+#            "LDFLAGS",
+#        ]
+#
+#        for var in env_vars:
+#            saved_env[var] = os.environ.get(var)
+#
+#        # Put our wrappers first.
+#        os.environ["PATH"] = compiler_wrapper_dir + os.pathsep + saved_env["PATH"]
+#
+#        # Avoid Spack's compiler-wrapper being picked up by NCL Configure.
+#        os.environ["CC"] = "cc"
+#        os.environ["CXX"] = "CC"
+#        os.environ["FC"] = "ftn"
+#        os.environ["F77"] = "ftn"
+#        os.environ["F90"] = "ftn"
+#
+#        # Avoid old Configure inheriting Spack flags in unexpected places.
+#        for var in ["CPP", "CFLAGS", "CXXFLAGS", "FFLAGS", "FCFLAGS", "LDFLAGS"]:
+#            os.environ.pop(var, None)
+#
+#        try:
+#            self.prepare_site_config(install_wrapper)
+#            self.prepare_install_config(local_libs, local_includes)
+#            self.prepare_src_tree()
+#
+#            make("Everything", parallel=False)
+#
+#        finally:
+#            for var, value in saved_env.items():
+#                if value is None:
+#                    os.environ.pop(var, None)
+#                else:
+#                    os.environ[var] = value
+#
+#        if not os.path.isdir(self.spec.prefix.bin):
+#            raise RuntimeError("Installation failed: prefix/bin was not created")
+#
+#        if "ncl" not in os.listdir(self.spec.prefix.bin):
+#            raise RuntimeError("Installation failed: ncl executable was not created")
+
 
     def setup_run_environment(self, env):
         env.set("NCARG_ROOT", self.spec.prefix)
         env.set("ESMFBINDIR", self.spec["esmf"].prefix.bin)
 
-    def prepare_site_config(self):
+    def create_compiler_wrappers(self, local_libs):
+        """Create wrappers around Cray compiler wrappers.
+
+        NCL's old ymake files sometimes put dependency libraries before
+        dependency -L paths. Injecting -L paths through wrappers makes them
+        visible before any -l flags.
+
+        Also inject -std=gnu99 for C compiles. Some NCL 6.6.2 sources use
+        C99 loop declarations, but the old build system may otherwise compile
+        them as GNU89.
+        """
+
+        wrapper_dir = join_path(self.stage.source_path, "spack-compiler-wrappers")
+        mkdirp(wrapper_dir)
+
+        real_cc = which("cc", required=True).path
+        real_cxx = which("CC", required=True).path
+        real_ftn = which("ftn", required=True).path
+
+        lib_flags = " ".join("-L{0}".format(d) for d in local_libs)
+
+        c_flags = " ".join(
+            [
+                "-std=gnu99",
+                "-fcommon",
+                "-Wno-error=incompatible-pointer-types",
+                "-Wno-error=implicit-function-declaration",
+                "-Wno-error=implicit-int",
+                "-Wno-error=int-conversion",
+                "-Wno-implicit-function-declaration",
+                "-Wno-implicit-int",
+                "-Wno-int-conversion",
+                "-Wno-incompatible-pointer-types",
+            ]
+        )
+
+        wrappers = {
+            # Cray compiler wrappers used explicitly by config/Spack
+            "cc": (real_cc, c_flags),
+            "CC": (real_cxx, ""),
+            "ftn": (real_ftn, ""),
+
+            # Legacy compiler names used by NCL/g2clib build files
+            "gcc": (real_cc, c_flags),
+            "g++": (real_cxx, ""),
+            "c++": (real_cxx, ""),
+            "f77": (real_ftn, ""),
+            "f90": (real_ftn, ""),
+            "gfortran": (real_ftn, ""),
+        }
+
+        for name, target_and_flags in wrappers.items():
+            target, extra_flags = target_and_flags
+            wrapper = join_path(wrapper_dir, name)
+
+            if os.path.exists(wrapper):
+                os.remove(wrapper)
+
+            all_flags = " ".join(x for x in [extra_flags, lib_flags] if x)
+
+            with open(wrapper, "w") as f:
+                f.write("#!/bin/sh\n")
+                if all_flags:
+                    f.write('exec "{0}" {1} "$@"\n'.format(target, all_flags))
+                else:
+                    f.write('exec "{0}" "$@"\n'.format(target))
+
+            os.chmod(wrapper, 0o755)
+
+        return wrapper_dir
+
+    def create_install_wrapper(self):
+        # Do not put /usr/bin/install directly into config/Spack.
+        # NCL's ymake preprocessing can mangle install-like paths.
+        wrapper_dir = join_path(self.stage.source_path, "spack-ncl-tools")
+        mkdirp(wrapper_dir)
+
+        wrapper = join_path(wrapper_dir, "nclcopy")
+
+        if os.path.exists(wrapper):
+            os.remove(wrapper)
+
+        with open(wrapper, "w") as f:
+            f.write("#!/bin/sh\n")
+            f.write('exec /usr/bin/install "$@"\n')
+
+        os.chmod(wrapper, 0o755)
+
+        return wrapper
+
+    def prepare_site_config(self, install_wrapper):
         fc_flags = []
         cc_flags = []
         c2f_flags = []
 
         if "+openmp" in self.spec:
-             fc_flags.append("-fopenmp")
-             cc_flags.append("-fopenmp")
-#            fc_flags.append(self.compiler.openmp_flag)
-#            cc_flags.append(self.compiler.openmp_flag)
+            fc_flags.append("-fopenmp")
+            cc_flags.append("-fopenmp")
 
         if self.spec.satisfies("^hdf5@1.11:"):
             cc_flags.append("-DH5_USE_110_API")
 
-#        if self.compiler.name == "gcc":
-#        if spec.satisfies("%gcc") or spec.satisfies("%gcc_compiler"):
-        if self.spec.satisfies("%gcc") or self.spec.satisfies("%gcc_compiler"):
-            fc_flags.append("-fno-range-check")
-            c2f_flags.extend(["-lgfortran", "-lm"])
-#        elif self.compiler.name == "intel":
-#        elif spec.satisfies("%intel") or spec.satisfies("%oneapi"):
-        elif self.spec.satisfies("%intel") or self.spec.satisfies("%oneapi"):
-            fc_flags.append("-fp-model precise")
-            cc_flags.extend(
-                ["-fp-model precise", "-std=c99", "-D_POSIX_C_SOURCE=2", "-D_GNU_SOURCE"]
-            )
-            c2f_flags.extend(["-lifcore", "-lifport"])
+        # Apply these unconditionally for this Setonix/Pawsey build.
+        # The spec shows none-none for ncl, so normal compiler constraints
+        # like %gcc@10: may not trigger reliably.
+        fc_flags.append("-fno-range-check")
+        fc_flags.append("-fallow-argument-mismatch")
 
-        if self.spec.satisfies("%gcc@10:"):
-            fc_flags.append("-fallow-argument-mismatch")
-            cc_flags.append("-fcommon")
-            cc_flags.append("-Wno-error=incompatible-pointer-types")
-            cc_flags.append("-Wno-error=implicit-function-declaration")
-            cc_flags.append("-Wno-error=implicit-int")
-            cc_flags.append("-Wno-error=int-conversion")
+        cc_flags.append("-std=gnu99")
+        cc_flags.append("-fcommon")
+        cc_flags.append("-Wno-error=incompatible-pointer-types")
+        cc_flags.append("-Wno-error=implicit-function-declaration")
+        cc_flags.append("-Wno-error=implicit-int")
+        cc_flags.append("-Wno-error=int-conversion")
+        cc_flags.append("-Wno-implicit-function-declaration")
+        cc_flags.append("-Wno-implicit-int")
+        cc_flags.append("-Wno-int-conversion")
+        cc_flags.append("-Wno-incompatible-pointer-types")
+
+        c2f_flags.extend(["-lgfortran", "-lquadmath", "-lgomp", "-lm"])
 
         if self.spec.satisfies("+grib"):
             gribline = (
-                "#define GRIB2lib %s/external/g2clib-1.6.0/libgrib2c.a -ljasper -lpng -lz -ljpeg\n"
+                "#define GRIB2lib %s/external/g2clib-1.6.0/libgrib2c.a "
+                "-ljasper -lpng -lz -ljpeg\n"
                 % self.stage.source_path
             )
         else:
             gribline = ""
 
-#                    "#define CCompiler {0}\n".format(spack_cc),
-#                    "#define FCompiler {0}\n".format(spack_fc),
         with open("./config/Spack", "w") as f:
             f.writelines(
                 [
                     "#define HdfDefines\n",
                     "#define CppCommand '/usr/bin/env cpp -traditional'\n",
+
+                    # Cray wrappers. PATH is prepended with our wrapper dir.
                     "#define CCompiler cc\n",
+                    "#define CxxCompiler CC\n",
+                    "#define CLoader cc\n",
                     "#define FCompiler ftn\n",
-                    (
-                        "#define CtoFLibraries " + " ".join(c2f_flags) + "\n"
-                        if len(c2f_flags) > 0
-                        else ""
-                    ),
-                    (
-                        "#define CtoFLibrariesUser " + " ".join(c2f_flags) + "\n"
-                        if len(c2f_flags) > 0
-                        else ""
-                    ),
-                    (
-                        "#define CcOptions " + " ".join(cc_flags) + "\n"
-                        if len(cc_flags) > 0
-                        else ""
-                    ),
-                    (
-                        "#define FcOptions " + " ".join(fc_flags) + "\n"
-                        if len(fc_flags) > 0
-                        else ""
-                    ),
+                    "#define FLoader ftn\n",
+                    "#define F77Compiler ftn\n",
+                    "#define F90Compiler ftn\n",
+
+                    "#ifdef InstallCommand\n",
+                    "#undef InstallCommand\n",
+                    "#endif\n",
+                    "#define InstallCommand {0}\n".format(install_wrapper),
+
+                    "#define CtoFLibraries " + " ".join(c2f_flags) + "\n",
+                    "#define CtoFLibrariesUser " + " ".join(c2f_flags) + "\n",
+                    "#define CcOptions " + " ".join(cc_flags) + "\n",
+                    "#define FcOptions " + " ".join(fc_flags) + "\n",
+
                     "#define BuildShared NO\n",
                     gribline,
                 ]
             )
 
-    def prepare_install_config(self):
-        # Remove the results of the previous configuration attempts.
+    def prepare_install_config(self, local_libs, local_includes):
         self.delete_files("./Makefile", "./config/Site.local")
 
-        # Generate an array of answers that will be passed to the interactive
-        # configuration script.
         config_answers = [
             # Enter Return to continue
             "\n",
+
             # Build NCL?
             "y\n",
-            # Parent installation directory :
+
+            # Parent installation directory
             self.spec.prefix + "\n",
-            # System temp space directory   :
+
+            # System temp space directory
             tempfile.gettempdir() + "\n",
-            # Build NetCDF4 feature support (optional)?
+
+            # Build NetCDF4 feature support?
             "y\n",
         ]
 
         if "+hdf4" in self.spec:
             config_answers.extend(
                 [
-                    # Build HDF4 support (optional) into NCL?
+                    # Build HDF4 support into NCL?
                     "y\n",
-                    # Also build HDF4 support (optional) into raster library?
+
+                    # Also build HDF4 support into raster library?
                     "y\n",
+
                     # Did you build HDF4 with szip support?
                     "y\n" if self.spec.satisfies("^hdf+szip") else "n\n",
                 ]
@@ -269,59 +447,58 @@ class Ncl(Package):
         else:
             config_answers.extend(
                 [
-                    # Build HDF4 support (optional) into NCL?
+                    # Build HDF4 support into NCL?
                     "n\n",
-                    # Also build HDF4 support (optional) into raster library?
+
+                    # Also build HDF4 support into raster library?
                     "n\n",
                 ]
             )
 
-        gribinc = (
-            " " + self.stage.source_path + "/external/g2clib-1.6.0/"
-            if self.spec.satisfies("+grib")
-            else ""
-        )
         config_answers.extend(
             [
-                # Build Triangle support (optional) into NCL
+                # Build Triangle support into NCL?
                 "y\n" if "+triangle" in self.spec else "n\n",
-                # If you are using NetCDF V4.x, did you enable NetCDF-4 support?
+
+                # If using NetCDF V4.x, did you enable NetCDF-4 support?
                 "y\n",
+
                 # Did you build NetCDF with OPeNDAP support?
                 "y\n" if self.spec.satisfies("^netcdf-c+dap") else "n\n",
-                # Build GDAL support (optional) into NCL?
+
+                # Build GDAL support into NCL?
                 "y\n" if "+gdal" in self.spec else "n\n",
-                # Build EEMD support (optional) into NCL?
+
+                # Build EEMD support into NCL?
                 "n\n",
-                # Build Udunits-2 support (optional) into NCL?
+
+                # Build Udunits-2 support into NCL?
                 "y\n" if "+udunits2" in self.spec else "n\n",
-                # Build Vis5d+ support (optional) into NCL?
+
+                # Build Vis5d+ support into NCL?
                 "n\n",
-                # Build HDF-EOS2 support (optional) into NCL?
+
+                # Build HDF-EOS2 support into NCL?
                 "n\n",
-                # Build HDF5 support (optional) into NCL?
+
+                # Build HDF5 support into NCL?
                 "y\n",
-                # Build HDF-EOS5 support (optional) into NCL?
+
+                # Build HDF-EOS5 support into NCL?
                 "n\n",
-                # Build GRIB2 support (optional) into NCL?
+
+                # Build GRIB2 support into NCL?
                 "y\n" if self.spec.satisfies("+grib") else "n\n",
-                # Enter local library search path(s) :
-                self.spec["fontconfig"].prefix.lib64
-                + " "
-                + self.spec["pixman"].prefix.lib
-                + " "
-                + self.spec["bzip2"].prefix.lib
-                + (
-                    (" " + self.spec["jasper"].prefix.lib64)
-                    if self.spec.satisfies("+grib")
-                    else ""
-                )
-                + "\n",
-                # Enter local include search path(s) :
-                # All other paths will be passed by the Spack wrapper.
-                self.spec["freetype"].headers.directories[0] + gribinc + "\n",
+
+                # Enter local library search path(s)
+                " ".join(local_libs) + "\n",
+
+                # Enter local include search path(s)
+                " ".join(local_includes) + "\n",
+
                 # Go back and make more changes or review?
                 "n\n",
+
                 # Save current configuration?
                 "y\n",
             ]
@@ -345,6 +522,127 @@ class Ncl(Package):
                 "config/Site.local",
             )
 
+    def local_paths(self):
+        local_libs = []
+        local_includes = []
+
+        lib_pkgs = [
+            "fontconfig",
+            "pixman",
+            "bzip2",
+            "freetype",
+            "libx11",
+            "libxt",
+            "libxaw",
+            "libxmu",
+            "libxext",
+            "libsm",
+            "libice",
+            "libxrender",
+            "jpeg",
+            "libpng",
+            "zlib",
+            "netcdf-c",
+            "hdf5",
+            "szip",
+            "zstd",
+            "curl",
+            "cairo",
+            "expat",
+        ]
+
+        include_pkgs = [
+            "freetype",
+            "fontconfig",
+            "pixman",
+            "libx11",
+            "libxt",
+            "libxaw",
+            "libxmu",
+            "libxext",
+            "libsm",
+            "libice",
+            "libxrender",
+            "jpeg",
+            "libpng",
+            "zlib",
+            "netcdf-c",
+            "hdf5",
+            "szip",
+            "zstd",
+            "curl",
+            "cairo",
+            "expat",
+        ]
+
+        if "+udunits2" in self.spec:
+            lib_pkgs.append("udunits")
+            include_pkgs.append("udunits")
+
+        if "+hdf4" in self.spec:
+            lib_pkgs.append("hdf")
+            include_pkgs.append("hdf")
+
+        if "+gdal" in self.spec:
+            lib_pkgs.append("gdal")
+            include_pkgs.append("gdal")
+
+        if "+grib" in self.spec:
+            lib_pkgs.append("jasper")
+            include_pkgs.append("jasper")
+
+        for pkg in lib_pkgs:
+            local_libs.extend(self.library_dirs(pkg))
+
+        for pkg in include_pkgs:
+            local_includes.extend(self.include_dirs(pkg))
+
+        if "+grib" in self.spec:
+            local_includes.append(join_path(self.stage.source_path, "external", "g2clib-1.6.0"))
+
+        return self.unique_existing_dirs(local_libs), self.unique_existing_dirs(local_includes)
+
+    def library_dirs(self, pkg):
+        dirs = []
+
+        if pkg not in self.spec:
+            return dirs
+
+        try:
+            for d in self.spec[pkg].libs.directories:
+                dirs.append(str(d))
+        except Exception:
+            pass
+
+        for d in [
+            self.spec[pkg].prefix.lib,
+            self.spec[pkg].prefix.lib64,
+        ]:
+            dirs.append(str(d))
+
+        return dirs
+
+    def include_dirs(self, pkg):
+        dirs = []
+
+        if pkg not in self.spec:
+            return dirs
+
+        try:
+            for d in self.spec[pkg].headers.directories:
+                dirs.append(str(d))
+        except Exception:
+            pass
+
+        for d in [
+            self.spec[pkg].prefix.include,
+            join_path(self.spec[pkg].prefix.include, "freetype2"),
+            join_path(self.spec[pkg].prefix.include, "cairo"),
+        ]:
+            dirs.append(str(d))
+
+        return dirs
+
     def prepare_src_tree(self):
         if "+triangle" in self.spec:
             triangle_src = join_path(self.stage.source_path, "triangle_src")
@@ -361,12 +659,15 @@ class Ncl(Package):
                 except OSError as e:
                     raise InstallError("Failed to delete file %s: %s" % (e.filename, e.strerror))
 
-    @when("+grib")
-    def patch(self):
-        filter_file("image.inmem_=1;", "", "external/g2clib-1.6.0/enc_jpeg2000.c")
-        filter_file("SUBDIRS = ", "SUBDIRS = g2clib-1.6.0 ", "external/yMakefile")
-        filter_file(
-            "INC=.*",
-            "INC=%s" % self.spec["jasper"].prefix.include,
-            "external/g2clib-1.6.0/makefile",
-        )
+    @staticmethod
+    def unique_existing_dirs(paths):
+        seen = set()
+        result = []
+
+        for path in paths:
+            path = str(path)
+            if path and os.path.isdir(path) and path not in seen:
+                seen.add(path)
+                result.append(path)
+
+        return result
