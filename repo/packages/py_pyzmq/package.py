@@ -1,0 +1,165 @@
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
+#
+# SPDX-License-Identifier: (Apache-2.0 OR MIT)
+
+import os
+
+from spack_repo.builtin.build_systems.python import PythonPackage
+
+from spack.package import *
+
+
+class PyPyzmq(PythonPackage):
+    """PyZMQ: Python bindings for zeromq."""
+
+    homepage = "https://github.com/zeromq/pyzmq"
+    pypi = "pyzmq/pyzmq-22.3.0.tar.gz"
+
+    license("BSD-3-Clause")
+
+    version("27.1.0", sha256="ac0765e3d44455adb6ddbf4417dcce460fc40a05978c08efdf2948072f6db540")
+    version("26.2.0", sha256="070672c258581c8e4f640b5159297580a9974b026043bd4ab0470be9ed324f1f")
+    version("26.1.1", sha256="a7db05d8b7cd1a8c6610e9e9aa55d525baae7a44a43e18bc3260eb3f92de96c6")
+    version("26.0.3", sha256="dba7d9f2e047dfa2bca3b01f4f84aa5246725203d6284e3790f2ca15fba6b40a")
+    version("25.1.2", sha256="93f1aa311e8bb912e34f004cf186407a4e90eec4f0ecc0efd26056bf7eda0226")
+    version("25.0.2", sha256="6b8c1bbb70e868dc88801aa532cae6bd4e3b5233784692b786f17ad2962e5149")
+    version("24.0.1", sha256="216f5d7dbb67166759e59b0479bca82b8acf9bed6015b526b8eb10143fb08e77")
+    version("22.3.0", sha256="8eddc033e716f8c91c6a2112f0a8ebc5e00532b4a6ae1eb0ccc48e027f9c671c")
+    version("18.1.0", sha256="93f44739db69234c013a16990e43db1aa0af3cf5a4b8b377d028ff24515fbeb3")
+    version("18.0.1", sha256="8b319805f6f7c907b101c864c3ca6cefc9db8ce0791356f180b1b644c7347e4c")
+    version("17.1.2", sha256="a72b82ac1910f2cf61a49139f4974f994984475f771b0faa730839607eeedddf")
+    version("16.0.2", sha256="0322543fff5ab6f87d11a8a099c4c07dd8a1719040084b6ce9162bcdf5c45c9d")
+
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+
+    depends_on("libfabric", type=("build", "link", "run"))
+
+    depends_on("py-cython@3:", type="build", when="@26:")
+    depends_on("py-cython@0.29.35:", type="build", when="@25.1.1:25 ^python@3.12:")
+    depends_on("py-cython@0.29:", type="build", when="@19:25")
+    depends_on("py-cython@0.20:", type="build", when="@:18")
+    depends_on("py-packaging", type="build")
+    depends_on("py-scikit-build-core+pyproject@0.10:", type="build", when="@26.3:")
+    depends_on("py-scikit-build-core+pyproject", type="build", when="@26.0:26.2")
+
+    # from README
+    depends_on("libzmq@3.2.2:", type=("build", "link"), when="@22.3.0:")
+    depends_on("libzmq", type=("build", "link"))
+
+    # Undocumented dependencies
+    depends_on("py-gevent", type=("build", "run"))
+
+    # https://github.com/zeromq/pyzmq/issues/1915
+    conflicts("^py-cython@3.1:", when="@:25")
+
+    # Historical dependencies
+    depends_on("py-setuptools@:59", type="build", when="@17:18.0")
+    depends_on("py-setuptools", type="build", when="@:25")
+    depends_on("py-setuptools-scm+toml", type="build", when="@25.1.1:25")
+    # Only when python is provided by 'pypy'
+    depends_on("py-py", type=("build", "run"), when="@:22")
+    depends_on("py-cffi", type=("build", "run"), when="@:22")
+
+    @run_before("install", when="@15:19")
+    def remove_cythonized_files(self):
+        # Before v20.0.0 an ancient cythonize API was used, for which we cannot
+        # force re-cythonization. Re-cythonizing v14.x fails in general, so
+        # restrict to 15:19
+        for f in find(".", "*.pyx"):
+            touch(f)
+
+    @run_before("install", when="@:25")
+    def setup(self):
+        """Create config file listing dependency information."""
+
+        with open("setup.cfg", "w") as config:
+            config.write(
+                """\
+[global]
+zmq_prefix = {0}
+
+[build_ext]
+library_dirs = {1}
+include_dirs = {2}
+""".format(
+                    self.spec["libzmq"].prefix,
+                    self.spec["libzmq"].libs.directories[0],
+                    self.spec["libzmq"].headers.directories[0],
+                )
+            )
+
+    @property
+    def import_modules(self):
+        # importing zmq mutates the install prefix, meaning spack install --test=root py-pyzmq
+        # would result in a different install prefix than spack install py-pyzmq. Therefore do not
+        # run any import tests.
+        return [] if self.spec.satisfies("@:20") else ["zmq"]
+
+
+    def setup_build_environment(self, env):
+        libfabric_libs = self.spec["libfabric"].libs.directories
+    
+        for libdir in libfabric_libs:
+            env.append_flags("LDFLAGS", f"-Wl,-rpath,{libdir}")
+
+#    def _pawsey_cray_runtime_libdirs(self):
+#        """Runtime library paths needed when importing zmq on Setonix.
+#
+#        py-pyzmq can be imported while building dependent Python packages
+#        such as py-ipykernel. In a clean Spack build environment, the Cray
+#        module LD_LIBRARY_PATH may not be preserved, so _zmq.so can fail with:
+#
+#            ImportError: libfabric.so.1: cannot open shared object file
+#        """
+#
+#        candidates = []
+#
+#        # Preserve useful Cray paths if they are visible when Spack starts.
+#        for var in ("CRAY_LD_LIBRARY_PATH", "LD_LIBRARY_PATH"):
+#            for path in os.environ.get(var, "").split(":"):
+#                if path:
+#                    candidates.append(path)
+#
+#        # Setonix 2026.06 Cray runtime paths needed by pyzmq/libzmq stack.
+#        candidates.extend(
+#            [
+#                "/opt/cray/libfabric/2.3.1/lib64",
+#                "/opt/cray/pe/pmi/6.1.17/lib",
+#                "/opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3/lib",
+#                "/opt/cray/pe/mpich/9.1.0/gtl/lib",
+#                "/opt/cray/pe/libsci/26.03.0/GNU/12/x86_64/lib",
+#                "/opt/cray/pe/lib64",
+#                "/opt/cray/lib64",
+#                "/opt/cray/pe/perftools/26.03.0/lib64",
+#            ]
+#        )
+#
+#        paths = []
+#        seen = set()
+#
+#        for path in candidates:
+#            if path in seen:
+#                continue
+#            if os.path.isdir(path):
+#                seen.add(path)
+#                paths.append(path)
+#
+#        return paths
+#
+#    def _prepend_pawsey_cray_runtime_libdirs(self, env):
+#        for path in reversed(self._pawsey_cray_runtime_libdirs()):
+#            env.prepend_path("LD_LIBRARY_PATH", path)
+#
+#    def setup_build_environment(self, env):
+#        self._prepend_pawsey_cray_runtime_libdirs(env)
+#
+#    def setup_run_environment(self, env):
+#        self._prepend_pawsey_cray_runtime_libdirs(env)
+#
+#    def setup_dependent_build_environment(self, env, dependent_spec):
+#        self._prepend_pawsey_cray_runtime_libdirs(env)
+#
+#    def setup_dependent_run_environment(self, env, dependent_spec):
+#        self._prepend_pawsey_cray_runtime_libdirs(env)
+
