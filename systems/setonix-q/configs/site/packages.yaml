@@ -92,11 +92,15 @@ packages:
     variants: '+X'
   llvm:
     # py-llvmlite (via py-numba) needs just the LLVM libraries, so prefer a lean
-    # build. This is a soft preference (not a hard require) because other
-    # consumers such as binder (pulled in by trilinos +python) hard-depend on
-    # llvm+clang; a hard '~clang' requirement here makes llvm unsatisfiable for
-    # them ("cannot satisfy a requirement for package 'llvm'").
-    prefer: '~clang ~lldb ~flang ~polly ~gold targets=aarch64,nvptx'
+    # build. The clang/frontend flags are a soft preference (not a hard require)
+    # because other consumers such as binder (pulled in by trilinos +python)
+    # hard-depend on llvm+clang; a hard '~clang' requirement makes llvm
+    # unsatisfiable for them ("cannot satisfy a requirement for package 'llvm'").
+    # '~gold' stays a hard requirement: the gold linker is not present on the
+    # system, so +gold could never build.
+    require: '~gold targets=aarch64,nvptx'
+    prefer:
+      - '~clang ~lldb ~flang ~polly'
   # preferred versions and variants, python
   python:
     version: [3.11.6]
