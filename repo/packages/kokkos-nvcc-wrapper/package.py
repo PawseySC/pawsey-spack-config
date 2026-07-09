@@ -48,6 +48,9 @@ class KokkosNvccWrapper(Package):
         env.set("OMPI_CXX", wrapper)
         env.set("MPICXX_CXX", wrapper)  # HPE MPT
 
+    def setup_dependent_package(self, module, dependent_spec):
+        self.spec.kokkos_cxx = join_path(self.prefix.bin, "nvcc_wrapper")
+
     @property
     def kokkos_cxx(self):
         return join_path(self.prefix.bin, "nvcc_wrapper")
