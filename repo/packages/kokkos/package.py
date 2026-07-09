@@ -32,6 +32,11 @@ class Kokkos(CMakePackage, CudaPackage, ROCmPackage):
     version("master", branch="master")
     version("develop", branch="develop")
 
+    # Pawsey: 4.7.04 is the last 4.x release. It is required for CUDA 13 because
+    # its bundled nvcc_wrapper defaults to sm_80 (valid for CUDA 11-13) instead
+    # of the sm_70 default in 4.4.01 (dropped in CUDA 13). It still provides the
+    # numactl/memkind/hpx_async_dispatch TPL options that kokkos@5 removed.
+    version("4.7.04", sha256="4213b248c39e112299fa94ee08817e51126fc02996ed6e2ab56aec4cdb80ee1f")
     version("4.4.01", sha256="3413f0cb39912128d91424ebd92e8832009e7eeaf6fa8da58e99b0d37860d972")
     version("4.4.00", sha256="0b46372f38c48aa088411ac1b7c173a5c90f0fdb69ab40271827688fc134f58b")
 
@@ -319,6 +324,9 @@ class Kokkos(CMakePackage, CudaPackage, ROCmPackage):
     depends_on("kokkos-nvcc-wrapper", when="+wrapper")
     depends_on("kokkos-nvcc-wrapper@develop", when="@develop+wrapper")
     depends_on("kokkos-nvcc-wrapper@master", when="@master+wrapper")
+    # Keep the nvcc_wrapper script in lockstep with the Kokkos sources so the
+    # CUDA 13 compatible sm_80 default arch is used (see 4.7.04 note above).
+    depends_on("kokkos-nvcc-wrapper@4.7.04", when="@4.7.04+wrapper")
     conflicts("+wrapper", when="~cuda")
     conflicts("+wrapper", when="+cmake_lang")
 

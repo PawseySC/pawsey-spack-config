@@ -15,9 +15,9 @@ spack:
     # use the flag cxxstd ... Update in recipes might fix this but for the moment, we fix 
     # this in our repo
     # cxxstd=14 is not a variant in kokkos@3.7.02
-    - kokkos@4.4.01 +cuda cuda_arch=90 +hwloc +memkind +numactl +openmp +tuning +wrapper build_type=Release ^cmake ~doc~qtgui %gcc
+    - kokkos@4.7.04 +cuda cuda_arch=90 +hwloc +memkind +numactl +openmp +tuning +wrapper build_type=Release ^cmake ~doc~qtgui %gcc
     # for hpx must explicitly set openmp off 
-    - kokkos@4.4.01 +cuda cuda_arch=90 +wrapper +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ~openmp
+    - kokkos@4.7.04 +cuda cuda_arch=90 +wrapper +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ~openmp
       build_type=Release ^hpx@1.9.1 +async_mpi max_cpu_count=128 networking=mpi build_type=Release ^cmake ~doc~qtgui %gcc
     - magma@master ~rocm +cuda cuda_arch=90
     # seems like slate can't compile with cuda due to openmp taskloops not implemented in cuda compiler. And needs nvcc,nvc++ for cuda to be enabled.
