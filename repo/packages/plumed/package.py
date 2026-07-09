@@ -199,8 +199,9 @@ class Plumed(AutotoolsPackage):
 
     # Dependencies. LAPACK and BLAS are recommended but not essential.
     depends_on("zlib-api")
-    depends_on("blas")
-    depends_on("lapack")
+    depends_on("blas", when="%gcc")
+    depends_on("lapack", when="%gcc")
+    depends_on("netlib-lapack", when="%cce")
     # For libmatheval support through the 'function' module
     # which is enabled by default (or when optional_modules=all)
     depends_on("libmatheval", when="@:2.4")
@@ -283,6 +284,32 @@ class Plumed(AutotoolsPackage):
             "python/Makefile",
         )
 
+    def netlib_lapack_libs(self):
+        netlib = self.spec["netlib-lapack"]
+
+        libs = find_libraries(
+            ["libblas", "liblapack"],
+            root=netlib.prefix,
+            shared=True,
+            recursive=True,
+        )
+
+        if not libs:
+            libs = find_libraries(
+                ["libblas", "liblapack"],
+                root=netlib.prefix,
+                shared=False,
+                recursive=True,
+            )
+
+        if not libs:
+            raise RuntimeError(
+                "Could not find libblas/liblapack under {0}".format(netlib.prefix)
+            )
+
+        return libs
+
+
     def configure_args(self):
         spec = self.spec
 
@@ -312,10 +339,33 @@ class Plumed(AutotoolsPackage):
 
         extra_libs = []
         # Set flags to help find gsl
+
         if "+gsl" in spec:
             gsl_libs = spec["gsl"].libs
-            blas_libs = spec["blas"].libs
+            if "%cce" in spec:
+                blas_libs = self.netlib_lapack_libs()
+            if "%gcc" in spec:
+                blas_libs = spec["blas"].libs 
+
             extra_libs.append((gsl_libs + blas_libs).ld_flags)
+
+#        if "+gsl" in spec:
+#            gsl_libs = spec["gsl"].libs
+#            #blas_libs = spec["netlib-lapack"].libs
+#            blas_libs = spec["blas"].libs
+#            extra_libs.append((gsl_libs + blas_libs).ld_flags)
+
+#        if "+gsl" in spec:
+#            gsl_libs = spec["gsl"].libs
+#        
+#            if "%cce" in spec:
+#                blas_libs = spec["netlib-blas"].libs
+#            else:
+#                blas_libs = spec["blas"].libs
+#        
+#            extra_libs.append((gsl_libs + blas_libs).ld_flags)
+
+
         # Set flags to help with ArrayFire
         if "arrayfire=none" not in spec:
             libaf = "arrayfire:{0}".format(spec.variants["arrayfire"].value)
