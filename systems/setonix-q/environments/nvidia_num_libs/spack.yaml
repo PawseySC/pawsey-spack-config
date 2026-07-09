@@ -30,11 +30,9 @@ spack:
     # Previously: opencv cmake error with cuda (master could not be patched).
     - opencv@4.10.0 +cuda cuda_arch=90 build_type=Release
 
-    # Previously: trilinos@16.0.0 +cuda failed because llvm failed to build with gcc
     # (CMake: imported target "LibXml2::LibXml2" includes non-existent path).
-    - trilinos@16.0.0 +cuda cuda_arch=90 +adios2 +openmp +python ^adios2@2.9.2 build_type=Release ^hdf5@1.14.3 build_type=Release ^adios2%gcc ^binder%gcc ^py-mpi4py%gcc ^python-venv%gcc ^llvm%gcc
-    - trilinos@15.1.0 ~rocm +adios2 +openmp +python +tpetra +kokkos +zoltan ~cuda ^adios2@2.9.2 build_type=Release ^adios2%gcc ^binder%gcc ^py-mpi4py%gcc ^python-venv%gcc ^llvm%gcc
-    - trilinos@16.0.0 ~rocm +adios2 +openmp +python +tpetra +kokkos +zoltan ~cuda ^adios2@2.9.2 build_type=Release ^adios2%gcc ^binder%gcc ^py-mpi4py%gcc ^python-venv%gcc ^llvm%gcc
+    - trilinos@16.2.1 +cuda cuda_arch=90 +adios2 +openmp +python ^adios2@2.9.2 build_type=Release ^hdf5@1.14.3 build_type=Release ^adios2%gcc ^binder%gcc ^py-mpi4py%gcc ^python-venv%gcc ^llvm%gcc
+    - trilinos@16.2.1 ~rocm +adios2 +openmp +python +tpetra +kokkos +zoltan ~cuda ^adios2@2.9.2 build_type=Release ^adios2%gcc ^binder%gcc ^py-mpi4py%gcc ^python-venv%gcc ^llvm%gcc
 
   - petsc-set:
     # Previously disabled: unable to configure petsc with trilinos (unclear whether
