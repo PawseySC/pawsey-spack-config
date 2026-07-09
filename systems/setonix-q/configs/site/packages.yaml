@@ -91,9 +91,12 @@ packages:
     version: [6.0.0]
     variants: '+X'
   llvm:
-    # py-llvmlite (via py-numba) is the only llvm consumer on setonix-q and needs
-    # just the LLVM libraries. 
-    require: '~clang ~lldb ~flang ~polly ~gold targets=aarch64,nvptx'
+    # py-llvmlite (via py-numba) needs just the LLVM libraries, so prefer a lean
+    # build. This is a soft preference (not a hard require) because other
+    # consumers such as binder (pulled in by trilinos +python) hard-depend on
+    # llvm+clang; a hard '~clang' requirement here makes llvm unsatisfiable for
+    # them ("cannot satisfy a requirement for package 'llvm'").
+    prefer: '~clang ~lldb ~flang ~polly ~gold targets=aarch64,nvptx'
   # preferred versions and variants, python
   python:
     version: [3.11.6]
