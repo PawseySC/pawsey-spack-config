@@ -937,6 +937,7 @@ class Opencv(CMakePackage, CudaPackage):
                 self.define_from_variant("ENABLE_POWERPC", "powerpc"),
                 self.define_from_variant("ENABLE_FAST_MATH", "fast-math"),
                 self.define_from_variant("OPENCV_ENABLE_NONFREE", "nonfree"),
+                self.define("WITH_AVIF", False),
             ]
         )
 
