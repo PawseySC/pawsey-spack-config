@@ -36,8 +36,8 @@ spack:
       +cudev +cudaarithm +cublas +cufft +cudafilters +cudaimgproc +cudawarping +cudafeatures2d
       build_type=Release
 
-    - trilinos@16.2.1 +cuda cuda_arch=90 +adios2 +openmp +python +thyra +stratimikos ^adios2@2.9.2 build_type=Release ^hdf5@1.14.3 build_type=Release ^adios2%gcc ^binder%gcc ^py-mpi4py%gcc ^python-venv%gcc ^llvm%gcc
-    - trilinos@16.2.1 ~rocm +adios2 +openmp +python +thyra +stratimikos +tpetra +kokkos +zoltan ~cuda ^adios2@2.9.2 build_type=Release ^adios2%gcc ^binder%gcc ^py-mpi4py%gcc ^python-venv%gcc ^llvm%gcc
+    - trilinos@16.2.1 +cuda cuda_arch=90 +adios2 +openmp ^adios2@2.9.2 build_type=Release ^hdf5@1.14.3 build_type=Release ^adios2%gcc
+    - trilinos@16.2.1 ~rocm +adios2 +openmp +tpetra +kokkos +zoltan ~cuda ^adios2@2.9.2 build_type=Release ^adios2%gcc
 
   - petsc-set:
     - petsc@3.21.1 +fftw +hwloc +openmp +cuda cuda_arch=90

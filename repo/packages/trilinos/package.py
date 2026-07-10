@@ -325,10 +325,6 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
 
     # Known requirements from tribits dependencies
     conflicts("~thyra", when="+stratimikos")
-    # PyTrilinos2 (@15: +python) has required dependences on ThyraTpetraAdapters
-    # (needs +thyra) and Stratimikos (needs +stratimikos).
-    conflicts("~thyra", when="@15: +python")
-    conflicts("~stratimikos", when="@15: +python")
     conflicts("+adelus", when="~kokkos")
     conflicts("+aztec", when="~fortran")
     conflicts("+basker", when="~amesos2")
@@ -437,8 +433,6 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
         depends_on(kokkos_spec, when="@14.4.0: +kokkos {0}".format(arch_str))
 
     depends_on("adios2", when="+adios2")
-    depends_on("binder@1.3:", when="@15: +python", type="build")
-    depends_on("llvm+clang", when="@15: +python", type="build")
     depends_on("blas")
     depends_on("boost+graph+math+exception+stacktrace", when="+boost")
     depends_on("boost+graph+math+exception+stacktrace", when="@:13.4.0 +stk")
@@ -455,7 +449,6 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
     depends_on("matio", when="+exodus")
     depends_on("metis", when="+zoltan")
     depends_on("mpi", when="+mpi")
-    depends_on("mpi", when="@15: +python")
     depends_on("netcdf-c", when="+exodus")
     depends_on("parallel-netcdf", when="+exodus+mpi")
     depends_on("parmetis", when="+mpi +zoltan")
@@ -528,8 +521,6 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
         when="@15.0.0 ^hip@6.0 +rocm",
     )
     patch("cstdint_gcc13.patch", when="@13.4.0:13.4.1 %gcc@13.0.0:")
-    patch("pytrilinos2-string-view-gcc13.patch", when="@15: +python %gcc@13.0.0:")
-
     # Allow building with +teko gotype=long
     patch(
         "https://github.com/trilinos/Trilinos/commit/b17f20a0b91e0b9fc5b1b0af3c8a34e2a4874f3f.patch?full_index=1",
@@ -631,36 +622,6 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
             if "+stk" in spec:
                 # Using CXXFLAGS for hipcc which doesn't use flags in the spack wrappers
                 env.set("CXXFLAGS", "-DSTK_NO_BOOST_STACKTRACE")
-
-    def _binder_gcc_install_dir(self):
-        gcc = Executable(self.compiler.cc)
-        libgcc = gcc("-print-file-name=libgcc.a", output=str, fail_on_error=False).strip()
-        if not os.path.isabs(libgcc):
-            return None
-
-        libgcc_dir = os.path.dirname(os.path.realpath(libgcc))
-        version_parts = str(self.compiler.version).split(".")
-        if version_parts[0] not in libgcc_dir.split(os.sep):
-            return None
-
-        return libgcc_dir
-
-    def _binder_clang_resource_dir(self):
-        try:
-            clang = Executable(self.spec["binder"]["llvm"].prefix.bin.clang)
-            resource_dir = clang("-print-resource-dir", output=str, fail_on_error=False).strip()
-        except Exception:
-            return None
-
-        if not resource_dir:
-            return None
-
-        wrapper = os.path.join(resource_dir, "include", "__clang_cuda_runtime_wrapper.h")
-        if os.path.exists(wrapper):
-            return resource_dir
-
-        return None
-
 
     def cmake_args(self):
         options = []
@@ -865,33 +826,6 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
                     define_trilinos_enable("SEACASNemslice", False),
                 ]
             )
-
-        if "@15: +python" in spec:
-            binder = spec["binder"].prefix.bin.binder
-            clang_include_dirs = spec["binder"].clang_include_dirs
-            libclang_include_dir = spec["binder"].libclang_include_dir
-            options.append(define("PyTrilinos2_BINDER_EXECUTABLE", binder))
-            options.append(define("PyTrilinos2_BINDER_clang_include_dirs", clang_include_dirs))
-            options.append(define("PyTrilinos2_BINDER_LibClang_include_dir", libclang_include_dir))
-            # PyTrilinos2 falls back to an OpenMPI-only `mpicxx --showme:compile`
-            # probe when this variable is empty; set it explicitly for MPICH.
-            options.append(define("TPL_MPI_INCLUDE_DIRS", spec["mpi"].prefix.include))
-            # Ensure binder uses the active GCC toolchain headers/libstdc++ and
-            # an LLVM resource directory that actually carries CUDA wrappers.
-            binder_flags = []
-            gcc_install_dir = self._binder_gcc_install_dir()
-            if gcc_install_dir:
-                binder_flags.append("--gcc-install-dir=" + gcc_install_dir)
-            clang_resource_dir = self._binder_clang_resource_dir()
-            if clang_resource_dir:
-                binder_flags.append("-resource-dir=" + clang_resource_dir)
-            if binder_flags:
-                options.append(define("PyTrilinos2_BINDER_FLAGS", ";".join(binder_flags)))
-            # PyTrilinos2/CMakeLists.txt does `find_package(LLVM REQUIRED CONFIG)`,
-            # which needs LLVM_DIR to point at the directory containing
-            # LLVMConfig.cmake (spack installs it under <prefix>/lib/cmake/llvm).
-            options.append(define("LLVM_DIR", spec["binder"]["llvm"].prefix.lib.cmake.llvm))
-            options.append(define_from_variant("PyTrilinos2_ENABLE_TESTS", "test"))
 
         if "+stratimikos" in spec:
             # Explicitly enable Thyra (ThyraCore is required). If you don't do
