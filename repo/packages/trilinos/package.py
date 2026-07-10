@@ -325,8 +325,10 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
 
     # Known requirements from tribits dependencies
     conflicts("~thyra", when="+stratimikos")
-    # PyTrilinos2 (@15: +python) has a required dependence on ThyraTpetraAdapters.
+    # PyTrilinos2 (@15: +python) has required dependences on ThyraTpetraAdapters
+    # (needs +thyra) and Stratimikos (needs +stratimikos).
     conflicts("~thyra", when="@15: +python")
+    conflicts("~stratimikos", when="@15: +python")
     conflicts("+adelus", when="~kokkos")
     conflicts("+aztec", when="~fortran")
     conflicts("+basker", when="~amesos2")
