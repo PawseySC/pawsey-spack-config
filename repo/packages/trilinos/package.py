@@ -538,6 +538,9 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
     # patch("fix_gather_ETI.patch", when="@15.1.1")
     # Pawsey: ROCm-only fix for deprecated gcnArch (rocm>6).
     patch("fix_Kokkos_HIP_Instance.cpp.patch", when="@:16.0.0 +rocm")
+    # PyTrilinos2/Binder needs both LLVM resource headers and an explicit GCC
+    # toolchain on Cray wrappers; also avoid its OpenMPI-only MPI flag probe.
+    patch("pytrilinos2-binder-cray.patch", when="@16.2.1 +python")
 
     def flag_handler(self, name, flags):
         spec = self.spec
@@ -631,6 +634,37 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
             if "+stk" in spec:
                 # Using CXXFLAGS for hipcc which doesn't use flags in the spack wrappers
                 env.set("CXXFLAGS", "-DSTK_NO_BOOST_STACKTRACE")
+
+    def _binder_gcc_toolchain(self):
+        """Return a GCC toolchain prefix suitable for Binder/libclang.
+
+        On Cray systems the configured compiler is usually a wrapper such as
+        ``CC``. Taking dirname(dirname("CC")) produces an empty string, which
+        later becomes ``--gcc-toolchain=`` and leaves Binder to find mismatched
+        system headers. Query the active compiler for libgcc instead; the
+        wrapper forwards this to the loaded GCC toolchain.
+        """
+        for compiler in (self.compiler.cxx, self.compiler.cc):
+            if not compiler:
+                continue
+
+            libgcc = Executable(compiler)(
+                "-print-file-name=libgcc.a", output=str, fail_on_error=False
+            ).strip()
+            if not os.path.isabs(libgcc):
+                continue
+
+            libgcc = os.path.realpath(libgcc)
+            for marker in (os.path.join("lib", "gcc"), os.path.join("lib64", "gcc")):
+                marker = os.sep + marker + os.sep
+                if marker in libgcc:
+                    return libgcc.split(marker, 1)[0]
+
+        cxx = self.compiler.cxx
+        if cxx and os.path.isabs(cxx):
+            return os.path.dirname(os.path.dirname(os.path.realpath(cxx)))
+
+        return None
 
 
     def cmake_args(self):
@@ -848,9 +882,9 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
             # probe when this variable is empty; set it explicitly for MPICH.
             options.append(define("TPL_MPI_INCLUDE_DIRS", spec["mpi"].prefix.include))
             # Ensure binder uses the active GCC toolchain headers/libstdc++.
-            options.append(
-                define("PyTrilinos2_BINDER_GCC_TOOLCHAIN", os.path.dirname(os.path.dirname(self.compiler.cxx)))
-            )
+            gcc_toolchain = self._binder_gcc_toolchain()
+            if gcc_toolchain:
+                options.append(define("PyTrilinos2_BINDER_GCC_TOOLCHAIN", gcc_toolchain))
             # PyTrilinos2/CMakeLists.txt does `find_package(LLVM REQUIRED CONFIG)`,
             # which needs LLVM_DIR to point at the directory containing
             # LLVMConfig.cmake (spack installs it under <prefix>/lib/cmake/llvm).
