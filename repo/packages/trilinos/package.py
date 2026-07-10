@@ -531,7 +531,10 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
         when="@13.0.0:13.0.1 +teko gotype=long",
     )
     # patch("fix_gather_ETI.patch", when="@15.1.1")
-    patch ("fix_Kokkos_HIP_Instance.cpp.patch")
+    # Pawsey: ROCm-only fix for deprecated gcnArch (rocm>6) in the bundled kokkos
+    # HIP source. Scoped to +rocm and older trilinos: 16.2.1 bundles kokkos
+    # 4.7.04 which already has the fix, so the patch no longer applies there.
+    patch("fix_Kokkos_HIP_Instance.cpp.patch", when="@:16.0.0 +rocm")
 
     def flag_handler(self, name, flags):
         spec = self.spec
