@@ -885,7 +885,7 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
             if clang_resource_dir:
                 binder_flags.append("-resource-dir=" + clang_resource_dir)
             if binder_flags:
-                options.append(define("PyTrilinos2_BINDER_FLAGS", " ".join(binder_flags)))
+                options.append(define("PyTrilinos2_BINDER_FLAGS", ";".join(binder_flags)))
             # PyTrilinos2/CMakeLists.txt does `find_package(LLVM REQUIRED CONFIG)`,
             # which needs LLVM_DIR to point at the directory containing
             # LLVMConfig.cmake (spack installs it under <prefix>/lib/cmake/llvm).
