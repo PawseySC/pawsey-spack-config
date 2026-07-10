@@ -551,7 +551,13 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
             if "+stk%intel" in spec:
                 # Workaround for Intel compiler segfaults with STK and IPO
                 flags.append("-no-ipo")
-            if "+wrapper" in spec:
+            if "+wrapper" in spec and not spec.satisfies("@14.4.0: +kokkos"):
+                # Only needed for Trilinos' *internal* Kokkos build. With external
+                # Kokkos (@14.4.0:), the exported Kokkos::kokkos target already
+                # carries --extended-lambda on its INTERFACE_COMPILE_OPTIONS, so
+                # injecting it globally here is redundant and breaks CMake's
+                # compiler-ABI try-compile (a host-only .cxx that never links
+                # Kokkos), since plain g++ rejects the nvcc-only flag.
                 flags.append("--expt-extended-lambda")
         elif name == "ldflags":
             if spec.satisfies("%cce@:14"):
@@ -837,6 +843,10 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
             options.append(define("PyTrilinos2_BINDER_EXECUTABLE", binder))
             options.append(define("PyTrilinos2_BINDER_clang_include_dirs", clang_include_dirs))
             options.append(define("PyTrilinos2_BINDER_LibClang_include_dir", libclang_include_dir))
+            # PyTrilinos2/CMakeLists.txt does `find_package(LLVM REQUIRED CONFIG)`,
+            # which needs LLVM_DIR to point at the directory containing
+            # LLVMConfig.cmake (spack installs it under <prefix>/lib/cmake/llvm).
+            options.append(define("LLVM_DIR", spec["llvm"].prefix.lib.cmake.llvm))
             options.append(define_from_variant("PyTrilinos2_ENABLE_TESTS", "test"))
 
         if "+stratimikos" in spec:

@@ -16,7 +16,6 @@ spack:
     # rather silly kokkos has std=98,11, etc setting cxxstd. BUT all other packages 
     # use the flag cxxstd ... Update in recipes might fix this but for the moment, we fix 
     # this in our repo
-    # cxxstd=14 is not a variant in kokkos@3.7.02
     - kokkos@4.7.04 +cuda cuda_arch=90 +hwloc +memkind +numactl +openmp +tuning +wrapper build_type=Release ^cmake ~doc~qtgui %gcc
     # for hpx must explicitly set openmp off 
     - kokkos@4.7.04 +cuda cuda_arch=90 +wrapper +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ~openmp
@@ -37,14 +36,10 @@ spack:
       +cudev +cudaarithm +cublas +cufft +cudafilters +cudaimgproc +cudawarping +cudafeatures2d
       build_type=Release
 
-    # (CMake: imported target "LibXml2::LibXml2" includes non-existent path).
     - trilinos@16.2.1 +cuda cuda_arch=90 +adios2 +openmp +python +thyra +stratimikos ^adios2@2.9.2 build_type=Release ^hdf5@1.14.3 build_type=Release ^adios2%gcc ^binder%gcc ^py-mpi4py%gcc ^python-venv%gcc ^llvm%gcc
     - trilinos@16.2.1 ~rocm +adios2 +openmp +python +thyra +stratimikos +tpetra +kokkos +zoltan ~cuda ^adios2@2.9.2 build_type=Release ^adios2%gcc ^binder%gcc ^py-mpi4py%gcc ^python-venv%gcc ^llvm%gcc
 
   - petsc-set:
-    # Previously disabled: unable to configure petsc with trilinos (unclear whether
-    # the petsc or trilinos side was at fault). Retrying now that trilinos is back.
-    - petsc@3.15.5 +fftw +trilinos +hwloc +openmp +complex ~cuda
     - petsc@3.21.1 +fftw +hwloc +openmp +cuda cuda_arch=90
   specs:
   # Build the GPU numerical libraries with gcc as the host compiler and consume
