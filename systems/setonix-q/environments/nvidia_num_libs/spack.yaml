@@ -8,8 +8,10 @@ spack:
 
   - parallel:
     - blaspp@2024.10.26 +cuda cuda_arch=90 build_type=Release ^openblas%gcc ^cmake ~doc~qtgui %gcc
-    # hpx is failing to build due to error  >> 1745    "/usr/include/c++/12/bits/stl_pair.h", line 191: error: incomplete type "boost::spirit::info" is not allowed
-    - hpx@1.9.1 +cuda cuda_arch=90 +async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi 
+    # hpx bumped 1.9.1 -> 1.11.0: 1.9.1 headers (just.hpp/pack.hpp) don't compile
+    # under CUDA-13 nvcc. 1.11.0 closes the Grace Hopper (#6563) and Kokkos (#6696)
+    # build issues. 1.11.0 is the last HPX supporting C++17.
+    - hpx@1.11.0 +cuda cuda_arch=90 +async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi 
       build_type=Release ^boost %gcc ^cmake ~doc~qtgui %gcc ^asio %gcc
     # rather silly kokkos has std=98,11, etc setting cxxstd. BUT all other packages 
     # use the flag cxxstd ... Update in recipes might fix this but for the moment, we fix 
@@ -18,7 +20,7 @@ spack:
     - kokkos@4.7.04 +cuda cuda_arch=90 +hwloc +memkind +numactl +openmp +tuning +wrapper build_type=Release ^cmake ~doc~qtgui %gcc
     # for hpx must explicitly set openmp off 
     - kokkos@4.7.04 +cuda cuda_arch=90 +wrapper +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ~openmp
-      build_type=Release ^hpx@1.9.1 +async_mpi max_cpu_count=128 networking=mpi build_type=Release ^cmake ~doc~qtgui %gcc
+      build_type=Release ^hpx@1.11.0 +async_mpi max_cpu_count=128 networking=mpi build_type=Release ^cmake ~doc~qtgui %gcc
     - magma@master ~rocm +cuda cuda_arch=90
     # Re-enabled to retry after the kokkos/CUDA-13 nvcc_wrapper (sm_80) fix.
     # Previously slate failed: openmp taskloops not implemented in the cuda
