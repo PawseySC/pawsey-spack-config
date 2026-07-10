@@ -438,6 +438,7 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
 
     depends_on("adios2", when="+adios2")
     depends_on("binder@1.3:", when="@15: +python", type="build")
+    depends_on("llvm+clang", when="@15: +python", type="build")
     depends_on("blas")
     depends_on("boost+graph+math+exception+stacktrace", when="+boost")
     depends_on("boost+graph+math+exception+stacktrace", when="@:13.4.0 +stk")
@@ -843,10 +844,17 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
             options.append(define("PyTrilinos2_BINDER_EXECUTABLE", binder))
             options.append(define("PyTrilinos2_BINDER_clang_include_dirs", clang_include_dirs))
             options.append(define("PyTrilinos2_BINDER_LibClang_include_dir", libclang_include_dir))
+            # PyTrilinos2 falls back to an OpenMPI-only `mpicxx --showme:compile`
+            # probe when this variable is empty; set it explicitly for MPICH.
+            options.append(define("TPL_MPI_INCLUDE_DIRS", spec["mpi"].prefix.include))
+            # Ensure binder uses the active GCC toolchain headers/libstdc++.
+            options.append(
+                define("PyTrilinos2_BINDER_GCC_TOOLCHAIN", os.path.dirname(os.path.dirname(self.compiler.cxx)))
+            )
             # PyTrilinos2/CMakeLists.txt does `find_package(LLVM REQUIRED CONFIG)`,
             # which needs LLVM_DIR to point at the directory containing
             # LLVMConfig.cmake (spack installs it under <prefix>/lib/cmake/llvm).
-            options.append(define("LLVM_DIR", spec["llvm"].prefix.lib.cmake.llvm))
+            options.append(define("LLVM_DIR", spec["binder"]["llvm"].prefix.lib.cmake.llvm))
             options.append(define_from_variant("PyTrilinos2_ENABLE_TESTS", "test"))
 
         if "+stratimikos" in spec:
