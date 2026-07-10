@@ -4,6 +4,21 @@ spack:
   packages:
     'fftw-api:':
       buildable: true
+
+
+    all:
+      providers:
+        blas: [netlib-lapack]
+        cblas: [netlib-lapack]
+        lapack: [netlib-lapack]
+
+    openblas:
+      buildable: false
+
+    amdblis:
+      buildable: false
+
+
   definitions:
   - parallel:
     
@@ -38,7 +53,7 @@ spack:
     
       #    - opencv@3.4.18 build_type=Release
     #I - trilinos@15.0.0 ~rocm +adios2 +openmp +python ~cuda ^adios2@2.9.2 build_type=Release ^llvm@18.1.2 ~libomptarget build_type=Release
-    - trilinos@15.0.0 ~rocm +adios2 +openmp +python ~cuda ^adios2@2.9.2 build_type=Release ^hdf5@1.14.3 build_type=Release
+    - trilinos@15.0.0 ~rocm +adios2 +openmp +python ~cuda ^adios2@2.9.2+fortran generator=ninja build_type=Release ^hdf5@1.14.3 build_type=Release
   - petsc-set:    
     - petsc@3.22.1
   - numerical:
