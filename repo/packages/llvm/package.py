@@ -499,6 +499,13 @@ class Llvm(CMakePackage, CudaPackage, LlvmDetection, CompilerPackage):
         sha256="c6ca6b925f150e8644ce756023797b7f94c9619c62507231f979edab1c09af78",
         when="@6:13",
     )
+
+
+    patch(
+        "llvm-21.1.4-cce-libu.patch",
+        when="@21.1.4 %cce@21.0.0",
+    )
+
     # fix building of older versions of llvm with newer versions of glibc
     for compiler_rt_as in ["project", "runtime"]:
         with when("compiler-rt={0}".format(compiler_rt_as)):
@@ -777,6 +784,7 @@ class Llvm(CMakePackage, CudaPackage, LlvmDetection, CompilerPackage):
         for key in ("c", "cxx"):
             msg = "{0} compiler not found for {1}"
             assert key in compilers, msg.format(key, spec)
+
 
     def _cc_path(self):
         if self.spec.satisfies("+clang"):
@@ -1141,6 +1149,30 @@ class Llvm(CMakePackage, CudaPackage, LlvmDetection, CompilerPackage):
 
             # CMake args passed just to runtimes
             runtime_cmake_args = [define("CMAKE_INSTALL_RPATH_USE_LINK_PATH", True)]
+            
+#            # LLVM objects built with CCE reference __cray_dset_detect from libu.so.2.
+#            # The nested runtime build links with the newly built clang++, which does
+#            # not automatically add the CCE runtime libraries.
+#            if spec.satisfies("%cce"):
+#                cce_libdir = join_path(
+#                    "/opt",
+#                    "cray",
+#                    "pe",
+#                    "cce",
+#                    str(self.compiler.version),
+#                    "cce",
+#                    "x86_64",
+#                    "lib",
+#                )
+#                libu = join_path(cce_libdir, "libu.so.2")
+#            
+#                runtime_cmake_args.append(
+#                    define(
+#                        "CMAKE_EXE_LINKER_FLAGS",
+#                        "-Wl,--no-as-needed {0} -Wl,--as-needed "
+#                        "-Wl,-rpath,{1}".format(libu, cce_libdir),
+#                    )
+#                )
 
             # When building runtimes, just-built clang has to know where GCC is.
             gcc_install_dir_flag = get_gcc_install_dir_flag(spec, self.compiler)

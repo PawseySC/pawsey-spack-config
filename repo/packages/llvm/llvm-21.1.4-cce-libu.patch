@@ -1,0 +1,58 @@
+diff -ruN a/offload/liboffload/CMakeLists.txt b/offload/liboffload/CMakeLists.txt
+--- a/offload/liboffload/CMakeLists.txt
++++ b/offload/liboffload/CMakeLists.txt
+@@ -14,6 +14,11 @@
+   PluginErrcodes
+   )
+ 
++# LLVM static libraries compiled with CCE require the CCE runtime.
++target_link_libraries(LLVMOffload PRIVATE
++  /opt/cray/pe/cce/21.0.0/cce/x86_64/lib/libu.so.2
++)
++
+ foreach(plugin IN LISTS LIBOMPTARGET_PLUGINS_TO_BUILD)
+     target_link_libraries(LLVMOffload PRIVATE omptarget.rtl.${plugin})
+ endforeach()
+diff -ruN a/offload/libomptarget/CMakeLists.txt b/offload/libomptarget/CMakeLists.txt
+--- a/offload/libomptarget/CMakeLists.txt
++++ b/offload/libomptarget/CMakeLists.txt
+@@ -40,6 +40,11 @@
+   NO_INSTALL_RPATH
+   BUILDTREE_ONLY
+ )
++# LLVM static libraries compiled with CCE require the CCE runtime.
++target_link_libraries(omptarget PRIVATE
++  /opt/cray/pe/cce/21.0.0/cce/x86_64/lib/libu.so.2
++)
++
+ target_include_directories(omptarget PRIVATE
+   ${LIBOMPTARGET_INCLUDE_DIR} ${LIBOMPTARGET_BINARY_INCLUDE_DIR}
+ )
+diff -ruN a/offload/tools/offload-tblgen/CMakeLists.txt b/offload/tools/offload-tblgen/CMakeLists.txt
+--- a/offload/tools/offload-tblgen/CMakeLists.txt
++++ b/offload/tools/offload-tblgen/CMakeLists.txt
+@@ -22,5 +22,14 @@
+   RecordTypes.hpp
+   )
+ 
++# LLVMSupport objects compiled with CCE reference __cray_[sd]set_detect.
++# Bootstrap clang++ does not automatically link the CCE runtime.
++target_link_libraries(offload-tblgen PRIVATE
++  /opt/cray/pe/cce/21.0.0/cce/x86_64/lib/libu.so.2
++)
++set_property(TARGET offload-tblgen APPEND PROPERTY BUILD_RPATH
++  /opt/cray/pe/cce/21.0.0/cce/x86_64/lib
++)
++
+ set(OFFLOAD_TABLEGEN_EXE "${OFFLOAD_TABLEGEN_EXE}" CACHE INTERNAL "")
+ set(OFFLOAD_TABLEGEN_TARGET "${OFFLOAD_TABLEGEN_TARGET}" CACHE INTERNAL "")
+--- a/offload/tools/CMakeLists.txt
++++ b/offload/tools/CMakeLists.txt
+@@ -6,6 +6,7 @@
+ 
+ macro(add_openmp_tool name)
+   llvm_add_tool(OPENMP ${ARGV})
++  target_link_libraries(${name} PRIVATE /opt/cray/pe/cce/21.0.0/cce/x86_64/lib/libu.so.2)
+ endmacro()
+ 
+ macro(add_openmp_tool_symlink name)
