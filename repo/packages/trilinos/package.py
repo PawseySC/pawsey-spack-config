@@ -699,9 +699,9 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
         )
 
         if spec.version >= Version("15"):
-            options.append(define_trilinos_enable("PyTrilinos2", "python"))
+            options.append(define("Trilinos_ENABLE_PyTrilinos2", False))
         else:
-            options.append(define_trilinos_enable("PyTrilinos", "python"))
+            options.append(define("Trilinos_ENABLE_PyTrilinos", False))
 
         if "+test" in spec:
             options.append(define_trilinos_enable("TESTS", True))
