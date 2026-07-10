@@ -538,10 +538,6 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
     # patch("fix_gather_ETI.patch", when="@15.1.1")
     # Pawsey: ROCm-only fix for deprecated gcnArch (rocm>6).
     patch("fix_Kokkos_HIP_Instance.cpp.patch", when="@:16.0.0 +rocm")
-    # PyTrilinos2/Binder needs both LLVM resource headers and an explicit GCC
-    # toolchain on Cray wrappers; also avoid its OpenMPI-only MPI flag probe.
-    patch("pytrilinos2-binder-cray.patch", when="@16.2.1 +python")
-
     def flag_handler(self, name, flags):
         spec = self.spec
         is_cce = spec.satisfies("%cce")
@@ -647,6 +643,22 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
             return None
 
         return libgcc_dir
+
+    def _binder_clang_resource_dir(self):
+        try:
+            clang = Executable(self.spec["binder"]["llvm"].prefix.bin.clang)
+            resource_dir = clang("-print-resource-dir", output=str, fail_on_error=False).strip()
+        except Exception:
+            return None
+
+        if not resource_dir:
+            return None
+
+        wrapper = os.path.join(resource_dir, "include", "__clang_cuda_runtime_wrapper.h")
+        if os.path.exists(wrapper):
+            return resource_dir
+
+        return None
 
 
     def cmake_args(self):
@@ -863,12 +875,17 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
             # PyTrilinos2 falls back to an OpenMPI-only `mpicxx --showme:compile`
             # probe when this variable is empty; set it explicitly for MPICH.
             options.append(define("TPL_MPI_INCLUDE_DIRS", spec["mpi"].prefix.include))
-            # Ensure binder uses the active GCC toolchain headers/libstdc++.
+            # Ensure binder uses the active GCC toolchain headers/libstdc++ and
+            # an LLVM resource directory that actually carries CUDA wrappers.
+            binder_flags = []
             gcc_install_dir = self._binder_gcc_install_dir()
             if gcc_install_dir:
-                options.append(
-                    define("PyTrilinos2_BINDER_FLAGS", "--gcc-install-dir=" + gcc_install_dir)
-                )
+                binder_flags.append("--gcc-install-dir=" + gcc_install_dir)
+            clang_resource_dir = self._binder_clang_resource_dir()
+            if clang_resource_dir:
+                binder_flags.append("-resource-dir=" + clang_resource_dir)
+            if binder_flags:
+                options.append(define("PyTrilinos2_BINDER_FLAGS", " ".join(binder_flags)))
             # PyTrilinos2/CMakeLists.txt does `find_package(LLVM REQUIRED CONFIG)`,
             # which needs LLVM_DIR to point at the directory containing
             # LLVMConfig.cmake (spack installs it under <prefix>/lib/cmake/llvm).
