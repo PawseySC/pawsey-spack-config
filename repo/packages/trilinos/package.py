@@ -528,6 +528,7 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
         when="@15.0.0 ^hip@6.0 +rocm",
     )
     patch("cstdint_gcc13.patch", when="@13.4.0:13.4.1 %gcc@13.0.0:")
+    patch("pytrilinos2-string-view-gcc13.patch", when="@15: +python %gcc@13.0.0:")
 
     # Allow building with +teko gotype=long
     patch(
