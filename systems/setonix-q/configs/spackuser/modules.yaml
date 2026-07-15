@@ -52,6 +52,8 @@ modules:
       # numerical libraries
       arpack-ng:
         autoload: direct
+      memkind:
+        autoload: direct
       cuda:
         autoload: direct
         load:
@@ -149,6 +151,7 @@ modules:
 
         # numerical or parallelisation libraries 
         arpack-ng: 'libraries/{name}/{version}'
+        memkind: 'libraries/{name}/{version}'
         cuda: 'libraries/{name}/{version}-cuda-gh200'
         cuquantum: 'libraries/{name}/{version}-cuda-gh200'
         cutensor: 'libraries/{name}/{version}-cuda-gh200'
@@ -217,6 +220,8 @@ modules:
         # adios also has similar variants 
         "adios2 +hdf5 +python": 'libraries/{name}/{version}-hdf5'
         "adios2 ~hdf5 +python": 'libraries/{name}/{version}'
+        "adios2 +hdf5 ~python": 'libraries/{name}/{version}-hdf5-nopython'
+        "adios2 ~hdf5 ~python": 'libraries/{name}/{version}-nopython'
         netcdf-c: 'libraries/{name}/{version}'
         netcdf-cxx: 'libraries/{name}/{version}'
         netcdf-cxx4: 'libraries/{name}/{version}'
@@ -237,6 +242,7 @@ modules:
         autoconf: 'utilities/{name}/{version}'
         automake: 'utilities/{name}/{version}'
         libtool: 'utilities/{name}/{version}'
+        meson: 'utilities/{name}/{version}'
         ninja: 'utilities/{name}/{version}'
         # to avoid multiple cmake modules, picking a specific one
         "cmake ~doc+ncurses+ownlibs": 'utilities/{name}/{version}'
@@ -377,6 +383,7 @@ modules:
         # py-rpds-py and py-markupsafe do not need a hash to install shpc
         py-rpds-py: 'dependencies/.py-rpds-py/{version}'
         py-markupsafe: 'dependencies/.py-markupsafe/{version}'
+        perl-data-dumper: 'dependencies/.{name}/{version}'
 
         # git needs special name, because `.git` is ignored by Lmod
         git: 'dependencies/.git-module/{version}-{hash:7}'
