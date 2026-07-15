@@ -67,10 +67,16 @@ setenv("LMOD_{{ name|upper() }}_VERSION", "{{ version_part }}")
 
 {% block autoloads %}
 {% for module in autoload %}
-{% if verbose %}
-LmodMessage("Autoloading {{ module |replace("astro-applications/", "") |replace("bio-applications/", "") |replace("py-keras-applications/", "pawsey-temporary-string/") |replace("applications/", "") |replace("pawsey-temporary-string/", "py-keras-applications/") |replace("libraries/", "") |replace("programming-languages/", "") |replace("utilities/", "") |replace("visualisation/", "") |replace("python-packages/", "") |replace("benchmarking/", "") |replace("developer-tools/", "") |replace("dependencies/", "") |replace("project-apps/", "") |replace("user-apps/", "") }}")
+{% set module_name = module |replace("astro-applications/", "") |replace("bio-applications/", "") |replace("py-keras-applications/", "pawsey-temporary-string/") |replace("applications/", "") |replace("pawsey-temporary-string/", "py-keras-applications/") |replace("libraries/", "") |replace("programming-languages/", "") |replace("utilities/", "") |replace("visualisation/", "") |replace("python-packages/", "") |replace("benchmarking/", "") |replace("developer-tools/", "") |replace("dependencies/", "") |replace("project-apps/", "") |replace("user-apps/", "") %}
+{# CUDA is provided by the site module cuda/<major.minor>, not by a Spack wrapper module. #}
+{% if module_name.startswith("cuda/") or module_name.startswith(".cuda/") %}
+{% set cuda_version = module_name.split('/')[1].split('-')[0].split('.')[:2] | join('.') %}
+{% set module_name = "cuda/" ~ cuda_version %}
 {% endif %}
-load("{{ module |replace("astro-applications/", "") |replace("bio-applications/", "") |replace("py-keras-applications/", "pawsey-temporary-string/") |replace("applications/", "") |replace("pawsey-temporary-string/", "py-keras-applications/") |replace("libraries/", "") |replace("programming-languages/", "") |replace("utilities/", "") |replace("visualisation/", "") |replace("python-packages/", "") |replace("benchmarking/", "") |replace("developer-tools/", "") |replace("dependencies/", "") |replace("project-apps/", "") |replace("user-apps/", "") }}")
+{% if verbose %}
+LmodMessage("Autoloading {{ module_name }}")
+{% endif %}
+load("{{ module_name }}")
 {% endfor %}
 {% endblock %}
 
