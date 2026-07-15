@@ -31,18 +31,6 @@ def quantum_access():
     return access
 
 
-def job_prerequisite_modules():
-    gcc_version = os.environ.get('gcc_version', '13.3.1')
-    pawseyenv_version = os.environ.get('pawseyenv_version', '2026.08')
-
-    return [
-        f'pawseyenv/{pawseyenv_version}',
-        'PrgEnv-gnu',
-        f'gcc-native/{gcc_version.split(".")[0]}',
-        'craype-arm-grace',
-    ]
-
-
 site_configuration = {
     'systems': [
         {
@@ -114,9 +102,9 @@ site_configuration = {
         {
             'name': 'PrgEnv-gnu',
             'target_systems': ['setonix-q'],
-            # Pin gcc-native after PrgEnv-gnu; plain PrgEnv-gnu otherwise resets
-            # GNU to the PE default.
-            'modules': job_prerequisite_modules()
+            # Module setup for package checks is done explicitly in the test
+            # job script so staff_modulefiles is visible before pawseyenv loads.
+            'modules': []
         },
     ],
     'logging': [

@@ -51,6 +51,19 @@ def quantum_allocation_pack(num_gpus_per_node=1):
     }
 
 
+def module_setup_commands():
+    date_tag = os.environ.get('DATE_TAG') or os.environ.get('pawseyenv_version', '2026.08')
+    install_prefix = os.environ.get('INSTALL_PREFIX', '${INSTALL_PREFIX}')
+
+    return [
+        'module purge',
+        'module load pawsey pawseytools',
+        f'module use {install_prefix}/staff_modulefiles',
+        f'module load pawseyenv/{date_tag}',
+        'module load PrgEnv-gnu',
+    ]
+
+
 def get_baseline_cmd(mod_category, base_name):
     return (pkg_cmds.get(mod_category) or {}).get(base_name)
 
@@ -164,10 +177,11 @@ class module_load_check(rfm.RunOnlyRegressionTest):
         # Execution
         self.executable = 'module'
         self.name_ver = '/'.join(self.mod.split('/')[-2:])[:-4]
-        self.executable_opts = ['load', self.mod]
+        self.executable_opts = ['load', self.name_ver]
 
         # module show to check the exact modulefile selected for this test
-        self.prerun_cmds += [f'module show {self.mod}']
+        self.prerun_cmds += module_setup_commands()
+        self.prerun_cmds += [f'module show {self.name_ver}']
         # Check main module is loaded
         self.postrun_cmds = [f'if module is-loaded {self.name_ver} ; then echo "main package is loaded"; fi']
 
@@ -210,7 +224,7 @@ class module_load_check(rfm.RunOnlyRegressionTest):
         return sn.all([
             sn.assert_found("main package is loaded", self.stdout),
             sn.assert_eq(sn.count(sn.extractall('dependency is loaded', self.stdout)), len(self.load_lines)),
-            sn.assert_found(self.mod, self.stderr),
+            sn.assert_found(self.name_ver, self.stderr),
             sn.assert_not_found('Failed', self.stderr),
             sn.assert_not_found('Error', self.stderr),
         ])
@@ -231,7 +245,8 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
 
         # Load the module we are testing
         self.name_ver = '/'.join(self.mod.split('/')[-2:])[:-4]
-        self.modules = [self.mod]
+        self.prerun_cmds += module_setup_commands()
+        self.prerun_cmds += [f'module load {self.name_ver}']
 
         # Execution - call executable with `--help` or `--version` option
         self.base_name = self.mod.split('/')[-2] # Extract package/library name from full module path

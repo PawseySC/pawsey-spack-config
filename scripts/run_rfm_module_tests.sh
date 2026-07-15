@@ -43,6 +43,8 @@ fi
 
 # These need to be exported to be accessible within Reframe tests
 export PAWSEY_SPACK_CONFIG_REPO=${PAWSEY_SPACK_CONFIG_REPO}
+export INSTALL_PREFIX=${INSTALL_PREFIX}
+export DATE_TAG=${DATE_TAG}
 export cce_version=${cce_version}
 export gcc_version=${gcc_version}
 export python_version=${python_version}
