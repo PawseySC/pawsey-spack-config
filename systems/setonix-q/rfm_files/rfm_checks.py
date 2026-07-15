@@ -236,12 +236,13 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
         # Execution - call executable with `--help` or `--version` option
         self.base_name = self.mod.split('/')[-2] # Extract package/library name from full module path
         self.mod_category = self.mod.split('/')[-3]
-        # Set executable, accounting for packages which have different commands for different package versions
-        version_cmds = ['fftw']
-        version_checks = [v in self.mod for v in version_cmds]
-        if any(version_checks):
-            self.base_name = self.name_ver
-        self.baseline_cmd = get_baseline_cmd(self.mod_category, self.base_name)
+        # Prefer a versioned command for projected modules that need one, then
+        # fall back to a generic command keyed by package name.
+        self.baseline_key = self.name_ver
+        self.baseline_cmd = get_baseline_cmd(self.mod_category, self.baseline_key)
+        if self.baseline_cmd is None:
+            self.baseline_key = self.base_name
+            self.baseline_cmd = get_baseline_cmd(self.mod_category, self.baseline_key)
         if self.baseline_cmd is None:
             self.skip_if(
                 True,
@@ -252,7 +253,7 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
 
         self.executable = self.baseline_cmd[0]
         # Set the executable options, which depends on if it's software or library
-        if (self.executable == 'ldd') or (self.base_name == 'hpx'):
+        if self.executable == 'ldd':
             lib_path = get_library_path(self.mod.split('/')[-2:])
             self.executable_opts = [lib_path + '/' + self.baseline_cmd[1]]
         else:
