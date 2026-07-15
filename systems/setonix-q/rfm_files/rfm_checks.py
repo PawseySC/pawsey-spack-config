@@ -125,7 +125,7 @@ class module_existence_check(rfm.RunOnlyRegressionTest):
         self.maintainers = ['Craig Meyer']
 
         # Valid systems and PEs
-        self.valid_systems = ['setonix-q:quantum']
+        self.valid_systems = ['setonix-q:quantum-shell']
         self.valid_prog_environs = ['PrgEnv-gnu']
         self.extra_resources = quantum_allocation_pack()
 

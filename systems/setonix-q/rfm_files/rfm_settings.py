@@ -67,6 +67,30 @@ site_configuration = {
                         'num_sockets': 4
                     },
                 },
+                {
+                    'name': 'quantum-shell',
+                    'descr': 'Setonix-Q shell checks',
+                    'scheduler': 'slurm',
+                    'launcher': 'local',
+                    'modules': [],
+                    'access': quantum_access(),
+                    'max_jobs': 1,
+                    'environs': [
+                        'PrgEnv-gnu',
+                    ],
+                    'resources': [
+                        {
+                            'name': 'gpu',
+                            'options': ['--gres=gpu:{num_gpus_per_node}']
+                        },
+                    ],
+                    'processor': {
+                        'num_cpus': 288,
+                        'num_cpus_per_core': 1,
+                        'num_cpus_per_socket': 72,
+                        'num_sockets': 4
+                    },
+                },
             ]
         },
     ],
