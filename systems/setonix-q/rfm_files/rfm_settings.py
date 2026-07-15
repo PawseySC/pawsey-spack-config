@@ -31,6 +31,18 @@ def quantum_access():
     return access
 
 
+def job_prerequisite_modules():
+    gcc_version = os.environ.get('gcc_version', '13.3.1')
+    pawseyenv_version = os.environ.get('pawseyenv_version', '2026.08')
+
+    return [
+        f'pawseyenv/{pawseyenv_version}',
+        'PrgEnv-gnu',
+        f'gcc-native/{gcc_version.split(".")[0]}',
+        'craype-arm-grace',
+    ]
+
+
 site_configuration = {
     'systems': [
         {
@@ -102,10 +114,9 @@ site_configuration = {
         {
             'name': 'PrgEnv-gnu',
             'target_systems': ['setonix-q'],
-            # Base modules are set by set_modulepaths_for_arch before ReFrame
-            # runs; loading PrgEnv-gnu here (without the gcc-native/13 pin) would
-            # reset the GNU compiler to the PE default.
-            'modules': []
+            # Pin gcc-native after PrgEnv-gnu; plain PrgEnv-gnu otherwise resets
+            # GNU to the PE default.
+            'modules': job_prerequisite_modules()
         },
     ],
     'logging': [

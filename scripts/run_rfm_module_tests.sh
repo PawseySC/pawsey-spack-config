@@ -47,6 +47,7 @@ export cce_version=${cce_version}
 export gcc_version=${gcc_version}
 export python_version=${python_version}
 export reframe_version=${reframe_version}
+export pawseyenv_version=${pawseyenv_version}
 
 
 # If running on compute node, add node this job is running on to host list of ReFrame, allowing it to run from this node
