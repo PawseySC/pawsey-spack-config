@@ -176,7 +176,10 @@ modules:
         eigen: 'libraries/{name}/{version}'
         fftw: 'libraries/{name}/{version}'
         gsl: 'libraries/{name}/{version}'
+        "hpx +cuda": 'libraries/{name}-cuda-gh200/{version}'
+        "hpx ~cuda": 'libraries/{name}/{version}'
         hpx: 'libraries/{name}/{version}'
+        "kokkos +cuda +hpx": 'libraries/{name}-cuda-gh200/{version}-hpx'
         "kokkos +hpx": 'libraries/{name}/{version}-hpx'
         "kokkos +openmp +cuda": 'libraries/{name}-cuda-gh200/{version}-openmp'
         "kokkos +openmp ~cuda": 'libraries/{name}/{version}-openmp' 
@@ -184,6 +187,8 @@ modules:
         openblas: 'libraries/{name}/{version}'
         "blaspp +cuda": 'libraries/{name}-cuda-gh200/{version}'
         "blaspp ~cuda": 'libraries/{name}/{version}'
+        "opencv +cuda": 'libraries/{name}-cuda-gh200/{version}'
+        "opencv ~cuda": 'libraries/{name}/{version}'
         opencv: 'libraries/{name}/{version}'
         plasma: 'libraries/{name}/{version}'
         "petsc +complex~trilinos": 'libraries/{name}/{version}-complex'
@@ -369,6 +374,8 @@ modules:
         #performance tests 
         "hpl ~openmp": 'benchmarking/{name}/{version}'
         "hpl +openmp": 'benchmarking/{name}/{version}+openmp'
+        "osu-micro-benchmarks +cuda": 'benchmarking/{name}/{version}-cuda-gh200'
+        "osu-micro-benchmarks ~cuda": 'benchmarking/{name}/{version}'
         osu-micro-benchmarks: 'benchmarking/{name}/{version}'
         ior: 'benchmarking/{name}/{version}'
 

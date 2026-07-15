@@ -9,7 +9,7 @@ spack:
 #      variants: ~external-xdr
   definitions:
   - hdf5-set:
-    - hdf5@1.14.3
+    - hdf5@1.14.5
   - adios-set:
     - adios2@2.10.2
   specs:
@@ -22,8 +22,8 @@ spack:
   - matrix:
     - [$adios-set]
     - ['%gcc@13.3.1']
-    - [+python ^python@3.11.6 +optimizations+zlib, ~python]
-    - [~hdf5, +hdf5 ^hdf5@1.14.3 +hl +fortran +szip api=v112 build_type=Release]
+    - [+python ^python@3.11.6+optimizations+zlib~ssl, ~python]
+    - [~hdf5, +hdf5 ^hdf5@1.14.5 +hl +fortran +szip api=v112 build_type=Release]
     - [+pic]
 
   view: false

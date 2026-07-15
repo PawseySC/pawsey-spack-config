@@ -25,8 +25,8 @@ spack:
     # Previously slate failed: openmp taskloops not implemented in the cuda
     # compiler, and it needs nvcc/nvc++ for cuda to be enabled.
     - slate@2024.10.29 +cuda cuda_arch=90 build_type=Release
-    # Previously: plasma relies on taskloops/openmp not available with cuda 13.0 and gcc 13.3.
-    - plasma@23.8.2 build_type=Release ^openblas
+    # CPU plasma build is installed by cpu_num_libs.
+    #- plasma@24.8.7 build_type=Release ^openblas
     # some heavier numerical library builds
     # opencv 4.13.0 is the newest non-deprecated release that supports CUDA 13
     # Add CUDA contrib + python3 bindings + the common CUDA algorithm modules
@@ -51,5 +51,5 @@ spack:
   - matrix:
     - [$parallel]
     - ['%gcc@13.3.1']
-    - [^python@3.11.6%gcc@13.3.1]
+    - [^python@3.11.6+optimizations+zlib~ssl%gcc@13.3.1]
   view: false
