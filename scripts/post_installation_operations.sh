@@ -33,6 +33,9 @@ if [ "${SYSTEM}" = "setonix-q" ]; then
     echo "Deploying custom utility modules.."
     "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_utility_modules.sh"
 
+    echo "Executing CRs"
+    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/cr_operations.sh"
+
     echo "Running spack reframe tests.."
     "${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_rfm_module_tests.sh"
     exit 0
