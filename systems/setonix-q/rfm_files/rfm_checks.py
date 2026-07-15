@@ -164,10 +164,10 @@ class module_load_check(rfm.RunOnlyRegressionTest):
         # Execution
         self.executable = 'module'
         self.name_ver = '/'.join(self.mod.split('/')[-2:])[:-4]
-        self.executable_opts = ['load', self.name_ver]
+        self.executable_opts = ['load', self.mod]
 
-        # module show to check the correct module is being pointed to
-        self.prerun_cmds += [f'module show {self.name_ver}']
+        # module show to check the exact modulefile selected for this test
+        self.prerun_cmds += [f'module show {self.mod}']
         # Check main module is loaded
         self.postrun_cmds = [f'if module is-loaded {self.name_ver} ; then echo "main package is loaded"; fi']
 
@@ -231,7 +231,7 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
 
         # Load the module we are testing
         self.name_ver = '/'.join(self.mod.split('/')[-2:])[:-4]
-        self.modules = [self.name_ver]
+        self.modules = [self.mod]
 
         # Execution - call executable with `--help` or `--version` option
         self.base_name = self.mod.split('/')[-2] # Extract package/library name from full module path
