@@ -36,11 +36,13 @@ spack:
       +cudev +cudaarithm +cublas +cufft +cudafilters +cudaimgproc +cudawarping +cudafeatures2d
       build_type=Release
 
-    - trilinos@16.2.1 +cuda cuda_arch=90 +adios2 +openmp ^adios2@2.9.2 build_type=Release ^hdf5@1.14.3 build_type=Release ^adios2%gcc
-    - trilinos@16.2.1 ~rocm +adios2 +openmp +tpetra +kokkos +zoltan ~cuda ^adios2@2.9.2 build_type=Release ^adios2%gcc
+    # Failing to build on arm with CUDA 13.0 and gcc 13.3.
+    #- trilinos@16.2.1 +cuda cuda_arch=90 +adios2 +openmp ^adios2@2.9.2 build_type=Release ^hdf5@1.14.3 build_type=Release ^adios2%gcc
+    #- trilinos@16.2.1 ~rocm +adios2 +openmp +tpetra +kokkos +zoltan ~cuda ^adios2@2.9.2 build_type=Release ^adios2%gcc
 
-  - petsc-set:
-    - petsc@3.21.1 +fftw +hwloc +openmp +cuda cuda_arch=90
+    # Build without trilinos on arm not tested
+    #- petsc-set:
+    #  - petsc@3.21.1 +fftw +hwloc +openmp +cuda cuda_arch=90
   specs:
   # Build the GPU numerical libraries with gcc as the host compiler and consume
   # CUDA via the external cuda/13.0 module (configs/site/packages.yaml)
