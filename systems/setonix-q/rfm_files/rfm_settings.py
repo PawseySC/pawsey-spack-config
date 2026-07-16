@@ -12,6 +12,10 @@
 import os
 
 
+def quantum_target_node():
+    return os.environ.get('SETONIX_Q_RFM_NODE')
+
+
 def quantum_account():
     project = os.environ.get('PAWSEY_PROJECT')
     if project:
@@ -22,11 +26,13 @@ def quantum_account():
     return None
 
 
-def quantum_access():
+def quantum_access(node=None):
     access = ['--partition=quantum']
     account = quantum_account()
     if account:
         access.append(f'--account={account}')
+    if node:
+        access.append(f'--nodelist={node}')
 
     return access
 
@@ -78,6 +84,54 @@ site_configuration = {
                     'launcher': 'local',
                     'modules': [],
                     'access': quantum_access(),
+                    'max_jobs': 1,
+                    'environs': [
+                        'PrgEnv-gnu',
+                    ],
+                    'resources': [
+                        {
+                            'name': 'gpu',
+                            'options': ['--gres=gpu:{num_gpus_per_node}']
+                        },
+                    ],
+                    'processor': {
+                        'num_cpus': 288,
+                        'num_cpus_per_core': 1,
+                        'num_cpus_per_socket': 72,
+                        'num_sockets': 4
+                    },
+                },
+                {
+                    'name': 'quantum-node',
+                    'descr': 'Setonix-Q GH200 tests pinned to a selected node',
+                    'scheduler': 'slurm',
+                    'launcher': 'srun',
+                    'modules': [],
+                    'access': quantum_access(quantum_target_node()),
+                    'max_jobs': 1,
+                    'environs': [
+                        'PrgEnv-gnu',
+                    ],
+                    'resources': [
+                        {
+                            'name': 'gpu',
+                            'options': ['--gres=gpu:{num_gpus_per_node}']
+                        },
+                    ],
+                    'processor': {
+                        'num_cpus': 288,
+                        'num_cpus_per_core': 1,
+                        'num_cpus_per_socket': 72,
+                        'num_sockets': 4
+                    },
+                },
+                {
+                    'name': 'quantum-node-shell',
+                    'descr': 'Setonix-Q shell checks pinned to a selected node',
+                    'scheduler': 'slurm',
+                    'launcher': 'local',
+                    'modules': [],
+                    'access': quantum_access(quantum_target_node()),
                     'max_jobs': 1,
                     'environs': [
                         'PrgEnv-gnu',

@@ -51,6 +51,24 @@ def quantum_allocation_pack(num_gpus_per_node=1):
     }
 
 
+def use_pinned_quantum_node():
+    return bool(os.environ.get('SETONIX_Q_RFM_NODE'))
+
+
+def quantum_compute_system():
+    if use_pinned_quantum_node():
+        return 'setonix-q:quantum-node'
+
+    return 'setonix-q:quantum'
+
+
+def quantum_shell_system():
+    if use_pinned_quantum_node():
+        return 'setonix-q:quantum-node-shell'
+
+    return 'setonix-q:quantum-shell'
+
+
 def module_setup_commands():
     date_tag = os.environ.get('DATE_TAG') or os.environ.get('pawseyenv_version', '2026.08')
     install_prefix = os.environ.get('INSTALL_PREFIX', '${INSTALL_PREFIX}')
@@ -77,7 +95,7 @@ class concretise_check(rfm.RunOnlyRegressionTest):
         self.maintainers = ['Craig Meyer']
 
         # Valid systems and PEs
-        self.valid_systems = ['setonix-q:quantum']
+        self.valid_systems = [quantum_compute_system()]
         self.valid_prog_environs = ['PrgEnv-gnu']
         self.extra_resources = quantum_allocation_pack()
 
@@ -138,7 +156,7 @@ class module_existence_check(rfm.RunOnlyRegressionTest):
         self.maintainers = ['Craig Meyer']
 
         # Valid systems and PEs
-        self.valid_systems = ['setonix-q:quantum-shell']
+        self.valid_systems = [quantum_shell_system()]
         self.valid_prog_environs = ['PrgEnv-gnu']
         self.extra_resources = quantum_allocation_pack()
 
@@ -170,7 +188,7 @@ class module_load_check(rfm.RunOnlyRegressionTest):
         self.maintainers = ['Craig Meyer']
 
         # Valid systems and PEs
-        self.valid_systems = ['setonix-q:quantum-shell']
+        self.valid_systems = [quantum_shell_system()]
         self.valid_prog_environs = ['PrgEnv-gnu']
         self.extra_resources = quantum_allocation_pack()
 
@@ -239,7 +257,7 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
         self.amintainers = ['Craig Meyer']
 
         # Valid systems and PEs
-        self.valid_systems = ['setonix-q:quantum']
+        self.valid_systems = [quantum_compute_system()]
         self.valid_prog_environs = ['PrgEnv-gnu']
         self.extra_resources = quantum_allocation_pack()
 
