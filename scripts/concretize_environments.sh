@@ -29,7 +29,7 @@ function concretize_environment()
 
   echo "Concretizing env ${env}.."
   spack env activate "${envpath}"
-  if ! spack concretize -f; then
+  if ! spack concretize -f ${SPACK_CONCRETIZE_ARGS}; then
     spack env deactivate || true
     echo "Concretization failed for env ${env}."
     exit 1
