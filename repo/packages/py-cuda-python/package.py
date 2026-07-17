@@ -159,6 +159,16 @@ class PyCudaPython(PythonPackage):
                 "No installable Python subprojects were found in the cuda-python source tree."
             )
 
+        pyver = ".".join(str(x) for x in spec["python"].version.up_to(2))
+        site_packages = [
+            join_path(prefix, "lib64", f"python{pyver}", "site-packages"),
+            join_path(prefix, "lib", f"python{pyver}", "site-packages"),
+        ]
+        for path in reversed(site_packages):
+            for name in ("PYTHONPATH", "CYTHON_INCLUDE_PATH"):
+                current = os.environ.get(name)
+                os.environ[name] = path if not current else path + os.pathsep + current
+
         for dist in dists:
             with working_dir(dist):
                 pip(
