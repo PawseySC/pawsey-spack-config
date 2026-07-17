@@ -17,7 +17,7 @@ class PyCudaPython(PythonPackage):
     (cuda-python, cuda-bindings, cuda-pathfinder, and sometimes additional CUDA component
     packages). For simplicity, this Spack package installs the required subprojects
     into a single prefix so downstream packages (e.g. nvmath-python) can import
-    cuda.bindings.* modules.
+    cuda.bindings.* and cuda.core.* modules.
     """
 
     homepage = "https://nvidia.github.io/cuda-python/"
@@ -125,8 +125,8 @@ class PyCudaPython(PythonPackage):
 
     def _find_repo_subdists(self):
         """Return candidate subproject dirs in install order."""
-        # Minimum set that fixes "missing cython files"/cuda.bindings.* imports.
-        required = ["cuda_bindings", "cuda_pathfinder", "cuda_python"]
+        # Minimum set needed by downstream CUDA Python consumers (e.g. nvmath).
+        required = ["cuda_bindings", "cuda_pathfinder", "cuda_core", "cuda_python"]
 
         # Always install required ones if present.
         dists = []
@@ -142,7 +142,7 @@ class PyCudaPython(PythonPackage):
                     continue
                 # Skip obvious non-dists (docs, scripts, etc.) while being robust.
                 base = os.path.basename(p)
-                if base in ("cuda_bindings", "cuda_pathfinder", "cuda_python"):
+                if base in ("cuda_bindings", "cuda_core", "cuda_pathfinder", "cuda_python"):
                     continue
                 if self._is_python_dist_dir(p):
                     dists.append(p)
