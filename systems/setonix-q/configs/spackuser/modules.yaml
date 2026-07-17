@@ -58,6 +58,10 @@ modules:
         autoload: direct
         load:
           - cuda/13.0
+      cuquantum:
+        autoload: direct
+      cutensor:
+        autoload: direct
       openblas:
         autoload: direct
       netlib-lapack:
@@ -111,6 +115,11 @@ modules:
         autoload: direct
       squashfs:
         autoload: none
+
+      mpifileutils:
+        autoload: direct
+      ior:
+        autoload: direct
 
 
       projections:
