@@ -60,10 +60,34 @@ if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
   for hash in `spack find -x --format "{hash}"`; do spack buildcache create -a -m systemwide_buildcache  /$hash; done;
 fi
 # Refresh module files - explicit specs
-for hash in `spack find -x --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
+# Disabled because querying the global install database also regenerates modules
+# for stale installs that are no longer present in  lockfiles.
+#for hash in `spack find -x --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
 
 # Refresh dependencies - implicit specs (manually remove .llvm load from pocl modulefile)
-for hash in `spack find -X --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
+# Disabled for the same reason as the explicit-spec refresh above.
+#for hash in `spack find -X --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
+
+# Rebuild the Spack module tree from the installed concrete specs belonging to
+# the active deployment environments. Include ReFrame 
+# explicitly because it is bootstrapped before environment concretization and
+# is required by the post-install tests.
+mapfile -t module_specs < <(
+  {
+    for env in $env_list $cray_env_list; do
+      spack -e "${envdir}/${env}" find --format '/{hash}'
+    done
+    spack find -x --format '/{hash}' \
+      "reframe@${reframe_version}%gcc@${gcc_version}"
+  } | sort -u
+)
+
+if ((${#module_specs[@]} == 0)); then
+  echo "No locked or bootstrapped specs found for module generation."
+  exit 1
+fi
+
+spack module lmod refresh -y --delete-tree "${module_specs[@]}"
 
 # Remove .llvm from module files to stop it replacing gcc/cce at module load which breaks reframe tests
 # Done post-installation, so commented out here
