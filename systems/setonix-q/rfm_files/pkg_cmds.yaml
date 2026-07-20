@@ -68,7 +68,7 @@ utilities:
   meson/1.5.1: ['meson', '--version', '1.5.1']
   ffmpeg/7.0.2: ['ffmpeg', '-version', 'ffmpeg version 7.0.2']
   gnuplot/6.0.0: ['gnuplot', '--version', 'gnuplot 6.0 patchlevel 0']
-  mpifileutils/0.11.1: ['bash', '-lc ''dcp --version >/dev/null && echo "mpifileutils ok"''', 'mpifileutils ok']
+  mpifileutils/0.11.1: ['dcp', '-h', 'Usage: dcp']
 # no viz packages
 #visualisation:
 python-packages:
