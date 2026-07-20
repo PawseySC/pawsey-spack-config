@@ -14,8 +14,9 @@ fi
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
-# Remove llvm load statements from affected module files
+# Remove llvm load and depends_on statements from affected module files
 grep -Elr "^load\(.*\.llvm.*\)" ${INSTALL_PREFIX}/modules | xargs -r sed -i "s/\(load(.*llvm.*)\)/--\1/"
+grep -Elr "^depends_on\(.*\.llvm.*\)" ${INSTALL_PREFIX}/modules | xargs -r sed -i "s/\(load(.*llvm.*)\)/--\1/"
 
 if [ "${SYSTEM}" = "setonix-q" ]; then
     exit 0
