@@ -1,7 +1,7 @@
 # Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-# Pawsey: Added version 2.4.1.4 with CUDA 12/13 support for setonix-q.
+# Pawsey: Added version 2.4.1.4 with CUDA 13 support for setonix-q.
 
 import os
 import platform
@@ -20,7 +20,7 @@ _versions = {
         "Linux-ppc64le": "7176083a4dad44cb0176771be6efb3775748ad30a39292bf7b4584510f1dd811",
         "Linux-aarch64": "4214a0f7b44747c738f2b643be06b2b24826bd1bae6af27f29f3c6dec131bdeb",
     },
-    # cuTensor 2.4.1 - requires CUDA 12+
+    # cuTensor 2.4.1 built for CUDA 13
     "2.4.1.4": {
         "Linux-x86_64": "032904fb8bba341e24aa45a8cc7b5afc63e4c28e22474530ccc97cfa546d0442",
         "Linux-aarch64": "9baffd3658b7f4da2d2f94d23c3acddb6d12c62997d3da39a774a058fef04aa5",
@@ -47,9 +47,9 @@ class Cutensor(Package):
             version(ver, sha256=pkg)
 
     # CUDA version requirements
-    depends_on("cuda@11.0:", when="@1.5.0.3")
-    depends_on("cuda@11.0:", when="@2.0.1.2")
-    depends_on("cuda@13.0.0:13.0.999", when="@2.4.1.4")
+    depends_on("cuda@11.0:", when="@1.5.0.3", type=("build", "link", "run"))
+    depends_on("cuda@11.0:", when="@2.0.1.2", type=("build", "link", "run"))
+    depends_on("cuda@13.0.0:13.0.999", when="@2.4.1.4", type=("build", "link", "run"))
 
     def url_for_version(self, version):
         # Get the system and machine arch for building the file path
