@@ -77,7 +77,7 @@ setenv("LMOD_{{ name|upper() }}_VERSION", "{{ version_part }}")
 {% if verbose %}
 LmodMessage("Autoloading {{ module_name }}")
 {% endif %}
-load("{{ module_name }}")
+depends_on("{{ module_name }}")
 {% endfor %}
 {% endblock %}
 

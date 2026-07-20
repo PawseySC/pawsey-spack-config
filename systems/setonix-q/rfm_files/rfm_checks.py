@@ -219,17 +219,26 @@ class module_load_check(rfm.RunOnlyRegressionTest):
         self.depends_on(testdep_name, udeps.by_env)
     
     @run_before('run')
-    def check_load_lines(self):
-        # Get list of dependencies that need to be loaded - explicit load statements in module file
-        self.load_lines = [line.split('load(')[-1][:-2].replace('"', '') for line in open(self.mod).readlines() if line.startswith('load')]
-        nloads = len(self.load_lines)
+    def check_dependency_lines(self):
+        # Get dependencies from both load() statements and depends_on() statements.
+        dependency_pattern = re.compile(r'^\s*(?:load|depends_on)\("([^"]+)"\)')
+        with open(self.mod) as module_file:
+            self.dependency_modules = []
+            for line in module_file:
+                match = dependency_pattern.match(line)
+                if match:
+                    self.dependency_modules.append(match.group(1))
+        ndependencies = len(self.dependency_modules)
         # `++` breaks the regex search, so replace ++ with \+\+ if present
-        for i in range(nloads):
-            if '++' in self.load_lines[i]:
-                l = self.load_lines[i]
-                self.load_lines[i] = l.replace('++', '\\+\\+')
+        for i in range(ndependencies):
+            if '++' in self.dependency_modules[i]:
+                module_name = self.dependency_modules[i]
+                self.dependency_modules[i] = module_name.replace('++', '\\+\\+')
         # Check all dependencies are loaded
-        self.postrun_cmds += [f'if module is-loaded {dep_mod} ; then echo "dependency is loaded"; fi' for dep_mod in self.load_lines]
+        self.postrun_cmds += [
+            f'if module is-loaded {dep_mod} ; then echo "dependency is loaded"; fi'
+            for dep_mod in self.dependency_modules
+        ]
 
     @sanity_function
     def assert_module_loaded(self):
@@ -241,7 +250,10 @@ class module_load_check(rfm.RunOnlyRegressionTest):
         
         return sn.all([
             sn.assert_found("main package is loaded", self.stdout),
-            sn.assert_eq(sn.count(sn.extractall('dependency is loaded', self.stdout)), len(self.load_lines)),
+            sn.assert_eq(
+                sn.count(sn.extractall('dependency is loaded', self.stdout)),
+                len(self.dependency_modules),
+            ),
             sn.assert_found(self.name_ver, self.stderr),
             sn.assert_not_found('Failed', self.stderr),
             sn.assert_not_found('Error', self.stderr),
