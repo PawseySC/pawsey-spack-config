@@ -16,12 +16,9 @@ modules:
       ^java:
         autoload: direct
       # GCC packages linked to the CUDA-aware Cray MPICH external must load
-      # its hidden wrapper and the matching CUDA/GPU runtime modules.
+      # its hidden wrapper so the matching runtime modules are propagated.
       "^cray-mpich@9.1.0%gcc":
         autoload: direct
-        load:
-          - cuda/13.0
-          - craype-accel-nvidia90
 
       # overwrite for packages that don't need python at runtime
       cp2k:
@@ -55,12 +52,14 @@ modules:
         autoload: direct
       charmpp:
         autoload: direct
-      # Runtime environment for the Cray MPICH external itself. CUDA/GPU
-      # modules are attached to packages using the CUDA-aware GCC external.
+      # The GCC MPI external is deliberately CUDA-aware. Reproduce its build
+      # modules at runtime so MPI-linked executables can resolve CUDA/GTL libs.
       "cray-mpich@9.1.0%gcc":
         load:
           - cray-mpich/9.1.0
           - craype-network-ofi
+          - cuda/13.0
+          - craype-accel-nvidia90
 
       # numerical libraries
       arpack-ng:
