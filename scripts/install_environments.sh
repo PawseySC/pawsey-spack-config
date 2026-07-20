@@ -69,25 +69,41 @@ fi
 #for hash in `spack find -X --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
 
 # Rebuild the Spack module tree from the installed concrete specs belonging to
-# the active deployment environments. Include ReFrame 
-# explicitly because it is bootstrapped before environment concretization and
-# is required by the post-install tests.
-mapfile -t module_specs < <(
+# the active deployment environments. Generate implicit specs first so that an
+# explicit/root spec wins when both intentionally use the same hashless module
+# projection. Include ReFrame explicitly because it is bootstrapped before
+# environment concretization and is required by the post-install tests.
+mapfile -t implicit_module_specs < <(
   {
     for env in $env_list $cray_env_list; do
-      spack -e "${envdir}/${env}" find --format '/{hash}'
+      spack -e "${envdir}/${env}" find -X --format '/{hash}'
+    done
+  } | sort -u
+)
+mapfile -t explicit_module_specs < <(
+  {
+    for env in $env_list $cray_env_list; do
+      spack -e "${envdir}/${env}" find -x --format '/{hash}'
     done
     spack find -x --format '/{hash}' \
       "reframe@${reframe_version}%gcc@${gcc_version}"
   } | sort -u
 )
+module_specs=("${implicit_module_specs[@]}" "${explicit_module_specs[@]}")
 
 if ((${#module_specs[@]} == 0)); then
   echo "No locked or bootstrapped specs found for module generation."
   exit 1
 fi
 
-spack module lmod refresh -y --delete-tree "${module_specs[@]}"
+# Public module projections deliberately omit hashes, so different locked specs
+# can share a filename. An aggregate refresh aborts on those clashes. Clear the
+# tree once, then refresh each selected hash separately; this retains the prior
+# overwrite behaviour without allowing stale, non-lockfile installs back in.
+spack module lmod refresh -y --delete-tree "${module_specs[0]}" || exit 1
+for module_spec in "${module_specs[@]:1}"; do
+  spack module lmod refresh -y "${module_spec}" || exit 1
+done
 
 # Remove .llvm from module files to stop it replacing gcc/cce at module load which breaks reframe tests
 # Done post-installation, so commented out here

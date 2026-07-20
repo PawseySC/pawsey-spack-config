@@ -7,6 +7,12 @@ modules:
 
     lmod:
 
+      # Environments are concretized independently and can therefore contain
+      # different hashes for the same dependency. Keep root modules readable,
+      # but give implicit modules their automatic hash-qualified hidden names
+      # so lockfile-backed module regeneration cannot encounter name clashes.
+      hide_implicits: true
+
       # Select all packages that depend on python, or r, or java,
       # and set these modules to autoload their dependencies
       ^python:
