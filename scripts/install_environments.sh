@@ -71,8 +71,9 @@ fi
 # Rebuild the Spack module tree from the installed concrete specs belonging to
 # the active deployment environments. Generate implicit specs first so that an
 # explicit/root spec wins when both intentionally use the same hashless module
-# projection. Include ReFrame explicitly because it is bootstrapped before
-# environment concretization and is required by the post-install tests.
+# projection. Include ReFrame's complete installed dependency DAG because it is
+# bootstrapped outside the deployment environments and is required by the
+# post-install tests.
 mapfile -t implicit_module_specs < <(
   {
     for env in $env_list $cray_env_list; do
@@ -85,7 +86,8 @@ mapfile -t explicit_module_specs < <(
     for env in $env_list $cray_env_list; do
       spack -e "${envdir}/${env}" find -x --format '/{hash}'
     done
-    spack find -x --format '/{hash}' \
+    # -x selects the installed ReFrame root and -d emits its dependencies too.
+    spack find -d -x --format '/{hash}' \
       "reframe@${reframe_version}%gcc@${gcc_version}"
   } | sort -u
 )
