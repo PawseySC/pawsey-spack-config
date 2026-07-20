@@ -63,7 +63,7 @@ class PyCupy(PythonPackage, CudaPackage, ROCmPackage):
     depends_on("py-numpy@1.22:2.2", when="@13.4", type=("build", "run"))
     depends_on("py-numpy@1.22:2.3", when="@13.5", type=("build", "run"))
     depends_on("py-numpy@1.24:2", when="@14", type=("build", "run"))
-    depends_on("py-cuda-pathfinder@1.3.4:", when="@14:+cuda", type=("build", "run"))
+    depends_on("py-cuda-pathfinder@1.3.4:1", when="@14:+cuda", type=("build", "run"))
     depends_on("py-scipy@1.6:1.11", when="@:12+all", type=("build", "run"))
     depends_on("py-scipy@1.7:1.16", when="@13+all", type=("build", "run"))
     depends_on("py-scipy@1.10:1.16", when="@14+all", type=("build", "run"))

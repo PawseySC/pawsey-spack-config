@@ -13,11 +13,11 @@ class PyCudaPython(PythonPackage):
     """CUDA Python: Performance meets Productivity.
 
     NOTE (simplified packaging):
-    NVIDIA's cuda-python repo is a monorepo containing multiple Python distributions
-    (cuda-python, cuda-bindings, cuda-pathfinder, and sometimes additional CUDA component
-    packages). For simplicity, this Spack package installs the required subprojects
+    NVIDIA's cuda-python repo is a monorepo containing multiple Python distributions.
+    For simplicity, this Spack package installs cuda-python, cuda-bindings, and cuda-core
     into a single prefix so downstream packages (e.g. nvmath-python) can import
-    cuda.bindings.* and cuda.core.* modules.
+    cuda.bindings.* and cuda.core.* modules. cuda-pathfinder is managed as a separate
+    Spack package to avoid installing conflicting copies of cuda.pathfinder.
     """
 
     homepage = "https://nvidia.github.io/cuda-python/"
@@ -58,6 +58,7 @@ class PyCudaPython(PythonPackage):
     depends_on("py-pyclibrary@0.1.7:", type="build")
     depends_on("py-wheel", type="build")
     depends_on("py-cython@3.2:3.2", type="build")
+    depends_on("py-cuda-pathfinder@1.3.4", when="@12.9:", type=("build", "run"))
 
     # CUDA Python releases track the CUDA Toolkit major/minor API.
     depends_on("cuda@11.8:12.999", when="@12:12.999", type=("build", "link", "run"))
@@ -126,7 +127,7 @@ class PyCudaPython(PythonPackage):
     def _find_repo_subdists(self):
         """Return candidate subproject dirs in install order."""
         # Minimum set needed by downstream CUDA Python consumers (e.g. nvmath).
-        required = ["cuda_bindings", "cuda_pathfinder", "cuda_core", "cuda_python"]
+        required = ["cuda_bindings", "cuda_core", "cuda_python"]
 
         # Always install required ones if present.
         dists = []

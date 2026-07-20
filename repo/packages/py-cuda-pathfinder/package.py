@@ -9,7 +9,11 @@ class PyCudaPathfinder(PythonPackage):
     """Utilities for locating CUDA components."""
 
     homepage = "https://nvidia.github.io/cuda-python/cuda-pathfinder/latest/"
-    pypi = "cuda-pathfinder/cuda_pathfinder-1.3.4-py3-none-any.whl"
+    url = (
+        "https://files.pythonhosted.org/packages/py3/c/cuda-pathfinder/"
+        "cuda_pathfinder-1.3.4-py3-none-any.whl"
+    )
+    list_url = "https://pypi.org/simple/cuda-pathfinder/"
 
     license("Apache-2.0")
 
@@ -21,7 +25,3 @@ class PyCudaPathfinder(PythonPackage):
     )
 
     depends_on("python@3.10:", type=("build", "run"))
-    depends_on("py-pip", type="build")
-
-    def install(self, spec, prefix):
-        pip("install", "--no-deps", "--prefix={0}".format(prefix), self.stage.archive_file)
