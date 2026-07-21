@@ -105,6 +105,7 @@ fi
 spack module lmod refresh -y --delete-tree "${module_specs[0]}" || exit 1
 for module_spec in "${module_specs[@]:1}"; do
   spack module lmod refresh -y "${module_spec}" || exit 1
+  echo "Refreshed module for ${module_spec}"
 done
 
 # Remove .llvm from module files to stop it replacing gcc/cce at module load which breaks reframe tests
