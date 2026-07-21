@@ -91,14 +91,14 @@ mapfile -t environment_implicit_module_specs < <(
     for env in $env_list $cray_env_list; do
       spack -e "${envdir}/${env}" find -X --format '/{hash}'
     done
-  } | sort -u
+  } | awk 'NF' | sort -u
 )
 mapfile -t environment_explicit_module_specs < <(
   {
     for env in $env_list $cray_env_list; do
       spack -e "${envdir}/${env}" find -x --format '/{hash}'
     done
-  } | sort -u
+  } | awk 'NF' | sort -u
 )
 
 if ((${#environment_implicit_module_specs[@]} == 0 && \
@@ -110,6 +110,8 @@ fi
 # Identify the standalone DAG hashes without regenerating them. Excluding these
 # exact hashes prevents an environment failure from rewriting the essential
 # Python and ReFrame modules created by refresh_standalone_modules.sh.
+# Spack can separate dependency groups with blank lines, which cannot be used
+# as associative-array keys.
 mapfile -t standalone_module_specs < <(
   {
     for comp in "${pythoncompilers[@]}"; do
@@ -120,8 +122,13 @@ mapfile -t standalone_module_specs < <(
     done
     spack find -d -x --format '/{hash}' \
       "reframe@${reframe_version}%gcc@${gcc_version}"
-  } | sort -u
+  } | awk 'NF' | sort -u
 )
+
+if ((${#standalone_module_specs[@]} == 0)); then
+  echo "No installed standalone Python or ReFrame specs found."
+  exit 1
+fi
 
 declare -A standalone_module_spec_set=()
 for module_spec in "${standalone_module_specs[@]}"; do

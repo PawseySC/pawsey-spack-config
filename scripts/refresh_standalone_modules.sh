@@ -42,7 +42,7 @@ mapfile -t python_module_specs < <(
           "python@${python_version}%${comp} target=${arch}"
       done
     done
-  } | sort -u
+  } | awk 'NF' | sort -u
 )
 
 if ((${#python_module_specs[@]} == 0)); then
@@ -52,7 +52,7 @@ fi
 
 mapfile -t reframe_module_specs < <(
   spack find -d -x --format '/{hash}' \
-    "reframe@${reframe_version}%gcc@${gcc_version}" | sort -u
+    "reframe@${reframe_version}%gcc@${gcc_version}" | awk 'NF' | sort -u
 )
 
 if ((${#reframe_module_specs[@]} == 0)); then
