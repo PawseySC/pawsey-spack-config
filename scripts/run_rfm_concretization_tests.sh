@@ -16,6 +16,8 @@ export cce_version=${cce_version}
 export gcc_version=${gcc_version}
 export python_version=${python_version}
 export reframe_version=${reframe_version}
+export env_list
+export cray_env_list
 
 mkdir -p "${RFM_STORAGE_DIR}"
 

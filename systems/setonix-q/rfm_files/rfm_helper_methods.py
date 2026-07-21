@@ -13,11 +13,65 @@ def get_env_vars():
     env_dict['spack_repo_path'] = os.getenv('PAWSEY_SPACK_CONFIG_REPO')
     env_dict['install_prefix'] = os.getenv('INSTALL_PREFIX')
     env_dict['python_version'] = os.getenv('python_version')
+    env_dict['reframe_version'] = os.getenv('reframe_version')
     env_dict['gcc_version'] = os.getenv('gcc_version')
     env_dict['cce_version'] = os.getenv('cce_version')
     env_dict['system'] = os.getenv('SYSTEM') or 'setonix-q'
 
     return env_dict
+
+
+def get_deployment_root_hashes():
+
+    # A package is public if its hash is a root in any active deployment
+    # environment. Derive this from lockfiles rather than generated modules.
+    env_dict = get_env_vars()
+    repo_path = env_dict['spack_repo_path']
+    system = env_dict['system']
+    env_names = (
+        os.getenv('env_list', '').split() +
+        os.getenv('cray_env_list', '').split()
+    )
+
+    if not env_names and env_dict['env']:
+        env_names = [env_dict['env']]
+
+    root_hashes = set()
+    for env in dict.fromkeys(env_names):
+        lock_file = f'{repo_path}/systems/{system}/environments/{env}/spack.lock'
+        if not os.path.exists(lock_file):
+            continue
+        with open(lock_file) as json_data:
+            lock_data = json.load(json_data)
+        root_hashes.update(root['hash'] for root in lock_data['roots'])
+
+    return root_hashes
+
+
+def is_standalone_root(pkg_info):
+
+    # Python and ReFrame are installed as explicit roots outside environments.
+    env_dict = get_env_vars()
+    name = pkg_info['name']
+    version = pkg_info['version']
+    compiler = pkg_info['compiler']
+
+    return (
+        compiler['name'] == 'gcc' and
+        compiler['version'] == env_dict['gcc_version'] and
+        (
+            (name == 'python' and version == env_dict['python_version']) or
+            (name == 'reframe' and version == env_dict['reframe_version'])
+        )
+    )
+
+
+def get_hidden_module_path(module_path, pkg_hash):
+
+    # hide_implicits appends a fixed seven-character hash to the projected name.
+    path, extension = os.path.splitext(module_path)
+    return f'{path}-{pkg_hash[:7]}{extension}'
+
 
 def get_pkg_cmds():
 
@@ -366,6 +420,7 @@ def get_module_dependencies(pkg_module_path):
     # Get root specs from the environment this package is in
     root_specs = get_root_specs()
     conc_specs = get_concretised_specs()
+    deployment_root_hashes = get_deployment_root_hashes()
 
     yaml_file = f'{repo_path}/systems/{system}/configs/spackuser/modules.yaml'
     with open(yaml_file, "r") as stream:
@@ -424,6 +479,12 @@ def get_module_dependencies(pkg_module_path):
                         # There is not even a partial projection match, so it falls under the dependencies catch-all projection
                         else:
                             path = f'{install_prefix}/modules/{d_arch}/{d_comp}/' + paths[-1].replace('{name}', dc['name']).replace('{version}', dc['version']).replace('{hash:7}', dh[:7]) + '.lua'
+
+                    # Environment and standalone roots remain public. Spack
+                    # adds a hash suffix to every other module when
+                    # hide_implicits is enabled.
+                    if dh not in deployment_root_hashes and not is_standalone_root(dc):
+                        path = get_hidden_module_path(path, dh)
                     dep_paths.append(path)
     
     return dep_paths
