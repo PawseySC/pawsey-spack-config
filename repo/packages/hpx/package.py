@@ -7,8 +7,8 @@
 import sys
 
 from spack.package import *
-from spack.pkg.builtin.boost import Boost
-
+#from spack.pkg.builtin.boost import Boost
+from spack_repo.builtin.packages.boost.package import Boost
 
 class Hpx(CMakePackage, CudaPackage, ROCmPackage):
     """C++ runtime system for parallel and distributed applications."""
@@ -112,6 +112,8 @@ class Hpx(CMakePackage, CudaPackage, ROCmPackage):
     with when("@1.7:"):
         for cxxstd in cxxstds:
             depends_on(f"asio cxxstd={map_cxxstd(cxxstd)}", when=f"cxxstd={cxxstd}")
+
+    depends_on("asio@1.32.0", when="@1.9.1")
 
     depends_on("gperftools", when="malloc=tcmalloc")
     depends_on("jemalloc", when="malloc=jemalloc")
