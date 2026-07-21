@@ -41,6 +41,19 @@ fi
 # list of environments included in variables.sh (sourced above)
 envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 
+# Refresh environment specs one at a time because public module projections
+# omit hashes and can otherwise clash. Never delete the module tree here; the
+# standalone refresh stage owns that operation.
+function refresh_environment_module_specs()
+{
+  local module_spec
+
+  for module_spec in "$@"; do
+    spack module lmod refresh -y "${module_spec}" || return 1
+    echo "Refreshed module for ${module_spec}"
+  done
+}
+
 echo "Running installation with $NCPUS cores.."
 
 for env in $env_list; do
@@ -68,45 +81,68 @@ fi
 # Disabled for the same reason as the explicit-spec refresh above.
 #for hash in `spack find -X --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
 
-# Rebuild the Spack module tree from the installed concrete specs belonging to
-# the active deployment environments. Generate implicit specs first so that an
-# explicit/root spec wins when both intentionally use the same hashless module
-# projection. Include ReFrame's complete installed dependency DAG because it is
-# bootstrapped outside the deployment environments and is required by the
-# post-install tests.
-mapfile -t implicit_module_specs < <(
+# Add modules for installed concrete specs belonging to the active deployment
+# environments. The standalone refresh has already cleared the module tree and
+# restored Python/ReFrame, so this stage must only append environment modules.
+# Generate implicit specs first so that an explicit root wins when both
+# intentionally use the same hashless module projection.
+mapfile -t environment_implicit_module_specs < <(
   {
     for env in $env_list $cray_env_list; do
       spack -e "${envdir}/${env}" find -X --format '/{hash}'
     done
   } | sort -u
 )
-mapfile -t explicit_module_specs < <(
+mapfile -t environment_explicit_module_specs < <(
   {
     for env in $env_list $cray_env_list; do
       spack -e "${envdir}/${env}" find -x --format '/{hash}'
     done
-    # -x selects the installed ReFrame root and -d emits its dependencies too.
+  } | sort -u
+)
+
+if ((${#environment_implicit_module_specs[@]} == 0 && \
+     ${#environment_explicit_module_specs[@]} == 0)); then
+  echo "No installed specs found in the deployment environments."
+  exit 1
+fi
+
+# Identify the standalone DAG hashes without regenerating them. Excluding these
+# exact hashes prevents an environment failure from rewriting the essential
+# Python and ReFrame modules created by refresh_standalone_modules.sh.
+mapfile -t standalone_module_specs < <(
+  {
+    for comp in "${pythoncompilers[@]}"; do
+      for arch in "${archs[@]}"; do
+        spack find -d -x --format '/{hash}' \
+          "python@${python_version}%${comp} target=${arch}"
+      done
+    done
     spack find -d -x --format '/{hash}' \
       "reframe@${reframe_version}%gcc@${gcc_version}"
   } | sort -u
 )
-module_specs=("${implicit_module_specs[@]}" "${explicit_module_specs[@]}")
 
-if ((${#module_specs[@]} == 0)); then
-  echo "No locked or bootstrapped specs found for module generation."
-  exit 1
-fi
-
-# Public module projections deliberately omit hashes, so different locked specs
-# can share a filename. An aggregate refresh aborts on those clashes. Clear the
-# tree once, then refresh each selected hash separately; this retains the prior
-# overwrite behaviour without allowing stale, non-lockfile installs back in.
-spack module lmod refresh -y --delete-tree "${module_specs[0]}" || exit 1
-for module_spec in "${module_specs[@]:1}"; do
-  spack module lmod refresh -y "${module_spec}" || exit 1
-  echo "Refreshed module for ${module_spec}"
+declare -A standalone_module_spec_set=()
+for module_spec in "${standalone_module_specs[@]}"; do
+  standalone_module_spec_set["${module_spec}"]=1
 done
+
+environment_module_specs=()
+for module_spec in \
+  "${environment_implicit_module_specs[@]}" \
+  "${environment_explicit_module_specs[@]}"; do
+  if [[ -z ${standalone_module_spec_set["${module_spec}"]+x} ]]; then
+    environment_module_specs+=("${module_spec}")
+  fi
+done
+
+if ((${#environment_module_specs[@]} > 0)); then
+  echo "Refreshing modules from concretized deployment environments.."
+  refresh_environment_module_specs "${environment_module_specs[@]}" || exit 1
+else
+  echo "No additional environment modules require regeneration."
+fi
 
 # Remove .llvm from module files to stop it replacing gcc/cce at module load which breaks reframe tests
 # Done post-installation, so commented out here
