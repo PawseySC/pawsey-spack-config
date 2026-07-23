@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash -e
 
 check_installation_environment
 set_spack_config_repo
@@ -32,8 +32,11 @@ if [ "${SYSTEM}" = "setonix" ]; then
       exit 1
     fi
     spack spec ${SPACK_SPEC_ARGS} openblas@0.3.24 %${main_compiler} threads=openmp
-    sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} openblas@0.3.24 %${main_compiler} threads=openmp"
-    openblas_not_installed=$?
+    if sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} openblas@0.3.24 %${main_compiler} threads=openmp"; then
+      openblas_not_installed=0
+    else
+      openblas_not_installed=$?
+    fi
     (( counter = counter + 1 ))
   done
 fi
@@ -41,115 +44,34 @@ fi
 # list of environments included in variables.sh (sourced above)
 envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 
-# Refresh environment specs one at a time because public module projections
-# omit hashes and can otherwise clash. Never delete the module tree here; the
-# standalone refresh stage owns that operation.
-function refresh_environment_module_specs()
-{
-  local module_spec
+ensure_spack_install_manifest_run
 
-  for module_spec in "$@"; do
-    spack module lmod refresh -y "${module_spec}" || return 1
-    echo "Refreshed module for ${module_spec}"
-  done
-}
+# Receipts are source-scoped and replaced on each run.  Reset every active
+# environment before installing any of them so a failed rerun cannot later
+# assemble a mixture of old and new roots.
+for env in $env_list $cray_env_list; do
+  reset_spack_install_receipt environment "${env}"
+done
 
 echo "Running installation with $NCPUS cores.."
 
 for env in $env_list; do
-  build_environment ${envdir} ${env}
+  build_environment "${envdir}" "${env}" || exit 1
 done
 
 # instead of having a separate script for cray environments, just
 # append them to the list of env but have a separate variable
 # so can do a parallel build. 
 for env in $cray_env_list; do
-  build_environment ${envdir} ${env}
+  build_environment "${envdir}" "${env}" || exit 1
 done
 
-# Create binary cache
-echo "Creating buildcache for installed packages, module refresh ... "
-if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
-  for hash in `spack find -x --format "{hash}"`; do spack buildcache create -a -m systemwide_buildcache  /$hash; done;
-fi
-# Refresh module files - explicit specs
-# Disabled because querying the global install database also regenerates modules
-# for stale installs that are no longer present in  lockfiles.
-#for hash in `spack find -x --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
-
-# Refresh dependencies - implicit specs (manually remove .llvm load from pocl modulefile)
-# Disabled for the same reason as the explicit-spec refresh above.
-#for hash in `spack find -X --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
-
-# Add modules for installed concrete specs belonging to the active deployment
-# environments. The standalone refresh has already cleared the module tree and
-# restored Python/ReFrame, so this stage must only append environment modules.
-# Generate implicit specs first so that an explicit root wins when both
-# intentionally use the same hashless module projection.
-mapfile -t environment_implicit_module_specs < <(
-  {
-    for env in $env_list $cray_env_list; do
-      spack -e "${envdir}/${env}" find -X --format '/{hash}'
-    done
-  } | awk 'NF' | sort -u
-)
-mapfile -t environment_explicit_module_specs < <(
-  {
-    for env in $env_list $cray_env_list; do
-      spack -e "${envdir}/${env}" find -x --format '/{hash}'
-    done
-  } | awk 'NF' | sort -u
-)
-
-if ((${#environment_implicit_module_specs[@]} == 0 && \
-     ${#environment_explicit_module_specs[@]} == 0)); then
-  echo "No installed specs found in the deployment environments."
-  exit 1
-fi
-
-# Identify the standalone DAG hashes without regenerating them. Excluding these
-# exact hashes prevents an environment failure from rewriting the essential
-# Python and ReFrame modules created by refresh_standalone_modules.sh.
-# Spack can separate dependency groups with blank lines, which cannot be used
-# as associative-array keys.
-mapfile -t standalone_module_specs < <(
-  {
-    for comp in "${pythoncompilers[@]}"; do
-      for arch in "${archs[@]}"; do
-        spack find -d -x --format '/{hash}' \
-          "python@${python_version}%${comp} target=${arch}"
-      done
-    done
-    spack find -d -x --format '/{hash}' \
-      "reframe@${reframe_version}%gcc@${gcc_version}"
-  } | awk 'NF' | sort -u
-)
-
-if ((${#standalone_module_specs[@]} == 0)); then
-  echo "No installed standalone Python or ReFrame specs found."
-  exit 1
-fi
-
-declare -A standalone_module_spec_set=()
-for module_spec in "${standalone_module_specs[@]}"; do
-  standalone_module_spec_set["${module_spec}"]=1
-done
-
-environment_module_specs=()
-for module_spec in \
-  "${environment_implicit_module_specs[@]}" \
-  "${environment_explicit_module_specs[@]}"; do
-  if [[ -z ${standalone_module_spec_set["${module_spec}"]+x} ]]; then
-    environment_module_specs+=("${module_spec}")
-  fi
-done
-
-if ((${#environment_module_specs[@]} > 0)); then
-  echo "Refreshing modules from concretized deployment environments.."
-  refresh_environment_module_specs "${environment_module_specs[@]}" || exit 1
-else
-  echo "No additional environment modules require regeneration."
-fi
+# Assemble and publish only from the receipts produced by this deployment.
+# The publication stage is shared with separately installed environments such
+# as Setonix ROCm so they extend the same authoritative manifest.
+deployment_environments=($env_list $cray_env_list)
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/publish_spack_install_manifest.sh" \
+  "${deployment_environments[@]}" || exit 1
 
 # Remove .llvm from module files to stop it replacing gcc/cce at module load which breaks reframe tests
 # Done post-installation, so commented out here

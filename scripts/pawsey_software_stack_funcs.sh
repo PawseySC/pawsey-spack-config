@@ -195,59 +195,322 @@ function set_modulepaths_for_arch()
     fi
 }
 
+function spack_install_manifest_tool()
+{
+    echo "${PAWSEY_SPACK_CONFIG_REPO}/scripts/spack_install_manifest.py"
+}
+
+function initialize_spack_install_manifest()
+{
+    : "${INSTALLATION_METADATA_DIR:=${INSTALL_PREFIX}/installation_metadata}"
+    : "${SPACK_INSTALL_MANIFEST:=${INSTALLATION_METADATA_DIR}/spack_install_manifest.json}"
+
+    mkdir -p "${INSTALLATION_METADATA_DIR}"
+    "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" init \
+        --metadata-root "${INSTALLATION_METADATA_DIR}" \
+        --system "${SYSTEM}" \
+        --date-tag "${DATE_TAG}" \
+        --install-prefix "${INSTALL_PREFIX}" \
+        --spack-version "${spack_version}"
+}
+
+function ensure_spack_install_manifest_run()
+{
+    : "${INSTALLATION_METADATA_DIR:=${INSTALL_PREFIX}/installation_metadata}"
+    : "${SPACK_INSTALL_MANIFEST:=${INSTALLATION_METADATA_DIR}/spack_install_manifest.json}"
+
+    if [ ! -f "${INSTALLATION_METADATA_DIR}/receipts/deployment.json" ]; then
+        initialize_spack_install_manifest
+    fi
+}
+
+function reset_spack_install_receipt()
+{
+    local source_type=$1
+    local source_name=$2
+
+    ensure_spack_install_manifest_run || return 1
+    "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" reset-receipt \
+        --metadata-root "${INSTALLATION_METADATA_DIR}" \
+        --source-type "${source_type}" \
+        --source-name "${source_name}"
+}
+
+function seal_spack_install_receipt()
+{
+    local source_type=$1
+    local source_name=$2
+
+    ensure_spack_install_manifest_run || return 1
+    "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" seal-receipt \
+        --metadata-root "${INSTALLATION_METADATA_DIR}" \
+        --source-type "${source_type}" \
+        --source-name "${source_name}"
+}
+
+function load_spack_install_manifest_hashes()
+{
+    local manifest_path=$1
+    local role=$2
+    local destination_name=$3
+    local hashes_file
+
+    if [[ ! ${destination_name} =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+        echo "Invalid destination array name '${destination_name}'."
+        return 1
+    fi
+    hashes_file=$(mktemp "${INSTALLATION_METADATA_DIR}/.manifest-hashes.XXXXXX") || return 1
+    if ! "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" hashes \
+        --manifest "${manifest_path}" --role "${role}" > "${hashes_file}"; then
+        rm -f "${hashes_file}"
+        return 1
+    fi
+    if ! mapfile -t "${destination_name}" < "${hashes_file}"; then
+        rm -f "${hashes_file}"
+        return 1
+    fi
+    rm -f "${hashes_file}"
+}
+
+function install_and_record_spack_root()
+{
+    local source_type=$1
+    local source_name=$2
+    local requested_spec=$3
+    local install_mode=${4:-root}
+    local temporary_spec_file
+    local root_hash
+    local concrete_spec_file
+    local quoted_spec_file
+    local install_command
+
+    ensure_spack_install_manifest_run || return 1
+    temporary_spec_file=$(mktemp "${INSTALLATION_METADATA_DIR}/.concrete-spec.XXXXXX.json") || return 1
+
+    if ! spack spec --json ${SPACK_SPEC_ARGS:-} "${requested_spec}" > "${temporary_spec_file}"; then
+        echo "Concretization failed for ${requested_spec}."
+        rm -f "${temporary_spec_file}"
+        return 1
+    fi
+
+    if ! root_hash=$("${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" store-spec \
+        --metadata-root "${INSTALLATION_METADATA_DIR}" \
+        --spec-file "${temporary_spec_file}"); then
+        echo "Could not preserve the concrete spec for ${requested_spec}."
+        rm -f "${temporary_spec_file}"
+        return 1
+    fi
+    rm -f "${temporary_spec_file}"
+    root_hash=${root_hash#/}
+    concrete_spec_file="${INSTALLATION_METADATA_DIR}/concrete_specs/${root_hash}.json"
+
+    printf -v quoted_spec_file '%q' "${concrete_spec_file}"
+    install_command="spack install ${SPACK_INSTALL_ARGS:-} -j${NCPUS}"
+    if [ "${install_mode}" = "dependencies-only" ]; then
+        install_command+=" --only dependencies"
+    elif [ "${install_mode}" != "root" ]; then
+        echo "Unsupported installation mode '${install_mode}' for ${requested_spec}."
+        return 1
+    fi
+    install_command+=" -f ${quoted_spec_file}"
+
+    if ! sg "${INSTALL_GROUP}" -c "${install_command}"; then
+        echo "Installation failed for ${requested_spec} (${root_hash})."
+        return 1
+    fi
+
+    if [ "${install_mode}" = "root" ] && \
+       ! spack find --format '{hash}' "/${root_hash}" | awk 'NF' | grep -Fxq "${root_hash}"; then
+        echo "Spack reported success, but root /${root_hash} is not installed."
+        return 1
+    fi
+
+    "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" record \
+        --metadata-root "${INSTALLATION_METADATA_DIR}" \
+        --source-type "${source_type}" \
+        --source-name "${source_name}" \
+        --requested-spec "${requested_spec}" \
+        --spec-file "${concrete_spec_file}" \
+        --install-mode "${install_mode}"
+}
+
+function record_concretized_environment()
+{
+    local envpath=$1
+    local env=$2
+    local install_mode=${3:-root}
+    local lock_file="${envpath}/spack.lock"
+    local root_hash
+    local requested_spec
+    local stored_hash
+    local temporary_spec_file
+    local concrete_spec_file
+    local lock_roots_file
+    local recorded_roots=0
+
+    lock_roots_file=$(mktemp) || return 1
+    if ! "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" lock-roots \
+        --lock-file "${lock_file}" > "${lock_roots_file}"; then
+        rm -f "${lock_roots_file}"
+        return 1
+    fi
+
+    while IFS=$'\t' read -r root_hash requested_spec; do
+        [ -n "${root_hash}" ] || continue
+        if ! temporary_spec_file=$(mktemp "${INSTALLATION_METADATA_DIR}/.concrete-spec.XXXXXX.json"); then
+            rm -f "${lock_roots_file}"
+            return 1
+        fi
+        if ! "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" export-lock-spec \
+            --lock-file "${lock_file}" \
+            --hash "${root_hash}" \
+            --output "${temporary_spec_file}"; then
+            rm -f "${temporary_spec_file}"
+            rm -f "${lock_roots_file}"
+            return 1
+        fi
+        if ! stored_hash=$("${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" store-spec \
+            --metadata-root "${INSTALLATION_METADATA_DIR}" \
+            --spec-file "${temporary_spec_file}"); then
+            rm -f "${temporary_spec_file}"
+            rm -f "${lock_roots_file}"
+            return 1
+        fi
+        rm -f "${temporary_spec_file}"
+        stored_hash=${stored_hash#/}
+        if [ "${stored_hash}" != "${root_hash}" ]; then
+            echo "Stored spec hash ${stored_hash} does not match lock root ${root_hash}."
+            rm -f "${lock_roots_file}"
+            return 1
+        fi
+        concrete_spec_file="${INSTALLATION_METADATA_DIR}/concrete_specs/${root_hash}.json"
+
+        if [ "${install_mode}" = "root" ] && \
+           ! spack find --format '{hash}' "/${root_hash}" | awk 'NF' | grep -Fxq "${root_hash}"; then
+            echo "Environment root /${root_hash} is not installed."
+            rm -f "${lock_roots_file}"
+            return 1
+        fi
+
+        "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" record \
+            --metadata-root "${INSTALLATION_METADATA_DIR}" \
+            --source-type environment \
+            --source-name "${env}" \
+            --requested-spec "${requested_spec}" \
+            --spec-file "${concrete_spec_file}" \
+            --install-mode "${install_mode}" || {
+                rm -f "${lock_roots_file}"
+                return 1
+            }
+        ((recorded_roots += 1))
+    done < "${lock_roots_file}"
+    rm -f "${lock_roots_file}"
+
+    if ((recorded_roots == 0)); then
+        echo "Environment ${env} contains no concrete lockfile roots to record."
+        return 1
+    fi
+}
+
 function build_environment() {
-    # build an evnironment given directory and name
+    # Build an environment given its directory and name.
     local envdir=$1
     local env=$2
     local testing_only=0
+    local previous_dir=$PWD
+    local install_mode=root
+    local extracted_specs
     if [ ! -z ${3+x} ]; then
         testing_only=$3
     fi
     echo "Installing environment $env..."
-    cd ${envdir}/${env}
-    spack env activate ${envdir}/${env}
+    cd "${envdir}/${env}" || return 1
+    if ! spack env activate "${envdir}/${env}"; then
+        cd "${previous_dir}" || true
+        return 1
+    fi
     # standard practice is to concretize in environments, but this can result in lots of duplicates
     # thus only do if explicitly requested
     if [ ! -z ${SPACK_ENV_CONCRETIZE+x} ]; then
-        echo "Using concreitization for $env"
-        spack concretize -f ${SPACK_CONCRETIZE_ARGS}
+        echo "Using environment concretization for $env"
+        if ! spack concretize -f ${SPACK_CONCRETIZE_ARGS}; then
+            spack env deactivate || true
+            cd "${previous_dir}" || true
+            return 1
+        fi
         if (( $testing_only != 0 )); then
             echo "Testing only - not installing for $env"
             spack env deactivate
+            cd "${previous_dir}" || true
             return
         fi
         if [ "${env}" == "roms" ] || [ "${env}" == "wrf" ] ; then
-            sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} --only dependencies"
+            install_mode=dependencies-only
+            sg "${INSTALL_GROUP}" -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} --only dependencies" || {
+                spack env deactivate || true
+                cd "${previous_dir}" || true
+                return 1
+            }
         else
-            sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS}"
+            sg "${INSTALL_GROUP}" -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS}" || {
+                spack env deactivate || true
+                cd "${previous_dir}" || true
+                return 1
+            }
         fi
         spack env deactivate
+        record_concretized_environment "${envdir}/${env}" "${env}" "${install_mode}" || {
+            cd "${previous_dir}" || true
+            return 1
+        }
     else
-        # instead of conretizing in the environment, which tends to produce lots of duplicates,
-        # just use spack find to get the basic spec being requested
+        # Instead of installing the environment concretization, which tends to
+        # produce duplicates, extract each requested root and concretize it
+        # once against the progressively populated installation store.
         echo "Using basic spec extraction and spec and install outside environment for $env"
         rm -f spack.specs.txt spack.specs.output.txt
         local str=" - "
-        spack find -c -r | awk  "/^$str/{print}" | sed "s: - ::g" > spack.specs.txt
+        if ! extracted_specs=$(spack find -c -r); then
+            spack env deactivate || true
+            cd "${previous_dir}" || true
+            return 1
+        fi
+        printf '%s\n' "${extracted_specs}" | \
+            awk  "/^$str/{print}" | sed "s: - ::g" > spack.specs.txt
         spack env deactivate
+        if [ ! -s spack.specs.txt ]; then
+            echo "Environment ${env} contains no extracted root specs."
+            cd "${previous_dir}" || true
+            return 1
+        fi
         if (( $testing_only != 0 )); then
             echo "Testing only - not installing for $env"
         fi
         echo "Number of specs to be processed for $env: $(wc -l spack.specs.txt)"
-        while read p; do
+        while IFS= read -r p; do
             echo "Package $p ..."
             if (( $testing_only != 0 )); then
                 spack spec ${SPACK_SPEC_ARGS} ${p} >> spack.specs.output.txt
             else
                 if [ "${env}" == "roms" ] || [ "${env}" == "wrf" ] ; then
-                    sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} --only dependencies ${p}"
+                    install_mode=dependencies-only
                 else
-                    sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} ${p}"
+                    install_mode=root
                 fi
+                install_and_record_spack_root environment "${env}" "${p}" "${install_mode}" || {
+                    cd "${previous_dir}" || true
+                    return 1
+                }
             fi
         done < spack.specs.txt
     fi
-    cd -
+    if ((testing_only == 0)); then
+        seal_spack_install_receipt environment "${env}" || {
+            cd "${previous_dir}" || true
+            return 1
+        }
+    fi
+    cd "${previous_dir}" || return 1
 }
 
 
@@ -258,4 +521,12 @@ export -f load_system_settings
 export -f set_spack_config_repo
 export -f set_compilation_sets_for_arch
 export -f set_modulepaths_for_arch
+export -f spack_install_manifest_tool
+export -f initialize_spack_install_manifest
+export -f ensure_spack_install_manifest_run
+export -f reset_spack_install_receipt
+export -f seal_spack_install_receipt
+export -f load_spack_install_manifest_hashes
+export -f install_and_record_spack_root
+export -f record_concretized_environment
 export -f build_environment

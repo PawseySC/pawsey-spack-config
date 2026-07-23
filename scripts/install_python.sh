@@ -25,12 +25,16 @@ fi
 echo "Running 'spack spec nano %${main_compiler} target=${main_arch}' to bootstrap Clingo.."
 spack spec nano %${main_compiler} target=${main_arch}
 
+reset_spack_install_receipt standalone python
+
 # first thing we need is Python
 for comp in ${pythoncompilers[@]}; do
     for arch in ${archs[@]}; do
+        python_spec="python@${python_version} %${comp} target=${arch}"
         echo "Concretization of Python with $comp for $arch .."
-        spack spec python@${python_version} %$comp target=${arch}
         echo "Installing Python with $comp for $arch.."
-        sg $INSTALL_GROUP -c "spack install -j${NCPUS} --no-checksum python@${python_version} %$comp target=${arch}"
+        install_and_record_spack_root standalone python "${python_spec}" root
     done
 done
+
+seal_spack_install_receipt standalone python

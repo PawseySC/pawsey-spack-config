@@ -2,6 +2,7 @@ import re
 import os
 import yaml
 import json
+from functools import lru_cache
 
 
 def get_env_vars():
@@ -227,7 +228,7 @@ def process_projections(variants):
     return new_variants
 
 # Get path to the shared object libraries for a package
-def get_library_path(pkg_name_ver):
+def _get_library_path_from_lockfile(pkg_name_ver):
 
     # Get required environment variables
     env_dict = get_env_vars()
@@ -407,7 +408,7 @@ def get_dependency_module_path(pkg_info, conc_specs, pkg_spec):
     return full_mod_path
 
 # Get the full module paths for all dependencies for this package
-def get_module_dependencies(pkg_module_path):
+def _get_module_dependencies_from_lockfile(pkg_module_path):
 
     # Get required environment variables
     env_dict = get_env_vars()
@@ -490,7 +491,7 @@ def get_module_dependencies(pkg_module_path):
     return dep_paths
 
 # Get full absolute module paths for every package in an environment
-def get_module_paths():
+def _get_module_paths_from_lockfile():
 
     # Get required environment variables
     env_dict = get_env_vars()
@@ -635,3 +636,256 @@ def get_module_paths():
         full_mod_paths[i] = install_prefix + f'/modules/{arch}/{compiler}/' + matching_mod_paths[i] + '.lua'
 
     return full_mod_paths
+
+
+def get_install_manifest_path():
+    """Return the installation manifest path used by installation checks."""
+
+    override = os.getenv('SPACK_INSTALL_MANIFEST')
+    if override:
+        return override
+
+    install_prefix = get_env_vars()['install_prefix']
+    if not install_prefix:
+        return None
+
+    return os.path.join(
+        install_prefix,
+        'installation_metadata',
+        'spack_install_manifest.json',
+    )
+
+
+@lru_cache(maxsize=None)
+def _read_install_manifest(manifest_path):
+    with open(manifest_path, encoding='utf-8') as manifest_file:
+        manifest = json.load(manifest_file)
+
+    if not isinstance(manifest, dict):
+        raise ValueError(
+            f'Installation manifest {manifest_path} must contain a JSON object'
+        )
+
+    return manifest
+
+
+def clear_install_manifest_cache():
+    """Clear the manifest cache (primarily useful to focused helper tests)."""
+
+    _read_install_manifest.cache_clear()
+
+
+def _manifest_value(manifest, key):
+    if key in manifest:
+        return manifest[key]
+
+    metadata = manifest.get('_meta') or {}
+    if key in metadata:
+        return metadata[key]
+
+    identity = manifest.get('identity') or {}
+    return identity.get(key)
+
+
+def get_install_manifest():
+    """Load and validate the completed installation manifest.
+
+    A missing or in-progress manifest returns ``None`` so ReFrame can still
+    import its concretization checks before installation has completed.  Once
+    marked complete, incompatible metadata is an error rather than a fallback
+    to lockfile-derived installation hashes.
+    """
+
+    manifest_path = get_install_manifest_path()
+    if not manifest_path or not os.path.isfile(manifest_path):
+        return None
+
+    manifest = _read_install_manifest(manifest_path)
+    schema_version = _manifest_value(manifest, 'schema_version')
+    if schema_version != 1:
+        raise ValueError(
+            f'Unsupported installation manifest schema {schema_version!r} '
+            f'in {manifest_path}; expected 1'
+        )
+
+    if _manifest_value(manifest, 'status') != 'complete':
+        return None
+
+    env_dict = get_env_vars()
+    manifest_system = _manifest_value(manifest, 'system')
+    manifest_prefix = _manifest_value(manifest, 'install_prefix')
+    if not manifest_system or not manifest_prefix:
+        raise ValueError(
+            f'Completed installation manifest {manifest_path} is missing '
+            'system or install_prefix metadata'
+        )
+
+    if env_dict['system'] and manifest_system != env_dict['system']:
+        raise ValueError(
+            f'Installation manifest system {manifest_system!r} does not '
+            f'match SYSTEM={env_dict["system"]!r}'
+        )
+
+    if (
+        env_dict['install_prefix'] and
+        os.path.normpath(manifest_prefix) !=
+        os.path.normpath(env_dict['install_prefix'])
+    ):
+        raise ValueError(
+            f'Installation manifest prefix {manifest_prefix!r} does not '
+            f'match INSTALL_PREFIX={env_dict["install_prefix"]!r}'
+        )
+
+    if not isinstance(manifest.get('environments'), dict):
+        raise ValueError(
+            f'Completed installation manifest {manifest_path} has no '
+            'environments mapping'
+        )
+    if not isinstance(manifest.get('specs'), dict):
+        raise ValueError(
+            f'Completed installation manifest {manifest_path} has no specs mapping'
+        )
+
+    return manifest
+
+
+def installation_manifest_is_complete():
+    return get_install_manifest() is not None
+
+
+def _current_environment_record(manifest):
+    env = get_env_vars()['env']
+    if not env:
+        return None
+
+    environment = manifest['environments'].get(env)
+    if environment is None:
+        raise ValueError(
+            f'Completed installation manifest has no entry for environment {env!r}'
+        )
+    if not isinstance(environment, dict) or not isinstance(
+        environment.get('roots'), list
+    ):
+        raise ValueError(
+            f'Installation manifest environment {env!r} has no roots list'
+        )
+
+    return environment
+
+
+def _installed_root_hashes(manifest):
+    environment = _current_environment_record(manifest)
+    if environment is None:
+        return []
+
+    root_hashes = []
+    for root in environment['roots']:
+        if not isinstance(root, dict) or not root.get('installed'):
+            continue
+        root_hash = root.get('hash') or root.get('root_hash')
+        if not root_hash:
+            raise ValueError(
+                'Installed root record in installation manifest has no hash'
+            )
+        if root_hash not in manifest['specs']:
+            raise ValueError(
+                f'Installed root hash {root_hash} is missing from manifest specs'
+            )
+        root_hashes.append(root_hash)
+
+    return root_hashes
+
+
+def _module_path(manifest, spec_hash):
+    spec = manifest['specs'].get(spec_hash)
+    if not isinstance(spec, dict):
+        raise ValueError(f'Spec hash {spec_hash} is missing from installation manifest')
+
+    module = spec.get('module')
+    module_path = module.get('path') if isinstance(module, dict) else None
+    if not module_path:
+        raise ValueError(
+            f'Installed spec {spec_hash} has no module path in installation manifest'
+        )
+
+    return module_path
+
+
+def _dependency_hashes(spec):
+    dependencies = spec.get('dependencies') or []
+    if isinstance(dependencies, dict):
+        dependencies = list(dependencies.values())
+    if not isinstance(dependencies, (list, tuple)):
+        raise ValueError('Spec dependencies in installation manifest are malformed')
+
+    hashes = []
+    for dependency in dependencies:
+        if isinstance(dependency, str):
+            dependency_hash = dependency
+        elif isinstance(dependency, dict):
+            dependency_hash = dependency.get('hash')
+        else:
+            dependency_hash = None
+        if not dependency_hash:
+            raise ValueError(
+                'Dependency record in installation manifest has no hash'
+            )
+        hashes.append(dependency_hash)
+
+    return hashes
+
+
+def _root_hash_for_module_path(manifest, pkg_module_path):
+    for root_hash in _installed_root_hashes(manifest):
+        if _module_path(manifest, root_hash) == pkg_module_path:
+            return root_hash
+
+    raise ValueError(
+        f'Module path {pkg_module_path!r} is not an installed root for '
+        f'environment {get_env_vars()["env"]!r}'
+    )
+
+
+def get_module_paths():
+    """Return exact generated module paths for installed environment roots."""
+
+    manifest = get_install_manifest()
+    if manifest is None:
+        return []
+
+    return sorted({
+        _module_path(manifest, root_hash)
+        for root_hash in _installed_root_hashes(manifest)
+    })
+
+
+def get_module_dependencies(pkg_module_path):
+    """Return exact module paths for a root's direct dependencies."""
+
+    manifest = get_install_manifest()
+    if manifest is None:
+        return []
+
+    root_hash = _root_hash_for_module_path(manifest, pkg_module_path)
+    root_spec = manifest['specs'][root_hash]
+    return sorted({
+        _module_path(manifest, dependency_hash)
+        for dependency_hash in _dependency_hashes(root_spec)
+    })
+
+
+def get_library_path(pkg_module_path):
+    """Return the actual installation prefix for an exact root module path."""
+
+    manifest = get_install_manifest()
+    if manifest is None:
+        raise ValueError('A completed installation manifest is required')
+
+    root_hash = _root_hash_for_module_path(manifest, pkg_module_path)
+    prefix = manifest['specs'][root_hash].get('prefix')
+    if not prefix:
+        raise ValueError(
+            f'Installed root {root_hash} has no prefix in installation manifest'
+        )
+
+    return prefix

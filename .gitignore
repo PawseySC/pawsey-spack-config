@@ -19,3 +19,4 @@ logs/
 *.tar.bz2
 patch*
 slurm-*
+setonix-q-*-rfm_results/

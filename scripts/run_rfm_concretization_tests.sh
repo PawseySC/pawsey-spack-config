@@ -19,6 +19,11 @@ export reframe_version=${reframe_version}
 export env_list
 export cray_env_list
 
+# ReFrame imports every check before applying tag filters.  Concretization
+# validation intentionally uses spack.lock only, so hide any previously
+# published installation manifest from installation-parameter construction.
+export SPACK_INSTALL_MANIFEST="${INSTALLATION_METADATA_DIR}/.concretization-only-no-manifest.json"
+
 mkdir -p "${RFM_STORAGE_DIR}"
 
 function check_concretized_environment()

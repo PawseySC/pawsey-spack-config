@@ -1,4 +1,7 @@
-#!/bin/bash 
+#!/bin/bash -e
+
+scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+. "${scriptdir}/pawsey_software_stack_funcs.sh"
 
 check_installation_environment
 set_spack_config_repo
@@ -26,8 +29,11 @@ if (( counter > 5 )); then
 	echo "Tried to install openblas 5 times, and it didn't work. Stopping here.."
 	exit 1
 fi
-sg $INSTALL_GROUP -c "spack install openblas@0.3.24 threads=openmp"
-openblas_not_installed=$?
+if sg $INSTALL_GROUP -c "spack install openblas@0.3.24 threads=openmp"; then
+	openblas_not_installed=0
+else
+	openblas_not_installed=$?
+fi
 (( counter = counter + 1 ))
 done
 
@@ -37,25 +43,21 @@ envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 echo "Running installation with $nprocs cores.."
 
 #Run rocm env on a gpu node with craype-accel-amd-gfx90a loaded
-cd ../systems/${SYSTEM}/environments/rocm
-cd ${envdir}/rocm
+reset_spack_install_receipt environment rocm
+cd "${envdir}/rocm"
 module load craype-accel-amd-gfx90a
-spack env activate ${envdir}/rocm
+spack env activate "${envdir}/rocm"
 spack concretize -f
-sg $INSTALL_GROUP -c "spack install --no-checksum -j${nprocs}"
+sg "${INSTALL_GROUP}" -c "spack install --no-checksum -j${nprocs}"
 spack env deactivate
-cd -
+record_concretized_environment "${envdir}/rocm" rocm root
+seal_spack_install_receipt environment rocm
 
-
-# Create binary cache
-if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
-  for hash in `spack find -x --format "{hash}"`; do spack buildcache create -a -m systemwide_buildcache  /$hash; done;
-fi
-# Refresh module files - explicit specs
-for hash in `spack find -x --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
-
-# Refresh dependencies - implicit specs (manually remove .llvm load from pocl modulefile)
-for hash in `spack find -X --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
+# Extend the same active deployment manifest used by the main environment
+# workflow, then republish modules and exact paths with ROCm included.
+deployment_environments=($env_list $cray_env_list rocm)
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/publish_spack_install_manifest.sh" \
+  "${deployment_environments[@]}"
 
 # Remove .llvm from module files to stop it replacing gcc/cce at module load which breaks reframe tests
 # Done post-installation, so commented out here

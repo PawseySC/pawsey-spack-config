@@ -32,50 +32,71 @@ function refresh_standalone_module_specs()
   done
 }
 
-# Resolve and validate both standalone DAGs before deleting existing modules.
-# Generate Python first because Spack and ReFrame depend on it.
-mapfile -t python_module_specs < <(
-  {
-    for comp in "${pythoncompilers[@]}"; do
-      for arch in "${archs[@]}"; do
-        spack find -d -x --format '/{hash}' \
-          "python@${python_version}%${comp} target=${arch}"
-      done
-    done
-  } | awk 'NF' | sort -u
-)
+# Build a candidate index from the exact concrete specs used for the standalone
+# installations.  This avoids rediscovering them through global DB explicitness
+# and validates both receipts before the one destructive module-tree clear.
+python_manifest_candidate="${INSTALLATION_METADATA_DIR}/standalone_python_manifest.candidate.json"
+standalone_manifest_candidate="${INSTALLATION_METADATA_DIR}/standalone_manifest.candidate.json"
+"${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" assemble \
+  --metadata-root "${INSTALLATION_METADATA_DIR}" \
+  --output "${python_manifest_candidate}" \
+  --standalone python
+"${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" assemble \
+  --metadata-root "${INSTALLATION_METADATA_DIR}" \
+  --output "${standalone_manifest_candidate}" \
+  --standalone python \
+  --standalone reframe
 
-if ((${#python_module_specs[@]} == 0)); then
-  echo "No installed standalone Python specs found for module generation."
+standalone_all_module_specs=()
+standalone_root_module_specs=()
+standalone_dependency_module_specs=()
+python_root_module_specs=()
+python_dependency_module_specs=()
+load_spack_install_manifest_hashes "${standalone_manifest_candidate}" all \
+  standalone_all_module_specs
+load_spack_install_manifest_hashes "${standalone_manifest_candidate}" public-root \
+  standalone_root_module_specs
+load_spack_install_manifest_hashes "${standalone_manifest_candidate}" dependency \
+  standalone_dependency_module_specs
+load_spack_install_manifest_hashes "${python_manifest_candidate}" public-root \
+  python_root_module_specs
+load_spack_install_manifest_hashes "${python_manifest_candidate}" dependency \
+  python_dependency_module_specs
+
+if ((${#standalone_all_module_specs[@]} == 0 || \
+     ${#standalone_root_module_specs[@]} == 0 || \
+     ${#python_root_module_specs[@]} == 0)); then
+  echo "Standalone installation receipts contain no installed Python/ReFrame roots."
   exit 1
 fi
 
-mapfile -t reframe_module_specs < <(
-  spack find -d -x --format '/{hash}' \
-    "reframe@${reframe_version}%gcc@${gcc_version}" | awk 'NF' | sort -u
+# Spack's Lmod writer derives both the current module name and autoloaded
+# dependency names from these DB flags.  Reset only the active standalone DAG,
+# then restore its true roots.
+spack mark --implicit "${standalone_all_module_specs[@]}"
+spack mark --explicit "${standalone_root_module_specs[@]}"
+
+python_module_specs=(
+  "${python_dependency_module_specs[@]}"
+  "${python_root_module_specs[@]}"
 )
 
-if ((${#reframe_module_specs[@]} == 0)); then
-  echo "No installed standalone ReFrame specs found for module generation."
-  exit 1
-fi
-
-# Python's DAG is complete, so only append ReFrame hashes not already generated.
-# This keeps the Python modules intact if ReFrame refresh fails.
 declare -A python_module_spec_set=()
 for module_spec in "${python_module_specs[@]}"; do
   python_module_spec_set["${module_spec}"]=1
 done
 
 reframe_only_module_specs=()
-for module_spec in "${reframe_module_specs[@]}"; do
+for module_spec in \
+  "${standalone_dependency_module_specs[@]}" \
+  "${standalone_root_module_specs[@]}"; do
   if [[ -z ${python_module_spec_set["${module_spec}"]+x} ]]; then
     reframe_only_module_specs+=("${module_spec}")
   fi
 done
 
 if ((${#reframe_only_module_specs[@]} == 0)); then
-  echo "No ReFrame-specific specs found for module generation."
+  echo "No ReFrame-specific specs found in the standalone receipts."
   exit 1
 fi
 
