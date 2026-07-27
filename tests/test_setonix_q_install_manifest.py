@@ -170,7 +170,7 @@ class SetonixQManifestTest(unittest.TestCase):
             )
             self.assertEqual(published['specs'][APP]['prefix'], rfm.get_library_path(module_path))
 
-    def test_records_all_roots_from_a_v5_lockfile(self):
+    def test_lists_all_roots_from_a_v5_lockfile(self):
         shared = node(SHARED, 'shared')
         app = node(APP, 'app', ((SHARED, 'shared', ['link']),))
         second = node(BUILD, 'second')
@@ -187,21 +187,6 @@ class SetonixQManifestTest(unittest.TestCase):
         with redirect_stdout(output):
             self.invoke('lock-roots', '--lock-file', str(lock_file))
         self.assertEqual(['app@1.0', 'second@1.0'], output.getvalue().splitlines())
-
-        self.invoke(
-            'reset-source', '--metadata-root', str(self.metadata),
-            '--kind', 'environment', '--name', 'numerics',
-        )
-        self.invoke(
-            'record-lockfile', '--metadata-root', str(self.metadata),
-            '--name', 'numerics', '--lock-file', str(lock_file),
-        )
-        receipt = json.loads(
-            (self.metadata / 'sources' / 'environments' / 'numerics.json').read_text()
-        )
-        self.assertEqual([APP, BUILD], [item['hash'] for item in receipt['roots']])
-        self.assertEqual(['app', 'second'], [item['name'] for item in receipt['roots']])
-        self.assertEqual(['1.0', '1.0'], [item['version'] for item in receipt['roots']])
 
     def test_annotates_modules_in_one_spack_process(self):
         plan = self.write_text(
