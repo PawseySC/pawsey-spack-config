@@ -7,19 +7,15 @@ set_compilation_sets_for_arch
 # initialise spack 
 . "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh"
 
-# Initialise GPG keys to sign build cache
-# This needs to be run on login nodes seems like.
-if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
-    spack gpg init
-    spack gpg create Spack spack@pawsey.org.au
-
-    # Create/add mirror
-    spack mirror add systemwide_buildcache "${SPACK_BUILDCACHE_PATH}"
-fi
-
-# make sure Clingo is bootstrapped
-echo "Running 'spack spec nano' to bootstrap Clingo.."
-spack spec nano
+# GPG/buildcache setup and the Clingo bootstrap are performed by
+# install_python.sh immediately before this script, so do not repeat them here.
+# if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
+#     spack gpg init
+#     spack gpg create Spack spack@pawsey.org.au
+#     spack mirror add systemwide_buildcache "${SPACK_BUILDCACHE_PATH}"
+# fi
+# echo "Running 'spack spec nano' to bootstrap Clingo.."
+# spack spec nano
 
 if [ "${SYSTEM}" = "setonix-q" ]; then
     reset_spack_install_receipt standalone reframe
