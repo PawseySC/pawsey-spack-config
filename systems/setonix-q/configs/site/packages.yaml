@@ -79,12 +79,11 @@ packages:
     version: [0.16]
   krb5:
     version: [1.21.3]
-  # Keep CMake consistent across independently concretized environments. A
-  # variant preference alone does not prevent a second ~ownlibs DAG.
+  # Prefer the usual CMake build while allowing an environment to select a
+  # compatible alternative. Dependency-only modules are hidden and hashed.
   cmake:
     version: [3.31.7]
     variants: ~doc+ncurses+ownlibs~qtgui
-    require: '@3.31.7 ~doc+ncurses+ownlibs~qtgui'
 # Commented out - see GENERAL NOTES above
 #    externals:
 #  # manual addition with the latest version
