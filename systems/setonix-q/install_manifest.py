@@ -328,32 +328,6 @@ def load_lockfile(path):
     return lock
 
 
-def export_lock_root(lock, root_hash):
-    indexed = lock["concrete_specs"]
-    ordered = []
-    seen = set()
-
-    def visit(node_hash):
-        fail_unless(node_hash in indexed, f"lockfile refers to absent node {node_hash}")
-        if node_hash in seen:
-            return
-        seen.add(node_hash)
-        node = indexed[node_hash]
-        ordered.append(copy.deepcopy(node))
-        for dependency in node.get("dependencies", []):
-            visit(dependency["hash"])
-        if node.get("build_spec"):
-            visit(node["build_spec"]["hash"])
-
-    visit(root_hash)
-    document = {"spec": {"_meta": {"version": 4}, "nodes": ordered}}
-    parsed_root, _ = parse_spec(document, f"lockfile root {root_hash}")
-    fail_unless(
-        parsed_root == root_hash, f"exported lockfile root changed from {root_hash}"
-    )
-    return document
-
-
 def command_init(args):
     root = metadata_root(args)
     prefix = absolute_path(args.install_prefix, "install prefix")
@@ -421,27 +395,6 @@ def command_record_spec(args):
             root, run, receipt, path, args.requested_spec, data, args.install_mode
         )
     )
-
-
-def command_record_lockfile(args):
-    root = metadata_root(args)
-    run = load_run(root)
-    receipt, path = load_receipt(root, run, "environment", args.name)
-    lock = load_lockfile(Path(args.lock_file))
-    fail_unless(lock["roots"], "Spack lockfile contains no roots")
-    for entry in lock["roots"]:
-        root_hash = clean_hash(entry.get("hash"), "lockfile root hash")
-        requested = clean_line(entry.get("spec"), "lockfile requested spec")
-        store_and_record(
-            root,
-            run,
-            receipt,
-            path,
-            requested,
-            export_lock_root(lock, root_hash),
-            args.install_mode,
-        )
-    print(path)
 
 
 def command_lock_roots(args):
@@ -945,15 +898,6 @@ def build_parser():
         "--install-mode", choices=("root", "dependencies-only"), default="root"
     )
     command.set_defaults(function=command_record_spec)
-
-    command = subparsers.add_parser("record-lockfile")
-    add_root_argument(command)
-    add_source_arguments(command, environment_only=True)
-    command.add_argument("--lock-file", required=True)
-    command.add_argument(
-        "--install-mode", choices=("root", "dependencies-only"), default="root"
-    )
-    command.set_defaults(function=command_record_lockfile)
 
     command = subparsers.add_parser("lock-roots")
     command.add_argument("--lock-file", required=True)
