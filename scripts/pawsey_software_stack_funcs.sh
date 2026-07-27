@@ -320,7 +320,6 @@ function build_environment() {
     local testing_only=0
     local previous_dir=$PWD
     local install_mode=root
-    local extracted_specs
     if [ ! -z ${3+x} ]; then
         testing_only=$3
     fi
@@ -372,14 +371,12 @@ function build_environment() {
         # once against the progressively populated installation store.
         echo "Using basic spec extraction and spec and install outside environment for $env"
         rm -f spack.specs.txt spack.specs.output.txt
-        local str=" - "
-        if ! extracted_specs=$(spack find -c -r); then
+        if ! "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" lock-roots \
+            --lock-file "${envdir}/${env}/spack.lock" > spack.specs.txt; then
             spack env deactivate || true
             cd "${previous_dir}" || true
             return 1
         fi
-        printf '%s\n' "${extracted_specs}" | \
-            awk  "/^$str/{print}" | sed "s: - ::g" > spack.specs.txt
         spack env deactivate
         if [ ! -s spack.specs.txt ]; then
             echo "Environment ${env} contains no extracted root specs."

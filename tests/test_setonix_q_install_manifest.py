@@ -1,8 +1,10 @@
 import importlib.util
+import io
 import json
 import os
 import tempfile
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
 from unittest import mock
 
@@ -160,12 +162,21 @@ class SetonixQManifestTest(unittest.TestCase):
     def test_records_all_roots_from_a_v5_lockfile(self):
         shared = node(SHARED, 'shared')
         app = node(APP, 'app', ((SHARED, 'shared', ['link']),))
+        second = node(BUILD, 'second')
         lock = {
             '_meta': {'lockfile-version': 5, 'specfile-version': 4},
-            'roots': [{'hash': APP, 'spec': 'app@1.0'}],
-            'concrete_specs': {APP: app, SHARED: shared},
+            'roots': [
+                {'hash': APP, 'spec': 'app@1.0'},
+                {'hash': BUILD, 'spec': 'second@1.0'},
+            ],
+            'concrete_specs': {APP: app, SHARED: shared, BUILD: second},
         }
         lock_file = self.write_spec('spack.lock', lock)
+        output = io.StringIO()
+        with redirect_stdout(output):
+            self.invoke('lock-roots', '--lock-file', str(lock_file))
+        self.assertEqual(['app@1.0', 'second@1.0'], output.getvalue().splitlines())
+
         self.invoke(
             'reset-source', '--metadata-root', str(self.metadata),
             '--kind', 'environment', '--name', 'numerics',
@@ -177,7 +188,7 @@ class SetonixQManifestTest(unittest.TestCase):
         receipt = json.loads(
             (self.metadata / 'sources' / 'environments' / 'numerics.json').read_text()
         )
-        self.assertEqual(APP, receipt['roots'][0]['hash'])
+        self.assertEqual([APP, BUILD], [item['hash'] for item in receipt['roots']])
 
 
 if __name__ == '__main__':

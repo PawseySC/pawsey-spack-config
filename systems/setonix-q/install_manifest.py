@@ -440,6 +440,13 @@ def command_record_lockfile(args):
     print(path)
 
 
+def command_lock_roots(args):
+    lock = load_lockfile(Path(args.lock_file))
+    fail_unless(lock["roots"], "Spack lockfile contains no roots")
+    for entry in lock["roots"]:
+        print(clean_line(entry.get("spec"), "lockfile root spec"))
+
+
 def command_seal_source(args):
     root = metadata_root(args)
     run = load_run(root)
@@ -813,6 +820,10 @@ def build_parser():
         "--install-mode", choices=("root", "dependencies-only"), default="root"
     )
     command.set_defaults(function=command_record_lockfile)
+
+    command = subparsers.add_parser("lock-roots")
+    command.add_argument("--lock-file", required=True)
+    command.set_defaults(function=command_lock_roots)
 
     command = subparsers.add_parser("seal-source")
     add_root_argument(command)
