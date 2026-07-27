@@ -55,6 +55,14 @@ def write_tsv(path, header, rows):
         writer.writerows(rows)
 
 
+def modified_time(path):
+    if not path.is_file():
+        return ""
+    return datetime.datetime.fromtimestamp(
+        path.stat().st_mtime, datetime.timezone.utc
+    ).isoformat()
+
+
 def compiler_text(node):
     compiler = node.get("compiler") or {}
     if isinstance(compiler, dict):
@@ -88,7 +96,9 @@ def analyse_lockfiles(environment_dir, report_dir):
             with lockfile.open(encoding="utf-8") as stream:
                 lock = json.load(stream)
         except (OSError, json.JSONDecodeError) as error:
-            environments.append([environment, "ERROR", "", "", str(error)])
+            environments.append(
+                [environment, "ERROR", "", "", "", "", "", str(error)]
+            )
             continue
 
         metadata = lock.get("_meta") or {}
@@ -102,6 +112,9 @@ def analyse_lockfiles(environment_dir, report_dir):
                 metadata.get("specfile-version", ""),
                 len(lock_roots),
                 len(concrete),
+                modified_time(lockfile.parent / "spack.yaml"),
+                modified_time(lockfile),
+                "",
             ]
         )
 
@@ -182,7 +195,16 @@ def analyse_lockfiles(environment_dir, report_dir):
 
     write_tsv(
         report_dir / "environments.tsv",
-        ["environment", "lockfile_version", "specfile_version", "roots", "nodes"],
+        [
+            "environment",
+            "lockfile_version",
+            "specfile_version",
+            "roots",
+            "nodes",
+            "spack_yaml_modified_utc",
+            "spack_lock_modified_utc",
+            "error",
+        ],
         environments,
     )
     write_tsv(
@@ -217,6 +239,13 @@ def collect_spack_diagnostics(repo_root, environment_dir, output_dir):
     diagnostics = output_dir / "spack_diagnostics"
     diagnostics.mkdir(parents=True, exist_ok=True)
     spack = shutil.which("spack")
+    if not spack:
+        candidates = []
+        if os.environ.get("SPACK_ROOT"):
+            candidates.append(Path(os.environ["SPACK_ROOT"]) / "bin" / "spack")
+        if os.environ.get("INSTALL_PREFIX"):
+            candidates.append(Path(os.environ["INSTALL_PREFIX"]) / "spack" / "bin" / "spack")
+        spack = next((str(item) for item in candidates if item.is_file()), None)
     if not spack:
         (diagnostics / "NOT_COLLECTED.txt").write_text(
             "The spack command was not available in PATH.\n", encoding="utf-8"
