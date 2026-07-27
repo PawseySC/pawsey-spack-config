@@ -282,8 +282,6 @@ function build_environment() {
     local testing_only=0
     local previous_dir=$PWD
     local install_mode=root
-    local specs_file
-    local specs_output_file
     if [ ! -z ${3+x} ]; then
         testing_only=$3
     fi
@@ -293,83 +291,51 @@ function build_environment() {
         cd "${previous_dir}" || true
         return 1
     fi
-    # Setonix preserves the environment install used on main. Setonix-Q
-    # installs individually extracted roots to promote reuse between sources.
-    if [ "${SYSTEM}" != "setonix-q" ]; then
-        echo "Using environment concretization for $env"
-        if ! spack concretize -f ${SPACK_CONCRETIZE_ARGS}; then
+    echo "Using environment concretization for $env"
+    if ! spack concretize -f ${SPACK_CONCRETIZE_ARGS}; then
+        spack env deactivate || true
+        cd "${previous_dir}" || true
+        return 1
+    fi
+    if (( $testing_only != 0 )); then
+        echo "Testing only - not installing for $env"
+        spack env deactivate
+        cd "${previous_dir}" || true
+        return
+    fi
+    if [ "${env}" == "roms" ] || [ "${env}" == "wrf" ] ; then
+        install_mode=dependencies-only
+        if ! sg "${INSTALL_GROUP}" -c \
+            "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} --only dependencies"; then
             spack env deactivate || true
             cd "${previous_dir}" || true
             return 1
         fi
-        if (( $testing_only != 0 )); then
-            echo "Testing only - not installing for $env"
-            spack env deactivate
-            cd "${previous_dir}" || true
-            return
-        fi
-        if [ "${env}" == "roms" ] || [ "${env}" == "wrf" ] ; then
-            install_mode=dependencies-only
-            sg "${INSTALL_GROUP}" -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} --only dependencies" || {
-                spack env deactivate || true
-                cd "${previous_dir}" || true
-                return 1
-            }
-        else
-            sg "${INSTALL_GROUP}" -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS}" || {
-                spack env deactivate || true
-                cd "${previous_dir}" || true
-                return 1
-            }
-        fi
-        spack env deactivate
     else
-        # Instead of installing the environment concretization, which tends to
-        # produce duplicates, extract each requested root and concretize it
-        # once against the progressively populated installation store.
-        echo "Using basic spec extraction and spec and install outside environment for $env"
-        specs_file="${INSTALLATION_METADATA_DIR}/environment_${env}_roots.txt"
-        specs_output_file="${INSTALLATION_METADATA_DIR}/environment_${env}_specs.output.txt"
-        rm -f "${specs_file}" "${specs_output_file}"
-        if ! "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" lock-roots \
-            --lock-file "${envdir}/${env}/spack.lock" > "${specs_file}"; then
+        if ! sg "${INSTALL_GROUP}" -c \
+            "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS}"; then
             spack env deactivate || true
             cd "${previous_dir}" || true
             return 1
         fi
-        spack env deactivate
-        if [ ! -s "${specs_file}" ]; then
-            echo "Environment ${env} contains no extracted root specs."
+    fi
+    if [ "${SYSTEM}" = "setonix-q" ]; then
+        if ! "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" record-lockfile \
+            --metadata-root "${INSTALLATION_METADATA_DIR}" \
+            --name "${env}" \
+            --lock-file "${envdir}/${env}/spack.lock" \
+            --install-mode "${install_mode}"; then
+            spack env deactivate || true
             cd "${previous_dir}" || true
             return 1
         fi
-        if (( $testing_only != 0 )); then
-            echo "Testing only - not installing for $env"
-        fi
-        echo "Number of specs to be processed for $env: $(wc -l < "${specs_file}")"
-        while IFS= read -r p; do
-            echo "Package $p ..."
-            if (( $testing_only != 0 )); then
-                spack spec ${SPACK_SPEC_ARGS} ${p} >> "${specs_output_file}"
-            else
-                if [ "${env}" == "roms" ] || [ "${env}" == "wrf" ] ; then
-                    install_mode=dependencies-only
-                else
-                    install_mode=root
-                fi
-                install_and_record_spack_root environment "${env}" "${p}" "${install_mode}" || {
-                    cd "${previous_dir}" || true
-                    return 1
-                }
-            fi
-        done < "${specs_file}"
-    fi
-    if ((testing_only == 0)) && [ "${SYSTEM}" = "setonix-q" ]; then
-        seal_spack_install_receipt environment "${env}" || {
+        if ! seal_spack_install_receipt environment "${env}"; then
+            spack env deactivate || true
             cd "${previous_dir}" || true
             return 1
-        }
+        fi
     fi
+    spack env deactivate || return 1
     cd "${previous_dir}" || return 1
 }
 

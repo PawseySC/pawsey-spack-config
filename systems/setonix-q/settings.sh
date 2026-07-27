@@ -44,9 +44,8 @@ SPACK_USER_CONFIG_PATH="$MYSOFTWARE/setonix-q/$DATE_TAG/.spack_user_config"
 BOOTSTRAP_PATH='$MYSOFTWARE/setonix-q/'$DATE_TAG/.spack_user_config/bootstrap
 # Set a new mirror where to fetch prebuilt binaries, if any.
 SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
-# Durable, release-scoped provenance for the concrete specs that were actually
-# installed.  This is intentionally separate from the source-controlled
-# environment lockfiles, which describe the pre-installation concretization.
+# Durable, release-scoped provenance for the environment lockfile DAGs that
+# were installed, plus standalone Python and ReFrame concrete specs.
 INSTALLATION_METADATA_DIR=${INSTALL_PREFIX}/installation_metadata
 SPACK_INSTALL_MANIFEST=${INSTALLATION_METADATA_DIR}/spack_install_manifest.json
 # When SPACK_POPULATE_CACHE=1, spack will push binaries in the above cache location for later use.
