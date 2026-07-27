@@ -29,7 +29,9 @@ class ManifestError(RuntimeError):
 
 
 def now():
-    return datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat()
+    return (
+        datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat()
+    )
 
 
 def fail_unless(condition, message):
@@ -38,12 +40,18 @@ def fail_unless(condition, message):
 
 
 def clean_name(value, label="name"):
-    fail_unless(isinstance(value, str) and NAME_RE.fullmatch(value), f"invalid {label}: {value!r}")
+    fail_unless(
+        isinstance(value, str) and NAME_RE.fullmatch(value),
+        f"invalid {label}: {value!r}",
+    )
     return value
 
 
 def clean_hash(value, label="hash"):
-    fail_unless(isinstance(value, str) and HASH_RE.fullmatch(value), f"invalid {label}: {value!r}")
+    fail_unless(
+        isinstance(value, str) and HASH_RE.fullmatch(value),
+        f"invalid {label}: {value!r}",
+    )
     return value
 
 
@@ -84,7 +92,9 @@ def read_json(path, label):
 
 def atomic_write(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{path.name}.", dir=path.parent
+    )
     temporary = Path(temporary_name)
     try:
         with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
@@ -101,7 +111,9 @@ def atomic_write(path, data):
 
 def atomic_write_text(path, text):
     path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{path.name}.", dir=path.parent
+    )
     temporary = Path(temporary_name)
     try:
         with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
@@ -117,8 +129,13 @@ def atomic_write_text(path, text):
 
 def load_run(root):
     run = read_json(root / RUN_FILE, "active installation run")
-    fail_unless(run.get("schema_version") == SCHEMA_VERSION, "unsupported installation run schema")
-    fail_unless(run.get("system") == "setonix-q", "installation run is not for setonix-q")
+    fail_unless(
+        run.get("schema_version") == SCHEMA_VERSION,
+        "unsupported installation run schema",
+    )
+    fail_unless(
+        run.get("system") == "setonix-q", "installation run is not for setonix-q"
+    )
     fail_unless(isinstance(run.get("run_id"), str), "installation run has no run_id")
     return run
 
@@ -131,36 +148,72 @@ def receipt_path(root, kind, name):
 def load_receipt(root, run, kind, name, complete=False):
     path = receipt_path(root, kind, name)
     receipt = read_json(path, f"{kind} source {name}")
-    fail_unless(receipt.get("schema_version") == SCHEMA_VERSION, f"unsupported source schema: {path}")
-    fail_unless(receipt.get("run_id") == run["run_id"], f"source belongs to a stale installation run: {path}")
-    fail_unless(receipt.get("kind") == kind and receipt.get("name") == name, f"source identity mismatch: {path}")
-    fail_unless(receipt.get("status") in ("recording", "complete"), f"invalid source status: {path}")
-    fail_unless(isinstance(receipt.get("roots"), list), f"source has no roots list: {path}")
+    fail_unless(
+        receipt.get("schema_version") == SCHEMA_VERSION,
+        f"unsupported source schema: {path}",
+    )
+    fail_unless(
+        receipt.get("run_id") == run["run_id"],
+        f"source belongs to a stale installation run: {path}",
+    )
+    fail_unless(
+        receipt.get("kind") == kind and receipt.get("name") == name,
+        f"source identity mismatch: {path}",
+    )
+    fail_unless(
+        receipt.get("status") in ("recording", "complete"),
+        f"invalid source status: {path}",
+    )
+    fail_unless(
+        isinstance(receipt.get("roots"), list), f"source has no roots list: {path}"
+    )
     if complete:
-        fail_unless(receipt["status"] == "complete" and receipt["roots"], f"source is not complete: {path}")
+        fail_unless(
+            receipt["status"] == "complete" and receipt["roots"],
+            f"source is not complete: {path}",
+        )
     return receipt, path
 
 
 def parse_spec(data, label):
-    fail_unless(isinstance(data, dict) and isinstance(data.get("spec"), dict), f"{label} is not a Spack spec")
+    fail_unless(
+        isinstance(data, dict) and isinstance(data.get("spec"), dict),
+        f"{label} is not a Spack spec",
+    )
     spec = data["spec"]
-    fail_unless(spec.get("_meta", {}).get("version") == 4, f"{label} must use Spack spec format 4")
+    fail_unless(
+        spec.get("_meta", {}).get("version") == 4,
+        f"{label} must use Spack spec format 4",
+    )
     nodes = spec.get("nodes")
     fail_unless(isinstance(nodes, list) and nodes, f"{label} contains no nodes")
     indexed = {}
     for position, node in enumerate(nodes):
         fail_unless(isinstance(node, dict), f"{label} node {position} is invalid")
         node_hash = clean_hash(node.get("hash"), f"node {position} hash")
-        fail_unless(node_hash not in indexed, f"{label} contains duplicate hash {node_hash}")
-        fail_unless(isinstance(node.get("name"), str) and node["name"], f"node {node_hash} has no name")
+        fail_unless(
+            node_hash not in indexed, f"{label} contains duplicate hash {node_hash}"
+        )
+        fail_unless(
+            isinstance(node.get("name"), str) and node["name"],
+            f"node {node_hash} has no name",
+        )
         dependencies = node.get("dependencies", [])
-        fail_unless(isinstance(dependencies, list), f"node {node_hash} has invalid dependencies")
+        fail_unless(
+            isinstance(dependencies, list), f"node {node_hash} has invalid dependencies"
+        )
         for dependency in dependencies:
-            fail_unless(isinstance(dependency, dict), f"node {node_hash} has an invalid dependency")
+            fail_unless(
+                isinstance(dependency, dict),
+                f"node {node_hash} has an invalid dependency",
+            )
             clean_hash(dependency.get("hash"), f"dependency of {node_hash}")
         build_spec = node.get("build_spec")
         if build_spec is not None:
-            fail_unless(isinstance(build_spec, dict), f"node {node_hash} has an invalid build_spec")
+            fail_unless(
+                isinstance(build_spec, dict),
+                f"node {node_hash} has an invalid build_spec",
+            )
             clean_hash(build_spec.get("hash"), f"build_spec of {node_hash}")
         indexed[node_hash] = node
     for node_hash, node in indexed.items():
@@ -168,7 +221,10 @@ def parse_spec(data, label):
         if node.get("build_spec"):
             references.append(node["build_spec"]["hash"])
         missing = sorted(set(references) - set(indexed))
-        fail_unless(not missing, f"node {node_hash} refers to absent nodes: {', '.join(missing)}")
+        fail_unless(
+            not missing,
+            f"node {node_hash} refers to absent nodes: {', '.join(missing)}",
+        )
     return nodes[0]["hash"], indexed
 
 
@@ -186,20 +242,30 @@ def active_hashes(indexed, root_hash, mode):
         if node_hash in result:
             continue
         result.add(node_hash)
-        pending.extend(item["hash"] for item in indexed[node_hash].get("dependencies", []))
+        pending.extend(
+            item["hash"] for item in indexed[node_hash].get("dependencies", [])
+        )
     if mode == "dependencies-only":
         result.remove(root_hash)
     return result
 
 
 def store_and_record(root, run, receipt, receipt_file, requested_spec, spec_data, mode):
-    fail_unless(receipt["status"] == "recording", f"source is not open for recording: {receipt_file}")
-    fail_unless(mode in ("root", "dependencies-only"), f"unsupported install mode: {mode}")
+    fail_unless(
+        receipt["status"] == "recording",
+        f"source is not open for recording: {receipt_file}",
+    )
+    fail_unless(
+        mode in ("root", "dependencies-only"), f"unsupported install mode: {mode}"
+    )
     requested_spec = clean_line(requested_spec, "requested spec")
     root_hash, _ = parse_spec(spec_data, "concrete spec")
     stored = root / "concrete_specs" / f"{root_hash}.json"
     if stored.exists():
-        fail_unless(read_json(stored, "stored concrete spec") == spec_data, f"conflicting concrete spec for {root_hash}")
+        fail_unless(
+            read_json(stored, "stored concrete spec") == spec_data,
+            f"conflicting concrete spec for {root_hash}",
+        )
     else:
         atomic_write(stored, spec_data)
     record = {
@@ -211,29 +277,50 @@ def store_and_record(root, run, receipt, receipt_file, requested_spec, spec_data
     }
     key = (requested_spec, root_hash, mode)
     existing = next(
-        (item for item in receipt["roots"] if (item["requested_spec"], item["hash"], item["install_mode"]) == key),
+        (
+            item
+            for item in receipt["roots"]
+            if (item["requested_spec"], item["hash"], item["install_mode"]) == key
+        ),
         None,
     )
     if existing is None:
         receipt["roots"].append(record)
-        receipt["roots"].sort(key=lambda item: (item["requested_spec"], item["hash"], item["install_mode"]))
+        receipt["roots"].sort(
+            key=lambda item: (
+                item["requested_spec"],
+                item["hash"],
+                item["install_mode"],
+            )
+        )
         receipt["updated_at"] = now()
         atomic_write(receipt_file, receipt)
     else:
-        fail_unless(existing == record, f"conflicting source record for {requested_spec}")
+        fail_unless(
+            existing == record, f"conflicting source record for {requested_spec}"
+        )
     return root_hash
 
 
 def load_lockfile(path):
     lock = read_json(path, "Spack lockfile")
     meta = lock.get("_meta", {}) if isinstance(lock, dict) else {}
-    fail_unless(meta.get("lockfile-version") == 5 and meta.get("specfile-version") == 4, "Spack lockfile must use lockfile version 5 and spec format 4")
+    fail_unless(
+        meta.get("lockfile-version") == 5 and meta.get("specfile-version") == 4,
+        "Spack lockfile must use lockfile version 5 and spec format 4",
+    )
     roots = lock.get("roots")
     specs = lock.get("concrete_specs")
-    fail_unless(isinstance(roots, list) and isinstance(specs, dict), "Spack lockfile has invalid roots or concrete_specs")
+    fail_unless(
+        isinstance(roots, list) and isinstance(specs, dict),
+        "Spack lockfile has invalid roots or concrete_specs",
+    )
     for node_hash, node in specs.items():
         clean_hash(node_hash, "lockfile spec key")
-        fail_unless(isinstance(node, dict) and node.get("hash") == node_hash, f"lockfile spec mismatch for {node_hash}")
+        fail_unless(
+            isinstance(node, dict) and node.get("hash") == node_hash,
+            f"lockfile spec mismatch for {node_hash}",
+        )
     return lock
 
 
@@ -257,15 +344,23 @@ def export_lock_root(lock, root_hash):
     visit(root_hash)
     document = {"spec": {"_meta": {"version": 4}, "nodes": ordered}}
     parsed_root, _ = parse_spec(document, f"lockfile root {root_hash}")
-    fail_unless(parsed_root == root_hash, f"exported lockfile root changed from {root_hash}")
+    fail_unless(
+        parsed_root == root_hash, f"exported lockfile root changed from {root_hash}"
+    )
     return document
 
 
 def command_init(args):
     root = metadata_root(args)
     prefix = absolute_path(args.install_prefix, "install prefix")
-    fail_unless(args.system == "setonix-q", "the installation manifest is currently supported only for setonix-q")
-    fail_unless(root == prefix / "installation_metadata", "metadata root must be <install-prefix>/installation_metadata")
+    fail_unless(
+        args.system == "setonix-q",
+        "the installation manifest is currently supported only for setonix-q",
+    )
+    fail_unless(
+        root == prefix / "installation_metadata",
+        "metadata root must be <install-prefix>/installation_metadata",
+    )
     root.mkdir(parents=True, exist_ok=True)
     final = root / FINAL_FILE
     previous = root / "spack_install_manifest.previous.json"
@@ -276,7 +371,8 @@ def command_init(args):
             stale.unlink()
     run = {
         "schema_version": SCHEMA_VERSION,
-        "run_id": args.run_id or f"{datetime.datetime.now(datetime.timezone.utc):%Y%m%dT%H%M%SZ}-{uuid.uuid4().hex[:8]}",
+        "run_id": args.run_id
+        or f"{datetime.datetime.now(datetime.timezone.utc):%Y%m%dT%H%M%SZ}-{uuid.uuid4().hex[:8]}",
         "system": "setonix-q",
         "date_tag": clean_line(args.date_tag, "date tag"),
         "install_prefix": str(prefix),
@@ -292,16 +388,19 @@ def command_reset_source(args):
     run = load_run(root)
     path = receipt_path(root, args.kind, args.name)
     timestamp = now()
-    atomic_write(path, {
-        "schema_version": SCHEMA_VERSION,
-        "run_id": run["run_id"],
-        "kind": args.kind,
-        "name": clean_name(args.name, "source name"),
-        "status": "recording",
-        "created_at": timestamp,
-        "updated_at": timestamp,
-        "roots": [],
-    })
+    atomic_write(
+        path,
+        {
+            "schema_version": SCHEMA_VERSION,
+            "run_id": run["run_id"],
+            "kind": args.kind,
+            "name": clean_name(args.name, "source name"),
+            "status": "recording",
+            "created_at": timestamp,
+            "updated_at": timestamp,
+            "roots": [],
+        },
+    )
     candidate = root / CANDIDATE_FILE
     if candidate.exists():
         candidate.unlink()
@@ -313,7 +412,11 @@ def command_record_spec(args):
     run = load_run(root)
     receipt, path = load_receipt(root, run, args.kind, args.name)
     data, _, _ = load_spec(Path(args.spec_file))
-    print(store_and_record(root, run, receipt, path, args.requested_spec, data, args.install_mode))
+    print(
+        store_and_record(
+            root, run, receipt, path, args.requested_spec, data, args.install_mode
+        )
+    )
 
 
 def command_record_lockfile(args):
@@ -325,7 +428,15 @@ def command_record_lockfile(args):
     for entry in lock["roots"]:
         root_hash = clean_hash(entry.get("hash"), "lockfile root hash")
         requested = clean_line(entry.get("spec"), "lockfile requested spec")
-        store_and_record(root, run, receipt, path, requested, export_lock_root(lock, root_hash), args.install_mode)
+        store_and_record(
+            root,
+            run,
+            receipt,
+            path,
+            requested,
+            export_lock_root(lock, root_hash),
+            args.install_mode,
+        )
     print(path)
 
 
@@ -355,7 +466,9 @@ def command_assemble(args):
         "standalone": sorted(set(args.standalone)),
         "environment": sorted(set(args.environment)),
     }
-    fail_unless(any(requested_sources.values()), "assemble requires at least one source")
+    fail_unless(
+        any(requested_sources.values()), "assemble requires at least one source"
+    )
     sources = {"standalone": {}, "environments": {}}
     receipts = []
     for kind, names in requested_sources.items():
@@ -378,27 +491,42 @@ def command_assemble(args):
         for record in receipt["roots"]:
             spec_path = root / record["spec_file"]
             _, root_hash, indexed = load_spec(spec_path)
-            fail_unless(root_hash == record["hash"], f"source root does not match {spec_path}")
+            fail_unless(
+                root_hash == record["hash"], f"source root does not match {spec_path}"
+            )
             selected = active_hashes(indexed, root_hash, record["install_mode"])
             source_hashes.update(selected)
             active.update(selected)
             if record["installed"]:
                 public.add(root_hash)
-                (standalone_roots if receipt["kind"] == "standalone" else environment_roots).add(root_hash)
+                (
+                    standalone_roots
+                    if receipt["kind"] == "standalone"
+                    else environment_roots
+                ).add(root_hash)
             for node_hash in selected | {root_hash}:
                 node = indexed[node_hash]
                 minimal = {
                     "hash": node_hash,
                     "name": node["name"],
                     "version": node.get("version"),
-                    "dependencies": sorted(item["hash"] for item in node.get("dependencies", [])),
+                    "dependencies": sorted(
+                        item["hash"] for item in node.get("dependencies", [])
+                    ),
                 }
-                fail_unless(node_hash not in nodes or nodes[node_hash] == minimal, f"conflicting node data for {node_hash}")
+                fail_unless(
+                    node_hash not in nodes or nodes[node_hash] == minimal,
+                    f"conflicting node data for {node_hash}",
+                )
                 nodes[node_hash] = minimal
                 raw_nodes[node_hash] = node
-        summary = sources["standalone" if receipt["kind"] == "standalone" else "environments"][receipt["name"]]
+        summary = sources[
+            "standalone" if receipt["kind"] == "standalone" else "environments"
+        ][receipt["name"]]
         summary["installed_hashes"] = sorted(source_hashes)
-        (standalone if receipt["kind"] == "standalone" else environments).update(source_hashes)
+        (standalone if receipt["kind"] == "standalone" else environments).update(
+            source_hashes
+        )
 
     specs = {}
     for node_hash in sorted(nodes):
@@ -412,13 +540,19 @@ def command_assemble(args):
                 module_dependencies.append(dependency["hash"])
         entry["dependencies"] = sorted(module_dependencies)
         installed = node_hash in active
-        entry.update({
-            "installed": installed,
-            "role": "root" if node_hash in public else "dependency" if installed else None,
-            "prefix": None,
-            "module_name": None,
-            "module_path": None,
-        })
+        entry.update(
+            {
+                "installed": installed,
+                "role": (
+                    "root"
+                    if node_hash in public
+                    else "dependency" if installed else None
+                ),
+                "prefix": None,
+                "module_name": None,
+                "module_path": None,
+            }
+        )
         specs[node_hash] = entry
     candidate = {
         "schema_version": SCHEMA_VERSION,
@@ -447,21 +581,44 @@ def command_assemble(args):
 
 
 def validate_manifest(manifest, complete, check_paths):
-    fail_unless(isinstance(manifest, dict) and manifest.get("schema_version") == SCHEMA_VERSION, "unsupported manifest schema")
-    valid_status = manifest.get("status") == "complete" if complete else manifest.get("status") in ("candidate", "complete")
+    fail_unless(
+        isinstance(manifest, dict) and manifest.get("schema_version") == SCHEMA_VERSION,
+        "unsupported manifest schema",
+    )
+    valid_status = (
+        manifest.get("status") == "complete"
+        if complete
+        else manifest.get("status") in ("candidate", "complete")
+    )
     fail_unless(valid_status, "invalid manifest status")
     fail_unless(manifest.get("system") == "setonix-q", "manifest is not for setonix-q")
-    fail_unless(isinstance(manifest.get("sources"), dict) and isinstance(manifest.get("specs"), dict), "manifest has invalid sources or specs")
+    fail_unless(
+        isinstance(manifest.get("sources"), dict)
+        and isinstance(manifest.get("specs"), dict),
+        "manifest has invalid sources or specs",
+    )
     specs = manifest["specs"]
     installed_specs = set()
     public_specs = set()
     for node_hash, spec in specs.items():
         clean_hash(node_hash)
-        fail_unless(isinstance(spec, dict) and spec.get("hash") == node_hash, f"invalid spec {node_hash}")
-        fail_unless(spec.get("role") in ("root", "dependency", None), f"invalid role for {node_hash}")
-        fail_unless(isinstance(spec.get("dependencies"), list), f"invalid dependencies for {node_hash}")
+        fail_unless(
+            isinstance(spec, dict) and spec.get("hash") == node_hash,
+            f"invalid spec {node_hash}",
+        )
+        fail_unless(
+            spec.get("role") in ("root", "dependency", None),
+            f"invalid role for {node_hash}",
+        )
+        fail_unless(
+            isinstance(spec.get("dependencies"), list),
+            f"invalid dependencies for {node_hash}",
+        )
         for dependency in spec["dependencies"]:
-            fail_unless(dependency in specs, f"spec {node_hash} refers to absent dependency {dependency}")
+            fail_unless(
+                dependency in specs,
+                f"spec {node_hash} refers to absent dependency {dependency}",
+            )
         if spec.get("installed"):
             installed_specs.add(node_hash)
         if spec.get("role") == "root":
@@ -469,27 +626,55 @@ def validate_manifest(manifest, complete, check_paths):
         if check_paths and spec.get("installed"):
             prefix = spec.get("prefix")
             module_path = spec.get("module_path")
-            fail_unless(isinstance(prefix, str) and Path(prefix).is_dir(), f"prefix does not exist for {node_hash}: {prefix}")
-            fail_unless(isinstance(spec.get("module_name"), str) and spec["module_name"], f"module name is missing for {node_hash}")
-            fail_unless(isinstance(module_path, str) and Path(module_path).is_file(), f"module file does not exist for {node_hash}: {module_path}")
+            fail_unless(
+                isinstance(prefix, str) and Path(prefix).is_dir(),
+                f"prefix does not exist for {node_hash}: {prefix}",
+            )
+            fail_unless(
+                isinstance(spec.get("module_name"), str) and spec["module_name"],
+                f"module name is missing for {node_hash}",
+            )
+            fail_unless(
+                isinstance(module_path, str) and Path(module_path).is_file(),
+                f"module file does not exist for {node_hash}: {module_path}",
+            )
     source_installed = set()
     source_roots = set()
     for category in ("standalone", "environments"):
-        fail_unless(isinstance(manifest["sources"].get(category), dict), f"manifest has invalid {category} sources")
+        fail_unless(
+            isinstance(manifest["sources"].get(category), dict),
+            f"manifest has invalid {category} sources",
+        )
         for name, source in manifest["sources"][category].items():
             clean_name(name, "source name")
-            fail_unless(isinstance(source.get("roots"), list), f"source {name} has no roots")
+            fail_unless(
+                isinstance(source.get("roots"), list), f"source {name} has no roots"
+            )
             installed_hashes = source.get("installed_hashes")
-            fail_unless(isinstance(installed_hashes, list), f"source {name} has no installed hashes")
+            fail_unless(
+                isinstance(installed_hashes, list),
+                f"source {name} has no installed hashes",
+            )
             source_installed.update(installed_hashes)
             for record in source["roots"]:
-                fail_unless(record.get("hash") in specs, f"source {name} refers to absent root")
+                fail_unless(
+                    record.get("hash") in specs, f"source {name} refers to absent root"
+                )
                 if record.get("installed"):
                     source_roots.add(record["hash"])
-    fail_unless(installed_specs == source_installed, "installed specs do not match source records")
-    fail_unless(public_specs == source_roots, "public roots do not match source records")
+    fail_unless(
+        installed_specs == source_installed,
+        "installed specs do not match source records",
+    )
+    fail_unless(
+        public_specs == source_roots, "public roots do not match source records"
+    )
     for node_hash, spec in specs.items():
-        expected_role = "root" if node_hash in source_roots else "dependency" if node_hash in source_installed else None
+        expected_role = (
+            "root"
+            if node_hash in source_roots
+            else "dependency" if node_hash in source_installed else None
+        )
         fail_unless(spec["role"] == expected_role, f"incorrect role for {node_hash}")
 
 
@@ -505,10 +690,22 @@ def read_annotations(path):
             if not line or line.startswith("#"):
                 continue
             columns = line.split("\t")
-            fail_unless(len(columns) == 4, f"annotation line {line_number} must have four columns")
-            node_hash = clean_hash(columns[0].lstrip("/"), f"annotation line {line_number} hash")
-            value = (str(absolute_path(columns[1], "prefix")), clean_line(columns[2], "module name"), str(absolute_path(columns[3], "module path")))
-            fail_unless(node_hash not in annotations or annotations[node_hash] == value, f"conflicting annotation for {node_hash}")
+            fail_unless(
+                len(columns) == 4,
+                f"annotation line {line_number} must have four columns",
+            )
+            node_hash = clean_hash(
+                columns[0].lstrip("/"), f"annotation line {line_number} hash"
+            )
+            value = (
+                str(absolute_path(columns[1], "prefix")),
+                clean_line(columns[2], "module name"),
+                str(absolute_path(columns[3], "module path")),
+            )
+            fail_unless(
+                node_hash not in annotations or annotations[node_hash] == value,
+                f"conflicting annotation for {node_hash}",
+            )
             annotations[node_hash] = value
     finally:
         if stream is not sys.stdin:
@@ -522,17 +719,30 @@ def command_publish(args):
     candidate_path = Path(args.candidate) if args.candidate else root / CANDIDATE_FILE
     manifest = read_json(candidate_path, "candidate manifest")
     validate_manifest(manifest, complete=False, check_paths=False)
-    fail_unless(manifest["status"] == "candidate" and manifest["run_id"] == run["run_id"], "candidate is stale or already published")
+    fail_unless(
+        manifest["status"] == "candidate" and manifest["run_id"] == run["run_id"],
+        "candidate is stale or already published",
+    )
     annotations = read_annotations(args.annotations)
-    installed = {node_hash for node_hash, spec in manifest["specs"].items() if spec["installed"]}
-    fail_unless(set(annotations) == installed, "annotations must contain every installed hash exactly once")
+    installed = {
+        node_hash for node_hash, spec in manifest["specs"].items() if spec["installed"]
+    }
+    fail_unless(
+        set(annotations) == installed,
+        "annotations must contain every installed hash exactly once",
+    )
     for node_hash, (prefix, module_name, module_path) in annotations.items():
-        manifest["specs"][node_hash].update(prefix=prefix, module_name=module_name, module_path=module_path)
+        manifest["specs"][node_hash].update(
+            prefix=prefix, module_name=module_name, module_path=module_path
+        )
     manifest["status"] = "complete"
     manifest["published_at"] = now()
     validate_manifest(manifest, complete=True, check_paths=True)
     paths = [manifest["specs"][item]["module_path"] for item in installed]
-    fail_unless(len(paths) == len(set(paths)), "two installed specs resolve to the same module path")
+    fail_unless(
+        len(paths) == len(set(paths)),
+        "two installed specs resolve to the same module path",
+    )
     output = Path(args.output) if args.output else root / FINAL_FILE
     atomic_write(output, manifest)
     print(output)
@@ -541,8 +751,15 @@ def command_publish(args):
 def command_validate(args):
     manifest = read_json(Path(args.manifest), "installation manifest")
     validate_manifest(manifest, complete=True, check_paths=not args.skip_path_checks)
-    fail_unless(manifest["system"] == args.system, f"manifest system is {manifest['system']!r}, expected {args.system!r}")
-    fail_unless(Path(manifest["install_prefix"]) == absolute_path(args.install_prefix, "install prefix"), "manifest install prefix does not match")
+    fail_unless(
+        manifest["system"] == args.system,
+        f"manifest system is {manifest['system']!r}, expected {args.system!r}",
+    )
+    fail_unless(
+        Path(manifest["install_prefix"])
+        == absolute_path(args.install_prefix, "install prefix"),
+        "manifest install prefix does not match",
+    )
     missing = sorted(set(args.environment) - set(manifest["sources"]["environments"]))
     fail_unless(not missing, f"manifest is missing environments: {', '.join(missing)}")
     print(args.manifest)
@@ -554,7 +771,9 @@ def add_root_argument(parser):
 
 def add_source_arguments(parser, environment_only=False):
     if not environment_only:
-        parser.add_argument("--kind", choices=("standalone", "environment"), required=True)
+        parser.add_argument(
+            "--kind", choices=("standalone", "environment"), required=True
+        )
     parser.add_argument("--name", required=True)
 
 
@@ -581,14 +800,18 @@ def build_parser():
     add_source_arguments(command)
     command.add_argument("--requested-spec", required=True)
     command.add_argument("--spec-file", required=True)
-    command.add_argument("--install-mode", choices=("root", "dependencies-only"), default="root")
+    command.add_argument(
+        "--install-mode", choices=("root", "dependencies-only"), default="root"
+    )
     command.set_defaults(function=command_record_spec)
 
     command = subparsers.add_parser("record-lockfile")
     add_root_argument(command)
     add_source_arguments(command, environment_only=True)
     command.add_argument("--lock-file", required=True)
-    command.add_argument("--install-mode", choices=("root", "dependencies-only"), default="root")
+    command.add_argument(
+        "--install-mode", choices=("root", "dependencies-only"), default="root"
+    )
     command.set_defaults(function=command_record_lockfile)
 
     command = subparsers.add_parser("seal-source")
