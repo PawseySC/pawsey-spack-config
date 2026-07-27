@@ -45,9 +45,6 @@ envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 
 if [ "${SYSTEM}" = "setonix-q" ]; then
   ensure_spack_install_manifest_run
-  for env in $env_list $cray_env_list; do
-    reset_spack_install_receipt environment "${env}"
-  done
 fi
 
 echo "Running installation with $NCPUS cores.."

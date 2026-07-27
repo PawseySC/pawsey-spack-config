@@ -387,27 +387,38 @@ def command_init(args):
     print(run["run_id"])
 
 
-def command_reset_source(args):
-    root = metadata_root(args)
-    run = load_run(root)
-    path = receipt_path(root, args.kind, args.name)
+def start_receipt(root, run, kind, name):
+    path = receipt_path(root, kind, name)
     timestamp = now()
-    atomic_write(
-        path,
-        {
-            "schema_version": SCHEMA_VERSION,
-            "run_id": run["run_id"],
-            "kind": args.kind,
-            "name": clean_name(args.name, "source name"),
-            "status": "recording",
-            "created_at": timestamp,
-            "updated_at": timestamp,
-            "roots": [],
-        },
-    )
+    receipt = {
+        "schema_version": SCHEMA_VERSION,
+        "run_id": run["run_id"],
+        "kind": kind,
+        "name": clean_name(name, "source name"),
+        "status": "recording",
+        "created_at": timestamp,
+        "updated_at": timestamp,
+        "roots": [],
+    }
+    atomic_write(path, receipt)
     candidate = root / CANDIDATE_FILE
     if candidate.exists():
         candidate.unlink()
+    return receipt, path
+
+
+def complete_receipt(receipt, path):
+    fail_unless(receipt["roots"], f"cannot seal an empty source: {path}")
+    receipt["status"] = "complete"
+    receipt["completed_at"] = now()
+    receipt["updated_at"] = receipt["completed_at"]
+    atomic_write(path, receipt)
+
+
+def command_reset_source(args):
+    root = metadata_root(args)
+    run = load_run(root)
+    _, path = start_receipt(root, run, args.kind, args.name)
     print(path)
 
 
@@ -426,9 +437,9 @@ def command_record_spec(args):
 def command_record_lockfile(args):
     root = metadata_root(args)
     run = load_run(root)
-    receipt, path = load_receipt(root, run, "environment", args.name)
     lock = load_lockfile(Path(args.lock_file))
     fail_unless(lock["roots"], "Spack lockfile contains no roots")
+    receipt, path = start_receipt(root, run, "environment", args.name)
     for entry in lock["roots"]:
         root_hash = clean_hash(entry.get("hash"), "lockfile root hash")
         requested = clean_line(entry.get("spec"), "lockfile requested spec")
@@ -441,6 +452,7 @@ def command_record_lockfile(args):
             export_lock_root(lock, root_hash),
             args.install_mode,
         )
+    complete_receipt(receipt, path)
     print(path)
 
 
@@ -451,11 +463,7 @@ def command_seal_source(args):
     if receipt["status"] == "complete":
         print(path)
         return
-    fail_unless(receipt["roots"], f"cannot seal an empty source: {path}")
-    receipt["status"] = "complete"
-    receipt["completed_at"] = now()
-    receipt["updated_at"] = receipt["completed_at"]
-    atomic_write(path, receipt)
+    complete_receipt(receipt, path)
     print(path)
 
 

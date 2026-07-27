@@ -341,11 +341,6 @@ function build_environment() {
             cd "${previous_dir}" || true
             return 1
         fi
-        if ! seal_spack_install_receipt environment "${env}"; then
-            spack env deactivate || true
-            cd "${previous_dir}" || true
-            return 1
-        fi
     fi
     spack env deactivate || return 1
     cd "${previous_dir}" || return 1
