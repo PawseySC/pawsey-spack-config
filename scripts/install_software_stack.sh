@@ -26,8 +26,10 @@ echo "Running first python install"
 echo "Running first reframe install"
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_reframe.sh"
 
-echo "Regenerating standalone Python and ReFrame modules.."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/refresh_standalone_modules.sh"
+if [ "${SYSTEM}" = "setonix-q" ]; then
+    echo "Regenerating standalone Python and ReFrame modules.."
+    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/refresh_standalone_modules.sh"
+fi
 
 echo "Run concretization.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/concretize_environments.sh"

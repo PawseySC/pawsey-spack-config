@@ -155,7 +155,9 @@ function set_modulepaths_for_arch()
 
     if [ "$( uname -m )" == "x86_64" ]; then
         module load cpe/25.03
-        module load gcc-native/${gcc_version}
+        # The Setonix module is named for its major/minor version (14.2), while
+        # the Spack compiler and module tree use the full version (14.2.0).
+        module load gcc-native/${gcc_version%.*}
         module use ${INSTALL_PREFIX}/staff_modulefiles
         # we need the python module to be available in order to run spack
         module --ignore-cache load pawseyenv/${pawseyenv_version}
@@ -328,9 +330,9 @@ function build_environment() {
         cd "${previous_dir}" || true
         return 1
     fi
-    # standard practice is to concretize in environments, but this can result in lots of duplicates
-    # thus only do if explicitly requested
-    if [ ! -z ${SPACK_ENV_CONCRETIZE+x} ]; then
+    # Setonix preserves the environment install used on main. Setonix-Q can
+    # opt into it, but defaults to installing individually extracted roots.
+    if [ "${SYSTEM}" != "setonix-q" ] || [ ! -z ${SPACK_ENV_CONCRETIZE+x} ]; then
         echo "Using environment concretization for $env"
         if ! spack concretize -f ${SPACK_CONCRETIZE_ARGS}; then
             spack env deactivate || true

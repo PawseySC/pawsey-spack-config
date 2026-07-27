@@ -6,7 +6,9 @@ set_compilation_sets_for_arch
 
 # for first run, use cray-python, because there is no Spack python yet
 module load cray-python
-SPACK_PYTHON="$CRAY_PYTHON_PREFIX/bin/python3"
+if [ "${SYSTEM}" = "setonix-q" ]; then
+    SPACK_PYTHON="$CRAY_PYTHON_PREFIX/bin/python3"
+fi
 
 # initialise spack 
 . "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh"
@@ -22,8 +24,13 @@ if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
 fi
 
 # make sure Clingo is bootstrapped
-echo "Running 'spack spec nano %${main_compiler} target=${main_arch}' to bootstrap Clingo.."
-spack spec nano %${main_compiler} target=${main_arch}
+if [ "${SYSTEM}" = "setonix-q" ]; then
+    echo "Running 'spack spec nano %${main_compiler} target=${main_arch}' to bootstrap Clingo.."
+    spack spec nano %${main_compiler} target=${main_arch}
+else
+    echo "Running 'spack spec nano' to bootstrap Clingo.."
+    spack spec nano
+fi
 
 if [ "${SYSTEM}" = "setonix-q" ]; then
     reset_spack_install_receipt standalone python

@@ -8,7 +8,17 @@ scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 check_installation_environment
 set_spack_config_repo
 set_compilation_sets_for_arch
-set_modulepaths_for_arch
+
+if [ "${SYSTEM}" = "setonix-q" ]; then
+  set_modulepaths_for_arch
+else
+  # Preserve the Setonix module setup from main.
+  module use ${INSTALL_PREFIX}/staff_modulefiles
+  module --ignore-cache load pawseyenv/${pawseyenv_version}
+  module load cpe/25.03
+  module load gcc-native/14.2
+  module load spack/${spack_version}
+fi
 
 # These need to be exported to be visible within Reframe
 export PAWSEY_SPACK_CONFIG_REPO=${PAWSEY_SPACK_CONFIG_REPO}

@@ -31,8 +31,7 @@ if [ "${SYSTEM}" = "setonix" ]; then
       echo "Tried to install openblas 5 times, and it didn't work. Stopping here.."
       exit 1
     fi
-    spack spec ${SPACK_SPEC_ARGS} openblas@0.3.24 %${main_compiler} threads=openmp
-    if sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} openblas@0.3.24 %${main_compiler} threads=openmp"; then
+    if sg $INSTALL_GROUP -c "spack install ${SPACK_INSTALL_ARGS} -j${NCPUS} openblas@0.3.24 threads=openmp"; then
       openblas_not_installed=0
     else
       openblas_not_installed=$?
@@ -69,69 +68,16 @@ if [ "${SYSTEM}" = "setonix-q" ]; then
   "${PAWSEY_SPACK_CONFIG_REPO}/scripts/publish_spack_install_manifest.sh" \
     "${deployment_environments[@]}" || exit 1
 else
-  # Keep the established Setonix module-refresh path unchanged. Setonix-Q uses
-  # the exact concrete specs recorded during this deployment instead.
-  echo "Creating buildcache for installed packages, module refresh ... "
+  # This is the Setonix module publication path from main. Setonix-Q instead
+  # refreshes only hashes in its installation manifest.
   if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
     for hash in `spack find -x --format "{hash}"`; do spack buildcache create -a -m systemwide_buildcache /$hash; done
   fi
-
-  mapfile -t environment_implicit_module_specs < <(
-    {
-      for env in $env_list $cray_env_list; do
-        spack -e "${envdir}/${env}" find -X --format '/{hash}'
-      done
-    } | awk 'NF' | sort -u
-  )
-  mapfile -t environment_explicit_module_specs < <(
-    {
-      for env in $env_list $cray_env_list; do
-        spack -e "${envdir}/${env}" find -x --format '/{hash}'
-      done
-    } | awk 'NF' | sort -u
-  )
-
-  if ((${#environment_implicit_module_specs[@]} == 0 && \
-       ${#environment_explicit_module_specs[@]} == 0)); then
-    echo "No installed specs found in the deployment environments."
-    exit 1
-  fi
-
-  mapfile -t standalone_module_specs < <(
-    {
-      for comp in "${pythoncompilers[@]}"; do
-        for arch in "${archs[@]}"; do
-          spack find -d -x --format '/{hash}' \
-            "python@${python_version}%${comp} target=${arch}"
-        done
-      done
-      spack find -d -x --format '/{hash}' \
-        "reframe@${reframe_version}%gcc@${gcc_version}"
-    } | awk 'NF' | sort -u
-  )
-
-  if ((${#standalone_module_specs[@]} == 0)); then
-    echo "No installed standalone Python or ReFrame specs found."
-    exit 1
-  fi
-
-  declare -A standalone_module_spec_set=()
-  for module_spec in "${standalone_module_specs[@]}"; do
-    standalone_module_spec_set["${module_spec}"]=1
+  for hash in `spack find -x --format "{hash}"`; do
+    spack module lmod refresh -y /$hash
   done
-
-  environment_module_specs=()
-  for module_spec in \
-    "${environment_implicit_module_specs[@]}" \
-    "${environment_explicit_module_specs[@]}"; do
-    if [[ -z ${standalone_module_spec_set["${module_spec}"]+x} ]]; then
-      environment_module_specs+=("${module_spec}")
-    fi
-  done
-
-  for module_spec in "${environment_module_specs[@]}"; do
-    spack module lmod refresh -y "${module_spec}" || exit 1
-    echo "Refreshed module for ${module_spec}"
+  for hash in `spack find -X --format "{hash}"`; do
+    spack module lmod refresh -y /$hash
   done
 fi
 

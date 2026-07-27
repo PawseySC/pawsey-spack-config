@@ -79,34 +79,6 @@ if [ "${SYSTEM}" = "setonix-q" ]; then
   echo "Regenerating standalone ReFrame modules.."
   refresh_module_specs 0 "${reframe_only_specs[@]}"
 else
-  mapfile -t python_specs < <(
-    {
-      for comp in "${pythoncompilers[@]}"; do
-        for arch in "${archs[@]}"; do
-          spack find -d -x --format '/{hash}' \
-            "python@${python_version}%${comp} target=${arch}"
-        done
-      done
-    } | awk 'NF' | sort -u
-  )
-  mapfile -t reframe_specs < <(
-    spack find -d -x --format '/{hash}' \
-      "reframe@${reframe_version}%gcc@${gcc_version}" | awk 'NF' | sort -u
-  )
-  if ((${#python_specs[@]} == 0 || ${#reframe_specs[@]} == 0)); then
-    echo "No installed standalone Python or ReFrame specs found."
-    exit 1
-  fi
-  declare -A python_spec_set=()
-  for spec in "${python_specs[@]}"; do python_spec_set["${spec}"]=1; done
-  reframe_only_specs=()
-  for spec in "${reframe_specs[@]}"; do
-    if [[ -z ${python_spec_set["${spec}"]+x} ]]; then
-      reframe_only_specs+=("${spec}")
-    fi
-  done
-  echo "Regenerating standalone Python modules.."
-  refresh_module_specs 1 "${python_specs[@]}"
-  echo "Regenerating standalone ReFrame modules.."
-  refresh_module_specs 0 "${reframe_only_specs[@]}"
+  echo "Standalone manifest module refresh is supported only for setonix-q."
+  exit 1
 fi
