@@ -282,6 +282,7 @@ function build_environment() {
     local testing_only=0
     local previous_dir=$PWD
     local install_mode=root
+    local lock_file
     if [ ! -z ${3+x} ]; then
         testing_only=$3
     fi
@@ -291,11 +292,22 @@ function build_environment() {
         cd "${previous_dir}" || true
         return 1
     fi
-    echo "Using environment concretization for $env"
-    if ! spack concretize -f ${SPACK_CONCRETIZE_ARGS}; then
-        spack env deactivate || true
-        cd "${previous_dir}" || true
-        return 1
+    if [ "${SYSTEM}" = "setonix-q" ]; then
+        lock_file="${envdir}/${env}/spack.lock"
+        if [ ! -f "${lock_file}" ]; then
+            echo "Environment ${env} has no spack.lock; run concretize_environments.sh first."
+            spack env deactivate || true
+            cd "${previous_dir}" || true
+            return 1
+        fi
+        echo "Using existing environment concretization for $env"
+    else
+        echo "Using environment concretization for $env"
+        if ! spack concretize -f ${SPACK_CONCRETIZE_ARGS}; then
+            spack env deactivate || true
+            cd "${previous_dir}" || true
+            return 1
+        fi
     fi
     if (( $testing_only != 0 )); then
         echo "Testing only - not installing for $env"
@@ -323,7 +335,7 @@ function build_environment() {
         if ! "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" record-lockfile \
             --metadata-root "${INSTALLATION_METADATA_DIR}" \
             --name "${env}" \
-            --lock-file "${envdir}/${env}/spack.lock" \
+            --lock-file "${lock_file}" \
             --install-mode "${install_mode}"; then
             spack env deactivate || true
             cd "${previous_dir}" || true
