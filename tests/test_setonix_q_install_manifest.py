@@ -6,6 +6,7 @@ import sys
 import tempfile
 import types
 import unittest
+from contextlib import nullcontext
 from contextlib import redirect_stdout
 from pathlib import Path
 from unittest import mock
@@ -205,31 +206,67 @@ class SetonixQManifestTest(unittest.TestCase):
     def test_annotates_modules_in_one_spack_process(self):
         plan = self.write_text(
             'plan.tsv',
-            'hash\tname\tversion\trole\n'
-            f'{APP}\tapp\t1.0\troot\n',
+            'hash\tname\tversion\trole\tstandalone\tstandalone_root\t'
+            'environment\tenvironment_root\n'
+            f'{APP}\tapp\t1.0\troot\t0\t0\t1\t1\n'
+            f'{SHARED}\tapp\t1.0\tdependency\t0\t0\t1\t0\n',
         )
-        prefix = self.prefix / 'software' / APP
-        module_path = self.prefix / 'modules' / f'{APP}.lua'
-        prefix.mkdir(parents=True)
-        module_path.parent.mkdir(parents=True)
-        module_path.write_text('-- module\n', encoding='utf-8')
+        prefixes = {
+            APP: self.prefix / 'software' / APP,
+            SHARED: self.prefix / 'software' / SHARED,
+        }
+        for prefix in prefixes.values():
+            prefix.mkdir(parents=True)
 
         class FakeSpec:
-            def __init__(self):
-                self.prefix = prefix
+            def __init__(self, node_hash):
+                self.node_hash = node_hash
+                self.prefix = prefixes[node_hash]
 
             def dag_hash(self):
-                return APP
+                return self.node_hash
 
-        record = types.SimpleNamespace(installed=True, spec=FakeSpec())
+        records = {
+            node_hash: types.SimpleNamespace(installed=True, spec=FakeSpec(node_hash))
+            for node_hash in (APP, SHARED)
+        }
+        marked = []
         database = types.SimpleNamespace(
-            query_by_spec_hash=lambda node_hash: (False, record if node_hash == APP else None)
+            query_by_spec_hash=lambda node_hash: (False, records.get(node_hash)),
+            write_transaction=lambda: nullcontext(),
+            mark=lambda spec, field, value: marked.append(
+                (spec.dag_hash(), field, value)
+            ),
         )
         fake_store = types.ModuleType('spack.store')
         fake_store.STORE = types.SimpleNamespace(db=database)
         fake_modules = types.ModuleType('spack.modules')
-        fake_modules.get_module = lambda _kind, _spec, full_path: (
-            str(module_path) if full_path else 'applications/app/1.0'
+        written = []
+        module_root = self.prefix / 'modules'
+
+        class FakeWriter:
+            def __init__(self, spec, _module_set, explicit=None):
+                suffix = '' if explicit else f'-{spec.dag_hash()[:7]}'
+                filename = module_root / f'app-1.0{suffix}.lua'
+                self.spec = spec
+                self.conf = types.SimpleNamespace(excluded=False)
+                self.layout = types.SimpleNamespace(
+                    filename=str(filename),
+                    use_name=f'app/1.0{suffix}',
+                    dirname=lambda: str(module_root),
+                )
+
+            def write(self, overwrite=False):
+                Path(self.layout.filename).parent.mkdir(parents=True, exist_ok=True)
+                Path(self.layout.filename).write_text('-- module\n', encoding='utf-8')
+                written.append((self.spec.dag_hash(), self.layout.filename, overwrite))
+
+        generated_indices = []
+        fake_modules.module_types = {'lmod': FakeWriter}
+        fake_modules.common = types.SimpleNamespace(
+            generate_module_index=lambda root, writers: generated_indices.append(
+                (root, [writer.spec.dag_hash() for writer in writers])
+            )
         )
         fake_spack = types.ModuleType('spack')
         fake_spack.modules = fake_modules
@@ -244,9 +281,21 @@ class SetonixQManifestTest(unittest.TestCase):
                 'annotate-modules', '--plan', str(plan), '--output', str(annotations),
                 '--progress-every', '1',
             )
+        lines = annotations.read_text(encoding='utf-8').splitlines()
+        self.assertEqual(2, len(lines))
+        self.assertIn(f'{APP}\t{prefixes[APP]}\tapp/1.0\t', lines[0])
+        self.assertIn(f'{SHARED}\t{prefixes[SHARED]}\tapp/1.0-{SHARED[:7]}\t', lines[1])
+        self.assertNotEqual(lines[0].split('\t')[3], lines[1].split('\t')[3])
         self.assertEqual(
-            f'{APP}\t{prefix}\tapplications/app/1.0\t{module_path}\n',
-            annotations.read_text(encoding='utf-8'),
+            [(APP, lines[0].split('\t')[3], True),
+             (SHARED, lines[1].split('\t')[3], True)],
+            written,
+        )
+        self.assertEqual(
+            [(str(self.prefix / 'modules'), [APP, SHARED])], generated_indices
+        )
+        self.assertEqual(
+            [(APP, 'explicit', True), (SHARED, 'explicit', False)], marked
         )
 
 

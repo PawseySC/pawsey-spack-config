@@ -41,19 +41,12 @@ done
 
 active_specs=()
 public_specs=()
-environment_specs=()
 while IFS=$'\t' read -r hash name version role standalone standalone_root environment environment_root; do
   [ "${hash}" != "hash" ] || continue
   spec="/${hash}"
   active_specs+=("${spec}")
   if [ "${role}" = "root" ]; then
     public_specs+=("${spec}")
-  fi
-  # Standalone modules already exist. Refresh a shared hash only when an
-  # environment promotes a standalone dependency to a public root.
-  if [ "${environment}" = 1 ] && \
-     { [ "${standalone}" = 0 ] || { [ "${environment_root}" = 1 ] && [ "${standalone_root}" = 0 ]; }; }; then
-    environment_specs+=("${spec}")
   fi
 done < "${plan}"
 
@@ -68,17 +61,10 @@ if [ "${SPACK_POPULATE_CACHE}" -eq 1 ]; then
   done
 fi
 
-# hide_implicits and dependency autoload names use these database flags.
-spack mark --implicit "${active_specs[@]}"
-spack mark --explicit "${public_specs[@]}"
-
-for spec in "${environment_specs[@]}"; do
-  spack module lmod refresh -y "${spec}"
-  echo "Refreshed module for ${spec}"
-done
-
 annotations=$(mktemp "${INSTALLATION_METADATA_DIR}/.module-annotations.XXXXXX.tsv")
 trap 'rm -f "${annotations}"' EXIT
+# This single Spack process updates explicit flags, regenerates environment
+# modules from the plan, then records the exact paths it generated.
 spack python "$(spack_install_manifest_tool)" annotate-modules \
   --plan "${plan}" --output "${annotations}"
 

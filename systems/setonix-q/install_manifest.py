@@ -778,29 +778,101 @@ def command_annotate_modules(args):
             rows = list(csv.DictReader(stream, delimiter="\t"))
     except FileNotFoundError as error:
         raise ManifestError(f"module plan does not exist: {plan_path}") from error
-    required = {"hash", "name", "version", "role"}
+    required = {
+        "hash",
+        "name",
+        "version",
+        "role",
+        "standalone",
+        "standalone_root",
+        "environment",
+        "environment_root",
+    }
     fail_unless(rows and required.issubset(rows[0]), "module plan is empty or invalid")
 
     hashes = [clean_hash(row.get("hash"), "module plan hash") for row in rows]
     fail_unless(len(hashes) == len(set(hashes)), "module plan contains duplicate hashes")
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    print(f"Resolving module metadata for {len(rows)} installed specs...")
-    with output_path.open("w", encoding="utf-8") as output:
-        for position, node_hash in enumerate(hashes, 1):
-            _upstream, record = spack_store.STORE.db.query_by_spec_hash(node_hash)
-            fail_unless(
-                record is not None and record.installed,
-                f"/{node_hash} is not installed in the Spack database",
+    specs = []
+    for node_hash in hashes:
+        _upstream, record = spack_store.STORE.db.query_by_spec_hash(node_hash)
+        fail_unless(
+            record is not None and record.installed,
+            f"/{node_hash} is not installed in the Spack database",
+        )
+        fail_unless(
+            record.spec.dag_hash() == node_hash,
+            f"Spack database returned the wrong spec for /{node_hash}",
+        )
+        specs.append(record.spec)
+
+    # Set all flags in one transaction before configuring any writer. Lmod
+    # also consults these flags when it writes dependency autoload names.
+    with spack_store.STORE.db.write_transaction():
+        for row, spec in zip(rows, specs):
+            spack_store.STORE.db.mark(spec, "explicit", row["role"] == "root")
+
+    writers = []
+    refresh_writers = []
+    for row, node_hash, spec in zip(rows, hashes, specs):
+        try:
+            # The manifest is authoritative here. Independently concretized
+            # environments can install the same name/version under different
+            # hashes, so relying on Spack's database flag can give a dependency
+            # the same public module path as a root.
+            writer = spack_modules.module_types["lmod"](
+                spec, "default", explicit=row["role"] == "root"
             )
-            spec = record.spec
-            fail_unless(
-                spec.dag_hash() == node_hash,
-                f"Spack database returned the wrong spec for /{node_hash}",
-            )
+        except Exception as error:
+            raise ManifestError(
+                f"could not configure the Lmod module for /{node_hash}: {error}"
+            ) from error
+        fail_unless(not writer.conf.excluded, f"Lmod module is excluded for /{node_hash}")
+        writers.append(writer)
+
+        # Standalone modules have already been generated. Regenerate modules
+        # supplied by environments, including a standalone dependency that an
+        # environment promotes to a public root.
+        if row["environment"] == "1" and (
+            row["standalone"] == "0"
+            or (row["environment_root"] == "1" and row["standalone_root"] == "0")
+        ):
+            refresh_writers.append(writer)
+
+    module_paths = {}
+    for writer in writers:
+        module_paths.setdefault(writer.layout.filename, []).append(writer.spec.dag_hash())
+    clashes = {path: values for path, values in module_paths.items() if len(values) > 1}
+    fail_unless(
+        not clashes,
+        "module plan resolves multiple specs to the same path:\n"
+        + "\n".join(f"  {path}: {', '.join(values)}" for path, values in clashes.items()),
+    )
+
+    if refresh_writers:
+        print(f"Regenerating {len(refresh_writers)} environment Lmod modules...")
+        module_root = refresh_writers[0].layout.dirname()
+        spack_modules.common.generate_module_index(module_root, refresh_writers)
+        for position, writer in enumerate(refresh_writers, 1):
             try:
-                prefix = str(spec.prefix)
-                module_name = spack_modules.get_module("lmod", spec, False)
-                module_path = spack_modules.get_module("lmod", spec, True)
+                writer.write(overwrite=True)
+            except Exception as error:
+                raise ManifestError(
+                    f"could not write Lmod module for /{writer.spec.dag_hash()}: {error}"
+                ) from error
+            if position % args.progress_every == 0 or position == len(refresh_writers):
+                print(
+                    f"Regenerated {position}/{len(refresh_writers)} environment modules.",
+                    flush=True,
+                )
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    print(f"Recording module metadata for {len(rows)} installed specs...")
+    with output_path.open("w", encoding="utf-8") as output:
+        for position, (node_hash, writer) in enumerate(zip(hashes, writers), 1):
+            try:
+                prefix = str(writer.spec.prefix)
+                module_name = writer.layout.use_name
+                module_path = writer.layout.filename
             except Exception as error:
                 raise ManifestError(
                     f"could not resolve installed/module metadata for /{node_hash}: {error}"
@@ -814,7 +886,7 @@ def command_annotate_modules(args):
             output.write(f"{node_hash}\t{prefix}\t{module_name}\t{module_path}\n")
             output.flush()
             if position % args.progress_every == 0 or position == len(rows):
-                print(f"Resolved module metadata for {position}/{len(rows)} specs.", flush=True)
+                print(f"Recorded module metadata for {position}/{len(rows)} specs.", flush=True)
 
 
 def command_validate(args):
