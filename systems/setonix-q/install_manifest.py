@@ -259,7 +259,8 @@ def store_and_record(root, run, receipt, receipt_file, requested_spec, spec_data
         mode in ("root", "dependencies-only"), f"unsupported install mode: {mode}"
     )
     requested_spec = clean_line(requested_spec, "requested spec")
-    root_hash, _ = parse_spec(spec_data, "concrete spec")
+    root_hash, indexed = parse_spec(spec_data, "concrete spec")
+    root_node = indexed[root_hash]
     stored = root / "concrete_specs" / f"{root_hash}.json"
     if stored.exists():
         fail_unless(
@@ -271,6 +272,8 @@ def store_and_record(root, run, receipt, receipt_file, requested_spec, spec_data
     record = {
         "requested_spec": requested_spec,
         "hash": root_hash,
+        "name": root_node["name"],
+        "version": root_node.get("version"),
         "install_mode": mode,
         "installed": mode == "root",
         "spec_file": stored.relative_to(root).as_posix(),
@@ -576,10 +579,14 @@ def command_assemble(args):
     output = Path(args.output) if args.output else root / CANDIDATE_FILE
     plan = Path(args.plan) if args.plan else root / PLAN_FILE
     atomic_write(output, candidate)
-    lines = ["hash\trole\tstandalone\tstandalone_root\tenvironment\tenvironment_root\n"]
+    lines = [
+        "hash\tname\tversion\trole\tstandalone\tstandalone_root\t"
+        "environment\tenvironment_root\n"
+    ]
     for node_hash in sorted(active):
         lines.append(
-            f"{node_hash}\t{specs[node_hash]['role']}\t{int(node_hash in standalone)}\t"
+            f"{node_hash}\t{specs[node_hash]['name']}\t{specs[node_hash]['version']}\t"
+            f"{specs[node_hash]['role']}\t{int(node_hash in standalone)}\t"
             f"{int(node_hash in standalone_roots)}\t{int(node_hash in environments)}\t"
             f"{int(node_hash in environment_roots)}\n"
         )

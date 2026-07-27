@@ -122,7 +122,15 @@ class SetonixQManifestTest(unittest.TestCase):
         assembled = json.loads(candidate.read_text(encoding='utf-8'))
         self.assertEqual('root', assembled['specs'][SHARED]['role'])
         self.assertEqual([SHARED], assembled['specs'][APP]['dependencies'])
-        self.assertIn(f'{APP}\troot\t0\t0\t1\t1', plan.read_text(encoding='utf-8'))
+        self.assertEqual(
+            ['hash', 'name', 'version', 'role', 'standalone', 'standalone_root',
+             'environment', 'environment_root'],
+            plan.read_text(encoding='utf-8').splitlines()[0].split('\t'),
+        )
+        self.assertIn(
+            f'{APP}\tapp\t1.0\troot\t0\t0\t1\t1',
+            plan.read_text(encoding='utf-8'),
+        )
 
         annotations = []
         for node_hash, spec in assembled['specs'].items():
@@ -189,6 +197,8 @@ class SetonixQManifestTest(unittest.TestCase):
             (self.metadata / 'sources' / 'environments' / 'numerics.json').read_text()
         )
         self.assertEqual([APP, BUILD], [item['hash'] for item in receipt['roots']])
+        self.assertEqual(['app', 'second'], [item['name'] for item in receipt['roots']])
+        self.assertEqual(['1.0', '1.0'], [item['version'] for item in receipt['roots']])
 
 
 if __name__ == '__main__':

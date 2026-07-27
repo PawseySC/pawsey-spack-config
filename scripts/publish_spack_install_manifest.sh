@@ -42,7 +42,7 @@ done
 active_specs=()
 public_specs=()
 environment_specs=()
-while IFS=$'\t' read -r hash role standalone standalone_root environment environment_root; do
+while IFS=$'\t' read -r hash name version role standalone standalone_root environment environment_root; do
   [ "${hash}" != "hash" ] || continue
   spec="/${hash}"
   active_specs+=("${spec}")
