@@ -79,10 +79,12 @@ packages:
     version: [0.16]
   krb5:
     version: [1.21.3]
-  # cmake can have multiple entries so set default
+  # Keep CMake consistent across independently concretized environments. A
+  # variant preference alone does not prevent a second ~ownlibs DAG.
   cmake:
     version: [3.31.7]
     variants: ~doc+ncurses+ownlibs~qtgui
+    require: '@3.31.7 ~doc+ncurses+ownlibs~qtgui'
 # Commented out - see GENERAL NOTES above
 #    externals:
 #  # manual addition with the latest version
