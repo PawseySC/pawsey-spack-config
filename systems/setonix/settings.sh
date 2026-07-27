@@ -41,11 +41,6 @@ SPACK_USER_CONFIG_PATH="$MYSOFTWARE/setonix/$DATE_TAG/.spack_user_config"
 BOOTSTRAP_PATH='$MYSOFTWARE/setonix/'$DATE_TAG/.spack_user_config/bootstrap
 # Set a new mirror where to fetch prebuilt binaries, if any.
 SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
-# Durable, release-scoped provenance for the concrete specs that were actually
-# installed.  This is intentionally separate from the source-controlled
-# environment lockfiles, which describe the pre-installation concretization.
-INSTALLATION_METADATA_DIR=${INSTALL_PREFIX}/installation_metadata
-SPACK_INSTALL_MANIFEST=${INSTALLATION_METADATA_DIR}/spack_install_manifest.json
 # When SPACK_POPULATE_CACHE=1, spack will push binaries in the above cache location for later use.
 # The operation will be executed after having installed the environments.
 # Useful when building the stack on the test system.

@@ -25,16 +25,25 @@ fi
 echo "Running 'spack spec nano %${main_compiler} target=${main_arch}' to bootstrap Clingo.."
 spack spec nano %${main_compiler} target=${main_arch}
 
-reset_spack_install_receipt standalone python
+if [ "${SYSTEM}" = "setonix-q" ]; then
+    reset_spack_install_receipt standalone python
+fi
 
 # first thing we need is Python
 for comp in ${pythoncompilers[@]}; do
     for arch in ${archs[@]}; do
-        python_spec="python@${python_version} %${comp} target=${arch}"
         echo "Concretization of Python with $comp for $arch .."
         echo "Installing Python with $comp for $arch.."
-        install_and_record_spack_root standalone python "${python_spec}" root
+        if [ "${SYSTEM}" = "setonix-q" ]; then
+            python_spec="python@${python_version} %${comp} target=${arch}"
+            install_and_record_spack_root standalone python "${python_spec}" root
+        else
+            spack spec python@${python_version} %$comp target=${arch}
+            sg $INSTALL_GROUP -c "spack install -j${NCPUS} --no-checksum python@${python_version} %$comp target=${arch}"
+        fi
     done
 done
 
-seal_spack_install_receipt standalone python
+if [ "${SYSTEM}" = "setonix-q" ]; then
+    seal_spack_install_receipt standalone python
+fi

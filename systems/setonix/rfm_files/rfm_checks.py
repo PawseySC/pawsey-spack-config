@@ -21,20 +21,8 @@ from rfm_files.rfm_helper_methods import *
 
 # Dictionary holding commands for every package used in baseline sanity check
 pkg_cmds = get_pkg_cmds()
-
-
-def get_module_paths_if_installed():
-    # Installation tests use the finalized deployment manifest. Returning no
-    # parameters before it exists keeps concretization-only imports working.
-    if not installation_manifest_is_complete():
-        return []
-
-    return get_module_paths()
-
-
-# List of full absolute paths for every installed root module. This remains
-# empty until the installation manifest has been finalized.
-full_mod_paths = get_module_paths_if_installed()
+# List of full absolute paths for every explicit module
+full_mod_paths = get_module_paths()
 
 
 @rfm.simple_test
@@ -251,7 +239,7 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
         self.executable = pkg_cmds[self.mod_category][self.base_name][0]
         # Set the executable options, which depends on if it's software or library
         if (self.executable == 'ldd') or (self.base_name == 'hpx'):
-            lib_path = get_library_path(self.mod)
+            lib_path = get_library_path(self.mod.split('/')[-2:])
             self.executable_opts = [lib_path + '/' + pkg_cmds[self.mod_category][self.base_name][1]]
         else:
             self.executable_opts = [pkg_cmds[self.mod_category][self.base_name][1] + ' 2>&1']

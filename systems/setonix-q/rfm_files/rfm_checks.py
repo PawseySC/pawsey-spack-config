@@ -18,6 +18,12 @@ curr_dir = os.path.dirname(__file__).replace('\\','/')
 parent_dir = os.path.abspath(os.path.join(curr_dir, os.pardir))
 sys.path.append(parent_dir)
 from rfm_files.rfm_helper_methods import *
+from rfm_files.install_manifest import (
+    get_library_path,
+    get_module_dependencies,
+    get_module_paths,
+    installation_manifest_is_complete,
+)
 
 # Dictionary holding commands for every package used in baseline sanity check
 pkg_cmds = get_pkg_cmds()

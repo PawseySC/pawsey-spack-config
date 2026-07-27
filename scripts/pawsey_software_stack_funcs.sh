@@ -197,11 +197,12 @@ function set_modulepaths_for_arch()
 
 function spack_install_manifest_tool()
 {
-    echo "${PAWSEY_SPACK_CONFIG_REPO}/scripts/spack_install_manifest.py"
+    echo "${PAWSEY_SPACK_CONFIG_REPO}/systems/setonix-q/install_manifest.py"
 }
 
 function initialize_spack_install_manifest()
 {
+    [ "${SYSTEM}" = "setonix-q" ] || return 0
     : "${INSTALLATION_METADATA_DIR:=${INSTALL_PREFIX}/installation_metadata}"
     : "${SPACK_INSTALL_MANIFEST:=${INSTALLATION_METADATA_DIR}/spack_install_manifest.json}"
 
@@ -216,10 +217,11 @@ function initialize_spack_install_manifest()
 
 function ensure_spack_install_manifest_run()
 {
+    [ "${SYSTEM}" = "setonix-q" ] || return 0
     : "${INSTALLATION_METADATA_DIR:=${INSTALL_PREFIX}/installation_metadata}"
     : "${SPACK_INSTALL_MANIFEST:=${INSTALLATION_METADATA_DIR}/spack_install_manifest.json}"
 
-    if [ ! -f "${INSTALLATION_METADATA_DIR}/receipts/deployment.json" ]; then
+    if [ ! -f "${INSTALLATION_METADATA_DIR}/current_run.json" ]; then
         initialize_spack_install_manifest
     fi
 }
@@ -230,10 +232,10 @@ function reset_spack_install_receipt()
     local source_name=$2
 
     ensure_spack_install_manifest_run || return 1
-    "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" reset-receipt \
+    "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" reset-source \
         --metadata-root "${INSTALLATION_METADATA_DIR}" \
-        --source-type "${source_type}" \
-        --source-name "${source_name}"
+        --kind "${source_type}" \
+        --name "${source_name}"
 }
 
 function seal_spack_install_receipt()
@@ -242,34 +244,10 @@ function seal_spack_install_receipt()
     local source_name=$2
 
     ensure_spack_install_manifest_run || return 1
-    "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" seal-receipt \
+    "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" seal-source \
         --metadata-root "${INSTALLATION_METADATA_DIR}" \
-        --source-type "${source_type}" \
-        --source-name "${source_name}"
-}
-
-function load_spack_install_manifest_hashes()
-{
-    local manifest_path=$1
-    local role=$2
-    local destination_name=$3
-    local hashes_file
-
-    if [[ ! ${destination_name} =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
-        echo "Invalid destination array name '${destination_name}'."
-        return 1
-    fi
-    hashes_file=$(mktemp "${INSTALLATION_METADATA_DIR}/.manifest-hashes.XXXXXX") || return 1
-    if ! "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" hashes \
-        --manifest "${manifest_path}" --role "${role}" > "${hashes_file}"; then
-        rm -f "${hashes_file}"
-        return 1
-    fi
-    if ! mapfile -t "${destination_name}" < "${hashes_file}"; then
-        rm -f "${hashes_file}"
-        return 1
-    fi
-    rm -f "${hashes_file}"
+        --kind "${source_type}" \
+        --name "${source_name}"
 }
 
 function install_and_record_spack_root()
@@ -279,8 +257,6 @@ function install_and_record_spack_root()
     local requested_spec=$3
     local install_mode=${4:-root}
     local temporary_spec_file
-    local root_hash
-    local concrete_spec_file
     local quoted_spec_file
     local install_command
 
@@ -293,18 +269,7 @@ function install_and_record_spack_root()
         return 1
     fi
 
-    if ! root_hash=$("${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" store-spec \
-        --metadata-root "${INSTALLATION_METADATA_DIR}" \
-        --spec-file "${temporary_spec_file}"); then
-        echo "Could not preserve the concrete spec for ${requested_spec}."
-        rm -f "${temporary_spec_file}"
-        return 1
-    fi
-    rm -f "${temporary_spec_file}"
-    root_hash=${root_hash#/}
-    concrete_spec_file="${INSTALLATION_METADATA_DIR}/concrete_specs/${root_hash}.json"
-
-    printf -v quoted_spec_file '%q' "${concrete_spec_file}"
+    printf -v quoted_spec_file '%q' "${temporary_spec_file}"
     install_command="spack install ${SPACK_INSTALL_ARGS:-} -j${NCPUS}"
     if [ "${install_mode}" = "dependencies-only" ]; then
         install_command+=" --only dependencies"
@@ -315,23 +280,22 @@ function install_and_record_spack_root()
     install_command+=" -f ${quoted_spec_file}"
 
     if ! sg "${INSTALL_GROUP}" -c "${install_command}"; then
-        echo "Installation failed for ${requested_spec} (${root_hash})."
+        echo "Installation failed for ${requested_spec}."
+        rm -f "${temporary_spec_file}"
         return 1
     fi
 
-    if [ "${install_mode}" = "root" ] && \
-       ! spack find --format '{hash}' "/${root_hash}" | awk 'NF' | grep -Fxq "${root_hash}"; then
-        echo "Spack reported success, but root /${root_hash} is not installed."
-        return 1
-    fi
-
-    "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" record \
+    if ! "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" record-spec \
         --metadata-root "${INSTALLATION_METADATA_DIR}" \
-        --source-type "${source_type}" \
-        --source-name "${source_name}" \
+        --kind "${source_type}" \
+        --name "${source_name}" \
         --requested-spec "${requested_spec}" \
-        --spec-file "${concrete_spec_file}" \
-        --install-mode "${install_mode}"
+        --spec-file "${temporary_spec_file}" \
+        --install-mode "${install_mode}"; then
+        rm -f "${temporary_spec_file}"
+        return 1
+    fi
+    rm -f "${temporary_spec_file}"
 }
 
 function record_concretized_environment()
@@ -340,76 +304,11 @@ function record_concretized_environment()
     local env=$2
     local install_mode=${3:-root}
     local lock_file="${envpath}/spack.lock"
-    local root_hash
-    local requested_spec
-    local stored_hash
-    local temporary_spec_file
-    local concrete_spec_file
-    local lock_roots_file
-    local recorded_roots=0
-
-    lock_roots_file=$(mktemp) || return 1
-    if ! "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" lock-roots \
-        --lock-file "${lock_file}" > "${lock_roots_file}"; then
-        rm -f "${lock_roots_file}"
-        return 1
-    fi
-
-    while IFS=$'\t' read -r root_hash requested_spec; do
-        [ -n "${root_hash}" ] || continue
-        if ! temporary_spec_file=$(mktemp "${INSTALLATION_METADATA_DIR}/.concrete-spec.XXXXXX.json"); then
-            rm -f "${lock_roots_file}"
-            return 1
-        fi
-        if ! "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" export-lock-spec \
-            --lock-file "${lock_file}" \
-            --hash "${root_hash}" \
-            --output "${temporary_spec_file}"; then
-            rm -f "${temporary_spec_file}"
-            rm -f "${lock_roots_file}"
-            return 1
-        fi
-        if ! stored_hash=$("${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" store-spec \
-            --metadata-root "${INSTALLATION_METADATA_DIR}" \
-            --spec-file "${temporary_spec_file}"); then
-            rm -f "${temporary_spec_file}"
-            rm -f "${lock_roots_file}"
-            return 1
-        fi
-        rm -f "${temporary_spec_file}"
-        stored_hash=${stored_hash#/}
-        if [ "${stored_hash}" != "${root_hash}" ]; then
-            echo "Stored spec hash ${stored_hash} does not match lock root ${root_hash}."
-            rm -f "${lock_roots_file}"
-            return 1
-        fi
-        concrete_spec_file="${INSTALLATION_METADATA_DIR}/concrete_specs/${root_hash}.json"
-
-        if [ "${install_mode}" = "root" ] && \
-           ! spack find --format '{hash}' "/${root_hash}" | awk 'NF' | grep -Fxq "${root_hash}"; then
-            echo "Environment root /${root_hash} is not installed."
-            rm -f "${lock_roots_file}"
-            return 1
-        fi
-
-        "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" record \
-            --metadata-root "${INSTALLATION_METADATA_DIR}" \
-            --source-type environment \
-            --source-name "${env}" \
-            --requested-spec "${requested_spec}" \
-            --spec-file "${concrete_spec_file}" \
-            --install-mode "${install_mode}" || {
-                rm -f "${lock_roots_file}"
-                return 1
-            }
-        ((recorded_roots += 1))
-    done < "${lock_roots_file}"
-    rm -f "${lock_roots_file}"
-
-    if ((recorded_roots == 0)); then
-        echo "Environment ${env} contains no concrete lockfile roots to record."
-        return 1
-    fi
+    "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" record-lockfile \
+        --metadata-root "${INSTALLATION_METADATA_DIR}" \
+        --name "${env}" \
+        --lock-file "${lock_file}" \
+        --install-mode "${install_mode}"
 }
 
 function build_environment() {
@@ -459,10 +358,12 @@ function build_environment() {
             }
         fi
         spack env deactivate
-        record_concretized_environment "${envdir}/${env}" "${env}" "${install_mode}" || {
-            cd "${previous_dir}" || true
-            return 1
-        }
+        if [ "${SYSTEM}" = "setonix-q" ]; then
+            record_concretized_environment "${envdir}/${env}" "${env}" "${install_mode}" || {
+                cd "${previous_dir}" || true
+                return 1
+            }
+        fi
     else
         # Instead of installing the environment concretization, which tends to
         # produce duplicates, extract each requested root and concretize it
@@ -497,14 +398,20 @@ function build_environment() {
                 else
                     install_mode=root
                 fi
-                install_and_record_spack_root environment "${env}" "${p}" "${install_mode}" || {
-                    cd "${previous_dir}" || true
-                    return 1
-                }
+                if [ "${SYSTEM}" = "setonix-q" ]; then
+                    install_and_record_spack_root environment "${env}" "${p}" "${install_mode}" || {
+                        cd "${previous_dir}" || true
+                        return 1
+                    }
+                elif [ "${install_mode}" = "dependencies-only" ]; then
+                    sg "${INSTALL_GROUP}" -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} --only dependencies ${p}" || return 1
+                else
+                    sg "${INSTALL_GROUP}" -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} ${p}" || return 1
+                fi
             fi
         done < spack.specs.txt
     fi
-    if ((testing_only == 0)); then
+    if ((testing_only == 0)) && [ "${SYSTEM}" = "setonix-q" ]; then
         seal_spack_install_receipt environment "${env}" || {
             cd "${previous_dir}" || true
             return 1
@@ -526,7 +433,6 @@ export -f initialize_spack_install_manifest
 export -f ensure_spack_install_manifest_run
 export -f reset_spack_install_receipt
 export -f seal_spack_install_receipt
-export -f load_spack_install_manifest_hashes
 export -f install_and_record_spack_root
 export -f record_concretized_environment
 export -f build_environment

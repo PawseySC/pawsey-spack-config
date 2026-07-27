@@ -13,21 +13,19 @@ Here is how to launch the software stack installation.
 5. Set and export the `SYSTEM` variable to the system you want to run the installation for, if it differs from the content of the `PAWSEY_CLUSTER` environment variable.
 6. Run the `scripts/install_software_stack.sh` script, preferably in a Slurm job or as a process detached from the login shell to prevent the installation from being aborted in case the SSH connection were to be interrupted unexpectedly.
 
-### Installation metadata
+### Setonix-Q installation metadata
 
-Each completed deployment publishes
-`$INSTALL_PREFIX/installation_metadata/spack_install_manifest.json`. This is
-the authoritative inventory of the concrete hashes actually installed by the
-workflow, their source environments, installation prefixes, module publication roles, and
-generated module paths. The environment `spack.lock` files remain the record
-of the earlier validation concretization and can therefore differ when the
-installer deliberately reconcretizes roots to reuse an existing installation.
+A completed Setonix-Q deployment publishes
+`$INSTALL_PREFIX/installation_metadata/spack_install_manifest.json`. It records
+the concrete hashes actually installed, their source environments, installation
+prefixes, and generated module paths. This is the authoritative input to the
+Setonix-Q module tests. The environment lockfiles remain the record of the
+earlier validation concretization and may differ when installation reconcretizes
+individual roots to reuse software already in the store.
 
-The same directory retains content-addressed concrete specfiles and per-source
-receipts. These provide useful provenance when examining either a completed
-deployment or an installation that stopped before the aggregate manifest could
-be published. The JSON manifest can be inspected with any standard JSON tool,
-for example:
+The same directory retains each concrete spec used by the installer and a
+small receipt for each installation source. The final manifest can be inspected
+with any standard JSON tool:
 
 ```bash
 python3 -m json.tool \

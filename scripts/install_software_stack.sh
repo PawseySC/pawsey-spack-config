@@ -15,8 +15,10 @@ set_compilation_sets_for_arch
 echo "Setting up spack.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_spack.sh"
 
-echo "Initialising installation metadata.."
-initialize_spack_install_manifest
+if [ "${SYSTEM}" = "setonix-q" ]; then
+    echo "Initialising Setonix-Q installation metadata.."
+    initialize_spack_install_manifest
+fi
 
 echo "Running first python install"
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_python.sh"

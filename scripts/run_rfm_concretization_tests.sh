@@ -19,10 +19,11 @@ export reframe_version=${reframe_version}
 export env_list
 export cray_env_list
 
-# ReFrame imports every check before applying tag filters.  Concretization
-# validation intentionally uses spack.lock only, so hide any previously
-# published installation manifest from installation-parameter construction.
-export SPACK_INSTALL_MANIFEST="${INSTALLATION_METADATA_DIR}/.concretization-only-no-manifest.json"
+if [ "${SYSTEM}" = "setonix-q" ]; then
+  # ReFrame imports installation checks before applying tag filters. Keep the
+  # concretization run independent of any manifest from an earlier deployment.
+  export SPACK_INSTALL_MANIFEST="${INSTALL_PREFIX}/installation_metadata/.concretization-only"
+fi
 
 mkdir -p "${RFM_STORAGE_DIR}"
 

@@ -52,33 +52,21 @@ export reframe_version=${reframe_version}
 export pawseyenv_version=${pawseyenv_version}
 export env_list
 export cray_env_list
-export INSTALLATION_METADATA_DIR=${INSTALLATION_METADATA_DIR:-${INSTALL_PREFIX}/installation_metadata}
-export SPACK_INSTALL_MANIFEST=${SPACK_INSTALL_MANIFEST:-${INSTALLATION_METADATA_DIR}/spack_install_manifest.json}
 
-# Installation checks must never silently fall back to the pre-installation
-# lockfiles.  Validate the published deployment index, including every source
-# environment, before ReFrame constructs its installation parameters.
-manifest_tool="${PAWSEY_SPACK_CONFIG_REPO}/scripts/spack_install_manifest.py"
-for env in $env_list $cray_env_list; do
-  "${SPACK_PYTHON:-python3}" "${manifest_tool}" validate \
-    --manifest "${SPACK_INSTALL_MANIFEST}" \
-    --require-complete \
-    --system "${SYSTEM}" \
-    --install-prefix "${INSTALL_PREFIX}" \
-    --environment "${env}" || exit 1
-done
-
-# ROCm is installed later on a GPU node and is therefore absent from the
-# valid manifest produced by the main Setonix workflow. Include it only after
-# that deferred workflow has extended and republished the same manifest.
-if [ "${SYSTEM}" != "setonix-q" ] && \
-   "${SPACK_PYTHON:-python3}" "${manifest_tool}" validate \
-     --manifest "${SPACK_INSTALL_MANIFEST}" \
-     --require-complete \
-     --system "${SYSTEM}" \
-     --install-prefix "${INSTALL_PREFIX}" \
-     --environment rocm > /dev/null 2>&1; then
-  env_list="${env_list} rocm"
+if [ "${SYSTEM}" = "setonix-q" ]; then
+    export SPACK_INSTALL_MANIFEST=${SPACK_INSTALL_MANIFEST:-${INSTALL_PREFIX}/installation_metadata/spack_install_manifest.json}
+    manifest_args=(
+        validate
+        --manifest "${SPACK_INSTALL_MANIFEST}"
+        --system setonix-q
+        --install-prefix "${INSTALL_PREFIX}"
+    )
+    for env in $env_list $cray_env_list; do
+        manifest_args+=(--environment "${env}")
+    done
+    "${SPACK_PYTHON:-python3}" \
+        "${PAWSEY_SPACK_CONFIG_REPO}/systems/setonix-q/install_manifest.py" \
+        "${manifest_args[@]}" || exit 1
 fi
 
 
@@ -91,6 +79,11 @@ fi
 # Reframe testing for modules
 module load reframe/${reframe_version}
 #module load reframe/3.12.0
+# Add rocm environment to environment list for testing (x86 stack only)
+# Can't be added to setting.sh since spack tries to install those packages straightaway
+if [ "${SYSTEM}" != "setonix-q" ]; then
+    env_list+="rocm"
+fi
 for env in $env_list; do
   echo "Running ReFrame tests for modules in env $env"
   export SPACK_ENV=${env}

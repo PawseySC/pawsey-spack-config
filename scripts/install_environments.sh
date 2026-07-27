@@ -44,14 +44,12 @@ fi
 # list of environments included in variables.sh (sourced above)
 envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 
-ensure_spack_install_manifest_run
-
-# Receipts are source-scoped and replaced on each run.  Reset every active
-# environment before installing any of them so a failed rerun cannot later
-# assemble a mixture of old and new roots.
-for env in $env_list $cray_env_list; do
-  reset_spack_install_receipt environment "${env}"
-done
+if [ "${SYSTEM}" = "setonix-q" ]; then
+  ensure_spack_install_manifest_run
+  for env in $env_list $cray_env_list; do
+    reset_spack_install_receipt environment "${env}"
+  done
+fi
 
 echo "Running installation with $NCPUS cores.."
 
@@ -66,12 +64,76 @@ for env in $cray_env_list; do
   build_environment "${envdir}" "${env}" || exit 1
 done
 
-# Assemble and publish only from the receipts produced by this deployment.
-# The publication stage is shared with separately installed environments such
-# as Setonix ROCm so they extend the same authoritative manifest.
-deployment_environments=($env_list $cray_env_list)
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/publish_spack_install_manifest.sh" \
-  "${deployment_environments[@]}" || exit 1
+if [ "${SYSTEM}" = "setonix-q" ]; then
+  deployment_environments=($env_list $cray_env_list)
+  "${PAWSEY_SPACK_CONFIG_REPO}/scripts/publish_spack_install_manifest.sh" \
+    "${deployment_environments[@]}" || exit 1
+else
+  # Keep the established Setonix module-refresh path unchanged. Setonix-Q uses
+  # the exact concrete specs recorded during this deployment instead.
+  echo "Creating buildcache for installed packages, module refresh ... "
+  if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
+    for hash in `spack find -x --format "{hash}"`; do spack buildcache create -a -m systemwide_buildcache /$hash; done
+  fi
+
+  mapfile -t environment_implicit_module_specs < <(
+    {
+      for env in $env_list $cray_env_list; do
+        spack -e "${envdir}/${env}" find -X --format '/{hash}'
+      done
+    } | awk 'NF' | sort -u
+  )
+  mapfile -t environment_explicit_module_specs < <(
+    {
+      for env in $env_list $cray_env_list; do
+        spack -e "${envdir}/${env}" find -x --format '/{hash}'
+      done
+    } | awk 'NF' | sort -u
+  )
+
+  if ((${#environment_implicit_module_specs[@]} == 0 && \
+       ${#environment_explicit_module_specs[@]} == 0)); then
+    echo "No installed specs found in the deployment environments."
+    exit 1
+  fi
+
+  mapfile -t standalone_module_specs < <(
+    {
+      for comp in "${pythoncompilers[@]}"; do
+        for arch in "${archs[@]}"; do
+          spack find -d -x --format '/{hash}' \
+            "python@${python_version}%${comp} target=${arch}"
+        done
+      done
+      spack find -d -x --format '/{hash}' \
+        "reframe@${reframe_version}%gcc@${gcc_version}"
+    } | awk 'NF' | sort -u
+  )
+
+  if ((${#standalone_module_specs[@]} == 0)); then
+    echo "No installed standalone Python or ReFrame specs found."
+    exit 1
+  fi
+
+  declare -A standalone_module_spec_set=()
+  for module_spec in "${standalone_module_specs[@]}"; do
+    standalone_module_spec_set["${module_spec}"]=1
+  done
+
+  environment_module_specs=()
+  for module_spec in \
+    "${environment_implicit_module_specs[@]}" \
+    "${environment_explicit_module_specs[@]}"; do
+    if [[ -z ${standalone_module_spec_set["${module_spec}"]+x} ]]; then
+      environment_module_specs+=("${module_spec}")
+    fi
+  done
+
+  for module_spec in "${environment_module_specs[@]}"; do
+    spack module lmod refresh -y "${module_spec}" || exit 1
+    echo "Refreshed module for ${module_spec}"
+  done
+fi
 
 # Remove .llvm from module files to stop it replacing gcc/cce at module load which breaks reframe tests
 # Done post-installation, so commented out here
