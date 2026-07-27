@@ -79,19 +79,8 @@ done
 
 annotations=$(mktemp "${INSTALLATION_METADATA_DIR}/.module-annotations.XXXXXX.tsv")
 trap 'rm -f "${annotations}"' EXIT
-for spec in "${active_specs[@]}"; do
-  hash=${spec#/}
-  prefix=$(spack find --format '{prefix}' "${spec}" | awk 'NF {print; exit}')
-  module_name=$(spack module lmod find "${spec}")
-  module_path=$(spack module lmod find --full-path "${spec}")
-  if [ -z "${prefix}" ] || [ -z "${module_name}" ] || \
-     [ -z "${module_path}" ] || [ ! -d "${prefix}" ] || [ ! -f "${module_path}" ]; then
-    echo "Could not resolve installed/module metadata for ${spec}."
-    exit 1
-  fi
-  printf '%s\t%s\t%s\t%s\n' \
-    "${hash}" "${prefix}" "${module_name}" "${module_path}" >> "${annotations}"
-done
+spack python "$(spack_install_manifest_tool)" annotate-modules \
+  --plan "${plan}" --output "${annotations}"
 
 "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" publish \
   --metadata-root "${INSTALLATION_METADATA_DIR}" \

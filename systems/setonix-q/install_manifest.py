@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import csv
 import datetime
 import json
 import os
@@ -762,6 +763,60 @@ def command_publish(args):
     print(output)
 
 
+def command_annotate_modules(args):
+    try:
+        from spack import modules as spack_modules
+        from spack import store as spack_store
+    except ImportError as error:
+        raise ManifestError("annotate-modules must be run with 'spack python'") from error
+
+    fail_unless(args.progress_every > 0, "progress interval must be positive")
+    plan_path = Path(args.plan)
+    output_path = Path(args.output)
+    try:
+        with plan_path.open(encoding="utf-8", newline="") as stream:
+            rows = list(csv.DictReader(stream, delimiter="\t"))
+    except FileNotFoundError as error:
+        raise ManifestError(f"module plan does not exist: {plan_path}") from error
+    required = {"hash", "name", "version", "role"}
+    fail_unless(rows and required.issubset(rows[0]), "module plan is empty or invalid")
+
+    hashes = [clean_hash(row.get("hash"), "module plan hash") for row in rows]
+    fail_unless(len(hashes) == len(set(hashes)), "module plan contains duplicate hashes")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    print(f"Resolving module metadata for {len(rows)} installed specs...")
+    with output_path.open("w", encoding="utf-8") as output:
+        for position, node_hash in enumerate(hashes, 1):
+            _upstream, record = spack_store.STORE.db.query_by_spec_hash(node_hash)
+            fail_unless(
+                record is not None and record.installed,
+                f"/{node_hash} is not installed in the Spack database",
+            )
+            spec = record.spec
+            fail_unless(
+                spec.dag_hash() == node_hash,
+                f"Spack database returned the wrong spec for /{node_hash}",
+            )
+            try:
+                prefix = str(spec.prefix)
+                module_name = spack_modules.get_module("lmod", spec, False)
+                module_path = spack_modules.get_module("lmod", spec, True)
+            except Exception as error:
+                raise ManifestError(
+                    f"could not resolve installed/module metadata for /{node_hash}: {error}"
+                ) from error
+            fail_unless(prefix and Path(prefix).is_dir(), f"invalid prefix for /{node_hash}: {prefix}")
+            fail_unless(module_name, f"no Lmod name for /{node_hash}")
+            fail_unless(
+                module_path and Path(module_path).is_file(),
+                f"invalid Lmod path for /{node_hash}: {module_path}",
+            )
+            output.write(f"{node_hash}\t{prefix}\t{module_name}\t{module_path}\n")
+            output.flush()
+            if position % args.progress_every == 0 or position == len(rows):
+                print(f"Resolved module metadata for {position}/{len(rows)} specs.", flush=True)
+
+
 def command_validate(args):
     manifest = read_json(Path(args.manifest), "installation manifest")
     validate_manifest(manifest, complete=True, check_paths=not args.skip_path_checks)
@@ -851,6 +906,12 @@ def build_parser():
     command.add_argument("--annotations", required=True)
     command.add_argument("--output")
     command.set_defaults(function=command_publish)
+
+    command = subparsers.add_parser("annotate-modules")
+    command.add_argument("--plan", required=True)
+    command.add_argument("--output", required=True)
+    command.add_argument("--progress-every", type=int, default=25)
+    command.set_defaults(function=command_annotate_modules)
 
     command = subparsers.add_parser("validate")
     command.add_argument("--manifest", required=True)

@@ -2,7 +2,9 @@ import importlib.util
 import io
 import json
 import os
+import sys
 import tempfile
+import types
 import unittest
 from contextlib import redirect_stdout
 from pathlib import Path
@@ -199,6 +201,53 @@ class SetonixQManifestTest(unittest.TestCase):
         self.assertEqual([APP, BUILD], [item['hash'] for item in receipt['roots']])
         self.assertEqual(['app', 'second'], [item['name'] for item in receipt['roots']])
         self.assertEqual(['1.0', '1.0'], [item['version'] for item in receipt['roots']])
+
+    def test_annotates_modules_in_one_spack_process(self):
+        plan = self.write_text(
+            'plan.tsv',
+            'hash\tname\tversion\trole\n'
+            f'{APP}\tapp\t1.0\troot\n',
+        )
+        prefix = self.prefix / 'software' / APP
+        module_path = self.prefix / 'modules' / f'{APP}.lua'
+        prefix.mkdir(parents=True)
+        module_path.parent.mkdir(parents=True)
+        module_path.write_text('-- module\n', encoding='utf-8')
+
+        class FakeSpec:
+            def __init__(self):
+                self.prefix = prefix
+
+            def dag_hash(self):
+                return APP
+
+        record = types.SimpleNamespace(installed=True, spec=FakeSpec())
+        database = types.SimpleNamespace(
+            query_by_spec_hash=lambda node_hash: (False, record if node_hash == APP else None)
+        )
+        fake_store = types.ModuleType('spack.store')
+        fake_store.STORE = types.SimpleNamespace(db=database)
+        fake_modules = types.ModuleType('spack.modules')
+        fake_modules.get_module = lambda _kind, _spec, full_path: (
+            str(module_path) if full_path else 'applications/app/1.0'
+        )
+        fake_spack = types.ModuleType('spack')
+        fake_spack.modules = fake_modules
+        fake_spack.store = fake_store
+
+        annotations = Path(self.temporary.name) / 'annotations.tsv'
+        with mock.patch.dict(
+            sys.modules,
+            {'spack': fake_spack, 'spack.modules': fake_modules, 'spack.store': fake_store},
+        ):
+            self.invoke(
+                'annotate-modules', '--plan', str(plan), '--output', str(annotations),
+                '--progress-every', '1',
+            )
+        self.assertEqual(
+            f'{APP}\t{prefix}\tapplications/app/1.0\t{module_path}\n',
+            annotations.read_text(encoding='utf-8'),
+        )
 
 
 if __name__ == '__main__':
