@@ -7,7 +7,7 @@ spack:
   definitions:
 
   - parallel:
-    - blaspp@2024.10.26 +cuda cuda_arch=90 build_type=Release ^openblas%gcc ^cmake ~doc~qtgui %gcc
+    - blaspp@2024.10.26 +cuda cuda_arch=90 build_type=Release ^openblas%gcc ^cmake ~doc~ownlibs~qtgui %gcc
     # hpx bumped 1.9.1 -> 1.11.0: 1.9.1 headers (just.hpp/pack.hpp) don't compile
     # under CUDA-13 nvcc. 1.11.0 closes the Grace Hopper (#6563) and Kokkos (#6696)
     # build issues. 1.11.0 is the last HPX supporting C++17.
