@@ -427,7 +427,10 @@ packages:
 
   curl:
     externals:
-    - spec: curl@8.14.1
+    # /usr/bin/curl reports libidn2 and the IDN feature. Declare the external
+    # precisely so independent environments cannot assign it conflicting
+    # +libidn2/~libidn2 hashes.
+    - spec: curl@8.14.1+libidn2
       prefix: /usr
     buildable: false
 
