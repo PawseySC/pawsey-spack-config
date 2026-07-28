@@ -16,7 +16,7 @@ libraries:
   boost/1.86.0-c++14-python: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <boost/version.hpp>\n" | CC -std=c++14 -E -x c++ - > "$tmp" 2>&1 && grep -m1 "boost-1.86.0" "$tmp"''', 'boost-1.86.0']
   eigen/3.4.0: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <Eigen/Core>\n" | CC -E -x c++ - > "$tmp" 2>&1 && grep -m1 "Eigen/Core" "$tmp"''', 'Eigen/Core']
   fftw/2.1.5: ['bash', '-lc ''test -f "$PAWSEY_FFTW_HOME/include/dfftw.h" && test -f "$PAWSEY_FFTW_HOME/lib/libdfftw.so.2.0.7" && echo "dfftw.h"''', 'dfftw.h']
-  fftw/3.3.10: ['fftw-wisdom', '-h', 'Usage: fftw-wisdom']
+  fftw/3.3.10: ['fftw-wisdom', '-h', 'Usage: '] # 'Usage: fftw-wisdom' doesn't match as the 'fftw-wisdom' is replaces by the full path to the script.
   gsl: ['gsl-config', '--libs', 'gsl']
   hdf5: ['h5dump', '--version', 'h5dump']
   hpx-cuda-gh200/1.11.0: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <hpx/hpx.hpp>\n" | CC -E -x c++ - > "$tmp" 2>&1 && grep -m1 "hpx-1.11.0" "$tmp"''', 'hpx-1.11.0']
