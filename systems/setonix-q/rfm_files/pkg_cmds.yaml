@@ -30,7 +30,7 @@ libraries:
   metis/5.1.0: ['bash', '-lc ''gpmetis 2>&1 | grep -m1 "Usage: gpmetis"''', 'Usage: gpmetis']
   netlib-lapack/3.11.0: ['bash', '-lc ''tmpdir=$(mktemp -d) && trap "rm -rf \"$tmpdir\"" EXIT && printf "extern void dgesv_(); int main(){ dgesv_(); return 0; }\n" | cc -x c - -llapack -o "$tmpdir/lapack_link_check" && ldd "$tmpdir/lapack_link_check" | grep -m1 "netlib-lapack-3.11.0"''', 'netlib-lapack-3.11.0']
   openblas/0.3.28: ['bash', '-lc ''printf "#include <cblas.h>\n" | cc -E -x c - >/dev/null && echo "openblas ok"''', 'openblas ok']
-  opencv-cuda-gh200/4.13.0: ['pkg-config', '--modversion opencv4', '4.13.0']
+  opencv-cuda-gh200/4.13.0: ['python3', '-c "import cv2; print(cv2.__version__)"', '4.13.0'] # module includes python bindings, so we can check the version using python
   parmetis/4.0.3-64bit: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <parmetis.h>\n" | cc -E -x c - > "$tmp" 2>&1 && grep -m1 "parmetis-4.0.3" "$tmp"''', 'parmetis-4.0.3']
   parmetis/4.0.3: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <parmetis.h>\n" | cc -E -x c - > "$tmp" 2>&1 && grep -m1 "parmetis-4.0.3" "$tmp"''', 'parmetis-4.0.3']
   plasma/24.8.7: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <plasma.h>\n" | cc -E -x c - > "$tmp" 2>&1 && grep -m1 "plasma-24.8.7" "$tmp"''', 'plasma-24.8.7']
