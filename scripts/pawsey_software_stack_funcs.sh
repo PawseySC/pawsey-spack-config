@@ -383,6 +383,7 @@ export -f set_spack_config_repo
 export -f set_compilation_sets_for_arch
 export -f set_modulepaths_for_arch
 export -f spack_install_manifest_tool
+export -f check_python_version
 export -f resolve_compatible_python_interpreter
 export -f initialize_spack_install_manifest
 export -f ensure_spack_install_manifest_run
