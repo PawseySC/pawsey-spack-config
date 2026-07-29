@@ -134,7 +134,7 @@ function check_python_version()
 
 function resolve_compatible_python_interpreter()
 {
-    # We need Python 3.8+ to run Spack and install_manifest.py.
+    # We need Python 3.8+ as some Spack packages use the walrus operator
     if check_python_version; then
         return 0
     fi
