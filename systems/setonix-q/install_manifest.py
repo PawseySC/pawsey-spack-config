@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """Record and publish the concrete specs installed for a Setonix-Q release."""
+from __future__ import annotations
+
 import argparse
 import copy
 import csv
