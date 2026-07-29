@@ -125,6 +125,35 @@ function set_compilation_sets_for_arch()
     fi   
 }
 
+function check_python_version()
+{
+    command -v python >/dev/null 2>&1 || return 1
+    python -c 'import sys; sys.exit(0 if sys.version_info >= (3, 8) else 1)' >/dev/null 2>&1
+}
+
+
+function resolve_compatible_python_interpreter()
+{
+    # We need Python 3.8+ to run Spack and install_manifest.py.
+    if check_python_version; then
+        return 0
+    fi
+
+    # Try to load spack-provided Python module first, then fall back to cray-python.
+    if ! module load "python/${python_version}" 2>/dev/null; then
+        module load cray-python || {
+            echo "Could not load python/${python_version} or cray-python." >&2
+            return 1
+        }
+    fi
+
+    if ! check_python_version; then
+        echo "Python 3.8+ is required to run Spack and install_manifest.py." >&2
+        echo "Please load a compatible Python module." >&2
+        return 1
+    fi
+}
+
 function set_modulepaths_for_arch()
 {
 
@@ -148,6 +177,7 @@ function set_modulepaths_for_arch()
         fi
 
         module use ${INSTALL_PREFIX}/staff_modulefiles
+        # we need the python module to be available in order to run spack
         module --ignore-cache load pawseyenv/${pawseyenv_version}
         # CUDA-free base: the plain GNU programming environment keeps the CUDA
         # toolkit out of the base that every build inherits, so pure %gcc CPU
@@ -164,13 +194,6 @@ function set_modulepaths_for_arch()
         # load spack` pulls in) is exposed via the pawseyenv + gcc-native
         # handshake (LMOD_CUSTOM_COMPILER_GNU_* prepended to MODULEPATH), so no
         # explicit `module use` of the programming-languages trees is needed.
-        # We need a Python 3.8+ in order to run Spack and the Spack
-        # install_manifest.py tool.
-        if ! module load python/${python_version} 2>/dev/null; then
-            echo "Could not load python/${python_version} module."
-            module load cray-python
-            echo "Loaded cray-python version $(python --version 2>&1 | awk '{print $2}')."
-        fi
         module load spack/${spack_version}
     else
         echo "The architecture '$( uname -m )' is not supported."
@@ -360,6 +383,7 @@ export -f set_spack_config_repo
 export -f set_compilation_sets_for_arch
 export -f set_modulepaths_for_arch
 export -f spack_install_manifest_tool
+export -f resolve_compatible_python_interpreter
 export -f initialize_spack_install_manifest
 export -f ensure_spack_install_manifest_run
 export -f reset_spack_install_receipt
