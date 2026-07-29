@@ -148,7 +148,6 @@ function set_modulepaths_for_arch()
         fi
 
         module use ${INSTALL_PREFIX}/staff_modulefiles
-        # we need the python module to be available in order to run spack
         module --ignore-cache load pawseyenv/${pawseyenv_version}
         # CUDA-free base: the plain GNU programming environment keeps the CUDA
         # toolkit out of the base that every build inherits, so pure %gcc CPU
@@ -165,6 +164,13 @@ function set_modulepaths_for_arch()
         # load spack` pulls in) is exposed via the pawseyenv + gcc-native
         # handshake (LMOD_CUSTOM_COMPILER_GNU_* prepended to MODULEPATH), so no
         # explicit `module use` of the programming-languages trees is needed.
+        # We need a Python 3.8+ in order to run Spack and the Spack
+        # install_manifest.py tool.
+        if ! module load python/${python_version} 2>/dev/null; then
+            echo "Could not load python/${python_version} module."
+            module load cray-python
+            echo "Loaded cray-python version $(python --version 2>&1 | awk '{print $2}')."
+        fi
         module load spack/${spack_version}
     else
         echo "The architecture '$( uname -m )' is not supported."
