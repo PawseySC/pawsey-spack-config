@@ -54,9 +54,9 @@ SPACK_INSTALL_MANIFEST=${INSTALLATION_METADATA_DIR}/spack_install_manifest.json
 SPACK_POPULATE_CACHE=0
 # Cap build parallelism well below single node core count. To prevent OOM errors when building large packages (e.g. LLVM).
 NCPUS=32
-SPACK_SPEC_ARGS=" --reuse "
+SPACK_SPEC_ARGS="" # reverted to setonix behaviour #" --reuse "
 SPACK_INSTALL_ARGS=" --no-checksum "
-SPACK_CONCRETIZE_ARGS=" --reuse "
+SPACK_CONCRETIZE_ARGS="" # reverted to setonix behaviour #" --reuse "
 
 pawseyenv_version="${DATE_TAG}"
 
