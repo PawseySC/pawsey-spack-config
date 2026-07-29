@@ -764,12 +764,53 @@ def command_publish(args):
     print(output)
 
 
+def normalise_hide_versions(module_root):
+    """
+    The modulefile.lua template maps
+    depends_on("<module category>/<module name>/...")
+    to depends_on("<module name>/...") in generated modulefiles because
+    pawseyenv adds each module category to MODULEPATH.
+
+    Spack-generated .modulerc.lua files do not use this template, so remove
+    the module category from their hide_version() calls here.
+    """
+    categories = {
+        category.strip()
+        for category in os.environ.get("module_cat_list", "").splitlines()
+        if category.strip()
+    }
+    fail_unless(
+        categories,
+        "module_cat_list environment variable not set or empty.",
+    )
+
+    changed = 0
+
+    for path in Path(module_root).rglob(".modulerc.lua"):
+        original = path.read_text(encoding="utf-8")
+        updated = original
+
+        for category in categories:
+            updated = updated.replace(
+                f'hide_version("{category}/',
+                'hide_version("',
+            )
+
+        if updated != original:
+            path.write_text(updated, encoding="utf-8")
+            changed += 1
+
+    return changed
+
+
 def command_annotate_modules(args):
     try:
         from spack import modules as spack_modules
         from spack import store as spack_store
     except ImportError as error:
-        raise ManifestError("annotate-modules must be run with 'spack python'") from error
+        raise ManifestError(
+            "annotate-modules must be run with 'spack python'"
+        ) from error
 
     fail_unless(args.progress_every > 0, "progress interval must be positive")
     plan_path = Path(args.plan)
@@ -792,7 +833,9 @@ def command_annotate_modules(args):
     fail_unless(rows and required.issubset(rows[0]), "module plan is empty or invalid")
 
     hashes = [clean_hash(row.get("hash"), "module plan hash") for row in rows]
-    fail_unless(len(hashes) == len(set(hashes)), "module plan contains duplicate hashes")
+    fail_unless(
+        len(hashes) == len(set(hashes)), "module plan contains duplicate hashes"
+    )
     specs = []
     for node_hash in hashes:
         _upstream, record = spack_store.STORE.db.query_by_spec_hash(node_hash)
@@ -827,7 +870,9 @@ def command_annotate_modules(args):
             raise ManifestError(
                 f"could not configure the Lmod module for /{node_hash}: {error}"
             ) from error
-        fail_unless(not writer.conf.excluded, f"Lmod module is excluded for /{node_hash}")
+        fail_unless(
+            not writer.conf.excluded, f"Lmod module is excluded for /{node_hash}"
+        )
         writers.append(writer)
 
         # Standalone modules have already been generated. Regenerate modules
@@ -841,17 +886,22 @@ def command_annotate_modules(args):
 
     module_paths = {}
     for writer in writers:
-        module_paths.setdefault(writer.layout.filename, []).append(writer.spec.dag_hash())
+        module_paths.setdefault(writer.layout.filename, []).append(
+            writer.spec.dag_hash()
+        )
     clashes = {path: values for path, values in module_paths.items() if len(values) > 1}
     fail_unless(
         not clashes,
         "module plan resolves multiple specs to the same path:\n"
-        + "\n".join(f"  {path}: {', '.join(values)}" for path, values in clashes.items()),
+        + "\n".join(
+            f"  {path}: {', '.join(values)}" for path, values in clashes.items()
+        ),
     )
+
+    module_root = writers[0].layout.dirname()
 
     if refresh_writers:
         print(f"Regenerating {len(refresh_writers)} environment Lmod modules...")
-        module_root = refresh_writers[0].layout.dirname()
         spack_modules.common.generate_module_index(module_root, refresh_writers)
         for position, writer in enumerate(refresh_writers, 1):
             try:
@@ -866,6 +916,9 @@ def command_annotate_modules(args):
                     flush=True,
                 )
 
+    changed = normalise_hide_versions(module_root)
+    print(f"Normalised {changed} Lmod visibility files.")
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
     print(f"Recording module metadata for {len(rows)} installed specs...")
     with output_path.open("w", encoding="utf-8") as output:
@@ -878,7 +931,10 @@ def command_annotate_modules(args):
                 raise ManifestError(
                     f"could not resolve installed/module metadata for /{node_hash}: {error}"
                 ) from error
-            fail_unless(prefix and Path(prefix).is_dir(), f"invalid prefix for /{node_hash}: {prefix}")
+            fail_unless(
+                prefix and Path(prefix).is_dir(),
+                f"invalid prefix for /{node_hash}: {prefix}",
+            )
             fail_unless(module_name, f"no Lmod name for /{node_hash}")
             fail_unless(
                 module_path and Path(module_path).is_file(),
@@ -887,7 +943,10 @@ def command_annotate_modules(args):
             output.write(f"{node_hash}\t{prefix}\t{module_name}\t{module_path}\n")
             output.flush()
             if position % args.progress_every == 0 or position == len(rows):
-                print(f"Recorded module metadata for {position}/{len(rows)} specs.", flush=True)
+                print(
+                    f"Recorded module metadata for {position}/{len(rows)} specs.",
+                    flush=True,
+                )
 
 
 def command_validate(args):

@@ -65,6 +65,7 @@ annotations=$(mktemp "${INSTALLATION_METADATA_DIR}/.module-annotations.XXXXXX.ts
 trap 'rm -f "${annotations}"' EXIT
 # This single Spack process updates explicit flags, regenerates environment
 # modules from the plan, then records the exact paths it generated.
+export module_cat_list
 spack python "$(spack_install_manifest_tool)" annotate-modules \
   --plan "${plan}" --output "${annotations}"
 
