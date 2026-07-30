@@ -11,6 +11,7 @@
 #                    isPinned = (memoryAttributes.memoryType == hipMemoryTypeHost); with
 #                    isPinned = (memoryAttributes.isManaged == 0);
 
+import os
 from spack.package import *
 from spack.util.prefix import Prefix
 
@@ -50,6 +51,89 @@ class Amdgromacs(CMakePackage, ROCmPackage):
 #        plumed = Executable(self.spec["plumed"].prefix.bin.plumed)
 #        plumed("patch", "-p", "-e", f"gromacs-{self.spec.version}", "-m", "shared")
          
+    @run_before("cmake")
+    def fix_rocm7_hiprtc_link(self):
+        cmake_file = join_path(
+            self.stage.source_path,
+            "CMakeLists.txt",
+        )
+    
+        hiprtc_libraries = find_libraries(
+            "libhiprtc",
+            root=self.spec["hip"].prefix,
+            shared=True,
+            recursive=True,
+        )
+    
+        if not hiprtc_libraries:
+            raise InstallError(
+                "Unable to locate libhiprtc under {0}".format(
+                    self.spec["hip"].prefix
+                )
+            )
+    
+        hiprtc_library = str(hiprtc_libraries[0])
+    
+        filter_file(
+            r'set\s*\(\s*GMX_EXTRA_LIBRARIES\s+""\s*\)',
+            'set(GMX_EXTRA_LIBRARIES "")\n'
+            'list(APPEND GMX_EXTRA_LIBRARIES "{0}")'.format(
+                hiprtc_library
+            ),
+            cmake_file,
+        )
+
+    @run_before("cmake")
+    def fix_rocm7_warp_size(self):
+        import os
+        import re
+    
+        ewald_dir = join_path(
+            self.stage.source_path,
+            "src",
+            "gromacs",
+            "ewald",
+        )
+    
+        files = [
+            "pme_gather.hip.cpp",
+            "pme_spread.hip.cpp",
+        ]
+    
+        replacements = 0
+    
+        for filename in files:
+            path = join_path(ewald_dir, filename)
+    
+            if not os.path.exists(path):
+                continue
+    
+            with open(path, "r", encoding="utf-8") as source_file:
+                source = source_file.read()
+    
+            original = source
+            source = re.sub(r"\bwarpSize\b", "64", source)
+    
+            if source != original:
+                with open(path, "w", encoding="utf-8") as source_file:
+                    source_file.write(source)
+    
+                replacements += 1
+    
+            with open(path, "r", encoding="utf-8") as source_file:
+                patched_source = source_file.read()
+    
+            if "warpSize" in patched_source:
+                raise RuntimeError(
+                    "Unpatched warpSize remains in {0}".format(path)
+                )
+    
+        if replacements == 0:
+            raise RuntimeError(
+                "ROCm 7 warpSize fix did not modify any AMD GROMACS source files"
+            )
+
+
     def cmake_args(self):
 #        hipcc = self.spec["hip"].prefix.bin.hipcc
         amdgpu_target = ",".join(self.spec.variants["amdgpu_target"].value)
@@ -88,7 +172,7 @@ class Amdgromacs(CMakePackage, ROCmPackage):
             "-DCMAKE_HIP_ARCHITECTURES='gfx90a'",
             "-DAMDGPU_TARGETS='gfx90a'",
             "-DGPU_TARGETS='gfx90a'",
-            f"-D HIP_HIPCC_FLAGS='-O3 -I/opt/rocm-6.3.0/include/hipfft --offload-arch={amdgpu_target} --save-temps -I/opt/cray/pe/mpich/8.1.32/ofi/gnu/12.3/include/'",
+            f"-D HIP_HIPCC_FLAGS='-O3 -I/opt/rocm-7.0.1/include/hipfft --offload-arch={amdgpu_target} --save-temps -I/opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3/include/'",
             "-DGMX_GPU_USE_VKFFT=ON",
             "-DCMAKE_C_FLAGS='-Ofast'",
             "-DCMAKE_CXX_FLAGS='-Ofast'", 
