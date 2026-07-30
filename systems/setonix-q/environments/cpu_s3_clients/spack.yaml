@@ -14,11 +14,11 @@ spack:
   specs:
   - matrix:
     - [$s3-python-set]
-    # This Python spec matches with the main Setonix-Q Python installation.
-    # However, this probably prevents awscli and py-boto3 from accessing HTTPS
-    # endpoints (which includes bothAcacia and AWS). We should revisit this 
-    # and the shared Python build to determine whether we can build with +ssl.
-    - [^python@3.11.6+optimizations+zlib~ssl]
+    # The main Python installation is configured with ~ssl. We
+    # should consider changing this to +ssl so it can be 
+    # reused here. Both awscli and py-boto3 require +ssl to
+    # access HTTPS S3 endpoints (which includes Acacia and AWS).
+    - [^python@3.11.6+optimizations+zlib+ssl]
     - ['%gcc@13.3.1']
   - matrix:
     - [$s3-go-set]
