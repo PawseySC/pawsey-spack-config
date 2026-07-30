@@ -117,6 +117,10 @@ packages:
   gettext:
     version: [0.22.5]
   py-cython:
+    # py-cuda and py-nvmath-python require the newer 3.2.3 version, but this 
+    # breaks older packages in the stack. Listing the two versions here avoids 
+    # increases instances of 'accidental' reuse when not using '--reuse' in
+    # during concretization.
     version: [3.2.3, 3.0.11]
   py-dask:
     version: [2024.7.1]
