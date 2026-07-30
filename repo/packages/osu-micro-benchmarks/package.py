@@ -61,7 +61,13 @@ class OsuMicroBenchmarks(AutotoolsPackage, CudaPackage, ROCmPackage):
 
     def configure_args(self):
         spec = self.spec
-        config_args = ["CC=%s" % spec["mpi"].mpicc, "CXX=%s" % spec["mpi"].mpicxx]
+        config_args = [
+            "CC=%s" % spec["mpi"].mpicc,
+            "CXX=%s" % spec["mpi"].mpicxx,
+            # SLES CONFIG_SITE maps libexecdir to lib, but the runtime
+            # environment below expects the standard <prefix>/libexec layout.
+            "--libexecdir=%s" % self.prefix.libexec,
+        ]
 
         if "+cuda" in spec:
             config_args.extend(["--enable-cuda", "--with-cuda=%s" % spec["cuda"].prefix])
