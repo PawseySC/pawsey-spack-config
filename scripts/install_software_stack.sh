@@ -9,8 +9,8 @@ scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 . "${scriptdir}/pawsey_software_stack_funcs.sh"
 
 check_installation_environment
-resolve_compatible_python_interpreter
 set_spack_config_repo
+resolve_compatible_python_interpreter
 set_compilation_sets_for_arch
 
 echo "Setting up spack.."
