@@ -155,7 +155,9 @@ packages:
   py-plotly:
     version: [5.20.0]
   py-pybind11:
-    # Qiskit 2.3.0 requires exactly 2.13.4, which is also valid for SciPy.
+    # Pinning to 2.13.4 to share one pybind11 build across the Qiskit Aer
+    # and SciPy DAGs. Qiskit Aer 0.17.2 requires >2.6, while Spack's
+    # SciPy 1.14.1 recipe permits @2.12.
     version: [2.13.4]
     require: '@2.13.4'
   py-scikit-learn:
