@@ -68,7 +68,7 @@ class PyPennylane(PythonPackage, CudaPackage):
     depends_on("py-diastatic-malt", type=("build", "run"))
     depends_on("py-gast", type=("build", "run"))
 
-    depends_on("cuda@13.0.0:13.0.999", when="+cuda", type=("build", "link", "run"))
+    depends_on("cuda@13", when="+cuda", type=("build", "link", "run"))
     depends_on("cuquantum@25.11.1:", when="+cuda", type=("build", "link", "run"))
     depends_on("cutensor@2.4.1.4:", when="+tensor", type=("build", "link", "run"))
     depends_on("mpi", when="+mpi", type=("build", "link", "run"))

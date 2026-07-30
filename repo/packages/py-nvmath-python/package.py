@@ -34,7 +34,7 @@ class PyNvmathPython(PythonPackage):
     depends_on("py-numpy@1.25:2", type=("build", "run"))
     depends_on("py-cuda-python", type=("build", "run"))
     depends_on("cuda@12:12", when="+cu12", type=("build", "run"))
-    depends_on("cuda@13.0.0:13.0.999", when="+cu13", type=("build", "run"))
+    depends_on("cuda@13", when="+cu13", type=("build", "run"))
     depends_on("cutensor@2.3.1:", type=("build", "run"))
 
     # Device extensions dependencies

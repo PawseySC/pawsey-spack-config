@@ -90,7 +90,7 @@ class PyQiskit(PythonPackage, CudaPackage):
     depends_on("py-psutil@5:", type=("build", "run"))
     depends_on("py-python-dateutil@2.8:", type=("build", "run"))
 
-    depends_on("cuda@13.0.0:13.0.999", type=("build", "link", "run"))
+    depends_on("cuda@13", type=("build", "link", "run"))
     depends_on("cuquantum@25.11.1:", type=("build", "link", "run"))
     depends_on("cutensor@2.4.1.4:", type=("build", "link", "run"))
     depends_on("mpi", when="+mpi", type=("build", "link", "run"))

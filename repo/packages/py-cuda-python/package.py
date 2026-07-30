@@ -60,10 +60,11 @@ class PyCudaPython(PythonPackage):
     depends_on("py-cython@3.2:3.2", type="build")
     depends_on("py-cuda-pathfinder@1.3.4", when="@12.9:", type=("build", "run"))
 
-    # CUDA Python releases track the CUDA Toolkit major/minor API.
-    depends_on("cuda@11.8:12.999", when="@12:12.999", type=("build", "link", "run"))
-    depends_on("cuda@13.0.0:13.0.999", when="@13.0.0:13.0.999", type=("build", "link", "run"))
-    depends_on("cuda@13.1.0:13.1.999", when="@13.1.0:13.1.999", type=("build", "link", "run"))
+    # Source builds require toolkit headers from the same major/minor API
+    depends_on("cuda@12.6", when="@12.6", type=("build", "link", "run"))
+    depends_on("cuda@12.9", when="@12.9", type=("build", "link", "run"))
+    depends_on("cuda@13.0", when="@13.0", type=("build", "link", "run"))
+    depends_on("cuda@13.1", when="@13.1", type=("build", "link", "run"))
 
     variant("all", default=False, description="Install all CUDA Python component subpackages found in the repo")
     variant("cufile", default=False, description="Build CUDA cuFile Python bindings")
