@@ -56,10 +56,10 @@ SPACK_POPULATE_CACHE=0
 NCPUS=32
 # Using --reuse in SPACK_SPEC_ARGS and SPACK_CONCRETIZE_ARGS leads to hangs during concretization
 # removed --reuse here, reverting to the behaviour of the 'setonix' system.
-# The issue with --reuse is unclear. On tests of the installation of large pythonic dominated environments
-# such as those in setonix-q, spack will hange indefinitely during concretization. Such much so that the process
-# cannot be interrupted with a ctrl-C signal. Testing does not show issues with file locks, or other 
-# IO hangs. It is unclear why this is not working and could be a bug in clingo. 
+# The issue with --reuse is unclear. During initial concretization of the 'quantum' environment 
+# (a pythonic dominated environment) Spack hangs indefinitely. So much so that the process cannot 
+# be interrupted with a ctrl-C signal. Testing does not show issues with file locks, or other 
+# IO hangs. It is unclear why this is not working and could be a bug in Clingo. 
 # For the moment, we do not need to enforce --reuse but in the future this may require
 # more investigation. It is also possible that this will fixed in later version of spack and 
 # clingo. 
