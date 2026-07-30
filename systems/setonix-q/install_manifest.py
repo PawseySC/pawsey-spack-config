@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Record and publish the concrete specs installed for a Setonix-Q release."""
+"""Record concrete specs and publish Setonix-Q installation metadata."""
 from __future__ import annotations
 
 import argparse
@@ -12,6 +12,7 @@ import re
 import sys
 import tempfile
 import uuid
+from contextlib import contextmanager
 from pathlib import Path
 
 
@@ -22,6 +23,9 @@ RUN_FILE = "current_run.json"
 CANDIDATE_FILE = "spack_install_manifest.candidate.json"
 FINAL_FILE = "spack_install_manifest.json"
 PLAN_FILE = "spack_install_module_plan.tsv"
+SOURCE_CATEGORIES = {"standalone": "standalone", "environment": "environments"}
+MEMBERSHIP_FIELDS = ("standalone", "standalone_root", "environment", "environment_root")
+PLAN_FIELDS = ("hash", "name", "version", "role") + MEMBERSHIP_FIELDS
 
 
 class ManifestError(RuntimeError):
@@ -72,6 +76,7 @@ def absolute_path(value, label):
 
 
 def metadata_root(args):
+    """Resolve the installation metadata directory from CLI input or INSTALL_PREFIX."""
     value = getattr(args, "metadata_root", None)
     if not value:
         prefix = os.environ.get("INSTALL_PREFIX")
@@ -90,7 +95,9 @@ def read_json(path, label):
         raise ManifestError(f"{label} is not valid JSON: {path}: {error}") from error
 
 
-def atomic_write(path, data):
+@contextmanager
+def atomic_output(path):
+    """Yield a stream and atomically replace the target only on success."""
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor, temporary_name = tempfile.mkstemp(
         prefix=f".{path.name}.", dir=path.parent
@@ -98,8 +105,7 @@ def atomic_write(path, data):
     temporary = Path(temporary_name)
     try:
         with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
-            json.dump(data, stream, indent=2, sort_keys=True)
-            stream.write("\n")
+            yield stream
             stream.flush()
             os.fsync(stream.fileno())
         os.chmod(temporary, 0o664)
@@ -107,27 +113,27 @@ def atomic_write(path, data):
     finally:
         if temporary.exists():
             temporary.unlink()
+
+
+def atomic_write(path, data):
+    with atomic_output(path) as stream:
+        json.dump(data, stream, indent=2, sort_keys=True)
+        stream.write("\n")
 
 
 def atomic_write_text(path, text):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary_name = tempfile.mkstemp(
-        prefix=f".{path.name}.", dir=path.parent
-    )
-    temporary = Path(temporary_name)
-    try:
-        with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
-            stream.write(text)
-            stream.flush()
-            os.fsync(stream.fileno())
-        os.chmod(temporary, 0o664)
-        os.replace(temporary, path)
-    finally:
-        if temporary.exists():
-            temporary.unlink()
+    with atomic_output(path) as stream:
+        stream.write(text)
+
+
+def invalidate_assembly(root):
+    """Remove the candidate manifest and module plan derived from source receipts."""
+    for name in (CANDIDATE_FILE, PLAN_FILE):
+        (root / name).unlink(missing_ok=True)
 
 
 def load_run(root):
+    """Load and validate the active Setonix-Q installation run."""
     run = read_json(root / RUN_FILE, "active installation run")
     fail_unless(
         run.get("schema_version") == SCHEMA_VERSION,
@@ -141,11 +147,13 @@ def load_run(root):
 
 
 def receipt_path(root, kind, name):
-    directory = "standalone" if kind == "standalone" else "environments"
+    directory = SOURCE_CATEGORIES.get(kind)
+    fail_unless(directory, f"invalid source kind: {kind!r}")
     return root / "sources" / directory / f"{clean_name(name, 'source name')}.json"
 
 
 def load_receipt(root, run, kind, name, complete=False):
+    """Load an active-run receipt, optionally requiring a complete, non-empty source."""
     path = receipt_path(root, kind, name)
     receipt = read_json(path, f"{kind} source {name}")
     fail_unless(
@@ -176,6 +184,7 @@ def load_receipt(root, run, kind, name, complete=False):
 
 
 def parse_spec(data, label):
+    """Validate a concrete Spack spec in format 4 and index its nodes by hash."""
     fail_unless(
         isinstance(data, dict) and isinstance(data.get("spec"), dict),
         f"{label} is not a Spack spec",
@@ -216,6 +225,8 @@ def parse_spec(data, label):
             )
             clean_hash(build_spec.get("hash"), f"build_spec of {node_hash}")
         indexed[node_hash] = node
+
+    # Check graph references only after every node has been indexed.
     for node_hash, node in indexed.items():
         references = [item["hash"] for item in node.get("dependencies", [])]
         if node.get("build_spec"):
@@ -235,6 +246,7 @@ def load_spec(path):
 
 
 def active_hashes(indexed, root_hash, mode):
+    """Return hashes installed from a root package's concrete spec in this mode."""
     result = set()
     pending = [root_hash]
     while pending:
@@ -250,10 +262,11 @@ def active_hashes(indexed, root_hash, mode):
     return result
 
 
-def store_and_record(root, run, receipt, receipt_file, requested_spec, spec_data, mode):
+def store_and_record(root, receipt, requested_spec, spec_data, mode):
+    """Store a concrete spec and add its root package to an open receipt."""
     fail_unless(
         receipt["status"] == "recording",
-        f"source is not open for recording: {receipt_file}",
+        "source is not open for recording",
     )
     fail_unless(
         mode in ("root", "dependencies-only"), f"unsupported install mode: {mode}"
@@ -261,6 +274,9 @@ def store_and_record(root, run, receipt, receipt_file, requested_spec, spec_data
     requested_spec = clean_line(requested_spec, "requested spec")
     root_hash, indexed = parse_spec(spec_data, "concrete spec")
     root_node = indexed[root_hash]
+
+    # Concrete spec files are immutable and shared between source receipts by
+    # root package hash.
     stored = root / "concrete_specs" / f"{root_hash}.json"
     if stored.exists():
         fail_unless(
@@ -278,6 +294,8 @@ def store_and_record(root, run, receipt, receipt_file, requested_spec, spec_data
         "installed": mode == "root",
         "spec_file": stored.relative_to(root).as_posix(),
     }
+
+    # Re-recording an identical root package is harmless; conflicting records are not.
     key = (requested_spec, root_hash, mode)
     existing = next(
         (
@@ -297,7 +315,6 @@ def store_and_record(root, run, receipt, receipt_file, requested_spec, spec_data
             )
         )
         receipt["updated_at"] = now()
-        atomic_write(receipt_file, receipt)
     else:
         fail_unless(
             existing == record, f"conflicting source record for {requested_spec}"
@@ -306,6 +323,7 @@ def store_and_record(root, run, receipt, receipt_file, requested_spec, spec_data
 
 
 def load_lockfile(path):
+    """Load and validate the supported Spack lockfile structure."""
     lock = read_json(path, "Spack lockfile")
     meta = lock.get("_meta", {}) if isinstance(lock, dict) else {}
     fail_unless(
@@ -328,6 +346,7 @@ def load_lockfile(path):
 
 
 def export_lock_root(lock, root_hash):
+    """Export one lockfile root package and its graph as a format-4 concrete spec."""
     indexed = lock["concrete_specs"]
     ordered = []
     seen = set()
@@ -354,6 +373,7 @@ def export_lock_root(lock, root_hash):
 
 
 def command_init(args):
+    """Start an installation metadata run after preserving the published manifest."""
     root = metadata_root(args)
     prefix = absolute_path(args.install_prefix, "install prefix")
     fail_unless(
@@ -364,29 +384,33 @@ def command_init(args):
         root == prefix / "installation_metadata",
         "metadata root must be <install-prefix>/installation_metadata",
     )
+    date_tag = clean_line(args.date_tag, "date tag")
+    spack_version = clean_line(args.spack_version, "Spack version")
+    run_id = clean_line(args.run_id, "run ID") if args.run_id else None
+    if run_id is None:
+        timestamp = datetime.datetime.now(datetime.timezone.utc)
+        run_id = f"{timestamp:%Y%m%dT%H%M%SZ}-{uuid.uuid4().hex[:8]}"
     root.mkdir(parents=True, exist_ok=True)
     final = root / FINAL_FILE
     previous = root / "spack_install_manifest.previous.json"
     if final.exists():
         os.replace(final, previous)
-    for stale in (root / CANDIDATE_FILE, root / PLAN_FILE):
-        if stale.exists():
-            stale.unlink()
+    invalidate_assembly(root)
     run = {
         "schema_version": SCHEMA_VERSION,
-        "run_id": args.run_id
-        or f"{datetime.datetime.now(datetime.timezone.utc):%Y%m%dT%H%M%SZ}-{uuid.uuid4().hex[:8]}",
+        "run_id": run_id,
         "system": "setonix-q",
-        "date_tag": clean_line(args.date_tag, "date tag"),
+        "date_tag": date_tag,
         "install_prefix": str(prefix),
-        "spack_version": clean_line(args.spack_version, "Spack version"),
+        "spack_version": spack_version,
         "created_at": now(),
     }
     atomic_write(root / RUN_FILE, run)
     print(run["run_id"])
 
 
-def start_receipt(root, run, kind, name):
+def new_receipt(root, run, kind, name):
+    """Create an unpersisted, empty source receipt for the active run."""
     path = receipt_path(root, kind, name)
     timestamp = now()
     receipt = {
@@ -399,14 +423,11 @@ def start_receipt(root, run, kind, name):
         "updated_at": timestamp,
         "roots": [],
     }
-    atomic_write(path, receipt)
-    candidate = root / CANDIDATE_FILE
-    if candidate.exists():
-        candidate.unlink()
     return receipt, path
 
 
 def complete_receipt(receipt, path):
+    """Seal and persist a non-empty source receipt."""
     fail_unless(receipt["roots"], f"cannot seal an empty source: {path}")
     receipt["status"] = "complete"
     receipt["completed_at"] = now()
@@ -417,7 +438,9 @@ def complete_receipt(receipt, path):
 def command_reset_source(args):
     root = metadata_root(args)
     run = load_run(root)
-    _, path = start_receipt(root, run, args.kind, args.name)
+    receipt, path = new_receipt(root, run, args.kind, args.name)
+    atomic_write(path, receipt)
+    invalidate_assembly(root)
     print(path)
 
 
@@ -426,32 +449,32 @@ def command_record_spec(args):
     run = load_run(root)
     receipt, path = load_receipt(root, run, args.kind, args.name)
     data, _, _ = load_spec(Path(args.spec_file))
-    print(
-        store_and_record(
-            root, run, receipt, path, args.requested_spec, data, args.install_mode
-        )
+    root_hash = store_and_record(
+        root, receipt, args.requested_spec, data, args.install_mode
     )
+    atomic_write(path, receipt)
+    print(root_hash)
 
 
 def command_record_lockfile(args):
+    """Record every lockfile root package before replacing an environment receipt."""
     root = metadata_root(args)
     run = load_run(root)
     lock = load_lockfile(Path(args.lock_file))
     fail_unless(lock["roots"], "Spack lockfile contains no roots")
-    receipt, path = start_receipt(root, run, "environment", args.name)
+    receipt, path = new_receipt(root, run, "environment", args.name)
     for entry in lock["roots"]:
         root_hash = clean_hash(entry.get("hash"), "lockfile root hash")
         requested = clean_line(entry.get("spec"), "lockfile requested spec")
         store_and_record(
             root,
-            run,
             receipt,
-            path,
             requested,
             export_lock_root(lock, root_hash),
             args.install_mode,
         )
     complete_receipt(receipt, path)
+    invalidate_assembly(root)
     print(path)
 
 
@@ -470,7 +493,48 @@ def source_summary(receipt):
     return {"kind": receipt["kind"], "roots": copy.deepcopy(receipt["roots"])}
 
 
+def load_source_receipts(root, run, requested_sources):
+    """Load complete source receipts and prepare their candidate manifest entries."""
+    sources = {category: {} for category in SOURCE_CATEGORIES.values()}
+    receipts = []
+    for kind, names in requested_sources.items():
+        category = SOURCE_CATEGORIES[kind]
+        for name in names:
+            receipt, _ = load_receipt(root, run, kind, name, complete=True)
+            sources[category][name] = source_summary(receipt)
+            receipts.append(receipt)
+    return sources, receipts
+
+
+def module_dependency_hashes(node):
+    """Return link/run or untyped dependencies used for Lmod modulefile autoloads."""
+    result = []
+    for dependency in node.get("dependencies", []):
+        types = dependency.get("type")
+        if types is None:
+            types = dependency.get("parameters", {}).get("deptypes", [])
+        if not types or {"link", "run"}.intersection(types):
+            result.append(dependency["hash"])
+    return sorted(result)
+
+
+def write_module_plan(path, specs, installed_hashes, membership):
+    lines = ["\t".join(PLAN_FIELDS) + "\n"]
+    for node_hash in sorted(installed_hashes):
+        spec = specs[node_hash]
+        values = (
+            node_hash,
+            spec["name"],
+            spec["version"],
+            spec["role"],
+            *(int(node_hash in membership[field]) for field in MEMBERSHIP_FIELDS),
+        )
+        lines.append("\t".join(map(str, values)) + "\n")
+    atomic_write_text(path, "".join(lines))
+
+
 def command_assemble(args):
+    """Assemble source receipts into a candidate manifest and module plan."""
     root = metadata_root(args)
     run = load_run(root)
     requested_sources = {
@@ -480,24 +544,15 @@ def command_assemble(args):
     fail_unless(
         any(requested_sources.values()), "assemble requires at least one source"
     )
-    sources = {"standalone": {}, "environments": {}}
-    receipts = []
-    for kind, names in requested_sources.items():
-        category = "standalone" if kind == "standalone" else "environments"
-        for name in names:
-            receipt, _ = load_receipt(root, run, kind, name, complete=True)
-            sources[category][name] = source_summary(receipt)
-            receipts.append(receipt)
+    sources, receipts = load_source_receipts(root, run, requested_sources)
 
+    # Merge concrete spec graphs while retaining raw nodes and source membership.
     nodes = {}
     raw_nodes = {}
-    active = set()
-    public = set()
-    standalone = set()
-    standalone_roots = set()
-    environments = set()
-    environment_roots = set()
+    membership = {field: set() for field in MEMBERSHIP_FIELDS}
     for receipt in receipts:
+        kind = receipt["kind"]
+        category = SOURCE_CATEGORIES[kind]
         source_hashes = set()
         for record in receipt["roots"]:
             spec_path = root / record["spec_file"]
@@ -507,14 +562,11 @@ def command_assemble(args):
             )
             selected = active_hashes(indexed, root_hash, record["install_mode"])
             source_hashes.update(selected)
-            active.update(selected)
             if record["installed"]:
-                public.add(root_hash)
-                (
-                    standalone_roots
-                    if receipt["kind"] == "standalone"
-                    else environment_roots
-                ).add(root_hash)
+                membership[f"{kind}_root"].add(root_hash)
+
+            # Compare full dependency lists before filtering to load-relevant
+            # modulefile dependencies below.
             for node_hash in selected | {root_hash}:
                 node = indexed[node_hash]
                 minimal = {
@@ -531,32 +583,24 @@ def command_assemble(args):
                 )
                 nodes[node_hash] = minimal
                 raw_nodes[node_hash] = node
-        summary = sources[
-            "standalone" if receipt["kind"] == "standalone" else "environments"
-        ][receipt["name"]]
-        summary["installed_hashes"] = sorted(source_hashes)
-        (standalone if receipt["kind"] == "standalone" else environments).update(
-            source_hashes
-        )
+        sources[category][receipt["name"]]["installed_hashes"] = sorted(source_hashes)
+        membership[kind].update(source_hashes)
 
+    installed_hashes = membership["standalone"] | membership["environment"]
+    public_roots = membership["standalone_root"] | membership["environment_root"]
+
+    # Build manifest entries with dependencies used by Lmod modulefile autoloads.
     specs = {}
     for node_hash in sorted(nodes):
         entry = nodes[node_hash]
-        module_dependencies = []
-        for dependency in raw_nodes[node_hash].get("dependencies", []):
-            dependency_types = dependency.get("type")
-            if dependency_types is None:
-                dependency_types = dependency.get("parameters", {}).get("deptypes", [])
-            if not dependency_types or {"link", "run"}.intersection(dependency_types):
-                module_dependencies.append(dependency["hash"])
-        entry["dependencies"] = sorted(module_dependencies)
-        installed = node_hash in active
+        entry["dependencies"] = module_dependency_hashes(raw_nodes[node_hash])
+        installed = node_hash in installed_hashes
         entry.update(
             {
                 "installed": installed,
                 "role": (
                     "root"
-                    if node_hash in public
+                    if node_hash in public_roots
                     else "dependency" if installed else None
                 ),
                 "prefix": None,
@@ -580,22 +624,12 @@ def command_assemble(args):
     output = Path(args.output) if args.output else root / CANDIDATE_FILE
     plan = Path(args.plan) if args.plan else root / PLAN_FILE
     atomic_write(output, candidate)
-    lines = [
-        "hash\tname\tversion\trole\tstandalone\tstandalone_root\t"
-        "environment\tenvironment_root\n"
-    ]
-    for node_hash in sorted(active):
-        lines.append(
-            f"{node_hash}\t{specs[node_hash]['name']}\t{specs[node_hash]['version']}\t"
-            f"{specs[node_hash]['role']}\t{int(node_hash in standalone)}\t"
-            f"{int(node_hash in standalone_roots)}\t{int(node_hash in environments)}\t"
-            f"{int(node_hash in environment_roots)}\n"
-        )
-    atomic_write_text(plan, "".join(lines))
+    write_module_plan(plan, specs, installed_hashes, membership)
     print(output)
 
 
 def validate_manifest(manifest, complete, check_paths):
+    """Validate manifest structure, roles, sources, and optional paths."""
     fail_unless(
         isinstance(manifest, dict) and manifest.get("schema_version") == SCHEMA_VERSION,
         "unsupported manifest schema",
@@ -612,6 +646,8 @@ def validate_manifest(manifest, complete, check_paths):
         and isinstance(manifest.get("specs"), dict),
         "manifest has invalid sources or specs",
     )
+
+    # Derive installed hashes and root package hashes from the manifest spec entries.
     specs = manifest["specs"]
     installed_specs = set()
     public_specs = set()
@@ -653,6 +689,8 @@ def validate_manifest(manifest, complete, check_paths):
                 isinstance(module_path, str) and Path(module_path).is_file(),
                 f"module file does not exist for {node_hash}: {module_path}",
             )
+
+    # Derive the same hash sets from source records for cross-checking.
     source_installed = set()
     source_roots = set()
     for category in ("standalone", "environments"):
@@ -663,7 +701,8 @@ def validate_manifest(manifest, complete, check_paths):
         for name, source in manifest["sources"][category].items():
             clean_name(name, "source name")
             fail_unless(
-                isinstance(source.get("roots"), list), f"source {name} has no roots"
+                isinstance(source, dict) and isinstance(source.get("roots"), list),
+                f"source {name} has no roots",
             )
             installed_hashes = source.get("installed_hashes")
             fail_unless(
@@ -673,7 +712,8 @@ def validate_manifest(manifest, complete, check_paths):
             source_installed.update(installed_hashes)
             for record in source["roots"]:
                 fail_unless(
-                    record.get("hash") in specs, f"source {name} refers to absent root"
+                    isinstance(record, dict) and record.get("hash") in specs,
+                    f"source {name} refers to absent root",
                 )
                 if record.get("installed"):
                     source_roots.add(record["hash"])
@@ -684,6 +724,8 @@ def validate_manifest(manifest, complete, check_paths):
     fail_unless(
         public_specs == source_roots, "public roots do not match source records"
     )
+
+    # Check every role against the root-package and installation state in sources.
     for node_hash, spec in specs.items():
         expected_role = (
             "root"
@@ -694,6 +736,7 @@ def validate_manifest(manifest, complete, check_paths):
 
 
 def read_annotations(path):
+    """Read hash, prefix, Lmod name, and modulefile path annotations."""
     annotations = {}
     try:
         stream = sys.stdin if str(path) == "-" else Path(path).open(encoding="utf-8")
@@ -729,6 +772,7 @@ def read_annotations(path):
 
 
 def command_publish(args):
+    """Apply module annotations and publish the final installation manifest."""
     root = metadata_root(args)
     run = load_run(root)
     candidate_path = Path(args.candidate) if args.candidate else root / CANDIDATE_FILE
@@ -802,39 +846,9 @@ def normalise_hide_versions(module_root):
     return changed
 
 
-def command_annotate_modules(args):
-    try:
-        from spack import modules as spack_modules
-        from spack import store as spack_store
-    except ImportError as error:
-        raise ManifestError(
-            "annotate-modules must be run with 'spack python'"
-        ) from error
-
-    fail_unless(args.progress_every > 0, "progress interval must be positive")
-    plan_path = Path(args.plan)
-    output_path = Path(args.output)
-    try:
-        with plan_path.open(encoding="utf-8", newline="") as stream:
-            rows = list(csv.DictReader(stream, delimiter="\t"))
-    except FileNotFoundError as error:
-        raise ManifestError(f"module plan does not exist: {plan_path}") from error
-    required = {
-        "hash",
-        "name",
-        "version",
-        "role",
-        "standalone",
-        "standalone_root",
-        "environment",
-        "environment_root",
-    }
-    fail_unless(rows and required.issubset(rows[0]), "module plan is empty or invalid")
-
-    hashes = [clean_hash(row.get("hash"), "module plan hash") for row in rows]
-    fail_unless(
-        len(hashes) == len(set(hashes)), "module plan contains duplicate hashes"
-    )
+def prepare_lmod_modules(rows, hashes, spack_modules, spack_store):
+    """Set explicit/implicit flags, configure Lmod writers, and reject path clashes."""
+    # Resolve every hash before changing Spack's explicit/implicit database flags.
     specs = []
     for node_hash in hashes:
         _upstream, record = spack_store.STORE.db.query_by_spec_hash(node_hash)
@@ -848,23 +862,28 @@ def command_annotate_modules(args):
         )
         specs.append(record.spec)
 
-    # Set all flags in one transaction before configuring any writer. Lmod
-    # also consults these flags when it writes dependency autoload names.
+    # Setonix-Q gives implicit modules hidden, hash-qualified names. Lmod uses
+    # these flags to name dependency autoloads, so set every flag first.
     with spack_store.STORE.db.write_transaction():
         for row, spec in zip(rows, specs):
             spack_store.STORE.db.mark(spec, "explicit", row["role"] == "root")
 
-    writers = []
+    # Resolve modulefile metadata and path clashes before regenerating modulefiles.
     refresh_writers = []
+    annotations = []
+    module_paths = {}
+    module_root = None
     for row, node_hash, spec in zip(rows, hashes, specs):
         try:
-            # The manifest is authoritative here. Independently concretized
-            # environments can install the same name/version under different
-            # hashes, so relying on Spack's database flag can give a dependency
-            # the same public module path as a root.
+            # The manifest role selects a readable root-package path or a hidden,
+            # hash-qualified dependency path, avoiding cross-environment clashes.
             writer = spack_modules.module_types["lmod"](
                 spec, "default", explicit=row["role"] == "root"
             )
+            prefix = str(writer.spec.prefix)
+            module_name = writer.layout.use_name
+            module_path = writer.layout.filename
+            module_root = module_root or writer.layout.dirname()
         except Exception as error:
             raise ManifestError(
                 f"could not configure the Lmod module for /{node_hash}: {error}"
@@ -872,22 +891,23 @@ def command_annotate_modules(args):
         fail_unless(
             not writer.conf.excluded, f"Lmod module is excluded for /{node_hash}"
         )
-        writers.append(writer)
+        fail_unless(
+            prefix and Path(prefix).is_dir(),
+            f"invalid prefix for /{node_hash}: {prefix}",
+        )
+        fail_unless(module_name, f"no Lmod name for /{node_hash}")
+        annotations.append((node_hash, prefix, module_name, module_path))
+        module_paths.setdefault(module_path, []).append(node_hash)
 
-        # Standalone modules have already been generated. Regenerate modules
-        # supplied by environments, including a standalone dependency that an
-        # environment promotes to a public root.
+        # Standalone modulefiles already exist. Refresh modulefiles supplied only
+        # by an environment, plus environment root packages promoted from
+        # standalone dependencies.
         if row["environment"] == "1" and (
             row["standalone"] == "0"
             or (row["environment_root"] == "1" and row["standalone_root"] == "0")
         ):
             refresh_writers.append(writer)
 
-    module_paths = {}
-    for writer in writers:
-        module_paths.setdefault(writer.layout.filename, []).append(
-            writer.spec.dag_hash()
-        )
     clashes = {path: values for path, values in module_paths.items() if len(values) > 1}
     fail_unless(
         not clashes,
@@ -896,8 +916,41 @@ def command_annotate_modules(args):
             f"  {path}: {', '.join(values)}" for path, values in clashes.items()
         ),
     )
+    return refresh_writers, module_root, annotations
 
-    module_root = writers[0].layout.dirname()
+
+def command_annotate_modules(args):
+    """Regenerate required Lmod modulefiles and record their manifest annotations."""
+    try:
+        from spack import modules as spack_modules
+        from spack import store as spack_store
+    except ImportError as error:
+        raise ManifestError(
+            "annotate-modules must be run with 'spack python'"
+        ) from error
+
+    fail_unless(args.progress_every > 0, "progress interval must be positive")
+    plan_path = Path(args.plan)
+    output_path = Path(args.output)
+
+    # Parse the complete module plan before changing Spack flags or modulefiles.
+    try:
+        with plan_path.open(encoding="utf-8", newline="") as stream:
+            rows = list(csv.DictReader(stream, delimiter="\t"))
+    except FileNotFoundError as error:
+        raise ManifestError(f"module plan does not exist: {plan_path}") from error
+    fail_unless(
+        rows and set(PLAN_FIELDS).issubset(rows[0]),
+        "module plan is empty or invalid",
+    )
+
+    hashes = [clean_hash(row.get("hash"), "module plan hash") for row in rows]
+    fail_unless(
+        len(hashes) == len(set(hashes)), "module plan contains duplicate hashes"
+    )
+    refresh_writers, module_root, annotations = prepare_lmod_modules(
+        rows, hashes, spack_modules, spack_store
+    )
 
     if refresh_writers:
         print(f"Regenerating {len(refresh_writers)} environment Lmod modules...")
@@ -907,48 +960,40 @@ def command_annotate_modules(args):
                 writer.write(overwrite=True)
             except Exception as error:
                 raise ManifestError(
-                    f"could not write Lmod module for /{writer.spec.dag_hash()}: {error}"
+                    f"could not write Lmod module for /{writer.spec.dag_hash()}: "
+                    f"{error}"
                 ) from error
             if position % args.progress_every == 0 or position == len(refresh_writers):
                 print(
-                    f"Regenerated {position}/{len(refresh_writers)} environment modules.",
+                    f"Regenerated {position}/{len(refresh_writers)} "
+                    "environment modules.",
                     flush=True,
                 )
 
     changed = normalise_hide_versions(module_root)
     print(f"Normalised {changed} Lmod visibility files.")
 
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+    # Validate all generated modulefile paths before writing the annotations.
     print(f"Recording module metadata for {len(rows)} installed specs...")
-    with output_path.open("w", encoding="utf-8") as output:
-        for position, (node_hash, writer) in enumerate(zip(hashes, writers), 1):
-            try:
-                prefix = str(writer.spec.prefix)
-                module_name = writer.layout.use_name
-                module_path = writer.layout.filename
-            except Exception as error:
-                raise ManifestError(
-                    f"could not resolve installed/module metadata for /{node_hash}: {error}"
-                ) from error
-            fail_unless(
-                prefix and Path(prefix).is_dir(),
-                f"invalid prefix for /{node_hash}: {prefix}",
+    lines = []
+    for position, annotation in enumerate(annotations, 1):
+        node_hash, prefix, module_name, module_path = annotation
+        fail_unless(
+            module_path and Path(module_path).is_file(),
+            f"invalid Lmod path for /{node_hash}: {module_path}",
+        )
+        lines.append(f"{node_hash}\t{prefix}\t{module_name}\t{module_path}\n")
+        if position % args.progress_every == 0 or position == len(rows):
+            print(
+                f"Recorded module metadata for {position}/{len(rows)} specs.",
+                flush=True,
             )
-            fail_unless(module_name, f"no Lmod name for /{node_hash}")
-            fail_unless(
-                module_path and Path(module_path).is_file(),
-                f"invalid Lmod path for /{node_hash}: {module_path}",
-            )
-            output.write(f"{node_hash}\t{prefix}\t{module_name}\t{module_path}\n")
-            output.flush()
-            if position % args.progress_every == 0 or position == len(rows):
-                print(
-                    f"Recorded module metadata for {position}/{len(rows)} specs.",
-                    flush=True,
-                )
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text("".join(lines), encoding="utf-8")
 
 
 def command_validate(args):
+    """Validate the published manifest against expected deployment metadata."""
     manifest = read_json(Path(args.manifest), "installation manifest")
     validate_manifest(manifest, complete=True, check_paths=not args.skip_path_checks)
     fail_unless(
