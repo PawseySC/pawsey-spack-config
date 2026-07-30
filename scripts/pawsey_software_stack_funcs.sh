@@ -201,11 +201,16 @@ function set_modulepaths_for_arch()
     fi
 }
 
+# Print the path to the Setonix-Q manifest helper. Allows easy modification
+# or system-specific locations in the future.
 function spack_install_manifest_tool()
 {
     echo "${PAWSEY_SPACK_CONFIG_REPO}/systems/setonix-q/install_manifest.py"
 }
 
+# Start a Setonix-Q manifest run and initialise its metadata paths. A run ties
+# all later source receipts to one stack release, preventing records from an
+# earlier or different installation from being published with this one.
 function initialize_spack_install_manifest()
 {
     [ "${SYSTEM}" = "setonix-q" ] || return 0
@@ -213,6 +218,9 @@ function initialize_spack_install_manifest()
     : "${SPACK_INSTALL_MANIFEST:=${INSTALLATION_METADATA_DIR}/spack_install_manifest.json}"
 
     mkdir -p "${INSTALLATION_METADATA_DIR}"
+    # Validate the Setonix-Q metadata location, archive any published manifest,
+    # remove stale candidate outputs, and write current_run.json with a new run
+    # ID and the release details supplied below.
     "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" init \
         --metadata-root "${INSTALLATION_METADATA_DIR}" \
         --system "${SYSTEM}" \
@@ -221,6 +229,9 @@ function initialize_spack_install_manifest()
         --spack-version "${spack_version}"
 }
 
+# Ensure that Setonix-Q has an active manifest run before recording install
+# results. This makes the individual install entry points safe to run without
+# first running the top-level stack installer.
 function ensure_spack_install_manifest_run()
 {
     [ "${SYSTEM}" = "setonix-q" ] || return 0
@@ -232,30 +243,46 @@ function ensure_spack_install_manifest_run()
     fi
 }
 
+# Open a fresh receipt for a standalone or environment source. Resetting it
+# before installation discards stale or partial root package records so a retry reports
+# only the specs installed by the current attempt.
 function reset_spack_install_receipt()
 {
     local source_type=$1
     local source_name=$2
 
     ensure_spack_install_manifest_run || return 1
+    # Load the active run and replace this source's receipt with an empty one in
+    # the "recording" state. This also removes any assembled candidate manifest,
+    # since it no longer represents the receipts being collected.
     "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" reset-source \
         --metadata-root "${INSTALLATION_METADATA_DIR}" \
         --kind "${source_type}" \
         --name "${source_name}"
 }
 
+# Mark a source receipt complete after all of its root packages have been recorded.
+# Sealing marks the result as publishable and indicates a that spack reported
+# a successful installation. Though no other validation is performed at this point.
 function seal_spack_install_receipt()
 {
     local source_type=$1
     local source_name=$2
 
     ensure_spack_install_manifest_run || return 1
+    # Check that the receipt belongs to the active run and contains at least one
+    # root package, then mark it "complete" and timestamp it. An already-complete
+    # receipt is accepted unchanged, making this operation safe to repeat.
     "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" seal-source \
         --metadata-root "${INSTALLATION_METADATA_DIR}" \
         --kind "${source_type}" \
         --name "${source_name}"
 }
 
+# Concretize and install one 'standalone' root package (currently Python and ReFrame),
+# then add its exact concrete spec to the source receipt. Installing from the saved
+# JSON makes ensures that the installed graph matches the graph used in the later
+# manifest and module-plan generation.
 function install_and_record_spack_root()
 {
     local source_type=$1
@@ -291,6 +318,10 @@ function install_and_record_spack_root()
         return 1
     fi
 
+    # Validate the concrete-spec JSON and the open receipt, store the full spec
+    # under its root package's hash, and add the requested spec, hash and
+    # installation mode to the receipt. Duplicate identical records are ignored;
+    # conflicts fail.
     if ! "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" record-spec \
         --metadata-root "${INSTALLATION_METADATA_DIR}" \
         --kind "${source_type}" \
@@ -304,8 +335,11 @@ function install_and_record_spack_root()
     rm -f "${temporary_spec_file}"
 }
 
+# Install a Spack environment and, on Setonix-Q, record its lockfile in
+# the installation manifest. Reusing the pre-generated Setonix-Q lockfile
+# preserves the concretization. Other systems re-concretize at install
+# time.
 function build_environment() {
-    # Build an environment given its directory and name.
     local envdir=$1
     local env=$2
     local testing_only=0
@@ -361,6 +395,9 @@ function build_environment() {
         fi
     fi
     if [ "${SYSTEM}" = "setonix-q" ]; then
+        # Validate the lockfile format, replace this environment's receipt, and
+        # record every root package together with its concrete dependency graph.
+        # The helper seals the populated receipt as part of the same operation.
         if ! "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" record-lockfile \
             --metadata-root "${INSTALLATION_METADATA_DIR}" \
             --name "${env}" \
