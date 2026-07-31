@@ -154,10 +154,10 @@ end
 
 local function prepend_compiler_paths(base_path, suffix)
   for _, compiler in ipairs(compilers) do
-    prepend_path(
-      compiler.var,
-      join_path(base_path, compiler.dir, compiler.version, suffix)
-    )
+    local path = join_path(base_path, compiler.dir, compiler.version, suffix)
+    if isDir(path) then
+      prepend_path(compiler.var, path)
+    end
   end
 end
 
