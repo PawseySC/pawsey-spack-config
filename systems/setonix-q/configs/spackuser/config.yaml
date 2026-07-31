@@ -29,8 +29,9 @@ config:
   # The build stage can be purged with `spack clean --stage` and
   # `spack clean -a`, so it is important that the specified directory uniquely
   # identifies Spack staging to avoid accidentally wiping out non-Spack work.
-  build_stage:
-#    - $tempdir/$user/spack-stage
+  # Using '::' to prevent this location from being merged with Spack's default
+  # staging locations.
+  build_stage::
     - USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/build_stage
 
   # Directory in which to run tests and store test results.

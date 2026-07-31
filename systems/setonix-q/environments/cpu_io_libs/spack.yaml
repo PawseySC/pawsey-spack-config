@@ -24,7 +24,7 @@ spack:
   - matrix:
     - [$adios-set]
     - ['%gcc@13.3.1']
-    - [+python ^python@3.11.6+optimizations+zlib~ssl, ~python]
+    - [+python ^python@3.11.6+optimizations+zlib+ssl, ~python]
     - [~hdf5, +hdf5 ^hdf5@1.14.5 +hl +fortran +szip api=v112 build_type=Release generator=make ^libaec generator=make]
     - [+pic]
 

@@ -53,6 +53,22 @@ export pawseyenv_version=${pawseyenv_version}
 export env_list
 export cray_env_list
 
+if [ "${SYSTEM}" = "setonix-q" ]; then
+    export SPACK_INSTALL_MANIFEST=${SPACK_INSTALL_MANIFEST:-${INSTALL_PREFIX}/installation_metadata/spack_install_manifest.json}
+    manifest_args=(
+        validate
+        --manifest "${SPACK_INSTALL_MANIFEST}"
+        --system setonix-q
+        --install-prefix "${INSTALL_PREFIX}"
+    )
+    for env in $env_list $cray_env_list; do
+        manifest_args+=(--environment "${env}")
+    done
+    "${SPACK_PYTHON:-python3}" \
+        "${PAWSEY_SPACK_CONFIG_REPO}/systems/setonix-q/install_manifest.py" \
+        "${manifest_args[@]}" || exit 1
+fi
+
 
 # If running on compute node, add node this job is running on to host list of ReFrame, allowing it to run from this node
 hn=$(hostname)

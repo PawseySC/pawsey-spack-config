@@ -18,28 +18,30 @@ curr_dir = os.path.dirname(__file__).replace('\\','/')
 parent_dir = os.path.abspath(os.path.join(curr_dir, os.pardir))
 sys.path.append(parent_dir)
 from rfm_files.rfm_helper_methods import *
+from rfm_files.install_manifest import (
+    get_library_path,
+    get_module_dependencies,
+    get_module_paths,
+    installation_manifest_is_complete,
+)
 
 # Dictionary holding commands for every package used in baseline sanity check
 pkg_cmds = get_pkg_cmds()
 
 
-def get_module_paths_if_concretized():
+def get_module_paths_if_installed():
     # ReFrame imports this file before applying tag filters. Do not let
-    # installation-test parameter generation hide concretization failures.
-    env = os.environ.get('SPACK_ENV')
-    repo_path = os.environ.get('PAWSEY_SPACK_CONFIG_REPO')
-    system = os.environ.get('SYSTEM') or 'setonix-q'
-    lock_file = f'{repo_path}/systems/{system}/environments/{env}/spack.lock'
-
-    if not os.path.exists(lock_file):
+    # installation-test parameter generation hide concretization failures or
+    # derive expected installation hashes from the environment lockfile.
+    if not installation_manifest_is_complete():
         return []
 
     return get_module_paths()
 
 
-# List of full absolute paths for every explicit module. This is empty until
-# the environment has been concretized and a spack.lock exists.
-full_mod_paths = get_module_paths_if_concretized()
+# List of full absolute paths for every installed root module. This is empty
+# until the installation manifest has been finalized.
+full_mod_paths = get_module_paths_if_installed()
 
 
 def quantum_allocation_pack(num_gpus_per_node=1):
@@ -299,7 +301,7 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
         self.executable = self.baseline_cmd[0]
         # Set the executable options, which depends on if it's software or library
         if self.executable == 'ldd':
-            lib_path = get_library_path(self.mod.split('/')[-2:])
+            lib_path = get_library_path(self.mod)
             self.executable_opts = [lib_path + '/' + self.baseline_cmd[1]]
         else:
             self.executable_opts = [self.baseline_cmd[1] + ' 2>&1']

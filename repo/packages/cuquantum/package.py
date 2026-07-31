@@ -46,7 +46,7 @@ class Cuquantum(Package):
 
     depends_on("c", type="build", when="+mpi")
     depends_on(
-        "cuda@13.0.0:13.0.999",
+        "cuda@13",
         type=("build", "link", "run"),
         when="@25.11.1",
     )

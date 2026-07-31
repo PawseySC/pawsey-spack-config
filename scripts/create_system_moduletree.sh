@@ -31,5 +31,7 @@ else
     done
   done
 fi
-mkdir -p ${INSTALL_PREFIX}/${shpc_containers_modules_dir}
+if [ "${SYSTEM}" != "setonix-q" ]; then
+  mkdir -p ${INSTALL_PREFIX}/${shpc_containers_modules_dir}
+fi
 mkdir -p ${INSTALL_PREFIX}/${utilities_modules_dir}

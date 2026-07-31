@@ -1,86 +1,85 @@
 #!/bin/bash -e
 
-# Rebuild standalone Python and ReFrame modules before installing deployment
-# environments. This is the only module refresh that deletes the existing tree,
-# removing stale modules while restoring essential tools early.
+# Clear the module tree once, then restore standalone Python and ReFrame.
 
 scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 . "${scriptdir}/pawsey_software_stack_funcs.sh"
 
 check_installation_environment
 set_spack_config_repo
+resolve_compatible_python_interpreter
 set_compilation_sets_for_arch
-
 . "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh"
 
-function refresh_standalone_module_specs()
+function refresh_module_specs()
 {
   local delete_tree=$1
   shift
-  local module_spec
+  local spec
 
   if ((delete_tree)); then
-    module_spec=$1
+    spec=$1
     shift
-    spack module lmod refresh -y --delete-tree "${module_spec}"
-    echo "Refreshed module for ${module_spec}"
+    spack module lmod refresh -y --delete-tree "${spec}"
+    echo "Refreshed module for ${spec}"
   fi
-
-  for module_spec in "$@"; do
-    spack module lmod refresh -y "${module_spec}"
-    echo "Refreshed module for ${module_spec}"
+  for spec in "$@"; do
+    spack module lmod refresh -y "${spec}"
+    echo "Refreshed module for ${spec}"
   done
 }
 
-# Resolve and validate both standalone DAGs before deleting existing modules.
-# Generate Python first because Spack and ReFrame depend on it.
-mapfile -t python_module_specs < <(
-  {
-    for comp in "${pythoncompilers[@]}"; do
-      for arch in "${archs[@]}"; do
-        spack find -d -x --format '/{hash}' \
-          "python@${python_version}%${comp} target=${arch}"
-      done
-    done
-  } | awk 'NF' | sort -u
-)
+if [ "${SYSTEM}" = "setonix-q" ]; then
+  python_candidate="${INSTALLATION_METADATA_DIR}/standalone_python_manifest.candidate.json"
+  python_plan="${INSTALLATION_METADATA_DIR}/standalone_python_module_plan.tsv"
+  standalone_candidate="${INSTALLATION_METADATA_DIR}/standalone_manifest.candidate.json"
+  standalone_plan="${INSTALLATION_METADATA_DIR}/standalone_module_plan.tsv"
 
-if ((${#python_module_specs[@]} == 0)); then
-  echo "No installed standalone Python specs found for module generation."
-  exit 1
-fi
+  "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" assemble \
+    --metadata-root "${INSTALLATION_METADATA_DIR}" \
+    --output "${python_candidate}" --plan "${python_plan}" \
+    --standalone python
+  "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" assemble \
+    --metadata-root "${INSTALLATION_METADATA_DIR}" \
+    --output "${standalone_candidate}" --plan "${standalone_plan}" \
+    --standalone python --standalone reframe
 
-mapfile -t reframe_module_specs < <(
-  spack find -d -x --format '/{hash}' \
-    "reframe@${reframe_version}%gcc@${gcc_version}" | awk 'NF' | sort -u
-)
+  python_specs=()
+  declare -A python_spec_set=()
+  while IFS=$'\t' read -r hash _rest; do
+    [ "${hash}" != "hash" ] || continue
+    python_specs+=("/${hash}")
+    python_spec_set["${hash}"]=1
+  done < "${python_plan}"
 
-if ((${#reframe_module_specs[@]} == 0)); then
-  echo "No installed standalone ReFrame specs found for module generation."
-  exit 1
-fi
+  standalone_specs=()
+  standalone_roots=()
+  reframe_only_specs=()
+  while IFS=$'\t' read -r hash _name _version role _rest; do
+    [ "${hash}" != "hash" ] || continue
+    standalone_specs+=("/${hash}")
+    if [ "${role}" = "root" ]; then
+      standalone_roots+=("/${hash}")
+    fi
+    if [[ -z ${python_spec_set["${hash}"]+x} ]]; then
+      reframe_only_specs+=("/${hash}")
+    fi
+  done < "${standalone_plan}"
 
-# Python's DAG is complete, so only append ReFrame hashes not already generated.
-# This keeps the Python modules intact if ReFrame refresh fails.
-declare -A python_module_spec_set=()
-for module_spec in "${python_module_specs[@]}"; do
-  python_module_spec_set["${module_spec}"]=1
-done
-
-reframe_only_module_specs=()
-for module_spec in "${reframe_module_specs[@]}"; do
-  if [[ -z ${python_module_spec_set["${module_spec}"]+x} ]]; then
-    reframe_only_module_specs+=("${module_spec}")
+  if ((${#python_specs[@]} == 0 || ${#standalone_roots[@]} == 0 || \
+       ${#reframe_only_specs[@]} == 0)); then
+    echo "Standalone installation receipts are incomplete."
+    exit 1
   fi
-done
 
-if ((${#reframe_only_module_specs[@]} == 0)); then
-  echo "No ReFrame-specific specs found for module generation."
+  spack mark --implicit "${standalone_specs[@]}"
+  spack mark --explicit "${standalone_roots[@]}"
+
+  echo "Regenerating standalone Python modules.."
+  refresh_module_specs 1 "${python_specs[@]}"
+  echo "Regenerating standalone ReFrame modules.."
+  refresh_module_specs 0 "${reframe_only_specs[@]}"
+else
+  echo "Standalone manifest module refresh is supported only for setonix-q."
   exit 1
 fi
-
-echo "Regenerating standalone Python modules.."
-refresh_standalone_module_specs 1 "${python_module_specs[@]}"
-
-echo "Regenerating standalone ReFrame modules.."
-refresh_standalone_module_specs 0 "${reframe_only_module_specs[@]}"

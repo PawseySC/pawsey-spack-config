@@ -14,7 +14,10 @@ spack:
   specs:
   - matrix:
     - [$s3-python-set]
-    - [^python@3.11.6+optimizations+zlib~ssl]
+    # Changed from ~ssl to +ssl here and in the main Python spec
+    # as awscli and boto3 require SSL to connect with S3
+    # via HTTPS.
+    - [^python@3.11.6+optimizations+zlib+ssl]
     - ['%gcc@13.3.1']
   - matrix:
     - [$s3-go-set]

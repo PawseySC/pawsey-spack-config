@@ -2,7 +2,7 @@ spack:
 
   packages:
     python:
-      require: "@3.11.6 ~ssl +optimizations +zlib %gcc@13.3.1"
+      require: "@3.11.6 +ssl +optimizations +zlib %gcc@13.3.1"
   
     py-numpy:
       require: "@2.1.2"
@@ -46,7 +46,7 @@ spack:
 
   - matrix:
     - [$py_stack]
-    - ["^python@3.11.6+optimizations+zlib~ssl"]
+    - ["^python@3.11.6+optimizations+zlib+ssl"]
     - ["%gcc@13.3.1"]
 
   view: false

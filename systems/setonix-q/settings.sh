@@ -44,15 +44,28 @@ SPACK_USER_CONFIG_PATH="$MYSOFTWARE/setonix-q/$DATE_TAG/.spack_user_config"
 BOOTSTRAP_PATH='$MYSOFTWARE/setonix-q/'$DATE_TAG/.spack_user_config/bootstrap
 # Set a new mirror where to fetch prebuilt binaries, if any.
 SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
+# Durable, release-scoped provenance for the environment lockfile DAGs that
+# were installed, plus standalone Python and ReFrame concrete specs.
+INSTALLATION_METADATA_DIR=${INSTALL_PREFIX}/installation_metadata
+SPACK_INSTALL_MANIFEST=${INSTALLATION_METADATA_DIR}/spack_install_manifest.json
 # When SPACK_POPULATE_CACHE=1, spack will push binaries in the above cache location for later use.
 # The operation will be executed after having installed the environments.
 # Useful when building the stack on the test system.
 SPACK_POPULATE_CACHE=0
 # Cap build parallelism well below single node core count. To prevent OOM errors when building large packages (e.g. LLVM).
 NCPUS=32
-SPACK_SPEC_ARGS=" --reuse "
+# Using --reuse in SPACK_SPEC_ARGS and SPACK_CONCRETIZE_ARGS leads to hangs during concretization
+# removed --reuse here, reverting to the behaviour of the 'setonix' system.
+# The issue with --reuse is unclear. During initial concretization of the 'quantum' environment 
+# (a pythonic dominated environment) Spack hangs indefinitely. So much so that the process cannot 
+# be interrupted with a ctrl-C signal. Testing does not show issues with file locks, or other 
+# IO hangs. It is unclear why this is not working and could be a bug in Clingo. 
+# For the moment, we do not need to enforce --reuse but in the future this may require
+# more investigation. It is also possible that this will fixed in later version of spack and 
+# clingo. 
+SPACK_SPEC_ARGS=""
 SPACK_INSTALL_ARGS=" --no-checksum "
-SPACK_CONCRETIZE_ARGS=" --reuse "
+SPACK_CONCRETIZE_ARGS=""
 
 pawseyenv_version="${DATE_TAG}"
 
@@ -140,11 +153,6 @@ container_list_mpi="
 #quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 
 #hpc-python containers need to be rebuild due to security bugs
-
-# Custom utility modules to deploy from systems/${SYSTEM}/templates/modules/
-# These are installed to ${utilities_modules_dir} and visible after loading pawseyenv
-utility_module_list="
-"
 
 ### TYPICALLY NO EDIT NEEDED PAST THIS POIINT
 

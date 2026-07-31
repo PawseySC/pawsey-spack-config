@@ -49,7 +49,7 @@ class Cutensor(Package):
     # CUDA version requirements
     depends_on("cuda@11.0:", when="@1.5.0.3", type=("build", "link", "run"))
     depends_on("cuda@11.0:", when="@2.0.1.2", type=("build", "link", "run"))
-    depends_on("cuda@13.0.0:13.0.999", when="@2.4.1.4", type=("build", "link", "run"))
+    depends_on("cuda@13.0", when="@2.4.1.4", type=("build", "link", "run"))
 
     def url_for_version(self, version):
         # Get the system and machine arch for building the file path

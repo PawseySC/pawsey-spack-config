@@ -3,7 +3,6 @@
 check_installation_environment
 set_spack_config_repo
 set_compilation_sets_for_arch
-set_modulepaths_for_arch
 
 module use ${INSTALL_PREFIX}/staff_modulefiles
 # we need the python module to be available in order to run spack
