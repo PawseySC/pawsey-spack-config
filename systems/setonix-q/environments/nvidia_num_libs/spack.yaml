@@ -51,5 +51,5 @@ spack:
   - matrix:
     - [$parallel]
     - ['%gcc@13.3.1']
-    - [^python@3.11.6+optimizations+zlib~ssl%gcc@13.3.1]
+    - [^python@3.11.6+optimizations+zlib+ssl%gcc@13.3.1]
   view: false

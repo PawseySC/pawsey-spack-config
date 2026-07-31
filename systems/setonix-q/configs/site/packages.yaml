@@ -109,7 +109,7 @@ packages:
   # preferred versions and variants, python
   python:
     version: [3.11.6]
-    variants: '+optimizations +zlib ~ssl'
+    variants: '+optimizations +zlib +ssl'
   gdbm:
     version: [1.24]
   apr:

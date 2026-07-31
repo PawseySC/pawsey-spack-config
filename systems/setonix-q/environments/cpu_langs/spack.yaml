@@ -23,7 +23,7 @@ spack:
   specs:
   - matrix:
     - [$py-utilities]
-    - [^python@3.11.6+optimizations+zlib~ssl]
+    - [^python@3.11.6+optimizations+zlib+ssl]
     - ['%gcc@13.3.1']
   - matrix:
     - [$packages]

@@ -14,10 +14,9 @@ spack:
   specs:
   - matrix:
     - [$s3-python-set]
-    # The main Python installation is configured with ~ssl. We
-    # should consider changing this to +ssl so it can be 
-    # reused here. Both awscli and py-boto3 require +ssl to
-    # access HTTPS S3 endpoints (which includes Acacia and AWS).
+    # Changed from ~ssl to +ssl here and in the main Python spec
+    # as awscli and boto3 require SSL to connect with S3
+    # via HTTPS.
     - [^python@3.11.6+optimizations+zlib+ssl]
     - ['%gcc@13.3.1']
   - matrix:
