@@ -858,6 +858,7 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
 
     root_cmakelists_dir = "cmake"
 
+
     def cmake_args(self):
         spec = self.spec
 
@@ -988,6 +989,11 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
                 elif spec.satisfies("^hip@5.5:"):
                     args.append(self.define("HIP_PATH", spec["hip"].prefix))
 
+
+        if "+rocm" in spec:
+            args.append(self.define("CMAKE_CXX_STANDARD", "17"))
+            args.append(self.define("CMAKE_CXX_STANDARD_REQUIRED", True))
+
         return args
 
     def patch(self):
@@ -1115,6 +1121,36 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
                 'std::string("fix {} group")',
                 "src/RIGID/fix_rigid.cpp",
             )
+        if "+rocm" in self.spec:
+            files = [
+                "lib/gpu/CMakeLists.txt",
+                "cmake/Modules/Packages/GPU.cmake",
+            ]
+
+            for filename in files:
+                filter_file(
+                    "-std=c++14",
+                    "-std=c++17",
+                    filename,
+                    string=True,
+                    ignore_absent=True,
+                )
+
+                filter_file(
+                    "cxx_std_14",
+                    "cxx_std_17",
+                    filename,
+                    string=True,
+                    ignore_absent=True,
+                )
+
+                filter_file(
+                    "CXX_STANDARD 14",
+                    "CXX_STANDARD 17",
+                    filename,
+                    string=True,
+                    ignore_absent=True,
+                )
 
     def setup_build_environment(self, env):
         if self.spec.satisfies("+intel %aocc"):
