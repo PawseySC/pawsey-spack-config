@@ -136,16 +136,9 @@ if current_mode == "load" or current_mode == "unload" then
   end
 end
 
---------------------------------------------------------------------------------
--- Path Registration Helpers
---------------------------------------------------------------------------------
-local function join_path(...)
-  return table.concat({...}, "/")
-end
-
 local function prepend_compiler_paths(base_path, suffix)
   for _, compiler in ipairs(compilers) do
-    local path = join_path(base_path, compiler.dir, compiler.version, suffix)
+    local path = pathJoin(base_path, compiler.dir, compiler.version, suffix)
     if isDir(path) then
       prepend_path(compiler.var, path)
     end
@@ -165,46 +158,46 @@ local project = project_file:read("*l")
 project_file:close()
 setenv("PAWSEY_PROJECT", project)
 
-local system_stack = join_path(system, date_tag)
+local system_stack = pathJoin(system, date_tag)
 
 -- User modules
-local user_modules_root = join_path(
+local user_modules_root = pathJoin(
   user_permanent_files_prefix, project, user, system_stack, "modules", arch
 )
 prepend_compiler_paths(user_modules_root, user_modules_suffix)
 
 -- User SHPC containers
-local user_shpc_root = join_path(
+local user_shpc_root = pathJoin(
   user_permanent_files_prefix, project, user, system_stack, shpc_modules_dir
 )
 prepend_path("MODULEPATH", user_shpc_root)
 
 -- Project SHPC containers
-local project_shpc_root = join_path(
+local project_shpc_root = pathJoin(
   user_permanent_files_prefix, project, system_stack, shpc_modules_dir
 )
 prepend_path("MODULEPATH", project_shpc_root)
 
 -- Project modules
-local project_modules_root = join_path(
+local project_modules_root = pathJoin(
   user_permanent_files_prefix, project, system_stack, "modules", arch
 )
 prepend_compiler_paths(project_modules_root, project_modules_suffix)
 
 -- Utility modules
-prepend_path("MODULEPATH", join_path(install_prefix, utilities_modules_dir))
+prepend_path("MODULEPATH", pathJoin(install_prefix, utilities_modules_dir))
 
 -- Spack modules
-local spack_root = join_path(install_prefix, "modules", arch)
+local spack_root = pathJoin(install_prefix, "modules", arch)
 for _, category in ipairs(module_categories) do
   prepend_compiler_paths(spack_root, category)
 end
 
 -- System SHPC containers
-prepend_path("MODULEPATH", join_path(install_prefix, shpc_modules_dir))
+prepend_path("MODULEPATH", pathJoin(install_prefix, shpc_modules_dir))
 
 -- Custom modules
-local custom_modules_root = join_path(install_prefix, custom_modules_dir, arch)
+local custom_modules_root = pathJoin(install_prefix, custom_modules_dir, arch)
 prepend_compiler_paths(custom_modules_root, custom_modules_suffix)
 
 local active_compiler = os.getenv("LMOD_FAMILY_COMPILER") or ""
