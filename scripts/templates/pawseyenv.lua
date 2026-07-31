@@ -110,19 +110,10 @@ local function is_stale_partition_path(path)
   end
 end
 
-local function discard_stale_path(var, path)
-  if current_mode == "unload" then
-    -- Lmod reverses modulefile operations while unloading.
-    prepend_path(var, path)
-  else
-    remove_path(var, path)
-  end
-end
-
 local function clean_path_variable(var, value)
   for path in string.gmatch(value or "", "[^:]+") do
     if is_stale_partition_path(path) then
-      discard_stale_path(var, path)
+      remove_path(var, path)
     end
   end
 end
@@ -217,6 +208,9 @@ local custom_modules_root = join_path(install_prefix, custom_modules_dir, arch)
 prepend_compiler_paths(custom_modules_root, custom_modules_suffix)
 
 local active_compiler = os.getenv("LMOD_FAMILY_COMPILER") or ""
+-- isPending() is true while this module is being loaded, but false when Lmod
+-- re-evaluates an already loaded module during `module refresh`.
+-- We use this here to prevent the warning from being displayed when refreshing.
 local pawseyenv_is_loading = isPending(myModuleFullName())
 if current_mode == "load"
   and pawseyenv_is_loading
