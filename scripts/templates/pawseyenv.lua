@@ -224,7 +224,6 @@ if current_mode == "load"
 then
   LmodWarning(
     "A compiler environment is already loaded (", active_compiler, "). ",
-    "Run 'module refresh' to activate the ",
-    "architecture-specific module paths."
+    "Run 'module refresh' to activate the architecture-specific module paths."
   )
 end
