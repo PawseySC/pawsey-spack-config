@@ -217,10 +217,14 @@ local custom_modules_root = join_path(install_prefix, custom_modules_dir, arch)
 prepend_compiler_paths(custom_modules_root, custom_modules_suffix)
 
 local active_compiler = os.getenv("LMOD_FAMILY_COMPILER") or ""
-if current_mode == "load" and active_compiler ~= "" then
+local pawseyenv_is_loading = isPending(myModuleFullName())
+if current_mode == "load"
+  and pawseyenv_is_loading
+  and active_compiler ~= ""
+then
   LmodWarning(
     "A compiler environment is already loaded (", active_compiler, "). ",
-    "Reload the compiler or PrgEnv module to activate the ",
+    "Run 'module refresh' to activate the ",
     "architecture-specific module paths."
   )
 end
