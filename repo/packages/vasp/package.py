@@ -195,7 +195,7 @@ class Vasp(MakefilePackage):
         filter_file('^LIBDIR *=.*$', '', 'makefile.include')
         filter_file('^BLAS *=.*$', 'BLAS ?=', 'makefile.include')
         filter_file('^LAPACK *=.*$', 'LAPACK ?=', 'makefile.include')
-        filter_file('^FFTW *\?=.*$', 'FFTW ?=', 'makefile.include')
+        filter_file('^FFTW *\\?=.*$', 'FFTW ?=', 'makefile.include')
         filter_file('^MPI_INC *=.*$', 'MPI_INC ?=', 'makefile.include')
         filter_file('-DscaLAPACK.*$\n', '', 'makefile.include')
         filter_file('^SCALAPACK.*$', '', 'makefile.include')

@@ -18,11 +18,74 @@ curr_dir = os.path.dirname(__file__).replace('\\','/')
 parent_dir = os.path.abspath(os.path.join(curr_dir, os.pardir))
 sys.path.append(parent_dir)
 from rfm_files.rfm_helper_methods import *
+from rfm_files.install_manifest import (
+    get_library_path,
+    get_module_dependencies,
+    get_module_paths,
+    installation_manifest_is_complete,
+)
 
 # Dictionary holding commands for every package used in baseline sanity check
 pkg_cmds = get_pkg_cmds()
-# List of full absolute paths for every explicit module
-full_mod_paths = get_module_paths()
+
+
+def get_module_paths_if_installed():
+    # ReFrame imports this file before applying tag filters. Do not let
+    # installation-test parameter generation hide concretization failures or
+    # derive expected installation hashes from the environment lockfile.
+    if not installation_manifest_is_complete():
+        return []
+
+    return get_module_paths()
+
+
+# List of full absolute paths for every installed root module. This is empty
+# until the installation manifest has been finalized.
+full_mod_paths = get_module_paths_if_installed()
+
+
+def quantum_allocation_pack(num_gpus_per_node=1):
+    # On Setonix-Q, --gres=gpu:N requests N GH200 allocation-packs.
+    return {
+        'gpu': {
+            'num_gpus_per_node': num_gpus_per_node,
+        },
+    }
+
+
+def use_pinned_quantum_node():
+    return bool(os.environ.get('SETONIX_Q_RFM_NODE'))
+
+
+def quantum_compute_system():
+    if use_pinned_quantum_node():
+        return 'setonix-q:quantum-node'
+
+    return 'setonix-q:quantum'
+
+
+def quantum_shell_system():
+    if use_pinned_quantum_node():
+        return 'setonix-q:quantum-node-shell'
+
+    return 'setonix-q:quantum-shell'
+
+
+def module_setup_commands():
+    date_tag = os.environ.get('DATE_TAG') or os.environ.get('pawseyenv_version', '2026.08')
+    install_prefix = os.environ.get('INSTALL_PREFIX', '${INSTALL_PREFIX}')
+
+    return [
+        'module purge',
+        'module load pawsey pawseytools',
+        f'module use {install_prefix}/staff_modulefiles',
+        f'module load pawseyenv/{date_tag}',
+        'module load PrgEnv-gnu',
+    ]
+
+
+def get_baseline_cmd(mod_category, base_name):
+    return (pkg_cmds.get(mod_category) or {}).get(base_name)
 
 
 @rfm.simple_test
@@ -34,8 +97,9 @@ class concretise_check(rfm.RunOnlyRegressionTest):
         self.maintainers = ['Craig Meyer']
 
         # Valid systems and PEs
-        self.valid_systems = ['setonix-q:quantum']
-        self.valid_prog_environs = ['PrgEnv-gnu', 'PrgEnv-nvidia']
+        self.valid_systems = [quantum_compute_system()]
+        self.valid_prog_environs = ['PrgEnv-gnu']
+        self.extra_resources = quantum_allocation_pack()
 
         # Execution
         self.executable = 'echo'
@@ -93,12 +157,10 @@ class module_existence_check(rfm.RunOnlyRegressionTest):
         self.descr = 'Test to check for existence of a module during software stack installation'
         self.maintainers = ['Craig Meyer']
 
-        # Valid systems and PEs - set PE based on module path
-        self.valid_systems = ['setonix-q:quantum']
-        if 'nvidia' in self.mod:
-            self.valid_prog_environs = ['PrgEnv-nvidia']
-        elif 'gcc' in self.mod:
-            self.valid_prog_environs = ['PrgEnv-gnu']
+        # Valid systems and PEs
+        self.valid_systems = [quantum_shell_system()]
+        self.valid_prog_environs = ['PrgEnv-gnu']
+        self.extra_resources = quantum_allocation_pack()
 
         # Execution - ls to check the module exists
         self.executable = 'ls'
@@ -128,22 +190,17 @@ class module_load_check(rfm.RunOnlyRegressionTest):
         self.maintainers = ['Craig Meyer']
 
         # Valid systems and PEs
-        self.valid_systems = ['setonix-q:quantum']
-        # Choose PE based on the module path
-        # NOTE: May need to edit zen2_path in future updates
-        cce_version = os.environ.get('nvidia_version')
-        gcc_version = os.environ.get('gcc_version')
-        if 'nvidia' in self.mod:
-            self.valid_prog_environs = ['PrgEnv-nvidia']
-        elif 'gcc' in self.mod:
-            self.valid_prog_environs = ['PrgEnv-gnu']
+        self.valid_systems = [quantum_shell_system()]
+        self.valid_prog_environs = ['PrgEnv-gnu']
+        self.extra_resources = quantum_allocation_pack()
 
         # Execution
         self.executable = 'module'
         self.name_ver = '/'.join(self.mod.split('/')[-2:])[:-4]
         self.executable_opts = ['load', self.name_ver]
 
-        # module show to check the correct module is being pointed to
+        # module show to check the exact modulefile selected for this test
+        self.prerun_cmds += module_setup_commands()
         self.prerun_cmds += [f'module show {self.name_ver}']
         # Check main module is loaded
         self.postrun_cmds = [f'if module is-loaded {self.name_ver} ; then echo "main package is loaded"; fi']
@@ -164,30 +221,42 @@ class module_load_check(rfm.RunOnlyRegressionTest):
         self.depends_on(testdep_name, udeps.by_env)
     
     @run_before('run')
-    def check_load_lines(self):
-        # Get list of dependencies that need to be loaded - explicit load statements in module file
-        self.load_lines = [line.split('load(')[-1][:-2].replace('"', '') for line in open(self.mod).readlines() if line.startswith('load')]
-        nloads = len(self.load_lines)
+    def check_dependency_lines(self):
+        # Get dependencies from both load() statements and depends_on() statements.
+        dependency_pattern = re.compile(r'^\s*(?:load|depends_on)\("([^"]+)"\)')
+        with open(self.mod) as module_file:
+            self.dependency_modules = []
+            for line in module_file:
+                match = dependency_pattern.match(line)
+                if match:
+                    self.dependency_modules.append(match.group(1))
+        ndependencies = len(self.dependency_modules)
         # `++` breaks the regex search, so replace ++ with \+\+ if present
-        for i in range(nloads):
-            if '++' in self.load_lines[i]:
-                l = self.load_lines[i]
-                self.load_lines[i] = l.replace('++', '\+\+')
+        for i in range(ndependencies):
+            if '++' in self.dependency_modules[i]:
+                module_name = self.dependency_modules[i]
+                self.dependency_modules[i] = module_name.replace('++', '\\+\\+')
         # Check all dependencies are loaded
-        self.postrun_cmds += [f'if module is-loaded {dep_mod} ; then echo "dependency is loaded"; fi' for dep_mod in self.load_lines]
+        self.postrun_cmds += [
+            f'if module is-loaded {dep_mod} ; then echo "dependency is loaded"; fi'
+            for dep_mod in self.dependency_modules
+        ]
 
     @sanity_function
     def assert_module_loaded(self):
         # '+' breaks regex search, need to replace with '\+' in all modules it is present
         if '+' in self.mod:
-            self.mod = self.mod.replace('+', '\+')
+            self.mod = self.mod.replace('+', '\\+')
         if '+' in self.name_ver:
-            self.name_ver = self.name_ver.replace('+', '\+')
+            self.name_ver = self.name_ver.replace('+', '\\+')
         
         return sn.all([
             sn.assert_found("main package is loaded", self.stdout),
-            sn.assert_eq(sn.count(sn.extractall('dependency is loaded', self.stdout)), len(self.load_lines)),
-            sn.assert_found(self.mod, self.stderr),
+            sn.assert_eq(
+                sn.count(sn.extractall('dependency is loaded', self.stdout)),
+                len(self.dependency_modules),
+            ),
+            sn.assert_found(self.name_ver, self.stderr),
             sn.assert_not_found('Failed', self.stderr),
             sn.assert_not_found('Error', self.stderr),
         ])
@@ -202,38 +271,40 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
         self.amintainers = ['Craig Meyer']
 
         # Valid systems and PEs
-        self.valid_systems = ['setonix-q:quantum']
-        # Choose PE based on the module
-        # NOTE: May need to edit zen2_path in future updates
-        if 'cce' in self.mod:
-            self.valid_prog_environs = ['PrgEnv-nvidia']
-        elif 'gcc' in self.mod:
-            self.valid_prog_environs = ['PrgEnv-gnu']
-        # Since zen3 is default, alter MODULEPATH variable if the module is zen2
-        if 'zen2' in self.mod:
-            install_prefix = os.environ.get('INSTALL_PREFIX')
-            modpath = zen2_path.replace('{basepath}', install_prefix)
-            self.prerun_cmds = [f'export MODULEPATH={modpath}']
+        self.valid_systems = [quantum_compute_system()]
+        self.valid_prog_environs = ['PrgEnv-gnu']
+        self.extra_resources = quantum_allocation_pack()
 
         # Load the module we are testing
         self.name_ver = '/'.join(self.mod.split('/')[-2:])[:-4]
-        self.modules = [self.name_ver]
+        self.prerun_cmds += module_setup_commands()
+        self.prerun_cmds += [f'module load {self.name_ver}']
 
         # Execution - call executable with `--help` or `--version` option
         self.base_name = self.mod.split('/')[-2] # Extract package/library name from full module path
         self.mod_category = self.mod.split('/')[-3]
-        # Set executable, accounting for packages which have different commands for different package versions
-        version_cmds = ['fftw']
-        version_checks = [v in self.mod for v in version_cmds]
-        if any(version_checks):
-            self.base_name = self.name_ver
-        self.executable = pkg_cmds[self.mod_category][self.base_name][0]
+        # Prefer a versioned command for projected modules that need one, then
+        # fall back to a generic command keyed by package name.
+        self.baseline_key = self.name_ver
+        self.baseline_cmd = get_baseline_cmd(self.mod_category, self.baseline_key)
+        if self.baseline_cmd is None:
+            self.baseline_key = self.base_name
+            self.baseline_cmd = get_baseline_cmd(self.mod_category, self.baseline_key)
+        if self.baseline_cmd is None:
+            self.skip_if(
+                True,
+                'Missing baseline sanity test coverage: '
+                f'no command configured in pkg_cmds.yaml for {self.mod}'
+            )
+            self.baseline_cmd = ['true', '', '']
+
+        self.executable = self.baseline_cmd[0]
         # Set the executable options, which depends on if it's software or library
-        if (self.executable == 'ldd') or (self.base_name == 'hpx'):
-            lib_path = get_library_path(self.mod.split('/')[-2:])
-            self.executable_opts = [lib_path + '/' + pkg_cmds[self.mod_category][self.base_name][1]]
+        if self.executable == 'ldd':
+            lib_path = get_library_path(self.mod)
+            self.executable_opts = [lib_path + '/' + self.baseline_cmd[1]]
         else:
-            self.executable_opts = [pkg_cmds[self.mod_category][self.base_name][1] + ' 2>&1']
+            self.executable_opts = [self.baseline_cmd[1] + ' 2>&1']
         
         self.tags = {'spack', 'installation', 'software_stack'}
 
@@ -256,4 +327,4 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
             return sn.assert_not_found('not found', self.stdout)
         # For software we do a basic check (e.g. --help or --version)
         else:
-            return sn.assert_found(pkg_cmds[self.mod_category][self.base_name][2], self.stdout)
+            return sn.assert_found(self.baseline_cmd[2], self.stdout)

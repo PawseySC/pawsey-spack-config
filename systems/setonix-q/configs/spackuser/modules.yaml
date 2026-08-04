@@ -7,6 +7,12 @@ modules:
 
     lmod:
 
+      # Environments are concretized independently and can therefore contain
+      # different hashes for the same dependency. Keep root modules readable,
+      # but give implicit modules their automatic hash-qualified hidden names
+      # so lockfile-backed module regeneration cannot encounter name clashes.
+      hide_implicits: true
+
       # Select all packages that depend on python, or r, or java,
       # and set these modules to autoload their dependencies
       ^python:
@@ -14,6 +20,10 @@ modules:
       ^r:
         autoload: direct
       ^java:
+        autoload: direct
+      # GCC packages linked to the CUDA-aware Cray MPICH external must load
+      # its hidden wrapper so the matching runtime modules are propagated.
+      "^cray-mpich@9.1.0%gcc":
         autoload: direct
 
       # overwrite for packages that don't need python at runtime
@@ -48,11 +58,27 @@ modules:
         autoload: direct
       charmpp:
         autoload: direct
+      # The GCC MPI external is deliberately CUDA-aware. Reproduce its build
+      # modules at runtime so MPI-linked executables can resolve CUDA/GTL libs.
+      "cray-mpich@9.1.0%gcc":
+        load:
+          - cray-mpich/9.1.0
+          - craype-network-ofi
+          - cuda/13.0
+          - craype-accel-nvidia90
 
       # numerical libraries
       arpack-ng:
         autoload: direct
+      memkind:
+        autoload: direct
       cuda:
+        autoload: direct
+        load:
+          - cuda/13.0
+      cuquantum:
+        autoload: direct
+      cutensor:
         autoload: direct
       openblas:
         autoload: direct
@@ -108,6 +134,11 @@ modules:
       squashfs:
         autoload: none
 
+      mpifileutils:
+        autoload: direct
+      ior:
+        autoload: direct
+
 
       projections:
         # modules on magnus have one of [apps, tools, python, devel] as start of module name 
@@ -147,7 +178,8 @@ modules:
 
         # numerical or parallelisation libraries 
         arpack-ng: 'libraries/{name}/{version}'
-        cuda: 'libraries/{name}/{version}-cuda-gh200'
+        memkind: 'libraries/{name}/{version}'
+        cuquantum: 'libraries/{name}/{version}-cuda-gh200'
         cutensor: 'libraries/{name}/{version}-cuda-gh200'
         nccl: 'libraries/{name}/{version}-cuda-gh200'
         nvpl-blas: 'libraries/{name}/{version}-cuda-gh200'
@@ -170,7 +202,10 @@ modules:
         eigen: 'libraries/{name}/{version}'
         fftw: 'libraries/{name}/{version}'
         gsl: 'libraries/{name}/{version}'
+        "hpx +cuda": 'libraries/{name}-cuda-gh200/{version}'
+        "hpx ~cuda": 'libraries/{name}/{version}'
         hpx: 'libraries/{name}/{version}'
+        "kokkos +cuda +hpx": 'libraries/{name}-cuda-gh200/{version}-hpx'
         "kokkos +hpx": 'libraries/{name}/{version}-hpx'
         "kokkos +openmp +cuda": 'libraries/{name}-cuda-gh200/{version}-openmp'
         "kokkos +openmp ~cuda": 'libraries/{name}/{version}-openmp' 
@@ -178,6 +213,8 @@ modules:
         openblas: 'libraries/{name}/{version}'
         "blaspp +cuda": 'libraries/{name}-cuda-gh200/{version}'
         "blaspp ~cuda": 'libraries/{name}/{version}'
+        "opencv +cuda": 'libraries/{name}-cuda-gh200/{version}'
+        "opencv ~cuda": 'libraries/{name}/{version}'
         opencv: 'libraries/{name}/{version}'
         plasma: 'libraries/{name}/{version}'
         "petsc +complex~trilinos": 'libraries/{name}/{version}-complex'
@@ -214,6 +251,8 @@ modules:
         # adios also has similar variants 
         "adios2 +hdf5 +python": 'libraries/{name}/{version}-hdf5'
         "adios2 ~hdf5 +python": 'libraries/{name}/{version}'
+        "adios2 +hdf5 ~python": 'libraries/{name}/{version}-hdf5-nopython'
+        "adios2 ~hdf5 ~python": 'libraries/{name}/{version}-nopython'
         netcdf-c: 'libraries/{name}/{version}'
         netcdf-cxx: 'libraries/{name}/{version}'
         netcdf-cxx4: 'libraries/{name}/{version}'
@@ -234,6 +273,7 @@ modules:
         autoconf: 'utilities/{name}/{version}'
         automake: 'utilities/{name}/{version}'
         libtool: 'utilities/{name}/{version}'
+        meson: 'utilities/{name}/{version}'
         ninja: 'utilities/{name}/{version}'
         # to avoid multiple cmake modules, picking a specific one
         "cmake ~doc+ncurses+ownlibs": 'utilities/{name}/{version}'
@@ -277,12 +317,21 @@ modules:
         py-mpi4py: 'python-packages/{name}/{version}-py{^python.version}'
         py-netcdf4: 'python-packages/{name}/{version}'
         py-numba: 'python-packages/{name}/{version}'
+        py-cuda-python: 'python-packages/{name}/{version}-cuda-gh200'
+        py-cupy: 'python-packages/{name}/{version}-cuda-gh200'
+        py-numba-cuda: 'python-packages/{name}/{version}-cuda-gh200'
+        py-nvmath-python: 'python-packages/{name}/{version}-cuda-gh200'
         py-numpy: 'python-packages/{name}/{version}'
         py-pandas: 'python-packages/{name}/{version}'
+        py-pennylane: 'python-packages/{name}/{version}-cuda-gh200'
+        py-pennylane-qiskit: 'python-packages/{name}/{version}-cuda-gh200'
+        'py-qiskit +mpi': 'python-packages/{name}/{version}-cuda-gh200'
+        'py-qiskit ~mpi': 'python-packages/py-qiskit-nompi/{version}-cuda-gh200'
         py-scikit-learn: 'python-packages/{name}/{version}'
         py-scipy: 'python-packages/{name}/{version}'
         py-prefect: 'python-packages/{name}/{version}'
         py-pydantic: 'python-packages/{name}/{version}'
+        py-rich: 'python-packages/{name}/{version}'
         py-setuptools: 'python-packages/{name}/{version}-py{^python.version}'
         py-scalene: 'python-packages/{name}/{version}'
         py-jupyterlab: 'python-packages/{name}/{version}'
@@ -351,6 +400,8 @@ modules:
         #performance tests 
         "hpl ~openmp": 'benchmarking/{name}/{version}'
         "hpl +openmp": 'benchmarking/{name}/{version}+openmp'
+        "osu-micro-benchmarks +cuda": 'benchmarking/{name}/{version}-cuda-gh200'
+        "osu-micro-benchmarks ~cuda": 'benchmarking/{name}/{version}'
         osu-micro-benchmarks: 'benchmarking/{name}/{version}'
         ior: 'benchmarking/{name}/{version}'
 
@@ -365,6 +416,7 @@ modules:
         # py-rpds-py and py-markupsafe do not need a hash to install shpc
         py-rpds-py: 'dependencies/.py-rpds-py/{version}'
         py-markupsafe: 'dependencies/.py-markupsafe/{version}'
+        perl-data-dumper: 'dependencies/.{name}/{version}'
 
         # git needs special name, because `.git` is ignored by Lmod
         git: 'dependencies/.git-module/{version}-{hash:7}'
@@ -374,4 +426,3 @@ modules:
         # but just to be careful to avoid name conflicts
         # added hash
         all: 'dependencies/.{name}/{version}-{hash:7}'
-

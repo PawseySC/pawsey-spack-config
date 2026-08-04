@@ -69,7 +69,7 @@ class AnsysStructures(Package):
         sed=which('sed')
         sed('s/distcmd="mpirun"/distcmd="srun --export=ALL"/g',"{0}/{1}/v221/ansys/bin/anssh.ini".format(tmp_install_path, 'structures'))
         sed('/distcmd/ s/ -np / -n /g',"{0}/{1}/v221/ansys/bin/ansys221".format(tmp_install_path, 'structures'))
-        sed('/distcmd/ s/ \${extra_mpi_args} / /g',"{0}/{1}/v221/ansys/bin/ansys221".format(tmp_install_path, 'structures'))
+        sed('/distcmd/ s/ \\${extra_mpi_args} / /g',"{0}/{1}/v221/ansys/bin/ansys221".format(tmp_install_path, 'structures'))
         sed('/KMP_AFFINITY/ s/norespect/disabled/g',"{0}/{1}/v221/ansys/bin/anssh.ini".format(tmp_install_path, 'structures'))
         sed("s/platform = None/platform = \'linx64\'/g", "{0}/{1}/v221/commonfiles/CPython/3_7/linx64/Release/Ansys/Util/Platform.py".format(tmp_install_path, 'structures'))
 
@@ -105,5 +105,4 @@ class AnsysStructures(Package):
         ]
         for l in ldpathlist:
             env.prepend_path('LD_LIBRARY_PATH', "{0}/structures/v221/{1}".format(self.prefix,l))
-
 

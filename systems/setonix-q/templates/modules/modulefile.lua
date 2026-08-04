@@ -67,10 +67,17 @@ setenv("LMOD_{{ name|upper() }}_VERSION", "{{ version_part }}")
 
 {% block autoloads %}
 {% for module in autoload %}
-{% if verbose %}
-LmodMessage("Autoloading {{ module |replace("astro-applications/", "") |replace("bio-applications/", "") |replace("py-keras-applications/", "pawsey-temporary-string/") |replace("applications/", "") |replace("pawsey-temporary-string/", "py-keras-applications/") |replace("libraries/", "") |replace("programming-languages/", "") |replace("utilities/", "") |replace("visualisation/", "") |replace("python-packages/", "") |replace("benchmarking/", "") |replace("developer-tools/", "") |replace("dependencies/", "") |replace("project-apps/", "") |replace("user-apps/", "") }}")
+{% set module_name = module |replace("astro-applications/", "") |replace("bio-applications/", "") |replace("py-keras-applications/", "pawsey-temporary-string/") |replace("applications/", "") |replace("pawsey-temporary-string/", "py-keras-applications/") |replace("libraries/", "") |replace("programming-languages/", "") |replace("utilities/", "") |replace("visualisation/", "") |replace("python-packages/", "") |replace("benchmarking/", "") |replace("developer-tools/", "") |replace("dependencies/", "") |replace("project-apps/", "") |replace("user-apps/", "") %}
+{# CUDA is provided by the site module cuda/<major.minor>, not by a Spack wrapper module. #}
+{% if module_name.startswith("cuda/") or module_name.startswith(".cuda/") %}
+{% set cuda_version_parts = module_name.split('/')[1].split('-')[0].split('.') %}
+{% set cuda_version = cuda_version_parts[0] ~ "." ~ cuda_version_parts[1] %}
+{% set module_name = "cuda/" ~ cuda_version %}
 {% endif %}
-load("{{ module |replace("astro-applications/", "") |replace("bio-applications/", "") |replace("py-keras-applications/", "pawsey-temporary-string/") |replace("applications/", "") |replace("pawsey-temporary-string/", "py-keras-applications/") |replace("libraries/", "") |replace("programming-languages/", "") |replace("utilities/", "") |replace("visualisation/", "") |replace("python-packages/", "") |replace("benchmarking/", "") |replace("developer-tools/", "") |replace("dependencies/", "") |replace("project-apps/", "") |replace("user-apps/", "") }}")
+{% if verbose %}
+LmodMessage("Autoloading {{ module_name }}")
+{% endif %}
+depends_on("{{ module_name }}")
 {% endfor %}
 {% endblock %}
 
@@ -101,7 +108,7 @@ local singularity_ld_path = ""
 -- COS 25.3
 singularity_ld_path = singularity_ld_path .. ":/host_lib64"
 -- add CRAY_PATHS START
-singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/mpich/8.1.32/ofi/gnu/12.3/lib-abi-mpich:/opt/cray/pe/mpich/8.1.32/gtl/lib:/opt/cray/xpmem/default/lib64:/opt/cray/pe/pmi/default/lib:/opt/cray/pe/pals/default/lib"
+singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3/lib:/opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3/gtl/lib:/opt/cray/xpmem/default/lib64:/opt/cray/pe/pmi/default/lib:/opt/cray/pe/pals/default/lib"
 --singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/gcc-libs"
 -- add CRAY_PATHS END
 -- add MPI START
@@ -170,34 +177,28 @@ singularity_ld_preload = singularity_ld_preload .. ":/usr/lib64/libmunge.so.2"
 singularity_ld_preload = singularity_ld_preload .. ":/usr/lib64/liblustreapi.so.1:/usr/lib64/liblnetconfig.so.4:/usr/lib64/libyaml-0.so.2:/usr/lib64/libnl-genl-3.so.200:/usr/lib64/libnl-3.so.200"
 -- add MPI END
 -- add GPUMPI START
-singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/mpich/8.1.32/gtl/lib/libmpi_gtl_hsa.so.0"
--- add GPUMPI END
--- add GPUGH200MPI START
+singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3/lib/libmpi_gtl_cuda.so"
 singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/lib64/libmpi_nvidia.so.12"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/24.11/compilers/lib/libacchost.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/24.11/compilers/lib/libaccdevaux.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/24.11/compilers/lib/libaccdevice.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/24.11/cuda/12.6/lib64/libcudart.so.12"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/24.11/compilers/lib/libcudadevice.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/24.11/compilers/lib/libcudanvhpc.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/24.11/compilers/lib/libnvf.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/24.11/compilers/lib/libnvhpcatm.so"
+singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libacchost.so"
+singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libaccdevaux.so"
+singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libaccdevice.so"
+singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/cuda/13.0/lib64/libcudart.so.12"
+singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libcudadevice.so"
+singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libcudanvhpc.so"
+singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libnvf.so"
+singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libnvhpcatm.so"
 singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/lib64/libsci_nvidia_mpi.so.6"
 singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/lib64/libsci_nvidia.so.6"
--- add GPUGH200MPI END
+-- add GPUMPI END
 prepend_path("SINGULARITYENV_LD_PRELOAD", singularity_ld_preload)
 
 -- add GPUMPI START
 setenv("MPICH_GPU_SUPPORT_ENABLED","1")
 setenv("SINGULARITYENV_MPICH_GPU_SUPPORT_ENABLED","1")
 -- add GPUMPI END
--- add GPUGH200MPI START
-setenv("MPICH_GPU_SUPPORT_ENABLED","1")
-setenv("SINGULARITYENV_MPICH_GPU_SUPPORT_ENABLED","1")
--- add GPUGH200MPI END
 
 -- Patch lmod messages in singularity shells
-local patch_dir = os.getenv("INSTALL_PREFIX") .. "/pawsey/lmod-variable-fixes"
+local patch_dir = "INSTALL_PREFIX" .. "/pawsey/lmod-variable-fixes"
 local patch_file = patch_dir .. "/pawsey_fix_initial_bash.lua"
 local func = assert(loadfile(patch_file))()
 func(patch_dir)

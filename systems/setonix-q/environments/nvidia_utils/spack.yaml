@@ -20,9 +20,6 @@ spack:
     - nvtop +cuda cuda_arch=90
   specs:
   - matrix:
-    - [$packages]
-    - ['%gcc@12.3.0']
-  - matrix:
-    - [$gpu-packages]
-    - ['%nvhpc@24.11']
+    - [$packages, $gpu-packages]
+    - ['%gcc@13.3.1']
   view: false

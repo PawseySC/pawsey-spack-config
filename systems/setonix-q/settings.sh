@@ -3,7 +3,7 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2026.01"
+DATE_TAG="2026.08"
 
 # Must be set manually for the setonix-q software stack
 PAWSEY_CLUSTER="setonix-q"
@@ -44,14 +44,28 @@ SPACK_USER_CONFIG_PATH="$MYSOFTWARE/setonix-q/$DATE_TAG/.spack_user_config"
 BOOTSTRAP_PATH='$MYSOFTWARE/setonix-q/'$DATE_TAG/.spack_user_config/bootstrap
 # Set a new mirror where to fetch prebuilt binaries, if any.
 SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
+# Durable, release-scoped provenance for the environment lockfile DAGs that
+# were installed, plus standalone Python and ReFrame concrete specs.
+INSTALLATION_METADATA_DIR=${INSTALL_PREFIX}/installation_metadata
+SPACK_INSTALL_MANIFEST=${INSTALLATION_METADATA_DIR}/spack_install_manifest.json
 # When SPACK_POPULATE_CACHE=1, spack will push binaries in the above cache location for later use.
 # The operation will be executed after having installed the environments.
 # Useful when building the stack on the test system.
 SPACK_POPULATE_CACHE=0
-NCPUS=288
-SPACK_SPEC_ARGS=" --reuse "
+# Cap build parallelism well below single node core count. To prevent OOM errors when building large packages (e.g. LLVM).
+NCPUS=32
+# Using --reuse in SPACK_SPEC_ARGS and SPACK_CONCRETIZE_ARGS leads to hangs during concretization
+# removed --reuse here, reverting to the behaviour of the 'setonix' system.
+# The issue with --reuse is unclear. During initial concretization of the 'quantum' environment 
+# (a pythonic dominated environment) Spack hangs indefinitely. So much so that the process cannot 
+# be interrupted with a ctrl-C signal. Testing does not show issues with file locks, or other 
+# IO hangs. It is unclear why this is not working and could be a bug in Clingo. 
+# For the moment, we do not need to enforce --reuse but in the future this may require
+# more investigation. It is also possible that this will fixed in later version of spack and 
+# clingo. 
+SPACK_SPEC_ARGS=""
 SPACK_INSTALL_ARGS=" --no-checksum "
-SPACK_CONCRETIZE_ARGS=" --reuse "
+SPACK_CONCRETIZE_ARGS=""
 
 pawseyenv_version="${DATE_TAG}"
 
@@ -60,31 +74,36 @@ RFM_SETTINGS_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_se
 RFM_STORAGE_DIR=${INSTALL_PREFIX}/rfm_results
 RFM_TEST_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_checks.py
 
-archs="aarch64"
+archs="neoverse_v2"
 # compiler versions (needed for module trees with compiler dependency)
-gcc_version="12.3.0"
-nvidia_version="24.11"
+gcc_version="13.3.1"
+nvidia_version="25.9"
+cuda_version="13.0"
 # Cray PE compatibility versions (used for LMOD_CUSTOM_COMPILER variable names)
 # These must match the CRAY_LMOD_COMPILER values set by PrgEnv-* modules
 gcc_compat_version="12.0"
 nvidia_compat_version="23.11"
-main_compiler="nvhpc"
-main_arch="aarch64"
+main_compiler="gcc"
+main_arch="neoverse_v2"
 
-# architecture of login/compute nodes (needed by Singularity symlink module)
-cpu_arch="aarch64"
+# module-tree paths to create for user/project installations
+module_tree_arch_list="neoverse_v2"
+module_tree_compiler_list="gcc/${gcc_version} nvhpc/${nvidia_version}"
+
+# architecture used in module-tree paths (needed by Singularity symlink module)
+cpu_arch="neoverse_v2"
 
 # tool versions
 spack_version="0.23.1" # the prefix "v" is added in setup_spack.sh
-singularity_version="4.1.0-nompi" # has to match the version in the Spack env yaml + nompi tag
-singularity_mpi_version="4.1.0-mpi" # has to match the version in the Spack env yaml + mpi tag
+singularity_version="4.3.5-nompi" # has to match the version in the Spack env yaml + nompi tag
+singularity_mpi_version="4.3.5-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.32"
 shpc_registry_version="bf0d6db12b1fe478e11c53dad966e25bb7d0a1b3"
 
 # python (and py tools) versions
 python_name="python"
 python_version="3.11.6" # has to match the version in the Spack env yaml
-setuptools_version="59.4.0" # has to match the version in the Spack env yaml
+setuptools_version="80.0.0" # has to match the version in the Spack env yaml
 pip_version="23.1.2" # has to match the version in the Spack env yaml
 # r major minor version
 r_version_majorminor="4.4.1"
@@ -108,7 +127,8 @@ dependencies
 
 # list of spack build environments
 env_list="
-cpu_python
+python
+quantum
 cpu_s3_clients
 cpu_io_libs
 container_engines
@@ -120,8 +140,9 @@ nvidia_bench
 nvidia_num_libs
 "
 
-#quay.io/sarahbeecroft9/alphafold:2.2.3
-#quay.io/pawsey/alphafold2-amd-gpu:rocm6.1.1
+# Quantum contains Spack-migrated quantum packages that still interoperate with
+# custom quantum installers.
+
 container_list="
 "
 
@@ -132,13 +153,6 @@ container_list_mpi="
 #quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 
 #hpc-python containers need to be rebuild due to security bugs
-
-# Custom utility modules to deploy from systems/${SYSTEM}/templates/modules/
-# These are installed to ${utilities_modules_dir} and visible after loading pawseyenv
-utility_module_list="
-PrgEnv-gnu-nvidia
-cudatoolkit-gnu-nvidia
-"
 
 ### TYPICALLY NO EDIT NEEDED PAST THIS POIINT
 
@@ -198,15 +212,5 @@ singularity_symlink_module_dir="${utilities_modules_dir}/${singularity_name}"
 
 # location for Spack modulefile
 spack_module_dir="${utilities_modules_dir}/spack"
-
-# Use the Cray provided ROCm until we have a stable custom build.
-
-#ROCM_VERSIONS=(
-#"6.3.0"
-#)
-
-#ROCM_PATHS=(
-#"/opt/rocm-6.3.0"
-#)
 
 fi # end include guard

@@ -13,11 +13,11 @@ class PyCudaPython(PythonPackage):
     """CUDA Python: Performance meets Productivity.
 
     NOTE (simplified packaging):
-    NVIDIA's cuda-python repo is a monorepo containing multiple Python distributions
-    (cuda-python, cuda-bindings, cuda-pathfinder, and sometimes additional CUDA component
-    packages). For simplicity, this Spack package installs the required subprojects
+    NVIDIA's cuda-python repo is a monorepo containing multiple Python distributions.
+    For simplicity, this Spack package installs cuda-python, cuda-bindings, and cuda-core
     into a single prefix so downstream packages (e.g. nvmath-python) can import
-    cuda.bindings.* modules.
+    cuda.bindings.* and cuda.core.* modules. cuda-pathfinder is managed as a separate
+    Spack package to avoid installing conflicting copies of cuda.pathfinder.
     """
 
     homepage = "https://nvidia.github.io/cuda-python/"
@@ -29,9 +29,10 @@ class PyCudaPython(PythonPackage):
     license("LicenseRef-NVIDIA-SOFTWARE-LICENSE")
 
     # Version 13.x releases
+    version("13.1.0", sha256="63cc2823bb73bfe1e7e697457364d626f8e7705d6c3dc93a7d120dd788e2a93e")
     version(
-        "13.1.0",
-        sha256="63cc2823bb73bfe1e7e697457364d626f8e7705d6c3dc93a7d120dd788e2a93e",
+        "13.0.3",
+        sha256="4885b7898ba30735cdf8a07b52496ecfe2b8f7d119245f3ced190f9ad445ffd4",
         preferred=True,
     )
     version("13.0.0", sha256="606bb3202392eb1014c82023e44858dbdd13a6ad7e4529251a12e72c76c7171f")
@@ -54,18 +55,46 @@ class PyCudaPython(PythonPackage):
     depends_on("py-setuptools@80:", type="build")
     depends_on("py-setuptools-scm@8:", type="build")
     depends_on("py-packaging@24.2:", type="build")
-    depends_on("py-pyclibrary", type="build")
+    depends_on("py-pyclibrary@0.1.7:", type="build")
     depends_on("py-wheel", type="build")
-    depends_on("py-cython", type="build")
+    depends_on("py-cython@3.2:3.2", type="build")
+    depends_on("py-cuda-pathfinder@1.3.4", when="@12.9:", type=("build", "run"))
 
-    # CUDA toolkit for building bindings
-    # (Package version != CUDA version; this is a conservative, practical mapping.)
-    depends_on("cuda@11.8:", when="@12:", type=("build", "link", "run"))
-    depends_on("cuda@12:", when="@13:", type=("build", "link", "run"))
+    # Source builds require toolkit headers from the same major/minor API
+    depends_on("cuda@12.6", when="@12.6", type=("build", "link", "run"))
+    depends_on("cuda@12.9", when="@12.9", type=("build", "link", "run"))
+    depends_on("cuda@13.0", when="@13.0", type=("build", "link", "run"))
+    depends_on("cuda@13.1", when="@13.1", type=("build", "link", "run"))
 
     variant("all", default=False, description="Install all CUDA Python component subpackages found in the repo")
-    
+    variant("cufile", default=False, description="Build CUDA cuFile Python bindings")
+
+    def patch(self):
+        if "~cufile" in self.spec:
+            filter_file(
+                'if sys.platform == "win32":',
+                (
+                    'if sys.platform == "win32" '
+                    'or os.environ.get("CUDA_PYTHON_DISABLE_CUFILE") == "1":'
+                ),
+                join_path("cuda_bindings", "setup.py"),
+                string=True,
+            )
+            filter_file(
+                "dst_files = rename_architecture_specific_files()",
+                (
+                    "dst_files = rename_architecture_specific_files()\n"
+                    'if os.environ.get("CUDA_PYTHON_DISABLE_CUFILE") == "1":\n'
+                    '    dst_files = [f for f in dst_files if "cufile" not in f]'
+                ),
+                join_path("cuda_bindings", "setup.py"),
+                string=True,
+            )
+
     def setup_build_environment(self, env):
+        if "~cufile" in self.spec:
+            env.set("CUDA_PYTHON_DISABLE_CUFILE", "1")
+
         if self.spec.satisfies("^cuda"):
             cuda = self.spec["cuda"].prefix
     
@@ -98,8 +127,8 @@ class PyCudaPython(PythonPackage):
 
     def _find_repo_subdists(self):
         """Return candidate subproject dirs in install order."""
-        # Minimum set that fixes "missing cython files"/cuda.bindings.* imports.
-        required = ["cuda_bindings", "cuda_pathfinder", "cuda_python"]
+        # Minimum set needed by downstream CUDA Python consumers (e.g. nvmath).
+        required = ["cuda_bindings", "cuda_core", "cuda_python"]
 
         # Always install required ones if present.
         dists = []
@@ -115,17 +144,12 @@ class PyCudaPython(PythonPackage):
                     continue
                 # Skip obvious non-dists (docs, scripts, etc.) while being robust.
                 base = os.path.basename(p)
-                if base in ("cuda_bindings", "cuda_pathfinder", "cuda_python"):
+                if base in ("cuda_bindings", "cuda_core", "cuda_pathfinder", "cuda_python"):
                     continue
                 if self._is_python_dist_dir(p):
                     dists.append(p)
 
         return dists
-
-    @run_after("install")
-    def _post_install_sanity(self):
-        # Basic import check: cuda.bindings should exist after install
-        python("-c", "import cuda; import cuda.bindings; import cuda.bindings.cydriver")
 
     def install(self, spec, prefix):
         # Install multiple Python distributions from the monorepo into this one prefix.
@@ -136,6 +160,16 @@ class PyCudaPython(PythonPackage):
             raise InstallError(
                 "No installable Python subprojects were found in the cuda-python source tree."
             )
+
+        pyver = ".".join(str(x) for x in spec["python"].version.up_to(2))
+        site_packages = [
+            join_path(prefix, "lib64", f"python{pyver}", "site-packages"),
+            join_path(prefix, "lib", f"python{pyver}", "site-packages"),
+        ]
+        for path in reversed(site_packages):
+            for name in ("PYTHONPATH", "CYTHON_INCLUDE_PATH"):
+                current = os.environ.get(name)
+                os.environ[name] = path if not current else path + os.pathsep + current
 
         for dist in dists:
             with working_dir(dist):

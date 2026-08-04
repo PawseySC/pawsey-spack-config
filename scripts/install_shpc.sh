@@ -36,6 +36,7 @@ cd ${INSTALL_PREFIX}/${shpc_install_dir}/bin
 [ -e realshpc ] || mv shpc realshpc
 sed -e "s;REALSHPC;${INSTALL_PREFIX}/${shpc_install_dir}/bin/realshpc;g" \
   -e "s|DATE_TAG|$DATE_TAG|g"\
+  -e "s|PAWSEY_SYSTEM|${SYSTEM}|g"\
   -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
    ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/shpc > shpc 
 chmod a+rx shpc
@@ -62,8 +63,8 @@ export PYTHONPATH="${INSTALL_PREFIX}/${shpc_install_dir}/lib/python${python_vers
 export PYTHONPATH="${INSTALL_PREFIX}/${shpc_install_dir}/lib64/python${python_version_major}.${python_version_minor}/site-packages":$PYTHONPATH
 
 # need to create these registry directories, otherwise corresponding config commands will fail
-mkdir -p ${USER_PERMANENT_FILES_PREFIX}/$PAWSEY_PROJECT/$USER/setonix/$DATE_TAG/shpc_registry
-mkdir -p ${USER_PERMANENT_FILES_PREFIX}/$PAWSEY_PROJECT/setonix/$DATE_TAG/shpc_registry
+mkdir -p ${USER_PERMANENT_FILES_PREFIX}/$PAWSEY_PROJECT/$USER/${SYSTEM}/$DATE_TAG/shpc_registry
+mkdir -p ${USER_PERMANENT_FILES_PREFIX}/$PAWSEY_PROJECT/${SYSTEM}/$DATE_TAG/shpc_registry
 
 #### ALL SHPC CONFIG COMMANDS HERE
 # in alternative, we could provide edited yamls, just to copy over
@@ -76,29 +77,29 @@ shpc config set container_tech:singularity
 shpc config remove registry https://github.com/singularityhub/shpc-registry
 shpc config add registry "${INSTALL_PREFIX}/${shpc_install_dir}/registry"
 shpc config add registry "${INSTALL_PREFIX}/${shpc_install_dir}/pawsey_registry"
-shpc config add registry "${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/shpc_registry"
-shpc config add registry "${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/setonix/$DATE_TAG/shpc_registry"
+shpc config add registry "${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/${SYSTEM}/$DATE_TAG/shpc_registry"
+shpc config add registry "${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/${SYSTEM}/$DATE_TAG/shpc_registry"
 # user install location for modulefiles
-shpc config set "module_base:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/${shpc_containers_modules_dir_long}"
+shpc config set "module_base:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/${SYSTEM}/$DATE_TAG/${shpc_containers_modules_dir_long}"
 # disable default version for modulefiles (original)
 shpc config set default_version:null
 # user install location for containers
-shpc config set "container_base:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/${shpc_containers_dir}"
+shpc config set "container_base:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/${SYSTEM}/$DATE_TAG/${shpc_containers_dir}"
 # user install location for modulefiles (symlinks - views)
 # variable substitutions assume format like views/modules
-shpc config set "views_base:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/${shpc_containers_modules_dir%/*}"
+shpc config set "views_base:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/${SYSTEM}/$DATE_TAG/${shpc_containers_modules_dir%/*}"
 shpc config set "default_view:${shpc_containers_modules_dir##*/}"
 # singularity module
 shpc config set "singularity_module:${singularity_name}/${singularity_version}"
 # enable wrapper scripts
 shpc config set wrapper_scripts:enabled:true
-shpc config set "wrapper_base:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/setonix/$DATE_TAG/containers/wrappers"
+shpc config set "wrapper_base:${USER_PERMANENT_FILES_PREFIX}/\$PAWSEY_PROJECT/\$USER/${SYSTEM}/$DATE_TAG/containers/wrappers"
 # GPU support (Phase 2)
-#shpc config set container_features:gpu:amd
+#shpc config set container_features:gpu:nvidia
 # enable X11 graphics
 shpc config set container_features:x11:true
 # location for container fake home
-shpc config set "container_features:home:\$MYSOFTWARE/setonix/$DATE_TAG/.${shpc_name}_home"
+shpc config set "container_features:home:\$MYSOFTWARE/${SYSTEM}/$DATE_TAG/.${shpc_name}_home"
 
 ## SPACK USER (system wide installation)
 shpc config inituser

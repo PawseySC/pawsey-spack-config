@@ -1,28 +1,26 @@
 #!/bin/bash -e
 #
 # Generate a complete pawseyenv.lua module file from the template
-# Requires settings.sh to be sourced first.
+# Resolves settings through pawsey_software_stack_funcs.sh.
 #
-# Usage: source systems/<system>/settings.sh && ./scripts/generate_pawseyenv.sh <output_file>
+# Usage: SYSTEM=<system> INSTALL_PREFIX=<prefix> INSTALL_GROUP=<group> ./scripts/generate_pawseyenv.sh <output_file>
 #
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_FILE="${SCRIPT_DIR}/templates/pawseyenv.lua"
 OUTPUT_FILE="$1"
 
-# Verify settings are sourced
-if [[ -z "${INSTALL_PREFIX}" || -z "${SYSTEM}" ]]; then
-    echo "Error: settings.sh must be sourced first"
-    echo "Usage: source systems/<system>/settings.sh && ./scripts/generate_pawseyenv.sh <output_file>"
-    exit 1
-fi
+. "${SCRIPT_DIR}/pawsey_software_stack_funcs.sh"
 
 # Verify output file is provided
 if [[ -z "${OUTPUT_FILE}" ]]; then
     echo "Error: output_file is required"
-    echo "Usage: source systems/<system>/settings.sh && ./scripts/generate_pawseyenv.sh <output_file>"
+    echo "Usage: SYSTEM=<system> INSTALL_PREFIX=<prefix> INSTALL_GROUP=<group> ./scripts/generate_pawseyenv.sh <output_file>"
     exit 1
 fi
+
+load_system_settings
+check_installation_environment
 
 if [ ! -f "${TEMPLATE_FILE}" ]; then
     echo "Error: Template file not found: ${TEMPLATE_FILE}"

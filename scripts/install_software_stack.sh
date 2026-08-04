@@ -10,16 +10,27 @@ scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 check_installation_environment
 set_spack_config_repo
+resolve_compatible_python_interpreter
 set_compilation_sets_for_arch
 
 echo "Setting up spack.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_spack.sh"
+
+if [ "${SYSTEM}" = "setonix-q" ]; then
+    echo "Initialising Setonix-Q installation metadata.."
+    initialize_spack_install_manifest
+fi
 
 echo "Running first python install"
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_python.sh"
 
 echo "Running first reframe install"
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_reframe.sh"
+
+if [ "${SYSTEM}" = "setonix-q" ]; then
+    echo "Regenerating standalone Python and ReFrame modules.."
+    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/refresh_standalone_modules.sh"
+fi
 
 echo "Run concretization.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/concretize_environments.sh"
@@ -37,11 +48,16 @@ echo "Update singularity modules.."
 #"${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_custom_singularity_modules.sh"
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_custom_singularity_modules_from_general_singularity_container_engine.sh"
 
-echo "Installing shpc..."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_shpc.sh"
+if [ "${SYSTEM}" = "setonix" ]; then
+    echo "Installing shpc..."
+    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_shpc.sh"
 
-echo "Installing containers.."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_shpc_containers.sh"
+    echo "Installing containers.."
+    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_shpc_containers.sh"
+
+elif [ "${SYSTEM}" = "setonix-q" ]; then
+    echo "Skipping Setonix-only SHPC registry/container operations for ${SYSTEM}."
+fi
 
 echo "Post installation operations.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/post_installation_operations.sh"

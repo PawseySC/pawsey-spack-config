@@ -8,13 +8,13 @@
 #!/bin/bash
 
 export INSTALL_GROUP="pawsey0001"
-export INSTALL_PREFIX="${MYSCRATCH}/setonix-q-tests"
 export SYSTEM="setonix-q"
-export DATE_TAG="2025.08"
+export DATE_TAG="2026.08"
+export INSTALL_PREFIX="${MYSCRATCH}/setonix-q-tests"
 
 mkdir -p "${INSTALL_PREFIX}"
 
-module load PrgEnv-nvidia gcc-native-mixed/12.3 craype craype-arm-grace craype-network-ofi xpmem
+module load PrgEnv-nvidia gcc-native-mixed/13 craype craype-arm-grace craype-network-ofi xpmem
 module unload cray-libsci
 ````
 

@@ -7,16 +7,9 @@
 #           py-mpi4py +gtl gtl_backend=cuda gtl_lib_path=/path/to/gtl/lib
 #
 # Notes:
-# - This recipe assumes mpi4py will discover mpi.cfg in the project root (source tree).
-# - The +gtl logic generates mpi.cfg with:
-#     - libraries = mpi_gtl_{cuda,hsa} [+ cudart for cuda]
-#     - library_dirs includes MPI lib dirs + GTL dir + (CUDA lib dirs if cuda backend)
-#     - runtime_library_dirs includes GTL dir (+ CUDA lib dirs if cuda backend)
-# - It validates GTL library existence, supports gtl_lib_path=auto detection, and
-#   prints mpi.cfg before install for debugging.
-#
-# Important: On some MPI stacks, you may need "libraries = mpi mpi_gtl_cuda cudart"
-#            instead of "mpi_gtl_cuda cudart". See comment in create_mpi_config_file.
+# - Building with +gtl validates or auto-detect the GTL
+#   directory, generates mpi.cfg, and pass it to mpi4py's build.
+# - Non-GTL builds still get a generic mpi.cfg for mpi4py 4.x
 
 import os
 
@@ -102,16 +95,25 @@ class PyMpi4py(PythonPackage):
             return os.pathsep.join(str(p) for p in x if p)
         return str(x)
 
+    def _mpi_cfg_path(self):
+        return join_path(self.stage.source_path, "mpi.cfg")
+
+    def _gtl_backend(self):
+        return self.spec.variants["gtl_backend"].value
+
     def _gtl_soname(self):
-        backend = self.spec.variants["gtl_backend"].value
+        backend = self._gtl_backend()
         return "libmpi_gtl_cuda.so" if backend == "cuda" else "libmpi_gtl_hsa.so"
 
     def _gtl_libname(self):
-        backend = self.spec.variants["gtl_backend"].value
+        backend = self._gtl_backend()
         return "mpi_gtl_cuda" if backend == "cuda" else "mpi_gtl_hsa"
 
     def _detect_gtl_dir(self):
         """Try to locate the GTL .so in reasonable locations."""
+        if "+gtl" not in self.spec:
+            return None
+
         mpi_spec = self.spec["mpi"]
         candidates = []
 
@@ -144,6 +146,7 @@ class PyMpi4py(PythonPackage):
         if "+gtl" in self.spec:
             # Matches the manual build approach for MPICH
             env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
+            env.set("MPI4PY_BUILD_MPICFG", self._mpi_cfg_path())
             # Useful for diagnosing what link flags are used
             env.set("MPI4PY_BUILD_VERBOSE", "1")
 
@@ -176,10 +179,10 @@ class PyMpi4py(PythonPackage):
                 "Verify gtl_lib_path points to a directory containing {1}".format(expected_lib, self._gtl_soname())
             )
 
-    @run_before("install")
+    @run_before("install", when="@4:")
     def write_and_dump_mpi_cfg_for_install(self):
-        """Generate mpi.cfg in the source tree so the install picks it up; dump for debug."""
-        cfg_fn = join_path(self.stage.source_path, "mpi.cfg")
+        """Generate mpi.cfg in the source tree and dump it for debug."""
+        cfg_fn = self._mpi_cfg_path()
         self.create_mpi_config_file(cfg_fn)
 
         warn("===== mpi.cfg (debug) =====")
@@ -196,44 +199,21 @@ class PyMpi4py(PythonPackage):
         Create mpi.cfg file introduced since version 4.0.0.
         """
         mpi_spec = self.spec["mpi"]
-        backend = self.spec.variants["gtl_backend"].value
+
+        if "+gtl" in self.spec:
+            gtl_dir = getattr(self, "_resolved_gtl_dir", None) or self._detect_gtl_dir()
+            if not gtl_dir:
+                raise InstallError("Could not locate GTL library directory")
+
+            with open(cfg_fn, "w") as cfg:
+                cfg.write("[mpi]\n")
+                cfg.write("libraries            = {0}\n".format(self._gtl_libname()))
+                cfg.write("library_dirs         = {0}\n".format(gtl_dir))
+                cfg.write("runtime_library_dirs = {0}\n".format(gtl_dir))
+            return
 
         include_dirs = self._pathlist(mpi_spec.headers.directories)
         mpi_libdirs = self._pathlist(mpi_spec.libs.directories)
-
-        gtl_library = None
-        gtl_dir = None
-        if "+gtl" in self.spec:
-            gtl_library = self._gtl_libname()
-            gtl_dir = getattr(self, "_resolved_gtl_dir", None) or self._detect_gtl_dir()
-
-        cuda_libdirs = ""
-        if "+gtl" in self.spec and backend == "cuda":
-            cuda_libdirs = self._pathlist(self.spec["cuda"].libs.directories)
-
-        libs = []
-        if gtl_library:
-            libs.append(gtl_library)
-            if backend == "cuda":
-                libs.append("cudart")
-
-        libdirs = []
-        if mpi_libdirs:
-            libdirs.append(mpi_libdirs)
-        if gtl_dir:
-            libdirs.append(gtl_dir)
-        if cuda_libdirs:
-            libdirs.append(cuda_libdirs)
-
-        library_dirs = os.pathsep.join([d for d in libdirs if d])
-
-        rdirs = []
-        if gtl_dir:
-            rdirs.append(gtl_dir)
-        if cuda_libdirs:
-            rdirs.append(cuda_libdirs)
-
-        runtime_dirs = os.pathsep.join([d for d in rdirs if d])
 
         with open(cfg_fn, "w") as cfg:
             cfg.write("[mpi]\n")
@@ -250,20 +230,14 @@ class PyMpi4py(PythonPackage):
             else:
                 cfg.write("## include_dirs         =\n")
 
-            if libs:
-                cfg.write("libraries            = {0}\n".format(" ".join(libs)))
-            else:
-                cfg.write("## libraries            = mpi\n")
+            cfg.write("## libraries            = mpi\n")
 
-            if library_dirs:
-                cfg.write("library_dirs         = {0}\n".format(library_dirs))
+            if mpi_libdirs:
+                cfg.write("library_dirs         = {0}\n".format(mpi_libdirs))
             else:
                 cfg.write("## library_dirs         = %(mpi_dir)s/lib\n")
 
-            if runtime_dirs:
-                cfg.write("runtime_library_dirs = {0}\n".format(runtime_dirs))
-            else:
-                cfg.write("## runtime_library_dirs = %(mpi_dir)s/lib\n")
+            cfg.write("## runtime_library_dirs = %(mpi_dir)s/lib\n")
 
             cfg.write("\n")
             cfg.write("## extra_compile_args   =\n")
@@ -274,7 +248,7 @@ class PyMpi4py(PythonPackage):
     def install_cfg(self):
         python_dir = join_path(self.prefix, python_platlib, "mpi4py")
         cfg_fn = join_path(python_dir, "mpi.cfg")
-        staged_cfg = join_path(self.stage.source_path, "mpi.cfg")
+        staged_cfg = self._mpi_cfg_path()
         if os.path.isfile(staged_cfg):
             mkdirp(python_dir)
             copy(staged_cfg, cfg_fn)

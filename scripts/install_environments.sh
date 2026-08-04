@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash -e
 
 check_installation_environment
 set_spack_config_repo
@@ -19,50 +19,64 @@ set_modulepaths_for_arch
 # module use $INSTALL_PREFIX/modules/zen3/gcc/14.2.0/programming-languages
 # module load spack/${spack_version}
 
-# We are forced to install openblas outside an environment because its build fails
-# in a nondeterministic way. So we just keep trying.
-
-# here script altered to just build openblas in envirnoment with appropriate version
-openblas_not_installed=0
-counter=0
-while (( openblas_not_installed > 0 ));
-do
-if (( counter > 5 )); then
-	echo "Tried to install openblas 5 times, and it didn't work. Stopping here.."
-	exit 1
+# We are forced to install openblas outside an environment on Setonix because
+# its build fails in a nondeterministic way. Setonix-Q environments select the
+# desired OpenBLAS compiler/version explicitly, so do not pre-install it here.
+if [ "${SYSTEM}" = "setonix" ]; then
+  openblas_not_installed=1
+  counter=0
+  while (( openblas_not_installed > 0 ));
+  do
+    if (( counter > 5 )); then
+      echo "Tried to install openblas 5 times, and it didn't work. Stopping here.."
+      exit 1
+    fi
+    if sg $INSTALL_GROUP -c "spack install ${SPACK_INSTALL_ARGS} -j${NCPUS} openblas@0.3.24 threads=openmp"; then
+      openblas_not_installed=0
+    else
+      openblas_not_installed=$?
+    fi
+    (( counter = counter + 1 ))
+  done
 fi
-spack spec ${SPACK_SPEC_ARGS} openblas@0.3.24 %${main_compiler} threads=openmp
-sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} openblas@0.3.24 %${main_compiler} threads=openmp"
-openblas_not_installed=$?
-(( counter = counter + 1 ))
-done
 
 # list of environments included in variables.sh (sourced above)
 envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 
+if [ "${SYSTEM}" = "setonix-q" ]; then
+  ensure_spack_install_manifest_run
+fi
+
 echo "Running installation with $NCPUS cores.."
 
 for env in $env_list; do
-  build_environment ${envdir} ${env}
+  build_environment "${envdir}" "${env}" || exit 1
 done
 
 # instead of having a separate script for cray environments, just
 # append them to the list of env but have a separate variable
 # so can do a parallel build. 
 for env in $cray_env_list; do
-  build_environment ${envdir} ${env}
+  build_environment "${envdir}" "${env}" || exit 1
 done
 
-# Create binary cache
-echo "Creating buildcache for installed packages, module refresh ... "
-if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
-  for hash in `spack find -x --format "{hash}"`; do spack buildcache create -a -m systemwide_buildcache  /$hash; done;
+if [ "${SYSTEM}" = "setonix-q" ]; then
+  deployment_environments=($env_list $cray_env_list)
+  "${PAWSEY_SPACK_CONFIG_REPO}/scripts/publish_spack_install_manifest.sh" \
+    "${deployment_environments[@]}" || exit 1
+else
+  # This is the Setonix module publication path from main. Setonix-Q instead
+  # refreshes only hashes in its installation manifest.
+  if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
+    for hash in `spack find -x --format "{hash}"`; do spack buildcache create -a -m systemwide_buildcache /$hash; done
+  fi
+  for hash in `spack find -x --format "{hash}"`; do
+    spack module lmod refresh -y /$hash
+  done
+  for hash in `spack find -X --format "{hash}"`; do
+    spack module lmod refresh -y /$hash
+  done
 fi
-# Refresh module files - explicit specs
-for hash in `spack find -x --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
-
-# Refresh dependencies - implicit specs (manually remove .llvm load from pocl modulefile)
-for hash in `spack find -X --format "{hash}"`; do spack module lmod refresh -y /$hash; done;
 
 # Remove .llvm from module files to stop it replacing gcc/cce at module load which breaks reframe tests
 # Done post-installation, so commented out here

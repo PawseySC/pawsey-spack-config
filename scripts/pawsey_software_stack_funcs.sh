@@ -24,7 +24,7 @@ function check_installation_environment() {
         if [ -z ${DATE_TAG+x} ]; then
             DATE_TAG=$( date +%Y.%m )
         fi
-        ARCH =$( uname -m )
+        ARCH=$( uname -m )
         if [ "$ARCH" == "x86_64" ]; then
             HOST_ARCH_NAME=""
         elif [ "$ARCH" == "aarch64" ]; then
@@ -39,16 +39,59 @@ function check_installation_environment() {
             DATE_TAG=$( date +%Y.%m )
             echo "The 'DATE_TAG' variable is not set. Using current date tag '$DATE_TAG'."
         fi
-        
-        export INSTALL_PREFIX="${INSTALL_PREFIX}/${DATE_TAG}"
+
+        if [ "${INSTALL_PREFIX%/${DATE_TAG}}" = "${INSTALL_PREFIX}" ]; then
+            export INSTALL_PREFIX="${INSTALL_PREFIX}/${DATE_TAG}"
+        else
+            export INSTALL_PREFIX
+        fi
     fi
+}
+
+function load_system_settings()
+{
+    if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
+        SYSTEM="$PAWSEY_CLUSTER"
+    fi
+
+    if [ -z ${SYSTEM+x} ]; then
+        echo "The 'SYSTEM' variable is not set. Please specify the system you want to
+        build Spack for."
+        exit 1
+    fi
+
+    local repo_candidate
+    local source_file
+    local source_candidates=("${BASH_SOURCE[@]}" "$0" "$PWD")
+
+    for source_file in "${source_candidates[@]}"; do
+        if [ -z "${source_file}" ] || [ "${source_file}" = "environment" ]; then
+            continue
+        fi
+
+        if [ -d "${source_file}" ]; then
+            repo_candidate="${source_file}"
+        else
+            repo_candidate=$( cd -- "$( dirname -- "${source_file}" )/.." &> /dev/null && pwd )
+        fi
+
+        if [ -f "${repo_candidate}/systems/${SYSTEM}/settings.sh" ]; then
+            export PAWSEY_SPACK_CONFIG_REPO="${repo_candidate}"
+            . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
+            if [ -z "${NCPUS+x}" ] && [ -n "${NPROCS+x}" ]; then
+                export NCPUS="${NPROCS}"
+            fi
+            return
+        fi
+    done
+
+    echo "Could not find systems/${SYSTEM}/settings.sh."
+    exit 1
 }
 
 function set_spack_config_repo()
 {
-    PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
-. "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
-
+    load_system_settings
 }
 
 function set_compilation_sets_for_arch()
@@ -56,22 +99,59 @@ function set_compilation_sets_for_arch()
     # Set compilation sets based on architecture of the system on which the script is run.
     # This is used to determine which compilers and architectures to use when installing software.
     # Allows for launching of installation process on 
-    if [ "$( uname -m )" == "x86_64" ]; then
+    local host_arch
+    host_arch="$( uname -m )"
+
+    if [ "${SYSTEM}" = "setonix-q" ] && [ "${host_arch}" != "aarch64" ]; then
+        echo "The setonix-q software stack must be built on aarch64; detected '${host_arch}'."
+        exit 1
+    fi
+
+    if [ "${host_arch}" == "x86_64" ]; then
         export mainarch="zen3"
         export archs=("zen2" "zen3")
         export maincompiler="gcc@${gcc_version}"
         export compilers=("gcc@${gcc_version}" "cce@${cce_version}" "aocc@${aocc_version}")
-	export pythoncompilers=("gcc@${gcc_version}" "cce@${cce_version}" "aocc@${aocc_version}")
-    elif [ "$( uname -m )" == "aarch64" ]; then
+	export pythoncompilers=("gcc@${gcc_version}" "cce@${cce_version}")
+    elif [ "${host_arch}" == "aarch64" ]; then
         export mainarch="neoverse_v2"
         export archs=("neoverse_v2")
-        export maincompiler="nvhpc@${nvidia_version}"
-        export compilers=("nvhpc@${nvidia_version}")
+        export maincompiler="gcc@${gcc_version}"
+        export compilers=("gcc@${gcc_version}" "nvhpc@${nvidia_version}")
 	export pythoncompilers=("gcc@${gcc_version}")
     else
-        echo "The architecture '$( uname -m )' is not supported."
+        echo "The architecture '${host_arch}' is not supported."
         exit 1
     fi   
+}
+
+function check_python_version()
+{
+    command -v python >/dev/null 2>&1 || return 1
+    python -c 'import sys; sys.exit(0 if sys.version_info >= (3, 8) else 1)' >/dev/null 2>&1
+}
+
+
+function resolve_compatible_python_interpreter()
+{
+    # We need Python 3.8+ as some Spack packages use the walrus operator
+    if check_python_version; then
+        return 0
+    fi
+
+    # Try to load spack-provided Python module first, then fall back to cray-python.
+    if ! module load "python/${python_version}" 2>/dev/null; then
+        module load cray-python || {
+            echo "Could not load python/${python_version} or cray-python." >&2
+            return 1
+        }
+    fi
+
+    if ! check_python_version; then
+        echo "Python 3.8+ is required to run Spack and install_manifest.py." >&2
+        echo "Please load a compatible Python module." >&2
+        return 1
+    fi
 }
 
 function set_modulepaths_for_arch()
@@ -79,7 +159,9 @@ function set_modulepaths_for_arch()
 
     if [ "$( uname -m )" == "x86_64" ]; then
         module load cpe/25.03
-        module load gcc-native/${gcc_version}
+        # The Setonix module is named for its major/minor version (14.2), while
+        # the Spack compiler and module tree use the full version (14.2.0).
+        module load gcc-native/${gcc_version%.*}
         module use ${INSTALL_PREFIX}/staff_modulefiles
         # we need the python module to be available in order to run spack
         module --ignore-cache load pawseyenv/${pawseyenv_version}
@@ -89,11 +171,29 @@ function set_modulepaths_for_arch()
         module use $INSTALL_PREFIX/modules/${mainarch}/gcc/${gcc_version}/programming-languages
         module load spack/${spack_version}
     elif [ "$( uname -m )" == "aarch64" ]; then
-        module load cpe/25.03
+        if [ "${SYSTEM}" != "setonix-q" ]; then
+            echo "The aarch64 module path setup is only configured for SYSTEM=setonix-q."
+            exit 1
+        fi
+
         module use ${INSTALL_PREFIX}/staff_modulefiles
         # we need the python module to be available in order to run spack
         module --ignore-cache load pawseyenv/${pawseyenv_version}
-        module use $INSTALL_PREFIX/modules/${mainarch}/nvhpc/${nvidia_version}/programming-languages
+        # CUDA-free base: the plain GNU programming environment keeps the CUDA
+        # toolkit out of the base that every build inherits, so pure %gcc CPU
+        # builds (e.g. openblas) do not pick up CUDA. nvhpc (GPU) builds
+        # family-swap to the stock NVIDIA PE via the compiler entry; gcc+CUDA
+        # packages get CUDA from the `cuda` external in packages.yaml.
+        module load PrgEnv-gnu
+        # Pin the GNU compiler; plain PrgEnv-gnu otherwise defaults to a newer
+        # gcc-native (e.g. 14.2) than the gcc@${gcc_version} compiler entry.
+        module load gcc-native/${gcc_version%%.*}
+        # Target the Grace ARM CPU (the cluster default is craype-x86-milan).
+        module load craype-arm-grace
+        # The gcc Spack module tree (which holds the python module that `module
+        # load spack` pulls in) is exposed via the pawseyenv + gcc-native
+        # handshake (LMOD_CUSTOM_COMPILER_GNU_* prepended to MODULEPATH), so no
+        # explicit `module use` of the programming-languages trees is needed.
         module load spack/${spack_version}
     else
         echo "The architecture '$( uname -m )' is not supported."
@@ -101,65 +201,230 @@ function set_modulepaths_for_arch()
     fi
 }
 
+# Print the path to the Setonix-Q manifest helper. Allows easy modification
+# or system-specific locations in the future.
+function spack_install_manifest_tool()
+{
+    echo "${PAWSEY_SPACK_CONFIG_REPO}/systems/setonix-q/install_manifest.py"
+}
+
+# Start a Setonix-Q manifest run and initialise its metadata paths. A run ties
+# all later source receipts to one stack release, preventing records from an
+# earlier or different installation from being published with this one.
+function initialize_spack_install_manifest()
+{
+    [ "${SYSTEM}" = "setonix-q" ] || return 0
+    : "${INSTALLATION_METADATA_DIR:=${INSTALL_PREFIX}/installation_metadata}"
+    : "${SPACK_INSTALL_MANIFEST:=${INSTALLATION_METADATA_DIR}/spack_install_manifest.json}"
+
+    mkdir -p "${INSTALLATION_METADATA_DIR}"
+    # Validate the Setonix-Q metadata location, archive any published manifest,
+    # remove stale candidate outputs, and write current_run.json with a new run
+    # ID and the release details supplied below.
+    "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" init \
+        --metadata-root "${INSTALLATION_METADATA_DIR}" \
+        --system "${SYSTEM}" \
+        --date-tag "${DATE_TAG}" \
+        --install-prefix "${INSTALL_PREFIX}" \
+        --spack-version "${spack_version}"
+}
+
+# Ensure that Setonix-Q has an active manifest run before recording install
+# results. This makes the individual install entry points safe to run without
+# first running the top-level stack installer.
+function ensure_spack_install_manifest_run()
+{
+    [ "${SYSTEM}" = "setonix-q" ] || return 0
+    : "${INSTALLATION_METADATA_DIR:=${INSTALL_PREFIX}/installation_metadata}"
+    : "${SPACK_INSTALL_MANIFEST:=${INSTALLATION_METADATA_DIR}/spack_install_manifest.json}"
+
+    if [ ! -f "${INSTALLATION_METADATA_DIR}/current_run.json" ]; then
+        initialize_spack_install_manifest
+    fi
+}
+
+# Open a fresh receipt for a standalone or environment source. Resetting it
+# before installation discards stale or partial root package records so a retry reports
+# only the specs installed by the current attempt.
+function reset_spack_install_receipt()
+{
+    local source_type=$1
+    local source_name=$2
+
+    ensure_spack_install_manifest_run || return 1
+    # Load the active run and replace this source's receipt with an empty one in
+    # the "recording" state. This also removes any assembled candidate manifest,
+    # since it no longer represents the receipts being collected.
+    "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" reset-source \
+        --metadata-root "${INSTALLATION_METADATA_DIR}" \
+        --kind "${source_type}" \
+        --name "${source_name}"
+}
+
+# Mark a source receipt complete after all of its root packages have been recorded.
+# Sealing marks the result as publishable and indicates a that spack reported
+# a successful installation. Though no other validation is performed at this point.
+function seal_spack_install_receipt()
+{
+    local source_type=$1
+    local source_name=$2
+
+    ensure_spack_install_manifest_run || return 1
+    # Check that the receipt belongs to the active run and contains at least one
+    # root package, then mark it "complete" and timestamp it. An already-complete
+    # receipt is accepted unchanged, making this operation safe to repeat.
+    "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" seal-source \
+        --metadata-root "${INSTALLATION_METADATA_DIR}" \
+        --kind "${source_type}" \
+        --name "${source_name}"
+}
+
+# Concretize and install one 'standalone' root package (currently Python and ReFrame),
+# then add its exact concrete spec to the source receipt. Installing from the saved
+# JSON makes ensures that the installed graph matches the graph used in the later
+# manifest and module-plan generation.
+function install_and_record_spack_root()
+{
+    local source_type=$1
+    local source_name=$2
+    local requested_spec=$3
+    local install_mode=${4:-root}
+    local temporary_spec_file
+    local quoted_spec_file
+    local install_command
+
+    ensure_spack_install_manifest_run || return 1
+    temporary_spec_file=$(mktemp "${INSTALLATION_METADATA_DIR}/.concrete-spec.XXXXXX.json") || return 1
+
+    if ! spack spec --json ${SPACK_SPEC_ARGS:-} "${requested_spec}" > "${temporary_spec_file}"; then
+        echo "Concretization failed for ${requested_spec}."
+        rm -f "${temporary_spec_file}"
+        return 1
+    fi
+
+    printf -v quoted_spec_file '%q' "${temporary_spec_file}"
+    install_command="spack install ${SPACK_INSTALL_ARGS:-} -j${NCPUS}"
+    if [ "${install_mode}" = "dependencies-only" ]; then
+        install_command+=" --only dependencies"
+    elif [ "${install_mode}" != "root" ]; then
+        echo "Unsupported installation mode '${install_mode}' for ${requested_spec}."
+        return 1
+    fi
+    install_command+=" -f ${quoted_spec_file}"
+
+    if ! sg "${INSTALL_GROUP}" -c "${install_command}"; then
+        echo "Installation failed for ${requested_spec}."
+        rm -f "${temporary_spec_file}"
+        return 1
+    fi
+
+    # Validate the concrete-spec JSON and the open receipt, store the full spec
+    # under its root package's hash, and add the requested spec, hash and
+    # installation mode to the receipt. Duplicate identical records are ignored;
+    # conflicts fail.
+    if ! "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" record-spec \
+        --metadata-root "${INSTALLATION_METADATA_DIR}" \
+        --kind "${source_type}" \
+        --name "${source_name}" \
+        --requested-spec "${requested_spec}" \
+        --spec-file "${temporary_spec_file}" \
+        --install-mode "${install_mode}"; then
+        rm -f "${temporary_spec_file}"
+        return 1
+    fi
+    rm -f "${temporary_spec_file}"
+}
+
+# Install a Spack environment and, on Setonix-Q, record its lockfile in
+# the installation manifest. Reusing the pre-generated Setonix-Q lockfile
+# preserves the concretization. Other systems re-concretize at install
+# time.
 function build_environment() {
-    # build an evnironment given directory and name
     local envdir=$1
     local env=$2
     local testing_only=0
+    local previous_dir=$PWD
+    local install_mode=root
+    local lock_file
     if [ ! -z ${3+x} ]; then
         testing_only=$3
     fi
     echo "Installing environment $env..."
-    cd ${envdir}/${env}
-    spack env activate ${envdir}/${env}
-    # standard practice is to concretize in environments, but this can result in lots of duplicates
-    # thus only do if explicitly requested
-    if [ ! -z ${SPACK_ENV_CONCRETIZE+x} ]; then
-        echo "Using concreitization for $env"
-        spack concretize -f ${SPACK_CONCRETIZE_ARGS}
-        if (( $testing_only != 0 )); then
-            echo "Testing only - not installing for $env"
-            spack env deactivate
-            return
-        fi
-        if [ "${env}" == "roms" ] || [ "${env}" == "wrf" ] ; then
-            sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} --only dependencies"
-        else
-            sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS}"
-        fi
-        spack env deactivate
-    else
-        # instead of conretizing in the environment, which tends to produce lots of duplicates,
-        # just use spack find to get the basic spec being requested
-        echo "Using basic spec extraction and spec and install outside environment for $env"
-        rm -f spack.specs.txt spack.specs.output.txt
-        local str=" - "
-        spack find -c -r | awk  "/^$str/{print}" | sed "s: - ::g" > spack.specs.txt
-        spack env deactivate
-        if (( $testing_only != 0 )); then
-            echo "Testing only - not installing for $env"
-        fi
-        echo "Number of specs to be processed for $env: $(wc -l spack.specs.txt)"
-        while read p; do
-            echo "Package $p ..."
-            if (( $testing_only != 0 )); then
-                spack spec ${SPACK_SPEC_ARGS} ${p} >> spack.specs.output.txt
-            else
-                if [ "${env}" == "roms" ] || [ "${env}" == "wrf" ] ; then
-                    sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} --only dependencies ${p}"
-                else
-                    sg $INSTALL_GROUP -c "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} ${p}"
-                fi
-            fi
-        done < spack.specs.txt
+    cd "${envdir}/${env}" || return 1
+    if ! spack env activate "${envdir}/${env}"; then
+        cd "${previous_dir}" || true
+        return 1
     fi
-    cd -
+    if [ "${SYSTEM}" = "setonix-q" ]; then
+        lock_file="${envdir}/${env}/spack.lock"
+        if [ ! -f "${lock_file}" ]; then
+            echo "Environment ${env} has no spack.lock; run concretize_environments.sh first."
+            spack env deactivate || true
+            cd "${previous_dir}" || true
+            return 1
+        fi
+        echo "Using existing environment concretization for $env"
+    else
+        echo "Using environment concretization for $env"
+        if ! spack concretize -f ${SPACK_CONCRETIZE_ARGS}; then
+            spack env deactivate || true
+            cd "${previous_dir}" || true
+            return 1
+        fi
+    fi
+    if (( $testing_only != 0 )); then
+        echo "Testing only - not installing for $env"
+        spack env deactivate
+        cd "${previous_dir}" || true
+        return
+    fi
+    if [ "${env}" == "roms" ] || [ "${env}" == "wrf" ] ; then
+        install_mode=dependencies-only
+        if ! sg "${INSTALL_GROUP}" -c \
+            "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS} --only dependencies"; then
+            spack env deactivate || true
+            cd "${previous_dir}" || true
+            return 1
+        fi
+    else
+        if ! sg "${INSTALL_GROUP}" -c \
+            "spack install ${SPACK_SPEC_ARGS} ${SPACK_INSTALL_ARGS} -j${NCPUS}"; then
+            spack env deactivate || true
+            cd "${previous_dir}" || true
+            return 1
+        fi
+    fi
+    if [ "${SYSTEM}" = "setonix-q" ]; then
+        # Validate the lockfile format, replace this environment's receipt, and
+        # record every root package together with its concrete dependency graph.
+        # The helper seals the populated receipt as part of the same operation.
+        if ! "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" record-lockfile \
+            --metadata-root "${INSTALLATION_METADATA_DIR}" \
+            --name "${env}" \
+            --lock-file "${lock_file}" \
+            --install-mode "${install_mode}"; then
+            spack env deactivate || true
+            cd "${previous_dir}" || true
+            return 1
+        fi
+    fi
+    spack env deactivate || return 1
+    cd "${previous_dir}" || return 1
 }
 
 
 # export relevant functions
 export -f check_installation_environment
+export -f load_system_settings
 export -f set_spack_config_repo
 export -f set_compilation_sets_for_arch
 export -f set_modulepaths_for_arch
+export -f spack_install_manifest_tool
+export -f check_python_version
+export -f resolve_compatible_python_interpreter
+export -f initialize_spack_install_manifest
+export -f ensure_spack_install_manifest_run
+export -f reset_spack_install_receipt
+export -f seal_spack_install_receipt
+export -f install_and_record_spack_root
 export -f build_environment

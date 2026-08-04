@@ -3,7 +3,7 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2025.08"
+DATE_TAG="2026.08"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
     INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
@@ -186,11 +186,6 @@ quay.io/pawsey/namd:3.0.1-rocm6.3.0
 #quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 
 #hpc-python containers need to be rebuild due to security bugs
-
-# Custom utility modules to deploy from systems/${SYSTEM}/templates/modules/
-# These are installed to ${utilities_modules_dir} and visible after loading pawseyenv
-utility_module_list="
-"
 
 ### TYPICALLY NO EDIT NEEDED PAST THIS POIINT
 

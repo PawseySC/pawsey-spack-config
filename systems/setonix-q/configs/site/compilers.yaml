@@ -4,23 +4,25 @@ compilers:
 #                        NVIDIA 
 # ===================================================================
 - compiler:
-    spec: nvhpc@24.11
+    spec: nvhpc@25.9
     paths:
       cc: cc
       cxx: CC
       f77: ftn
       fc: ftn
     flags:
-      cflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/12/bin/gcc
-      cxxflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/12/bin/gcc
-      cppflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/12/bin/gcc
-      fflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/12/bin/gcc
+      cflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/13/bin/gcc
+      cxxflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/13/bin/gcc
+      cppflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/13/bin/gcc
+      fflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/13/bin/gcc
     operating_system: sles15
-
     target: aarch64
     modules:
+    # Stock NVIDIA PE for nvhpc (GPU) builds. CUDA comes from the `cuda` external
+    # and GPU-aware MPICH from the cray-mpich external, not the PE.
     - PrgEnv-nvidia
-    - gcc-native-mixed/12.3
+    - nvidia/25.9
+    - gcc-native-mixed/13
     - craype
     - craype-arm-grace
     - craype-network-ofi
@@ -28,25 +30,35 @@ compilers:
     environment:
       set:
         PE_ENV: "NVIDIA"
+        # Keep build caches off $HOME.
+        CARGO_HOME: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/cargo
+        GOCACHE: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/go-cache/build
+        GOMODCACHE: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/go-cache/mod
     extra_rpaths: []
+
+# ===================================================================
+#                        GNU
+# ===================================================================
 - compiler:
-    spec: gcc@12.3.0
+    spec: gcc@13.3.1
     paths:
       cc: cc
       cxx: CC
       f77: ftn
       fc: ftn
     flags:
-      # might not need permissive, this was done to get around a cmake+curl bug but that should be fixed in cmake 3.31.7
       cflags: -O3
-      cxxflags: -O3 
+      cxxflags: -O3
       cppflags: -O3
-      fflags: -O3 -fallow-argument-mismatch
+      # Keep package-specific -fallow-argument-mismatch handling local to the
+      # packages that need it. Global GNU-only flag conflicts with mixed
+      # %gcc/%nvhpc concretization in the shared stack.
+      fflags: -O3
     operating_system: sles15
     target: aarch64
     modules:
     - PrgEnv-gnu
-    - gcc-native/12.3
+    - gcc-native/13
     - craype
     - craype-arm-grace
     - craype-network-ofi
@@ -54,4 +66,14 @@ compilers:
     environment:
       set:
         PE_ENV: "GNU"
+        # Keep build caches off $HOME.
+        CARGO_HOME: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/cargo
+        GOCACHE: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/go-cache/build
+        GOMODCACHE: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/go-cache/mod
+        # The system binutils ships only ld.bfd, no ld.gold.
+        GOFLAGS: "-ldflags=-extldflags=-fuse-ld=bfd"
+      unset:
+        # Guard against the Cray cudatoolkit forced-link options that broke %gcc
+        # CPU builds (e.g. openblas); normally already absent in the CUDA-free base.
+        - CRAY_CUDATOOLKIT_POST_LINK_OPTS
     extra_rpaths: []

@@ -46,6 +46,8 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
 
     version("master", branch="master")
     version("develop", branch="develop")
+    # Pawsey: 16.2.1 bundles kokkos 4.7.04
+    version("16.2.1", sha256="c68a9d28fc9e7b06f33804c1f5e998234820878c21ae075649483b56992cea05")
     version("16.0.0", sha256="46bfc40419ed2aa2db38c144fb8e61d4aa8170eaa654a88d833ba6b92903f309")
     version("15.1.1", sha256="2108d633d2208ed261d09b2d6b2fbae7a9cdc455dd963c9c94412d38d8aaefe4")
     version("15.0.0", sha256="5651f1f967217a807f2c418a73b7e649532824dbf2742fa517951d6cc11518fb")
@@ -412,6 +414,7 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
 
     # External Kokkos
     depends_on("kokkos@4.4.01", when="@master: +kokkos")
+    depends_on("kokkos@4.7.04", when="@16.2.1 +kokkos")
     depends_on("kokkos@4.3.01", when="@16.0.0 +kokkos")
     depends_on("kokkos@4.2.01", when="@15.1.0:15.1.1 +kokkos")
     depends_on("kokkos@4.1.00", when="@14.4.0:15.0.0 +kokkos")
@@ -430,7 +433,6 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
         depends_on(kokkos_spec, when="@14.4.0: +kokkos {0}".format(arch_str))
 
     depends_on("adios2", when="+adios2")
-    depends_on("binder@1.3:", when="@15: +python", type="build")
     depends_on("blas")
     depends_on("boost+graph+math+exception+stacktrace", when="+boost")
     depends_on("boost+graph+math+exception+stacktrace", when="@:13.4.0 +stk")
@@ -447,7 +449,6 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
     depends_on("matio", when="+exodus")
     depends_on("metis", when="+zoltan")
     depends_on("mpi", when="+mpi")
-    depends_on("mpi", when="@15: +python")
     depends_on("netcdf-c", when="+exodus")
     depends_on("parallel-netcdf", when="+exodus+mpi")
     depends_on("parmetis", when="+mpi +zoltan")
@@ -520,7 +521,6 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
         when="@15.0.0 ^hip@6.0 +rocm",
     )
     patch("cstdint_gcc13.patch", when="@13.4.0:13.4.1 %gcc@13.0.0:")
-
     # Allow building with +teko gotype=long
     patch(
         "https://github.com/trilinos/Trilinos/commit/b17f20a0b91e0b9fc5b1b0af3c8a34e2a4874f3f.patch?full_index=1",
@@ -528,8 +528,8 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
         when="@13.0.0:13.0.1 +teko gotype=long",
     )
     # patch("fix_gather_ETI.patch", when="@15.1.1")
-    patch ("fix_Kokkos_HIP_Instance.cpp.patch")
-
+    # Pawsey: ROCm-only fix for deprecated gcnArch (rocm>6).
+    patch("fix_Kokkos_HIP_Instance.cpp.patch", when="@:16.0.0 +rocm")
     def flag_handler(self, name, flags):
         spec = self.spec
         is_cce = spec.satisfies("%cce")
@@ -543,7 +543,13 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
             if "+stk%intel" in spec:
                 # Workaround for Intel compiler segfaults with STK and IPO
                 flags.append("-no-ipo")
-            if "+wrapper" in spec:
+            if "+wrapper" in spec and not spec.satisfies("@14.4.0: +kokkos"):
+                # Only needed for Trilinos' *internal* Kokkos build. With external
+                # Kokkos (@14.4.0:), the exported Kokkos::kokkos target already
+                # carries --extended-lambda on its INTERFACE_COMPILE_OPTIONS, so
+                # injecting it globally here is redundant and breaks CMake's
+                # compiler-ABI try-compile (a host-only .cxx that never links
+                # Kokkos), since plain g++ rejects the nvcc-only flag.
                 flags.append("--expt-extended-lambda")
         elif name == "ldflags":
             if spec.satisfies("%cce@:14"):
@@ -616,7 +622,6 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
             if "+stk" in spec:
                 # Using CXXFLAGS for hipcc which doesn't use flags in the spack wrappers
                 env.set("CXXFLAGS", "-DSTK_NO_BOOST_STACKTRACE")
-
 
     def cmake_args(self):
         options = []
@@ -694,9 +699,9 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
         )
 
         if spec.version >= Version("15"):
-            options.append(define_trilinos_enable("PyTrilinos2", "python"))
+            options.append(define("Trilinos_ENABLE_PyTrilinos2", False))
         else:
-            options.append(define_trilinos_enable("PyTrilinos", "python"))
+            options.append(define("Trilinos_ENABLE_PyTrilinos", False))
 
         if "+test" in spec:
             options.append(define_trilinos_enable("TESTS", True))
@@ -821,15 +826,6 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
                     define_trilinos_enable("SEACASNemslice", False),
                 ]
             )
-
-        if "@15: +python" in spec:
-            binder = spec["binder"].prefix.bin.binder
-            clang_include_dirs = spec["binder"].clang_include_dirs
-            libclang_include_dir = spec["binder"].libclang_include_dir
-            options.append(define("PyTrilinos2_BINDER_EXECUTABLE", binder))
-            options.append(define("PyTrilinos2_BINDER_clang_include_dirs", clang_include_dirs))
-            options.append(define("PyTrilinos2_BINDER_LibClang_include_dir", libclang_include_dir))
-            options.append(define_from_variant("PyTrilinos2_ENABLE_TESTS", "test"))
 
         if "+stratimikos" in spec:
             # Explicitly enable Thyra (ThyraCore is required). If you don't do

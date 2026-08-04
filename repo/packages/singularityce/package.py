@@ -113,6 +113,16 @@ class SingularityBase(MakefilePackage):
     def setup_build_environment(self, env):
         # Point GOPATH at the top of the staging dir for the build step.
         env.prepend_path("GOPATH", self.gopath)
+        # Some systems do not provide ld.gold, may be request by Singularity's Go link step
+        # Force bfd when ld.gold is unavailable.
+        if shutil.which("ld.gold") is None:
+            ld_bfd = shutil.which("ld.bfd")
+            if ld_bfd:
+                env.append_flags("GOFLAGS", "-ldflags=-extldflags=-fuse-ld=bfd")
+                env.append_flags("CGO_LDFLAGS", "-fuse-ld=bfd")
+                env.set("LD", ld_bfd)
+            else:
+                tty.warn("ld.gold is unavailable and ld.bfd was not found; leaving linker flags unchanged")
 
     # `singularity` has a fixed path where it will look for
     # mksquashfs.  If it lives somewhere else you need to specify the

@@ -8,8 +8,8 @@ spack:
   specs:
   - matrix:
     - [$packages]
-    - ['%gcc@12.3.0']
+    - ['%gcc@13.3.1']
   #- matrix:
   #  - [$gpu-packages]
-  #  - ['%gcc@12.3.0']
+  #  - ['%gcc@13.3.1']
   view: false

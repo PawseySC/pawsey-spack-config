@@ -13,16 +13,14 @@ spack:
     - hpl@2.3 ~openmp
     - hpl@2.3 +openmp  
   - mpi-tests:
-    - osu-micro-benchmarks@7.5 +cuda cuda_arch=90
+    # 7.5.2 fixes the CUDA 13 build failure due to change to cudaMemPrefetchAsync signature.
+    - osu-micro-benchmarks@7.5.2 +cuda cuda_arch=90
   - io-tests:
     - ior@3.3.0 +hdf5 +lustre
 
   # add package specs to the `specs` list
   specs:
   - matrix:
-    - [$math-tests, $io-tests]
-    - ['%gcc@12.3.0']
-  - matrix:
-    - [$mpi-tests]
-    - ['%nvhpc@24.11']
+    - [$math-tests, $io-tests, $mpi-tests]
+    - ['%gcc@13.3.1']
   view: false

@@ -3,11 +3,8 @@ repos:
 # in that items higher up in the list are inspected first
 # and take precedence
 #
-# This one is for user recipes
-- USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix/DATE_TAG/spack_repo
-
-# The following is for project-wide recipes
-- USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/setonix/DATE_TAG/spack_repo
+# User and project recipe repositories are added by the Spack wrapper at
+# runtime when the corresponding repo.yaml files exist.
 
 # 
 # Spack user (Pawsey staff) populates this one with fixed recipes for Setonix

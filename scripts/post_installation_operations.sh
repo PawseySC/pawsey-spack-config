@@ -8,7 +8,6 @@
 # 5. create hpc-python view and module
 # 6. apply licensing permissions
 # 7. customise shpc symlink modules
-# 8. deploy custom utility modules
 
 # source setup variables
 # if copy/pasting these commands, need to run from this directory
@@ -23,7 +22,20 @@ if [ -z ${SYSTEM+x} ]; then
 fi
 
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
+. "${PAWSEY_SPACK_CONFIG_REPO}/scripts/pawsey_software_stack_funcs.sh"
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
+
+if [ "${SYSTEM}" = "setonix-q" ]; then
+    echo "Creating all missing module directories.."
+    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_system_moduletree.sh"
+
+    echo "Executing CRs"
+    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/cr_operations.sh"
+
+    echo "Running spack reframe tests.."
+    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_rfm_module_tests.sh"
+    exit 0
+fi
 
 module use ${INSTALL_PREFIX}/staff_modulefiles
 # we need the python module to be available in order to run spack
@@ -68,11 +80,7 @@ echo "Apply licensing permissions.."
 echo "Customising shpc container modules.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/patch_shpc_pawsey_modules.sh"
 
-# step 8. deploy custom utility modules
-echo "Deploying custom utility modules.."
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_utility_modules.sh"
-
-# step 9, run previous manual steps outlined in 2024.05 deployment CRs
+# step 8, run previous manual steps outlined in 2024.05 deployment CRs
 echo "Executing CRs"
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/cr_operations.sh"
 

@@ -6,12 +6,49 @@ applications:
 bio-applications:
 # No cppzmq (no suitable command found yet)
 astro-applications:
-# No eigen (no suitable binary or library found), hpx (python script can't be called easily)
 libraries:
-  fftw/3.3.10: ['fftw-wisdom', '-h', 'Usage: fftw-wisdom']
+  adios2/2.10.2-hdf5: ['adios2-config', '--version', 'ADIOS 2.10.2']
+  adios2/2.10.2-hdf5-nopython: ['adios2-config', '--version', 'ADIOS 2.10.2']
+  adios2/2.10.2: ['adios2-config', '--version', 'ADIOS 2.10.2']
+  adios2/2.10.2-nopython: ['adios2-config', '--version', 'ADIOS 2.10.2']
+  blaspp-cuda-gh200/2024.10.26: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <blas.hh>\n" | CC -E -x c++ - > "$tmp" 2>&1 && grep -m1 "blaspp-2024.10.26" "$tmp"''', 'blaspp-2024.10.26']
+  boost/1.86.0-c++11-python: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <boost/version.hpp>\n" | CC -std=c++11 -E -x c++ - > "$tmp" 2>&1 && grep -m1 "boost-1.86.0" "$tmp"''', 'boost-1.86.0']
+  boost/1.86.0-c++14-python: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <boost/version.hpp>\n" | CC -std=c++14 -E -x c++ - > "$tmp" 2>&1 && grep -m1 "boost-1.86.0" "$tmp"''', 'boost-1.86.0']
+  eigen/3.4.0: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <Eigen/Core>\n" | CC -E -x c++ - > "$tmp" 2>&1 && grep -m1 "Eigen/Core" "$tmp"''', 'Eigen/Core']
+  fftw/2.1.5: ['bash', '-lc ''test -f "$PAWSEY_FFTW_HOME/include/dfftw.h" && test -f "$PAWSEY_FFTW_HOME/lib64/libdfftw.so.2.0.7" && echo "dfftw.h"''', 'dfftw.h']
+  fftw/3.3.10: ['fftw-wisdom', '-h', 'Usage: '] # 'Usage: fftw-wisdom' doesn't match as the 'fftw-wisdom' is replaces by the full path to the script.
+  gsl: ['gsl-config', '--libs', 'gsl']
+  hdf5: ['h5dump', '--version', 'h5dump']
+  hpx-cuda-gh200/1.11.0: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <hpx/hpx.hpp>\n" | CC -E -x c++ - > "$tmp" 2>&1 && grep -m1 "hpx-1.11.0" "$tmp"''', 'hpx-1.11.0']
+  kokkos-cuda-gh200/4.7.04-hpx: ['bash', '-lc ''printf "#include <Kokkos_Core.hpp>\nint main(){return KOKKOS_VERSION_MAJOR!=4;}\n" > test.cpp && nvcc_wrapper test.cpp -o test && ./test && echo Kokkos && rm -f test.cpp test''', 'Kokkos']
+  kokkos-cuda-gh200/4.7.04-openmp: ['bash', '-lc ''printf "#include <Kokkos_Core.hpp>\nint main(){return KOKKOS_VERSION_MAJOR!=4;}\n" > test.cpp && nvcc_wrapper -Xcompiler -fopenmp test.cpp -o test && ./test && echo Kokkos && rm -f test.cpp test''', 'Kokkos']
+  cuquantum/25.11.1-cuda-gh200: ['bash', '-lc ''printf "#include <custatevec.h>\n" | cc -E -x c - >/dev/null && echo "cuquantum ok"''', 'cuquantum ok']
+  cutensor/2.4.1.4-cuda-gh200: ['bash', '-lc ''printf "#include <cutensor.h>\n" | cc -E -x c - >/dev/null && echo "cutensor ok"''', 'cutensor ok']
+  magma-cuda-gh200/master: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <magma_v2.h>\n" | cc -E -x c - > "$tmp" 2>&1 && grep -m1 "magma-master" "$tmp"''', 'magma-master']
+  memkind/1.14.0: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <memkind.h>\n" | cc -E -x c - > "$tmp" 2>&1 && grep -m1 "memkind-1.14.0" "$tmp"''', 'memkind-1.14.0']
+  metis/5.1.0-64bit: ['bash', '-lc ''gpmetis 2>&1 | grep -m1 "Usage: gpmetis"''', 'Usage: gpmetis']
+  metis/5.1.0: ['bash', '-lc ''gpmetis 2>&1 | grep -m1 "Usage: gpmetis"''', 'Usage: gpmetis']
+  netlib-lapack/3.11.0: ['bash', '-lc ''tmpdir=$(mktemp -d) && trap "rm -rf \"$tmpdir\"" EXIT && printf "extern void dgesv_(); int main(){ dgesv_(); return 0; }\n" | cc -x c - -llapack -o "$tmpdir/lapack_link_check" && ldd "$tmpdir/lapack_link_check" | grep -m1 "netlib-lapack-3.11.0"''', 'netlib-lapack-3.11.0']
+  openblas/0.3.28: ['bash', '-lc ''printf "#include <cblas.h>\n" | cc -E -x c - >/dev/null && echo "openblas ok"''', 'openblas ok']
+  opencv-cuda-gh200/4.13.0: ['python3', '-c "import cv2; print(cv2.__version__)"', '4.13.0'] # module includes python bindings, so we can check the version using python
+  parmetis/4.0.3-64bit: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <parmetis.h>\n" | cc -E -x c - > "$tmp" 2>&1 && grep -m1 "parmetis-4.0.3" "$tmp"''', 'parmetis-4.0.3']
+  parmetis/4.0.3: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <parmetis.h>\n" | cc -E -x c - > "$tmp" 2>&1 && grep -m1 "parmetis-4.0.3" "$tmp"''', 'parmetis-4.0.3']
+  plasma/24.8.7: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <plasma.h>\n" | cc -E -x c - > "$tmp" 2>&1 && grep -m1 "plasma-24.8.7" "$tmp"''', 'plasma-24.8.7']
+  scotch/7.0.4-metis: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <scotch.h>\n" | cc -E -x c - > "$tmp" 2>&1 && grep -m1 "scotch-7.0.4" "$tmp"''', 'scotch-7.0.4']
+  scotch/7.0.4: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <scotch.h>\n" | cc -E -x c - > "$tmp" 2>&1 && grep -m1 "scotch-7.0.4" "$tmp"''', 'scotch-7.0.4']
+  slate-cuda-gh200/2024.10.29: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <slate/slate.hh>\n" | CC -E -x c++ - > "$tmp" 2>&1 && grep -m1 "slate-2024.10.29" "$tmp"''', 'slate-2024.10.29']
+  # trilinos-cuda-gh200 is not currently built in nvidia_num_libs.
+  #trilinos-cuda-gh200/16.2.1: ['bash', '-lc ''printf "#include <Teuchos_Version.hpp>\n" | CC -E -x c++ - >/dev/null && echo "trilinos ok"''', 'trilinos ok']
+  trilinos/16.2.1: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <Teuchos_Version.hpp>\n" | CC -E -x c++ - > "$tmp" 2>&1 && grep -m1 "trilinos-16.2.1" "$tmp"''', 'trilinos-16.2.1']
+# No petsc baseline command added yet.
 programming-languages:
   python: ['python', '-h', 'usage: python']
-# No py-setuptools or py-boto3 (no suitable command found yet for either one)
+  perl: ['perl', '--version', 'This is perl']
+  go: ['go', 'version', 'go version']
+  openjdk: ['java', '-version', 'openjdk version']
+  r: ['R', '--version', 'R version']
+  ruby: ['ruby', '--version', 'ruby']
+  rust: ['rustc', '--version', 'rustc']
 utilities:
   cmake: ['cmake', '--version', 'CMake suite maintained and supported by Kitware']
   rclone: ['rclone', '-h', 'Rclone syncs files']
@@ -21,6 +58,17 @@ utilities:
   libtool: ['libtool', '-h', 'Provide generalized library-building support services.']
   autoconf: ['autoconf', '-h', 'Generate a configuration script from a TEMPLATE-FILE if given']
   py-pip: ['pip', '-h', 'pip <command>']
+  singularityce: ['singularity', '-h', 'Linux container platform optimized for High Performance Computing']
+  awscli: ['aws', '--version', 'aws-cli']
+  py-boto3: ['python3', '-c "import boto3; print(boto3)"', "module 'boto3'"]
+  nextflow: ['nextflow', '-version', 'version']
+  feh: ['feh', '--version', 'feh']
+  nano: ['nano', '--version', 'GNU nano']
+  nvtop: ['nvtop', '--version', 'nvtop']
+  meson/1.5.1: ['meson', '--version', '1.5.1']
+  ffmpeg/7.0.2: ['ffmpeg', '-version', 'ffmpeg version 7.0.2']
+  gnuplot/6.0.0: ['gnuplot', '--version', 'gnuplot 6.0 patchlevel 0']
+  mpifileutils/0.11.1: ['dcp', '-h', 'Usage: dcp']
 # no viz packages
 #visualisation:
 python-packages:
@@ -31,12 +79,28 @@ python-packages:
   py-pandas: ['python3', '-c "import pandas; print(pandas)"', "module 'pandas'"]
   py-dask: ['python3', '-c "import dask; print(dask)"', "module 'dask'"]
   py-numba: ['python3', '-c "import numba; print(numba)"', "module 'numba'"]
+  py-cuda-python: ['python3', '-c "import cuda.bindings; print(cuda.bindings)"', "module 'cuda.bindings'"]
+  py-cupy: ['python3', '-c "import cupy; print(cupy)"', "module 'cupy'"]
+  py-numba-cuda: ['python3', '-c "import numba_cuda; print(numba_cuda)"', "module 'numba_cuda'"]
+  py-nvmath-python: ['python3', '-c "import nvmath; print(nvmath)"', "module 'nvmath'"]
   py-scikit-learn: ['python3', '-c "import sklearn; print(sklearn)"', "module 'sklearn'"]
-  py-h5py: ['python3', '-c "import h5py; print(h5py)"', "module 'h5py"]
+  py-h5py: ['python3', '-c "import h5py; print(h5py)"', "module 'h5py'"]
   py-mpi4py: ['python3', '-c "import mpi4py; print(mpi4py)"', "module 'mpi4py'"]
+  py-h5netcdf: ['python3', '-c "import h5netcdf; print(h5netcdf)"', "module 'h5netcdf'"]
+  py-pydantic: ['python3', '-c "import pydantic; print(pydantic)"', "module 'pydantic'"]
+  py-rich: ['python3', '-c "import rich; print(rich)"', "module 'rich'"]
+  py-setuptools: ['python3', '-c "import setuptools; print(setuptools)"', "module 'setuptools'"]
+  py-pip: ['pip', '-h', 'pip <command>']
+  py-pennylane: ['python3', '-c "import pennylane; print(pennylane)"', "module 'pennylane'"]
+  py-pennylane-qiskit: ['python3', '-c "import pennylane_qiskit; print(pennylane_qiskit)"', "module 'pennylane_qiskit'"]
+  py-qiskit: ['python3', '-c "import qiskit; print(qiskit)"', "module 'qiskit'"]
+  py-qiskit-nompi: ['python3', '-c "import qiskit; print(qiskit)"', "module 'qiskit'"]
 benchmarking:
-  osu-micro-benchmarks: ['osu_init', '', '# OSU MPI Init Test']
+  osu-micro-benchmarks/7.5.2-cuda-gh200: ['osu_init', '', '# OSU MPI Init Test']
   # Want alternative command for hpl
   hpl: ['xhpl', '', 'function HPL_pdinfo']
+  ior/3.3.0: ['bash', '-lc ''ior -V >/dev/null && echo "ior ok"''', 'ior ok']
 developer-tools:
   hpcviewer: ['hpcviewer', '-h', 'hpcviewer ']
+dependencies:
+  '.perl-data-dumper/2.173': ['perl', '-MData::Dumper -e ''print "$Data::Dumper::VERSION\n"''', '2.173']

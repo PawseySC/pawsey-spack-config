@@ -12,5 +12,5 @@ spack:
   - matrix:
   - matrix:
     - [$packages]
-    - ['%nvhpc@24.11']
+    - ['%nvhpc@25.9']
   view: false
