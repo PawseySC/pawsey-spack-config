@@ -10,6 +10,7 @@ class Birli(Package):
     maintainers = ["d3v-null", "gsleap"]
 
     version("main", branch="main")
+    version("0.19.1", tag="v0.19.1")
     version("0.19.0", tag="v0.19.0")
     version("0.18.2", tag="v0.18.2")
     version("0.17.1", tag="v0.17.1")
@@ -45,7 +46,7 @@ class Birli(Package):
         if self.spec.satisfies("+cfitsio-static"):
             env.set("MWALIB_LINK_STATIC_CFITSIO", 1)
         if self.spec.satisfies("~portable"):
-            env.append_flags("RUSTFLAGS", f"-C target-cpu=native")
+            env.append_flags("RUSTFLAGS", "-C target-cpu=native")
 
     def get_features(self):
         features = ["cli"]

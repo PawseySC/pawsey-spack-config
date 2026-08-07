@@ -53,7 +53,7 @@ spack:
               - hyperbeam@0.10.2 ~portable +python
               - hyperdrive@=0.8.0 ~portable
               - hyperdrive@=0.7.0 ~portable
-              - birli@0.19.0 +aoflagger ~portable
+              - birli@0.19.1 +aoflagger ~portable
               - birli@0.18.2 +aoflagger ~portable
               - calceph@3.5.5 target=zen3
               - presto@5.0.1 target=zen3
