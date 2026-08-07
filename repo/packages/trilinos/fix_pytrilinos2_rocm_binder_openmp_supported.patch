@@ -1,0 +1,16 @@
+--- a/packages/PyTrilinos2/CMakeLists.txt
++++ b/packages/PyTrilinos2/CMakeLists.txt
+@@ -258,6 +258,13 @@
+ list(APPEND BINDER_OPTIONS -I${CMAKE_CURRENT_BINARY_DIR}/include_tmp)
+ list(APPEND BINDER_OPTIONS -I${CMAKE_CURRENT_BINARY_DIR}/src)
+ list(APPEND BINDER_OPTIONS -I${CMAKE_CURRENT_SOURCE_DIR}/src)
++list(APPEND BINDER_OPTIONS -D__HIP_PLATFORM_AMD__=1)
++list(APPEND BINDER_OPTIONS -U__HIP_PLATFORM_NVIDIA__)
++list(APPEND BINDER_OPTIONS -D_OPENMP=201811)
++list(APPEND BINDER_OPTIONS -x hip)
++list(APPEND BINDER_OPTIONS --offload-arch=gfx90a)
++list(APPEND BINDER_OPTIONS --rocm-path=/opt/rocm-7.0.1)
++list(APPEND BINDER_OPTIONS -fopenmp=libomp)
+ IF(NOT DEFINED PyTrilinos2_BINDER_GCC_TOOLCHAIN)
+   list(APPEND BINDER_OPTIONS -I${PyTrilinos2_BINDER_clang_include_dirs})
+   list(APPEND BINDER_OPTIONS -iwithsysroot${PyTrilinos2_BINDER_LibClang_include_dir})

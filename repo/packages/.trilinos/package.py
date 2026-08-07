@@ -441,7 +441,11 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
 
     depends_on("adios2", when="+adios2")
     depends_on("binder@1.3:", when="@15: +python", type="build")
-    depends_on("blas")
+    #depends_on("blas")
+
+    depends_on("blas", when="%gcc")
+    depends_on("lapack", when="%gcc")
+    depends_on("netlib-lapack", when="%cce")
     depends_on("boost+graph+math+exception+stacktrace", when="+boost")
     depends_on("boost+graph+math+exception+stacktrace", when="@:13.4.0 +stk")
     depends_on("cgns", when="+exodus")
@@ -451,7 +455,6 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
         depends_on("hypre~internal-superlu~int64", when="+hypre platform=%s" % plat)
     depends_on("hypre-cmake~int64", when="+hypre platform=windows")
     depends_on("kokkos-nvcc-wrapper", when="+wrapper")
-    depends_on("lapack")
     # depends_on('perl', type=('build',)) # TriBITS finds but doesn't use...
     depends_on("libx11", when="+x11")
     depends_on("matio", when="+exodus")
@@ -463,7 +466,16 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
     depends_on("parmetis", when="+mpi +zoltan")
     depends_on("parmetis", when="+scorec")
     depends_on("py-mpi4py", when="+python", type=("build", "run"))
+
     depends_on("py-numpy", when="+python", type=("build", "run"))
+    
+    ## Avoid openblas for PyTrilinos2 with CCE.
+    #depends_on(
+    #    "py-numpy %blas=netlib-lapack %lapack=netlib-lapack",
+    #    when="+python %cce",
+    #    type=("build", "run"),
+    #)
+
     depends_on("py-pybind11", when="@15: +python", type=("build", "link"))
     depends_on("python", when="+python")
     depends_on("python", when="@13.2: +ifpack +hypre", type="build")
@@ -539,6 +551,11 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
     )
     # patch("fix_gather_ETI.patch", when="@15.1.1")
     patch ("fix_Kokkos_HIP_Instance.cpp.patch")
+
+    patch(
+    "fix_kokkos_kernels_spadd_sort_option.patch",
+    when="@15.0.0",
+)
 
     def flag_handler(self, name, flags):
         spec = self.spec
@@ -901,16 +918,38 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
 
         # Enable these TPLs based on whether they're in our spec; prefer to
         # require this way so that packages/features disable availability
+#        tpl_dep_map = [
+#            ("BLAS", "blas"),
+#            ("CGNS", "cgns"),
+#            ("LAPACK", "lapack"),
+#            ("Matio", "matio"),
+#            ("METIS", "metis"),
+#            ("Netcdf", "netcdf-c"),
+#            ("SCALAPACK", "scalapack"),
+#            ("Zlib", "zlib-api"),
+#        ]
+
+# BLAS/LAPACK need special handling because for %cce we want to use
+# netlib-lapack directly, not the generic virtual provider selected
+# from packages.yaml.
+#        if spec.satisfies("%cce"):
+#            define_tpl("BLAS", "netlib-lapack", "netlib-lapack" in spec)
+#            define_tpl("LAPACK", "netlib-lapack", "netlib-lapack" in spec)
+#        else:
+#            define_tpl("BLAS", "blas", "blas" in spec)
+#            define_tpl("LAPACK", "lapack", "lapack" in spec)
+        define_tpl("BLAS", "blas", "blas" in spec)
+        define_tpl("LAPACK", "lapack", "lapack" in spec)
+        
         tpl_dep_map = [
-            ("BLAS", "blas"),
             ("CGNS", "cgns"),
-            ("LAPACK", "lapack"),
             ("Matio", "matio"),
             ("METIS", "metis"),
             ("Netcdf", "netcdf-c"),
             ("SCALAPACK", "scalapack"),
             ("Zlib", "zlib-api"),
         ]
+
         if spec.satisfies("@12.12.1:"):
             tpl_dep_map.append(("Pnetcdf", "parallel-netcdf"))
         if spec.satisfies("@13:") and not spec.satisfies("@develop"):
