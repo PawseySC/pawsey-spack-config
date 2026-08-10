@@ -115,6 +115,7 @@ class Hpx(CMakePackage, CudaPackage, ROCmPackage):
             depends_on(f"asio cxxstd={map_cxxstd(cxxstd)}", when=f"cxxstd={cxxstd}")
 
     depends_on("asio@1.32.0", when="@1.9.1")
+    conflicts("^asio@1.34:")
 
     depends_on("gperftools", when="malloc=tcmalloc")
     depends_on("jemalloc", when="malloc=jemalloc")
@@ -215,8 +216,8 @@ class Hpx(CMakePackage, CudaPackage, ROCmPackage):
     patch("git_external.patch", when="@1.3.0 instrumentation=apex")
     patch("mimalloc_no_version_requirement.patch", when="@:1.8.0 malloc=mimalloc")
 
-    patch("fix_restricted_thread_pool_executor.hpp.patch", when="%gcc@14:")
-    patch("fix_restricted_thread_pool_executor.hpp.patch", when="%cce@19:")
+    patch("fix_restricted_thread_pool_executor.hpp.patch", when="@1.9.1 %gcc@14:")
+    patch("fix_restricted_thread_pool_executor.hpp.patch", when="@1.9.1 %cce@19:")
 
     def url_for_version(self, version):
         if version >= Version("1.9.0"):
