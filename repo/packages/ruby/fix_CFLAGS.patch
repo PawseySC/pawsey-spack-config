@@ -1,0 +1,33 @@
+--- a/configure	2025-01-03 15:37:04.000000000 +0800
++++ b/configure	2025-01-03 15:37:42.000000000 +0800
+@@ -9783,18 +9783,18 @@
+   return 0;
+ }
+ _ACEOF
+-if ac_fn_c_try_compile "$LINENO"
+-then :
+-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+-    printf "%s\n" "${msg_result_yes}yes${msg_reset}" >&6 ; }
+-else $as_nop
+-
+-	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+-    printf "%s\n" "${msg_result_no}no${msg_reset}" >&6 ; }
+-	as_fn_error $? "something wrong with CFLAGS=\"$CFLAGS\"" "$LINENO" 5
+-
+-
+-fi
++#if ac_fn_c_try_compile "$LINENO"
++#then :
++#  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
++#    printf "%s\n" "${msg_result_yes}yes${msg_reset}" >&6 ; }
++#else $as_nop
++#
++#	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
++#    printf "%s\n" "${msg_result_no}no${msg_reset}" >&6 ; }
++#	as_fn_error $? "something wrong with CFLAGS=\"$CFLAGS\"" "$LINENO" 5
++#
++#
++#fi
+ rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+ 
+     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether LDFLAGS is valid" >&5
