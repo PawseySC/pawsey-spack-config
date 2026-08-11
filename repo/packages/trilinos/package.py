@@ -568,9 +568,16 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
         when="@16.1.0 +python +rocm",
     )
 
+
     patch(
         "fix_pytrilinos2_rocm_generated_sources5.patch",
         when="@16.1.0 +python +rocm",
+    )
+
+
+    patch(
+        "fix_pytrilinos2_rocm_generated_sources5.patch",
+        when="@16.1.0 +python ~rocm",
     )
 
     def patch(self):
@@ -726,7 +733,7 @@ message(
                 flags.append("-Wl,-undefined,dynamic_lookup")
 
             # Fortran lib (assumes clang is built with gfortran!)
-            if spec.satisfies("+fortran") and (
+            if spec.satisfies("+fortran +rocm") and (
                 spec.satisfies("%gcc")
                 or spec.satisfies("%clang")
                 or spec.satisfies("%apple-clang")
@@ -1046,6 +1053,9 @@ message(
             ] + [
                 "-I" + path for path in clang_include_dirs[1:]
             ]
+
+            if spec.satisfies("+openmp ~rocm"):
+                binder_clang_include_args.append("-fopenmp")
 
             llvm_spec = spec["binder"]["llvm"]
             clang_resource_dir = os.path.join(
