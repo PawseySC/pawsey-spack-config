@@ -18,7 +18,6 @@ spack:
 #    - nekrs@23.0 amdgpu_target=gfx90a:xnack+ +rocm
     - nekrs@23.0 amdgpu_target=gfx90a:xnack+ +rocm
     - amdgromacs@2023 amdgpu_target=gfx90a +rocm
-      
   - lammps:
     #- lammps@=20240829.1 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +hwloc+memkind+numactl+openmp+tuning+rocm build_type=Release
     #- lammps@=20230802.4 amdgpu_target=gfx90a +rocm ^kokkos@4.4.01 +hwloc+memkind+numactl+openmp+tuning+rocm build_type=Release      
@@ -27,6 +26,8 @@ spack:
 
 
   specs:
+  # gromacs GPU support is the only package that needs to be compiled with LLVM, so no matrix needed.
+  - gromacs@2026.1  +sycl  +mpi %llvm@20  ^adaptivecpp +rocm amdgpu_target=gfx90a  %llvm@20
   - matrix:
     - [$packages-with-python]
     - ['%%gcc_compiler']
