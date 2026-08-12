@@ -35,6 +35,10 @@ class Amdgromacs(CMakePackage, ROCmPackage):
     variant("openmp", default=True)
     # variant("plumed", default=False)
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+    depends_on("fortran", type="build", when="@:4.5.5")  # No core Fortran code since 4.6
+
 #    depends_on("fftw-api@3:")
     depends_on("cray-libsci")
     depends_on("cray-fftw")
