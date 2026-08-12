@@ -10,6 +10,7 @@ spack:
 ## for now    - llvm@15.0.4 ~polly ~gold # Ilkhom: ~omp_as_runtime variant is removed from spack/0.21.0
     - nextflow@22.10.0 #supports DSL-1
     - nextflow@24.10.0 #supports DSL-2
+    - nextflow@25.10.4 #supports DSL-2
     - parallel@20240822
 # Reframe installation is not required since it is done via install_reframe.sh
     - reframe@4.7.3 ^python@3.11.6 #+optimizations+zlib
