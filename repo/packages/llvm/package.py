@@ -506,6 +506,13 @@ class Llvm(CMakePackage, CudaPackage, LlvmDetection, CompilerPackage):
         when="@21.1.4 %cce@21.0.0",
     )
 
+#    patch(
+#        "fix-smallvector-cstdint.patch",
+#        when="@16.0.0:16.0.6 %cce@21:",
+#    )
+
+
+
     # fix building of older versions of llvm with newer versions of glibc
     for compiler_rt_as in ["project", "runtime"]:
         with when("compiler-rt={0}".format(compiler_rt_as)):
@@ -668,6 +675,7 @@ class Llvm(CMakePackage, CudaPackage, LlvmDetection, CompilerPackage):
         sha256="0dc6e0bf66edf260b56c088dfbf37abb8417e210f256abe4ee11c395a2665ed8",
         when="@21.1.0:21.1.4",
     )
+
 
     @when("@14:17")
     def patch(self):
@@ -883,6 +891,9 @@ class Llvm(CMakePackage, CudaPackage, LlvmDetection, CompilerPackage):
         if name == "ldflags" and self.spec.satisfies("%intel"):
             flags.append("-shared-intel")
             return (None, flags, None)
+        if self.spec.satisfies("@16.0.0:16.0.6 %cce@21:"):
+            if name in ("cxxflags"):
+                flags.append("-includestdint.h")
         return (flags, None, None)
 
     def setup_build_environment(self, env: EnvironmentModifications) -> None:
@@ -1175,15 +1186,56 @@ class Llvm(CMakePackage, CudaPackage, LlvmDetection, CompilerPackage):
 #                )
 
             # When building runtimes, just-built clang has to know where GCC is.
+#            gcc_install_dir_flag = get_gcc_install_dir_flag(spec, self.compiler)
+#            if gcc_install_dir_flag:
+#                runtime_cmake_args.extend(
+#                    [
+#                        define("CMAKE_C_FLAGS", gcc_install_dir_flag),
+#                        define("CMAKE_CXX_FLAGS", gcc_install_dir_flag),
+#                    ]
+#                )
+#
+#            cmake_args.extend(
+#                [
+#                    define("LLVM_ENABLE_RUNTIMES", runtimes),
+#                    define("RUNTIMES_CMAKE_ARGS", runtime_cmake_args),
+#                    define("LIBCXXABI_USE_LLVM_UNWINDER", not spec.satisfies("libunwind=none")),
+#                ]
+#            )
+
             gcc_install_dir_flag = get_gcc_install_dir_flag(spec, self.compiler)
+    
+            runtime_cxx_flags = []
+    
             if gcc_install_dir_flag:
-                runtime_cmake_args.extend(
-                    [
-                        define("CMAKE_C_FLAGS", gcc_install_dir_flag),
-                        define("CMAKE_CXX_FLAGS", gcc_install_dir_flag),
-                    ]
+                runtime_cmake_args.append(
+                    define("CMAKE_C_FLAGS", gcc_install_dir_flag)
+                )
+                runtime_cxx_flags.append(gcc_install_dir_flag)
+    
+            # LLVM 16 + CCE 21 requires fixed-width integer types to be
+            # available in C++ sources, including nested runtime builds.
+            if spec.satisfies("@16.0.0:16.0.6 %cce@21:"):
+                runtime_cxx_flags.append("-includestdint.h")
+    
+                cce_runtime_libdir = (
+                    f"/opt/cray/pe/cce/{spec.compiler.version}/cce/x86_64/lib"
+                )
+    
+                runtime_cmake_args.append(
+                    define(
+                        "CMAKE_CXX_STANDARD_LIBRARIES",
+                        f"-Wl,-rpath,{cce_runtime_libdir} "
+                        f"{cce_runtime_libdir}/libu.so.2",
+                    )
                 )
 
+    
+            if runtime_cxx_flags:
+                runtime_cmake_args.append(
+                    define("CMAKE_CXX_FLAGS", " ".join(runtime_cxx_flags))
+                )
+    
             cmake_args.extend(
                 [
                     define("LLVM_ENABLE_RUNTIMES", runtimes),
@@ -1191,6 +1243,8 @@ class Llvm(CMakePackage, CudaPackage, LlvmDetection, CompilerPackage):
                     define("LIBCXXABI_USE_LLVM_UNWINDER", not spec.satisfies("libunwind=none")),
                 ]
             )
+
+
 
         return cmake_args
 
