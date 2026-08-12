@@ -52,7 +52,11 @@ class Exabayes(AutotoolsPackage):
 
     variant('mpi', default=True, description='Enable MPI parallel support')
 
+    depends_on("c", type="build")  # generated
+    depends_on("cxx", type="build")  # generated
+
     depends_on('mpi', when='+mpi')
+
 
     # ExaBayes manual states the program succesfully compiles with GCC, version
     # 4.6 or greater, and Clang, version 3.2 or greater. The build fails when
