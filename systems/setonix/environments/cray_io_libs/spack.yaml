@@ -7,6 +7,20 @@ spack:
 #  packages:
 #    hdf:
 #      variants: ~external-xdr
+  packages:
+    all:
+      providers:
+        blas: [netlib-lapack]
+        cblas: [netlib-lapack]
+        lapack: [netlib-lapack]
+
+    openblas:
+      buildable: false
+
+    amdblis:
+      buildable: false
+
+
   definitions:
   - hdf5-set:
     - hdf5@1.14.5
