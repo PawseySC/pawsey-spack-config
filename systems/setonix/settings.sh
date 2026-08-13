@@ -60,7 +60,7 @@ gcc_versionO="14.2.1"
 cce_version="21.0.0"
 aocc_version="5.1.0"
 # CPE 26.03 compiler aliases used in the LMOD_CUSTOM_COMPILER variable names.
-gcc_compat_version="13.0"
+gcc_compat_version="12.0"
 cce_compat_version="21.0"
 aocc_compat_version="4.1"
 
