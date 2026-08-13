@@ -55,7 +55,7 @@ spack:
     
       #    - opencv@3.4.18 build_type=Release
     - trilinos@16.1.0 ~rocm +adios2 +openmp +python +thyra +tpetra +stratimikos ~cuda ^adios2@2.9.2 build_type=Release
-    - trilinos@15.0.0 ~rocm +adios2 +openmp +python ~cuda ^adios2@2.9.2 build_type=Release
+    #- trilinos@15.0.0 ~rocm +adios2 +openmp +python ~cuda ^adios2@2.9.2 build_type=Release
     #- trilinos@16.1.0 +rocm amdgpu_target=gfx90a +adios2 +openmp +python +thyra +tpetra +stratimikos ~cuda ^adios2@2.9.2 build_type=Release
       #- trilinos@15.1.0 ~rocm +adios2 +openmp +python +tpetra +kokkos +zoltan ~cuda ^adios2@2.9.2 build_type=Release failed with /usr/include/stdlib.h:31:10: fatal error: 'stddef.h' file not found 
 
