@@ -4,6 +4,9 @@ spack:
   packages:
     'fftw-api:':
       buildable: true
+#  concretizer:
+#    unify: true
+
   definitions:
   - parallel:
     
@@ -11,8 +14,11 @@ spack:
     - boost@1.86.0 +mpi +numpy +python cxxstd=14
     # IA cxxstd=98 is replaced by cxxstd=11 in the following line since boost@1.85.0 does not support cxxstd=98
     - boost@1.86.0 +mpi +numpy +python cxxstd=11
-    - hpx@1.11.0 +async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi
-      build_type=Release ^boost
+
+    - hpx@1.11.0 +async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi build_type=Release ^boost
+
+    - kokkos@4.4.01 +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ~openmp build_type=Release
+
     
     # rather silly kokkos has std=98,11, etc setting cxxstd. BUT all other packages 
     # use the flag cxxstd ... Update in recipes might fix this but for the moment, we fix 
@@ -21,8 +27,8 @@ spack:
     - kokkos@4.4.01 ~rocm +hwloc +memkind +numactl +openmp +tuning build_type=Release
     
     # for hpx must explicitly set openmp off 
-    - kokkos@4.4.01 +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ~openmp
-      build_type=Release ^hpx@1.11.0 +async_mpi max_cpu_count=128 networking=mpi build_type=Release
+#    - kokkos@4.4.01 +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ~openmp
+#      build_type=Release ^hpx@1.11.0 +async_mpi max_cpu_count=128 networking=mpi build_type=Release
     - metis@5.1.0 ~int64~real64
     - metis@5.1.0 +int64+real64
 # IAB
@@ -48,7 +54,9 @@ spack:
     - opencv@4.10.0 build_type=Release
     
       #    - opencv@3.4.18 build_type=Release
-    - trilinos@15.0.0 ~rocm +adios2 +openmp +python ~cuda ^adios2@2.9.2 build_type=Release
+    - trilinos@16.1.0 ~rocm +adios2 +openmp +python +thyra +tpetra +stratimikos ~cuda ^adios2@2.9.2 build_type=Release
+    #- trilinos@15.0.0 ~rocm +adios2 +openmp +python ~cuda ^adios2@2.9.2 build_type=Release
+    #- trilinos@16.1.0 +rocm amdgpu_target=gfx90a +adios2 +openmp +python +thyra +tpetra +stratimikos ~cuda ^adios2@2.9.2 build_type=Release
       #- trilinos@15.1.0 ~rocm +adios2 +openmp +python +tpetra +kokkos +zoltan ~cuda ^adios2@2.9.2 build_type=Release failed with /usr/include/stdlib.h:31:10: fatal error: 'stddef.h' file not found 
 
     #- trilinos@16.0.0 ~rocm +adios2 +openmp +python +tpetra +kokkos +zoltan ~cuda ^adios2@2.9.2 build_type=Release

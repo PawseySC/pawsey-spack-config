@@ -2,6 +2,7 @@ include:
   # Normal user scope.
   # submit_job can override this with SPACK_USER_CONFIG_PATH.
   - name: "user"
+    path_override_env_var: SPACK_USER_CONFIG_PATH
     path: "USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix/DATE_TAG/.spack_user_config"
     optional: true
     prefer_modify: true

@@ -1,0 +1,14 @@
+--- a/packages/PyTrilinos2/scripts/gather_ETI.py	2026-08-06 10:26:00.707342283 +0800
++++ b/packages/PyTrilinos2/scripts/gather_ETI.py	2026-08-06 10:50:11.798344433 +0800
+@@ -149,8 +149,10 @@
+                     node_type_internal = 'Tpetra_KokkosCompat_KokkosDeviceWrapperNode_Kokkos_OpenMP_Kokkos_HostSpace'
+                 if node_type == 'cuda':
+                     node_type_internal = 'Tpetra_KokkosCompat_KokkosDeviceWrapperNode_Kokkos_Cuda_Kokkos_CudaSpace'
+-                if node_type == 'cudaUVM':
++                if node_type == 'cudauvm':
+                     node_type_internal = 'Tpetra_KokkosCompat_KokkosDeviceWrapperNode_Kokkos_Cuda_Kokkos_CudaUVMSpace'
++                if node_type == 'hip':
++                    node_type_internal = 'Tpetra_KokkosCompat_KokkosDeviceWrapperNode_Kokkos_HIP_Kokkos_HIPSpace'
+ 
+                 fh.write('\tif class_name.lower() == "'+class_name+'" and scalar_type.lower() == "'+scalar_type+'" and local_ordinal_type.lower() == "'+local_ordinal_type+'" and global_ordinal_type.lower() == "'+global_ordinal_type+'" and node_type.lower() == "'+node_type+'":\n')
+                 fh.write('\t\treturn Tpetra.'+class_name_internal+'_'+scalar_type_internal+'_'+local_ordinal_type_internal+'_'+global_ordinal_type_internal+'_'+node_type_internal+'_t\n')

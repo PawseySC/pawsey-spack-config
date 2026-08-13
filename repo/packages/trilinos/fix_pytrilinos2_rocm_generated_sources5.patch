@@ -1,0 +1,295 @@
+--- a/packages/PyTrilinos2/CMakeLists.txt
++++ b/packages/PyTrilinos2/CMakeLists.txt
+@@ -277,7 +277,15 @@
+ add_custom_command(
+   OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/binder/PyTrilinos2.cpp
+   COMMAND ${PyTrilinos2_BINDER_EXECUTABLE} ${binder_include_name} ${BINDER_OPTIONS}
+-  DEPENDS ${binder_include_name} generate_include_name
++  COMMAND
++    ${Python3_EXECUTABLE}
++    ${CMAKE_CURRENT_SOURCE_DIR}/scripts/fix_rocm_binder_output.py
++    ${CMAKE_CURRENT_BINARY_DIR}/binder
++  DEPENDS
++    ${binder_include_name}
++    generate_include_name
++    ${CMAKE_CURRENT_SOURCE_DIR}/scripts/fix_rocm_binder_output.py
++  VERBATIM
+ )
+ add_custom_target(binder_call DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/binder/PyTrilinos2.cpp)
+ add_dependencies(binder_call generate_ETI_name generate_include_name)
+--- /dev/null
++++ b/packages/PyTrilinos2/scripts/fix_rocm_binder_output.py
+@@ -0,0 +1,273 @@
++#!/usr/bin/env python3
++
++from pathlib import Path
++import sys
++
++
++PRIVATE_HEADERS = {
++    "#include <HIP/Kokkos_HIP.hpp>": "#include <Kokkos_Core.hpp>",
++    "#include <HIP/Kokkos_HIP_Space.hpp>": "#include <Kokkos_Core.hpp>",
++}
++
++
++NODE_ALIASES = {
++    "Tpetra_KokkosCompat_KokkosHIPWrapperNode": (
++        "Tpetra::Tpetra_KokkosCompat_KokkosHIPWrapperNode"
++    ),
++    "Tpetra_KokkosCompat_KokkosOpenMPWrapperNode": (
++        "Tpetra::Tpetra_KokkosCompat_KokkosOpenMPWrapperNode"
++    ),
++    "Tpetra_KokkosCompat_KokkosSerialWrapperNode": (
++        "Tpetra::Tpetra_KokkosCompat_KokkosSerialWrapperNode"
++    ),
++}
++
++
++EPETRA_HEADERS = {
++    "Epetra_Comm": "Epetra_Comm.h",
++    "Epetra_Map": "Epetra_Map.h",
++    "Epetra_Vector": "Epetra_Vector.h",
++    "Epetra_MultiVector": "Epetra_MultiVector.h",
++}
++
++
++ENUM_RCP_TYPES = (
++    "Tpetra::FE::WhichActive",
++    "Tpetra::FE::FillState",
++)
++
++
++def insert_after_includes(text: str, block: str) -> str:
++    lines = text.splitlines(keepends=True)
++
++    last_include = -1
++
++    for index, line in enumerate(lines):
++        if line.startswith("#include "):
++            last_include = index
++        elif last_include >= 0 and line.strip():
++            break
++
++    if last_include < 0:
++        return block + "\n\n" + text
++
++    lines.insert(
++        last_include + 1,
++        "\n" + block + "\n",
++    )
++
++    return "".join(lines)
++
++
++def add_required_epetra_headers(text: str) -> str:
++    includes = []
++
++    for typename, header in EPETRA_HEADERS.items():
++        if typename not in text:
++            continue
++
++        include = f"#include <{header}>"
++
++        if include not in text:
++            includes.append(include)
++
++    if includes:
++        text = insert_after_includes(
++            text,
++            "\n".join(includes),
++        )
++
++    return text
++
++
++def remove_invalid_enum_rcp_functions(text: str) -> str:
++    """
++    Binder generates Teuchos::rcp overloads like:
++
++        M("Teuchos").def(
++            "rcp",
++            [](Tpetra::FE::FillState *p)
++                -> Teuchos::RCP<Tpetra::FE::FillState> {
++                return Teuchos::rcp(p);
++            },
++            ...
++        );
++
++    pybind11 then attempts to use Teuchos::RCP as a holder for an enum,
++    which it rejects.
++
++    Remove ONLY these module-level rcp() bindings.
++
++    Do not remove:
++      - callback class declarations
++      - Teuchos::DeallocDelete<enum> bindings
++      - RCPNodeTmpl generated classes
++      - other Teuchos::RCP uses
++    """
++
++    lines = text.splitlines(keepends=True)
++    result = []
++
++    for line in lines:
++        is_enum_rcp_function = (
++            'M("Teuchos").def("rcp"' in line
++            and "Teuchos::RCP" in line
++            and any(enum_type in line for enum_type in ENUM_RCP_TYPES)
++        )
++
++        if is_enum_rcp_function:
++            continue
++
++        result.append(line)
++
++    return "".join(result)
++
++
++def repair_source(path: Path) -> None:
++    text = path.read_text(encoding="utf-8")
++    original = text
++
++    #
++    # Replace direct private Kokkos HIP headers with the public header.
++    #
++    for private_header, public_header in PRIVATE_HEADERS.items():
++        text = text.replace(
++            private_header,
++            public_header,
++        )
++
++    #
++    # Binder sometimes only sees forward declarations of Epetra classes.
++    # pybind11 uses typeid/type traits, which require complete types.
++    #
++    text = add_required_epetra_headers(text)
++
++    declarations = []
++
++    #
++    # Binder emits "longlong" in generated C++ identifiers/types.
++    #
++    if (
++        "longlong" in text
++        and "using longlong = long long;" not in text
++    ):
++        declarations.append(
++            "using longlong = long long;"
++        )
++
++    #
++    # Binder loses the Tpetra namespace from these ETI aliases.
++    #
++    for generated_name, qualified_name in NODE_ALIASES.items():
++        alias = (
++            f"using {generated_name} = "
++            f"{qualified_name};"
++        )
++
++        if (
++            generated_name in text
++            and alias not in text
++        ):
++            declarations.append(alias)
++
++    #
++    # HIP defines hipStream_t as a pointer to opaque ihipStream_t.
++    # pybind11 applies typeid/type traits to it and requires completeness.
++    #
++    if (
++        "ihipStream_t" in text
++        and "struct ihipStream_t {};" not in text
++    ):
++        declarations.append(
++            "struct ihipStream_t {};"
++        )
++
++    if declarations:
++        text = insert_after_includes(
++            text,
++            "\n".join(declarations),
++        )
++
++    #
++    # Teuchos::Array<MPI_Status>::toString() requires operator<<.
++    #
++    if "MPI_Status" in text:
++        marker = "PYTRILINOS2_MPI_STATUS_STREAM_OPERATOR"
++
++        if marker not in text:
++            mpi_support = """\
++#ifndef PYTRILINOS2_MPI_STATUS_STREAM_OPERATOR
++#define PYTRILINOS2_MPI_STATUS_STREAM_OPERATOR
++
++#include <mpi.h>
++#include <ostream>
++
++inline std::ostream &
++operator<<(std::ostream &stream, const MPI_Status &status)
++{
++    stream << "MPI_Status{"
++           << "MPI_SOURCE=" << status.MPI_SOURCE
++           << ", MPI_TAG=" << status.MPI_TAG
++           << ", MPI_ERROR=" << status.MPI_ERROR
++           << "}";
++
++    return stream;
++}
++
++#endif
++"""
++
++            text = insert_after_includes(
++                text,
++                mpi_support,
++            )
++
++    #
++    # Remove ONLY Teuchos::rcp(enum *) bindings.
++    #
++    text = remove_invalid_enum_rcp_functions(text)
++
++    if text != original:
++        path.write_text(
++            text,
++            encoding="utf-8",
++        )
++
++
++def main() -> int:
++    if len(sys.argv) != 2:
++        print(
++            f"Usage: {sys.argv[0]} BINDER_DIRECTORY",
++            file=sys.stderr,
++        )
++        return 2
++
++    binder_dir = Path(sys.argv[1])
++
++    if not binder_dir.is_dir():
++        print(
++            f"Binder directory does not exist: {binder_dir}",
++            file=sys.stderr,
++        )
++        return 1
++
++    generated_sources = sorted(
++        binder_dir.glob("PyTrilinos2_*.cpp")
++    )
++
++    if not generated_sources:
++        print(
++            "No generated PyTrilinos2 sources "
++            f"found in {binder_dir}",
++            file=sys.stderr,
++        )
++        return 1
++
++    for source in generated_sources:
++        repair_source(source)
++
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())

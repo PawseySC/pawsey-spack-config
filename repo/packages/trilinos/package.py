@@ -550,12 +550,160 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
         when="@13.0.0:13.0.1 +teko gotype=long",
     )
     # patch("fix_gather_ETI.patch", when="@15.1.1")
-    patch ("fix_Kokkos_HIP_Instance.cpp.patch")
+    patch ("fix_Kokkos_HIP_Instance.cpp.patch", when="@15.0.0")
 
     patch(
     "fix_kokkos_kernels_spadd_sort_option.patch",
     when="@15.0.0",
+    )
+
+    patch(
+    "fix_pytrilinos2_hip_eti.patch",
+    when="@16.1.0 +python +rocm",
+    )
+
+
+    patch(
+        "fix_pytrilinos2_rocm_binder_openmp_supported.patch",
+        when="@16.1.0 +python +rocm",
+    )
+
+
+    patch(
+        "fix_pytrilinos2_rocm_generated_sources5.patch",
+        when="@16.1.0 +python +rocm",
+    )
+
+
+    patch(
+        "fix_pytrilinos2_rocm_generated_sources5.patch",
+        when="@16.1.0 +python ~rocm",
+    )
+
+    def patch(self):
+        """Provide the missing ADIOS2 TriBITS finder for Trilinos 16.1.0."""
+
+        if not self.spec.satisfies("@16.1.0 +adios2"):
+            return
+
+        tpl_dir = os.path.join(
+            self.stage.source_path,
+            "packages",
+            "seacas",
+            "cmake",
+            "tpls",
+        )
+        mkdirp(tpl_dir)
+
+        finder = os.path.join(tpl_dir, "FindTPLADIOS2.cmake")
+
+        with open(finder, "w") as f:
+            f.write(
+                r"""
+# Find ADIOS2 through its exported CMake package.
+#
+# This file is supplied by the Spack recipe because the Trilinos 16.1.0
+# source distribution references the SEACAS ADIOS2 finder but does not
+# contain it.
+
+set(_ADIOS2_HINTS)
+
+if(DEFINED ADIOS2_ROOT)
+  list(APPEND _ADIOS2_HINTS "${ADIOS2_ROOT}")
+endif()
+
+if(DEFINED TPL_ADIOS2_ROOT)
+  list(APPEND _ADIOS2_HINTS "${TPL_ADIOS2_ROOT}")
+endif()
+
+find_package(
+  ADIOS2 CONFIG REQUIRED
+  HINTS ${_ADIOS2_HINTS}
+  PATH_SUFFIXES
+    lib/cmake/adios2
+    lib64/cmake/adios2
 )
+
+if(TARGET adios2::cxx11_mpi)
+  set(TPL_ADIOS2_LIBRARIES adios2::cxx11_mpi)
+elseif(TARGET adios2::cxx11)
+  set(TPL_ADIOS2_LIBRARIES adios2::cxx11)
+elseif(TARGET adios2::adios2)
+  set(TPL_ADIOS2_LIBRARIES adios2::adios2)
+else()
+  message(
+    FATAL_ERROR
+    "ADIOS2 was found, but no supported ADIOS2 imported target exists"
+  )
+endif()
+
+set(TPL_ADIOS2_INCLUDE_DIRS "")
+
+message(
+  STATUS
+  "Using ADIOS2 target: ${TPL_ADIOS2_LIBRARIES}"
+)
+"""
+            )
+
+    @run_after("cmake")
+    def fix_adios2_external_config(self):
+        if "adios2" not in self.spec:
+            return
+    
+        adios2_prefix = self.spec["adios2"].prefix
+    
+        adios2_cmake_dir = join_path(
+            adios2_prefix,
+            "lib64",
+            "cmake",
+            "adios2",
+        )
+    
+        adios2_config = join_path(
+            adios2_cmake_dir,
+            "adios2-config.cmake",
+        )
+    
+        adios2_version = join_path(
+            adios2_cmake_dir,
+            "adios2-config-version.cmake",
+        )
+    
+        if not os.path.isfile(adios2_config):
+            raise InstallError(
+                "Cannot find ADIOS2 config file: {}".format(
+                    adios2_config
+                )
+            )
+    
+        dst = join_path(
+            self.build_directory,
+            "external_packages",
+            "ADIOS2",
+        )
+    
+        mkdirp(dst)
+    
+        #
+        # Trilinos expects these CamelCase wrapper files.
+        #
+        with open(join_path(dst, "ADIOS2Config.cmake"), "w") as f:
+            f.write(
+                '# Trilinos wrapper for Spack ADIOS2\n'
+                'include("{}")\n'.format(adios2_config)
+            )
+    
+        if os.path.isfile(adios2_version):
+            with open(
+                join_path(dst, "ADIOS2ConfigVersion.cmake"),
+                "w",
+            ) as f:
+                f.write(
+                    '# Trilinos wrapper for Spack ADIOS2 version config\n'
+                    'include("{}")\n'.format(adios2_version)
+                )
+
 
     def flag_handler(self, name, flags):
         spec = self.spec
@@ -585,7 +733,7 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
                 flags.append("-Wl,-undefined,dynamic_lookup")
 
             # Fortran lib (assumes clang is built with gfortran!)
-            if spec.satisfies("+fortran") and (
+            if spec.satisfies("+fortran +rocm") and (
                 spec.satisfies("%gcc")
                 or spec.satisfies("%clang")
                 or spec.satisfies("%apple-clang")
@@ -849,14 +997,96 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
                 ]
             )
 
+#        if "@15: +python" in spec:
+#            binder = spec["binder"].prefix.bin.binder
+#            clang_include_dirs = spec["binder"].clang_include_dirs
+#            libclang_include_dir = spec["binder"].libclang_include_dir
+#            options.append(define("PyTrilinos2_BINDER_EXECUTABLE", binder))
+#            options.append(define("PyTrilinos2_BINDER_clang_include_dirs", clang_include_dirs))
+#            options.append(define("PyTrilinos2_BINDER_LibClang_include_dir", libclang_include_dir))
+#            options.append(define_from_variant("PyTrilinos2_ENABLE_TESTS", "test"))
+
         if "@15: +python" in spec:
             binder = spec["binder"].prefix.bin.binder
-            clang_include_dirs = spec["binder"].clang_include_dirs
-            libclang_include_dir = spec["binder"].libclang_include_dir
-            options.append(define("PyTrilinos2_BINDER_EXECUTABLE", binder))
-            options.append(define("PyTrilinos2_BINDER_clang_include_dirs", clang_include_dirs))
-            options.append(define("PyTrilinos2_BINDER_LibClang_include_dir", libclang_include_dir))
-            options.append(define_from_variant("PyTrilinos2_ENABLE_TESTS", "test"))
+            binder_dirs = spec["binder"].clang_include_dirs
+
+            if isinstance(binder_dirs, str):
+                clang_include_dirs = [binder_dirs]
+            else:
+                clang_include_dirs = [
+                    str(path) for path in binder_dirs
+                ]
+
+            gcc14_include_dirs = [
+                "/usr/include/c++/14",
+                "/usr/include/c++/14/x86_64-suse-linux",
+                "/usr/include/c++/14/backward",
+                "/usr/lib64/gcc/x86_64-suse-linux/14/include",
+            ]
+
+            clang_include_dirs.extend(gcc14_include_dirs)
+
+            if spec.satisfies("+rocm"):
+                hip_include_dir = os.path.join(
+                    str(spec["hip"].prefix),
+                    "include",
+                )
+
+                hip_runtime_header = os.path.join(
+                    hip_include_dir,
+                    "hip",
+                    "hip_runtime.h",
+                )
+
+                if not os.path.isfile(hip_runtime_header):
+                    raise InstallError(
+                        "HIP runtime header was not found: "
+                        + hip_runtime_header
+                    )
+
+                clang_include_dirs.append(hip_include_dir)
+
+            # PyTrilinos2 adds -I only to the beginning of this CMake list.
+            # Prefix every subsequent entry explicitly.
+            binder_clang_include_args = [
+                clang_include_dirs[0]
+            ] + [
+                "-I" + path for path in clang_include_dirs[1:]
+            ]
+
+            if spec.satisfies("+openmp ~rocm"):
+                binder_clang_include_args.append("-fopenmp")
+
+            llvm_spec = spec["binder"]["llvm"]
+            clang_resource_dir = os.path.join(
+                str(llvm_spec.prefix),
+                "lib",
+                "clang",
+                "21",
+                "include",
+            )
+
+            options.extend(
+                [
+                    define(
+                        "PyTrilinos2_BINDER_EXECUTABLE",
+                        binder,
+                    ),
+                    define(
+                        "PyTrilinos2_BINDER_clang_include_dirs",
+                        binder_clang_include_args,
+                    ),
+                    define(
+                        "PyTrilinos2_BINDER_LibClang_include_dir",
+                        clang_resource_dir,
+                    ),
+                    define_from_variant(
+                        "PyTrilinos2_ENABLE_TESTS",
+                        "test",
+                    ),
+                ]
+            )
+
 
         if "+stratimikos" in spec:
             # Explicitly enable Thyra (ThyraCore is required). If you don't do
@@ -898,7 +1128,6 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
         # Enable these TPLs explicitly from variant options.
         # Format is (TPL name, variant name, Spack spec name)
         tpl_variant_map = [
-            ("ADIOS2", "adios2", "adios2"),
             ("Boost", "boost", "boost"),
             ("CUDA", "cuda", "cuda"),
             ("HDF5", "hdf5", "hdf5"),
@@ -912,6 +1141,19 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
         ]
         if spec.satisfies("@13.0.2:"):
             tpl_variant_map.append(("STRUMPACK", "strumpack", "strumpack"))
+
+        # ADIOS2 uses its exported CMake targets rather than manually supplied
+        # library names. The Trilinos 16.1.0 finder is created in patch().
+        if "+adios2" in spec:
+            options.extend(
+                [
+                    define("TPL_ENABLE_ADIOS2", True),
+                    define("ADIOS2_ROOT", spec["adios2"].prefix),
+                    define("TPL_ADIOS2_ROOT", spec["adios2"].prefix),
+                ]
+            )
+        else:
+            options.append(define("TPL_ENABLE_ADIOS2", False))
 
         for tpl_name, var_name, spec_name in tpl_variant_map:
             define_tpl(tpl_name, spec_name, spec.variants[var_name].value)
@@ -1142,3 +1384,4 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
             # currently Trilinos doesn't perform the memory fence so
             # it relies on blocking CUDA kernel launch.
             env.set("CUDA_LAUNCH_BLOCKING", "1")
+

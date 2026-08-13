@@ -30,7 +30,29 @@ config:
       glibc:            "{architecture}/build-tools/{name}-{version}-{hash}"
       autoconf:         "{architecture}/build-tools/{name}-{version}-{hash}"
 
-      # 4) Default: compiler-aware layout
+      # 4) Compiler independent packages
+      asciidoc-py3:     "{architecture}/compiler-independent/{name}-{version}-{hash}"
+      autoconf-archive: "{architecture}/compiler-independent/{name}-{version}-{hash}"
+      beast2:           "{architecture}/compiler-independent/{name}-{version}-{hash}"
+      clblast:          "{architecture}/compiler-independent/{name}-{version}-{hash}"
+      docbook-xml:      "{architecture}/compiler-independent/{name}-{version}-{hash}"
+      docbook-xsl:      "{architecture}/compiler-independent/{name}-{version}-{hash}"
+      go-bootstrap:     "{architecture}/compiler-independent/{name}-{version}-{hash}"
+      go-md2man:        "{architecture}/compiler-independent/{name}-{version}-{hash}"
+      hpcviewer:        "{architecture}/compiler-independent/{name}-{version}-{hash}"
+      javafx:           "{architecture}/compiler-independent/{name}-{version}-{hash}"
+      nextflow:         "{architecture}/compiler-independent/{name}-{version}-{hash}"
+      openjdk:          "{architecture}/compiler-independent/{name}-{version}-{hash}"
+      parallel:         "{architecture}/compiler-independent/{name}-{version}-{hash}"
+      perl-data-dumper: "{architecture}/compiler-independent/{name}-{version}-{hash}"
+      rclone:           "{architecture}/compiler-independent/{name}-{version}-{hash}"
+      tinyxml:          "{architecture}/compiler-independent/{name}-{version}-{hash}"
+      util-macros:      "{architecture}/compiler-independent/{name}-{version}-{hash}"
+      xcb-proto:        "{architecture}/compiler-independent/{name}-{version}-{hash}"
+      xineramaproto:    "{architecture}/compiler-independent/{name}-{version}-{hash}"
+
+
+      # 5) Default: compiler-aware layout
       all: "{architecture}/{compiler.name}-{compiler.version}/{name}-{version}-{hash}"
 
   environments_root: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix/DATE_TAG/environments
