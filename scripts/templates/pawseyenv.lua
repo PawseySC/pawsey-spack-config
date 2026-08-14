@@ -172,11 +172,11 @@ if current_mode == "load" then
       "variable to your project name."
     )
   end
-  setenv("PAWSEYENV_PROJECT", project)
 else
   project = os.getenv("PAWSEYENV_PROJECT") or os.getenv("PAWSEY_PROJECT")
 end
 
+setenv("PAWSEYENV_PROJECT", project)
 
 --------------------------------------------------------------------------------
 -- Apply Module Paths
