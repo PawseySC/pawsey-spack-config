@@ -11,12 +11,20 @@
 
 ]]--
 
+
 local user = os.getenv("USER")
 if user == "root" then
   return
 end
 
 family("pawseyenv")
+
+--------------------------------------------------------------------------------
+-- Lmod Mode
+--------------------------------------------------------------------------------
+-- Configure variable caching or cleanup based on the current Lmod mode.
+local current_mode = mode()
+
 
 --------------------------------------------------------------------------------
 -- Runtime Detection
@@ -88,8 +96,6 @@ add_compiler(
 --------------------------------------------------------------------------------
 -- Cross-partition Cleanup
 --------------------------------------------------------------------------------
-local current_mode = mode()
-
 local function contains(path, fragment)
   return string.find(path, fragment, 1, true) ~= nil
 end
@@ -146,17 +152,39 @@ local function prepend_compiler_paths(base_path, suffix)
 end
 
 --------------------------------------------------------------------------------
+-- Pawsey Project Detection
+--------------------------------------------------------------------------------
+-- The PAWSEY_PROJECT environment variable is required to determine 
+-- project-specific module paths. This variable is set by the 'pawsey'
+-- module, or may be set manually by the user if they are a member of
+-- multiple projects. When the current Lmod mode is 'load' we check 
+-- for the variable and raise an error if it is not set. 
+-- The PAWSEYENV_PROJECT variable caches the project name to ensure
+-- that the module can be unloaded cleanly if the PAWSEY_PROJECT 
+-- variable is altered after loading this module.
+local project
+if current_mode == "load" then
+  project = os.getenv("PAWSEY_PROJECT") or ""
+  if project == "" then
+    LmodError(
+      "PAWSEY_PROJECT is not set. ",
+      "Please load the 'pawsey' module or set the PAWSEY_PROJECT environment ",
+      "variable to your project name."
+    )
+  end
+  setenv("PAWSEYENV_PROJECT", project)
+else
+  project = os.getenv("PAWSEYENV_PROJECT") or os.getenv("PAWSEY_PROJECT")
+end
+
+
+--------------------------------------------------------------------------------
 -- Apply Module Paths
 --------------------------------------------------------------------------------
 setenv("PAWSEY_STACK_VERSION", date_tag)
 setenv("PAWSEYENV_ARCH", arch)
 
 prepend_path("LMOD_PACKAGE_PATH", "/software/" .. system .. "/lmod-extras")
-
-local project_file = assert(io.open(os.getenv("HOME") .. "/.pawsey_project", "r"))
-local project = project_file:read("*l")
-project_file:close()
-setenv("PAWSEY_PROJECT", project)
 
 local system_stack = pathJoin(system, date_tag)
 
