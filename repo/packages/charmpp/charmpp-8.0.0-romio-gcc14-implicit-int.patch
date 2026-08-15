@@ -1,0 +1,166 @@
+--- a/src/libs/ck-libs/ampi/romio/confdb/aclocal_romio.m4
++++ b/src/libs/ck-libs/ampi/romio/confdb/aclocal_romio.m4
+@@ -169,7 +169,7 @@
+   rm -f mpitest.c
+   cat > mpitest.c <<EOF
+ #include "mpi.h"
+-     main(int argc, char **argv)
++     int main(int argc, char **argv)
+      {
+          MPI_Init(&argc,&argv);
+          MPI_Finalize(); 
+@@ -223,7 +223,7 @@
+   rm -f mpitest.c
+   cat > mpitest.c <<EOF
+ #include "mpi.h"
+-     main(int argc, char **argv)
++     int main(int argc, char **argv)
+      {
+          long long i;   
+          MPI_Init(&argc,&argv);
+@@ -321,7 +321,7 @@
+   rm -f mpitest.c
+   cat > mpitest.c <<EOF
+ #include "mpi.h"
+-     main(int argc, char **argv)
++     int main(int argc, char **argv)
+      {
+          MPI_Info info;
+          MPI_Init(&argc,&argv);
+@@ -356,7 +356,7 @@
+   rm -f mpitest.c
+   cat > mpitest.c <<EOF
+ #include "mpi.h"
+-     main(int argc, char **argv)
++     int main(int argc, char **argv)
+      {
+          int i=MPI_DISTRIBUTE_CYCLIC;
+          MPI_Datatype t;
+@@ -399,7 +399,7 @@
+   rm -f mpitest.c
+   cat > mpitest.c <<EOF
+ #include "mpi.h"
+-     main(int argc, char **argv)
++     int main(int argc, char **argv)
+      {
+ 	int i;
+ 	i = MPI_INFO_NULL;
+@@ -473,7 +473,7 @@
+   rm -f mpitest.c
+   cat > mpitest.c <<EOF
+ #include "mpi.h"
+-     main(int argc, char **argv)
++     int main(int argc, char **argv)
+      {
+          MPI_Datatype type;
+          int i;
+@@ -501,7 +501,7 @@
+   rm -f mpitest.c
+   cat > mpitest.c <<EOF
+ #include "mpi.h"
+-     main(int argc, char **argv)
++     int main(int argc, char **argv)
+      {
+          int i;
+ 
+@@ -765,7 +765,7 @@
+   rm -f mpitest.c
+   cat > mpitest.c <<EOF
+ #include "mpi.h"
+-     main(int argc, char **argv)
++     int main(int argc, char **argv)
+      {
+      	 MPI_Status *status;
+          MPI_Datatype type;
+@@ -814,7 +814,7 @@
+   cat > mpitest.c <<EOF
+ #include "mpi.h"
+ #include "stdio.h"
+-    main(int argc, char **argv)
++    int main(int argc, char **argv)
+     {
+        MPI_Request request;
+        MPI_Init(&argc, &argv);
+@@ -840,7 +840,7 @@
+   cat > mpitest.c <<EOF
+ #include "mpi.h"
+ #include "stdio.h"
+-    main(int argc, char **argv)
++    int main(int argc, char **argv)
+     {
+        MPIX_Grequest_class classtest
+     }
+--- a/src/libs/ck-libs/ampi/romio/configure
++++ b/src/libs/ck-libs/ampi/romio/configure
+@@ -20564,7 +20564,7 @@
+   rm -f mpitest.c
+   cat > mpitest.c <<EOF
+ #include "mpi.h"
+-     main(int argc, char **argv)
++     int main(int argc, char **argv)
+      {
+          long long i;
+          MPI_Init(&argc,&argv);
+@@ -20818,7 +20818,7 @@
+   rm -f mpitest.c
+   cat > mpitest.c <<EOF
+ #include "mpi.h"
+-     main(int argc, char **argv)
++     int main(int argc, char **argv)
+      {
+          MPI_Info info;
+          MPI_Init(&argc,&argv);
+@@ -20868,7 +20868,7 @@
+   rm -f mpitest.c
+   cat > mpitest.c <<EOF
+ #include "mpi.h"
+-     main(int argc, char **argv)
++     int main(int argc, char **argv)
+      {
+          MPI_Datatype type;
+          int i;
+@@ -20898,7 +20898,7 @@
+   rm -f mpitest.c
+   cat > mpitest.c <<EOF
+ #include "mpi.h"
+-     main(int argc, char **argv)
++     int main(int argc, char **argv)
+      {
+          int i;
+ 
+@@ -20958,7 +20958,7 @@
+   rm -f mpitest.c
+   cat > mpitest.c <<EOF
+ #include "mpi.h"
+-     main(int argc, char **argv)
++     int main(int argc, char **argv)
+      {
+          int i=MPI_DISTRIBUTE_CYCLIC;
+          MPI_Datatype t;
+@@ -23719,7 +23719,7 @@
+   rm -f mpitest.c
+   cat > mpitest.c <<EOF
+ #include "mpi.h"
+-     main(int argc, char **argv)
++     int main(int argc, char **argv)
+      {
+          MPI_Init(&argc,&argv);
+          MPI_Finalize();
+@@ -23890,7 +23890,7 @@
+   rm -f mpitest.c
+   cat > mpitest.c <<EOF
+ #include "mpi.h"
+-     main(int argc, char **argv)
++     int main(int argc, char **argv)
+      {
+      	 MPI_Status *status;
+          MPI_Datatype type;
+@@ -23922,7 +23922,7 @@
+   cat > mpitest.c <<EOF
+ #include "mpi.h"
+ #include "stdio.h"
+-    main(int argc, char **argv)
++    int main(int argc, char **argv)
+     {
+        MPI_Request request;
+        MPI_Init(&argc, &argv);

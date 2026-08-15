@@ -1,0 +1,16 @@
+--- a/src/arch/ofi/machine.C
++++ b/src/arch/ofi/machine.C
+@@ -159,6 +159,13 @@
+ #include <rdma/fi_domain.h>
+ #include <rdma/fi_tagged.h>
+ #include <rdma/fi_rma.h>
++#include <stddef.h>
++
++/* libfabric 2.x no longer exposes container_of in the public headers. */
++#ifndef container_of
++#define container_of(ptr, type, member) \
++    ((type *)((char *)(ptr) - offsetof(type, member)))
++#endif
+ 
+ #define USE_OFIREQUEST_CACHE 1
+ 
