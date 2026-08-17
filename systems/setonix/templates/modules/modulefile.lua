@@ -116,7 +116,7 @@ setenv("SINGULARITYENV_LD_LIBRARY_PATH", singularity_ld_path)
 
 -- BIND_PATH addition
 -- add LOCAL FILESYSTEM START
-local singularity_bindpath = "/askapbuffer,/scratch,/software"
+local singularity_bindpath = "/askapbuffer,/scratch,/software,/data/references"
 -- add LOCAL FILESYSTEM END
 -- add SLURM START
 singularity_bindpath = singularity_bindpath .. ",/var/run/munge/munge.socket.2,/etc/slurm"
