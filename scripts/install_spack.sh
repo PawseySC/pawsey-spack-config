@@ -313,9 +313,15 @@ for mod_cat in ${module_cat_list}; do
     module_lua_cat_list+="\"${mod_cat}\", "
 done
 
+# Generate the suffixes used by the Cray Lmod compiler hierarchy variables.
+gcc_lmod_ver="${gcc_compat_version//./_}"
+cce_lmod_ver="${cce_compat_version//./_}"
+aocc_lmod_ver="${aocc_compat_version//./_}"
+nvidia_lmod_ver="${nvidia_compat_version//./_}"
 
 sed \
     -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g" \
+    -e "s|SYSTEM|${SYSTEM}|g" \
     -e "s|DATE_TAG|${DATE_TAG}|g" \
     -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g" \
     -e "s;CUSTOM_MODULES_DIR;${custom_modules_dir};g" \
@@ -327,6 +333,11 @@ sed \
     -e "s;GCC_VERSION;${gcc_version};g" \
     -e "s;CCE_VERSION;${cce_version};g" \
     -e "s;AOCC_VERSION;${aocc_version};g" \
+    -e "s;NVIDIA_VERSION;${nvidia_version};g" \
+    -e "s;GCC_LMOD_VERSION;${gcc_lmod_ver};g" \
+    -e "s;CCE_LMOD_VERSION;${cce_lmod_ver};g" \
+    -e "s;AOCC_LMOD_VERSION;${aocc_lmod_ver};g" \
+    -e "s;NVIDIA_LMOD_VERSION;${nvidia_lmod_ver};g" \
     -e "s;MODULE_LUA_CAT_LIST;${module_lua_cat_list};g" \
     "${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/pawseyenv.lua" \
     > "${INSTALL_PREFIX}/staff_modulefiles/pawseyenv/${pawseyenv_version}.lua"
