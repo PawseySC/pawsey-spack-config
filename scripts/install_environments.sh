@@ -89,4 +89,4 @@ echo """Singularity fix permissions:
 -----------------------------
 Ask the admins to execute the following scripts:
 """
-for prefix in `spack find -x --format "{prefix}" singularityce`; do echo ${prefix}/bin/spack_perms_fix.sh; done;
+for prefix in `spack find -x --format "{prefix}" singularityce`; do echo ${prefix}/libexec/spack_perms_fix.sh; done;
