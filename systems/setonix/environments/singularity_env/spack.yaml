@@ -1,8 +1,8 @@
 spack:
   definitions:
   - packages:
-    - singularityce@4.1.0
-    - singularityce@3.11.4
+    - singularityce@4.1.0 +suid
+    - singularityce@3.11.4 +suid
 #    - singularityce@4.1.0%gcc_compiler cflags="-O0" cppflags="-O0" cxxflags="-O0"
 #    - singularityce@3.11.4%gcc_compiler cflags="-O0" cppflags="-O0" cxxflags="-O0"
   specs:
