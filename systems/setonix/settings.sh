@@ -164,6 +164,7 @@ quay.io/pawsey/alphafold3:rocm7.1.1
 quay.io/pawsey/boltz2:v2.2.1_rocm6.4
 quay.io/pawsey/colabfold:1.6.1_rocm7.0.2
 quay.io/pawsey/esmfold_openfold:rocm6.3.3
+quay.io/pawsey/freebindcraft:rocm7.0.2_nopyrosetta
 quay.io/pawsey/rfdiffusion:rocm7.0.0_dgl2.4.0
 quay.io/pawsey/tiberius:v2.0.6_rocm7.0.2
 quay.io/sarahbeecroft9/interproscan:5.56-89.0
