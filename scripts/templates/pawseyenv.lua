@@ -94,6 +94,12 @@ local psc_sw_env_spack_root = psc_sw_env_root_dir .. "/modules/" .. arch
 local psc_sw_env_gcc_root  = psc_sw_env_spack_root .. "/gcc/" .. psc_sw_env_gcc_version
 local psc_sw_env_cce_root  = psc_sw_env_spack_root .. "/cce/" .. psc_sw_env_cce_version
 local psc_sw_env_aocc_root = psc_sw_env_spack_root .. "/aocc/" .. psc_sw_env_aocc_version
+
+-- Add compilerless/Core Spack dependencies to MODULEPATH
+local psc_sw_env_core_dependencies_root =
+    psc_sw_env_root_dir .. "/modules/x86_64/Core/dependencies"
+prepend_path("MODULEPATH", psc_sw_env_core_dependencies_root)
+
 -- Add Spack modules to Cray Lmod hierarchy variables
 -- Note: LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX comes from Lumi, on Joey there was no `_8_0`
 for index = 1,num_categories do
