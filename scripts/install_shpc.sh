@@ -56,7 +56,7 @@ cd -
 # get registry from github repo
 if ! [ -e "${INSTALL_PREFIX}/${shpc_install_dir}/registry" ]; then
     # get registry from github repo
-    git clone https://github.com/singularityhub/shpc-registry ${INSTALL_PREFIX}/${shpc_install_dir}/registry
+    git clone https://github.com/PawseySC/shpc-registry ${INSTALL_PREFIX}/${shpc_install_dir}/registry
     # checkout registry, too, for reproducibility
     cd ${INSTALL_PREFIX}/${shpc_install_dir}/registry
     git checkout ${shpc_registry_version}
