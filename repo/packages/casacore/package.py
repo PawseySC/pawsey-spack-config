@@ -43,6 +43,12 @@ class Casacore(CMakePackage):
     variant('tablelocking', default=False, description='Enable table locking.')
     variant('datapath', default='none', values=('none', 'setonix'),
         description='Path to pre-installed casacore Measures data.')
+
+
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+    depends_on("fortran", type="build")
+
     # Force dependency on readline in v3.2 and earlier. Although the
     # presence of readline is tested in CMakeLists.txt, and casacore
     # can be built without it, there's no way to control that
@@ -111,6 +117,10 @@ class Casacore(CMakePackage):
     def patch(self):
         # Rely on CMake ability to find hdf5, available since CMake 3.7.X
         os.remove('cmake/FindHDF5.cmake')
+        find_gsl = join_path(self.stage.source_path, "cmake", "FindGSL.cmake")
+        if os.path.exists(find_gsl):
+            os.remove(find_gsl)
+
 
     def setup_build_environment(self, env):
         env.append_flags('CFLAGS', '-fpermissive -Wno-error=incompatible-pointer-types')

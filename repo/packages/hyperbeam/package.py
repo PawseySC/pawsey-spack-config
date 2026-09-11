@@ -7,7 +7,7 @@
 from spack.package import *
 
 import os
-import spack.util.filesystem as fs
+import llnl.util.filesystem as fs
 from pathlib import Path
 import shutil
 
@@ -21,6 +21,7 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
     maintainers = ["d3v-null", "gsleap"]
 
     version("main", branch="main")
+    version("0.11.0", tag="v0.11.0")
     version("0.10.2", tag="v0.10.2")
     version("0.10.0", tag="v0.10.0")
     version("0.9.3", tag="v0.9.3")
@@ -33,8 +34,13 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
     variant("hdf5-static", default=False, description="Link statically to hdf5 via hdf5-sys crate.")
     variant("portable", default=True, description="Disable native CPU optimizations")
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+    depends_on("fortran", type="build")
+
     depends_on("rust@1.64.0:", type="build")
     depends_on("rust@1.80.0:", type="build", when="@0.10.0:")
+    depends_on("rust@1.85.0:", type="build", when="@0.11.0:")
     depends_on("cmake", type="build")
 
     # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.
@@ -43,7 +49,7 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
 
     depends_on("hdf5@1.10 +cxx ~mpi api=v110", when="~hdf5-static")
     depends_on("py-maturin", when="+python")
-
+    depends_on("libaec", when="^hdf5")
     # this is the only version of patchelf that has been found to work with maturin. patchelf@0.18
     # corrupts the dynamic libraries, making them unusable.
     # https://github.com/PawseySC/pawsey-spack-config/pull/280#issuecomment-2258095785

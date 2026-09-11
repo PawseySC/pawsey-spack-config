@@ -5,8 +5,7 @@
 
 
 import os
-#import llnl.util.filesystem as fs
-import spack.util.filesystem as fs
+import llnl.util.filesystem as fs
 from pathlib import Path
 import shutil
 
@@ -22,6 +21,7 @@ class Mwalib(Package):
     maintainers = ["gsleap", "d3v-null"]
 
     version("main", branch="main")
+    version("2.0.5", tag="v2.0.5")
     version("1.8.7", tag="v1.8.7")
     version("1.8.2", tag="v1.8.2")
     version("1.5.0", tag="v1.5.0")
@@ -34,8 +34,11 @@ class Mwalib(Package):
     variant("cfitsio-static", default=False, description="Enable the fitsio_src feature of the fitsio-sys crate.")
     variant("portable", default=True, description="Disable native CPU optimizations")
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
     depends_on("rust@1.64.0:", type="build")
     depends_on("rust@1.65.0:", type="build", when="@1.8:")
+    depends_on("rust@1.85.0:", type="build", when="@2.0.5:")
 
     # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.
     # default spack cfitsio does not give the +reentrant option

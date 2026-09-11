@@ -97,7 +97,6 @@ dependencies
 "
 
 #io_libs
-#astro
 # list of spack build environments - missing vis
 env_list="
 singularity_env
@@ -109,6 +108,7 @@ apps
 devel
 bench
 s3_clients
+astro
 bio
 roms
 wrf

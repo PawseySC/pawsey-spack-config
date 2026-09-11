@@ -4,6 +4,9 @@
 # configuration settings.
 # Pawsey, Ilkhom: giant-squid@1.0.3 is moved to mwa-no-python to avoid concretization error.
 spack:
+  concretizer:
+    unify: when_possible
+    #static_analysis: true
   packages:
     'blas:':
       buildable: true
@@ -12,7 +15,6 @@ spack:
     'fftw-api:':
       buildable: true
   definitions:
-
   # casacore variants
   # try running spack install --no-checksum
   - casacore-legacy:
@@ -46,27 +48,34 @@ spack:
   - mwa-with-python:
     - wsclean@3.4 +mpi +idg +everybeam #build_type=Release target=zen3
     - wsclean@3.4 ~mpi +idg +everybeam #build_type=Release target=zen3
-    - wsclean@2.9 +idg #build_type=Release target=zen3
+    - wsclean@2.9 +idg ^boost@:1.86 #build_type=Release target=zen3
+    - mwalib@2.0.5+python~portable
     - mwalib@1.8.7+python~portable
     - aoflagger@3.4.0 ^cfitsio@3.49 #build_type=Release target=zen3 ^cfitsio@3.49
-    - hyperbeam@0.10.2 ~portable +python
-    - hyperdrive@=0.6.1 ~portable
+    - hyperbeam@0.11.0 ~portable +python +hdf5-static
+    - hyperbeam@0.10.2 ~portable +python +hdf5-static
+    - hyperdrive@=0.8.0 ~portable
+    - hyperdrive@=0.7.0 ~portable
+    - birli@0.20.0 +aoflagger ~portable
+    - birli@0.19.1 +aoflagger ~portable
     - birli@0.18.2 +aoflagger ~portable
-    - calceph@3.5.5 #target=zen3
     - presto@5.0.1 #target=zen3
 
   - mwa-no-python:
     - chgcentre
+    - giant-squid@2.5.1
     - giant-squid@2.3.0
+    - calceph@3.5.5 #target=zen3
 
   - mwa-no-python-zen2:
+    - giant-squid@2.5.1
     - giant-squid@2.3.0
 
   # TODO add versions
   - python-astro-set:
     - py-funcsigs #package not available in spack/0.20.0, using recipe from 0.19.0
-    - py-astropy@4.2.1+extras
-    - py-astropy@5.1+extras
+#    - py-astropy@4.2.1+extras
+#    - py-astropy@5.1+extras
       #    - py-healpy ^py-astropy@4.2.1+extras #No longintrepr.h in python/3.11
     - py-emcee
   # add package specs to the `specs` list

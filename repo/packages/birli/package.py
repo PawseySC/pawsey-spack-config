@@ -10,6 +10,9 @@ class Birli(Package):
     maintainers = ["d3v-null", "gsleap"]
 
     version("main", branch="main")
+    version("0.20.0", tag="v0.20.0")
+    version("0.19.1", tag="v0.19.1")
+    version("0.19.0", tag="v0.19.0")
     version("0.18.2", tag="v0.18.2")
     version("0.17.1", tag="v0.17.1")
     version("0.16.0", tag="v0.16.0")
@@ -24,8 +27,13 @@ class Birli(Package):
     variant("portable", default=True, description="Disable native CPU optimizations")
     variant("aoflagger", default=True, description="AOFlagger RFI flagging")
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+    depends_on("fortran", type="build")
+
     depends_on("rust@1.64.0:", type="build")
     depends_on("rust@1.65.0:", type="build", when="@0.16.0:")
+    depends_on("rust@1.85.0:", type="build", when="@0.19.0:")
     depends_on("cmake", type="build")
 
     # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.
@@ -40,10 +48,15 @@ class Birli(Package):
     def setup_build_environment(self, env):
         build_dir = self.stage.source_path
         env.set("CARGO_HOME", f"{build_dir}/.cargo")
+        if self.spec.satisfies("+aoflagger"):
+            aoflagger = self.spec["aoflagger"]
+            env.set("AOFLAGGER_INCLUDE_DIR", aoflagger.prefix.include)
+            env.set("AOFLAGGER_LIB", aoflagger.prefix.lib)
+
         if self.spec.satisfies("+cfitsio-static"):
             env.set("MWALIB_LINK_STATIC_CFITSIO", 1)
         if self.spec.satisfies("~portable"):
-            env.append_flags("RUSTFLAGS", f"-C target-cpu=native")
+            env.append_flags("RUSTFLAGS", "-C target-cpu=native")
 
     def get_features(self):
         features = ["cli"]

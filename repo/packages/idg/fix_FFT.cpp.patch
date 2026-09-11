@@ -1,0 +1,10 @@
+--- a/idg-lib/src/fft/FFT.cpp	2025-01-08 10:36:01.000000000 +0800
++++ b/idg-lib/src/fft/FFT.cpp	2025-01-08 10:36:11.000000000 +0800
+@@ -4,6 +4,7 @@
+ #include "FFT.h"
+ 
+ #include <fftw3.h>
++#include <cstdint>
+ 
+ using namespace std;
+ 

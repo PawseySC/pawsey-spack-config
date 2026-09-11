@@ -20,19 +20,23 @@ class Wsclean(CMakePackage):
 
     maintainers = ['dipietrantonio']
 
-    version('3.5', git='https://gitlab.com/aroffringa/wsclean.git', tag='v3.5', submodules=True)
-    version('3.4', git='https://gitlab.com/aroffringa/wsclean.git', tag='v3.4', submodules=True)
-    version('3.3', git='https://gitlab.com/aroffringa/wsclean.git', tag='v3.3', submodules=True)
-    version('3.2', git='https://gitlab.com/aroffringa/wsclean.git', tag='v3.2', submodules=True)
-    version('3.1', git='https://gitlab.com/aroffringa/wsclean.git', tag='v3.1', submodules=True)
-    version('3.0', git='https://gitlab.com/aroffringa/wsclean.git', tag='v3.0', submodules=True)
-    version('2.10.1', git='https://gitlab.com/aroffringa/wsclean.git', tag='v2.10.1', submodules=True)
-    version('2.9', git='https://gitlab.com/aroffringa/wsclean.git', tag='wsclean2.9', submodules=True)
+    git='https://gitlab.com/aroffringa/wsclean.git'
+    version('3.5', tag='v3.5', submodules=True)
+    version('3.4', tag='v3.4', submodules=True)
+    version('3.3', tag='v3.3', submodules=True)
+    version('3.2', tag='v3.2', submodules=True)
+    version('3.1', tag='v3.1', submodules=True)
+    version('3.0', tag='v3.0', submodules=True)
+    version('2.10.1', tag='v2.10.1', submodules=True)
+    version('2.9', tag='wsclean2.9', submodules=True)
 
     variant('idg', default=False, description='To enable Image Domain Gridder (a fast GPU-enabled gridder)')
     variant('everybeam', default=False, when="@3:", description='To apply primary beams for version >=3')
     variant('mpi', default=False,when="@3:", description='To enable distributed mode')
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+    depends_on("fortran", type="build")
     depends_on('casacore@3.2.1:')
     depends_on('fftw-api@3')
     depends_on('hdf5@1.10.7: +cxx ~mpi api=v110')
@@ -79,4 +83,11 @@ class Wsclean(CMakePackage):
             f"-DHDF5_LIBRARIES={self.spec['hdf5'].prefix.lib}/libhdf5_cpp.so"
         ]
         args.append(self.define_from_variant('USE_MPI', 'mpi'))
+
+        if self.spec.satisfies("@2.9"):
+            args.extend([
+                self.define("CMAKE_CXX_STANDARD", "14"),
+                self.define("CMAKE_CXX_STANDARD_REQUIRED", True),
+            ])
+
         return args

@@ -25,6 +25,11 @@ class Wcstools(MakefilePackage):
     version('3.9.7', sha256='525f6970eb818f822db75c1526b3122b1af078affa572dce303de37df5c7b088')
     #version('3.9.7', sha256='efebf6970f6158ed002fdfe320d4ff4738e3a049b333a749da6cc464b3579860')
 
+
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+    depends_on("fortran", type="build")
+
     def _make(self, *args, **kwargs):
         # PREFIX must be defined on macOS even when building the library, since
         # it gets hardcoded into the library's install_path

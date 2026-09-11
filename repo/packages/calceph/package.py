@@ -17,6 +17,10 @@ class Calceph(AutotoolsPackage):
 
     version("3.5.5", sha256="f7acf529a9267793126d7fdbdf79d4d26ae33274c99d09a9fc9d6191a3c72aca")
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+    depends_on("fortran", type="build")
+
     def configure_args(self):
         args = [
                 "--with-pic",
