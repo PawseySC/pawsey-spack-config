@@ -153,7 +153,7 @@ quay.io/biocontainers/macs3:3.0.4--py310h5a5e57a_0
 quay.io/biocontainers/maker:3.01.03--pl5262h8f1cd36_2
 quay.io/biocontainers/megahit:1.2.9--haf24da9_8
 quay.io/biocontainers/minimap2:2.31--h118bc1c_0
-quay.io/biocontainers/mrbayes:3.2.7--h5465cc4_4
+quay.io/biocontainers/mrbayes:3.2.7--hd0d793b_7
 quay.io/biocontainers/mummer:3.23--pl5321h87f3376_14
 quay.io/biocontainers/sambamba:1.0--h98b6b92_0
 quay.io/biocontainers/samtools:1.7--h91fe0ab_3
