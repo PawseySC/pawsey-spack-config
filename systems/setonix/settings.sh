@@ -68,6 +68,7 @@ spack_version="1.1.1" # the prefix "v" is added in setup_spack.sh
 singularity_version="4.1.0-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="4.1.0-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.32"
+# TODO: update with final commit hash when the registry is ready
 shpc_registry_version="bf0d6db12b1fe478e11c53dad966e25bb7d0a1b3"
 cpe_version="26.03"
                      
