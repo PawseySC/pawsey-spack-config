@@ -179,6 +179,7 @@ quay.io/biocontainers/trimmomatic:0.39--hdfd78af_2
 quay.io/biocontainers/trinity:2.13.2--hea94271_3
 quay.io/biocontainers/vcftools:0.1.16--pl5321hd03093a_7
 quay.io/biocontainers/velvet:1.2.10--h7132678_5
+quay.io/pawsey/alphafold2:v2.3.2_rocm6.2.4
 quay.io/pawsey/alphafold3:v3.0.1_rocm7.1.1
 quay.io/pawsey/boltz2:v2.2.1_rocm6.4.1
 quay.io/pawsey/colabfold:1.6.1_rocm7.0.2
@@ -186,7 +187,6 @@ quay.io/pawsey/esmfold_openfold:rocm6.3.3
 quay.io/pawsey/freebindcraft:v1.0.5_rocm7.0.2_nopyrosetta
 quay.io/pawsey/rfdiffusion:v1.1.0-rocm7.0.0_dgl2.4.0
 quay.io/sarahbeecroft9/interproscan:5.56-89.0
-quay.io/sarahbeecroft9/rfdiffusion:86507b6_rocm7.0.0_ubuntu22
 "
 
 
