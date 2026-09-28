@@ -96,13 +96,13 @@ developer-tools
 dependencies
 "
 
-#io_libs
 # list of spack build environments - missing vis
 env_list="
 singularity_env
 utils
 num_libs
 python
+io_libs
 langs
 apps
 devel
