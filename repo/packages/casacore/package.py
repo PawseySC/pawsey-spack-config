@@ -124,3 +124,15 @@ class Casacore(CMakePackage):
 
     def setup_build_environment(self, env):
         env.append_flags('CFLAGS', '-fpermissive -Wno-error=incompatible-pointer-types')
+        if "+python" in self.spec:
+            python = self.spec["python"]
+            numpy = self.spec["py-numpy"]
+
+            site_packages = join_path(
+                numpy.prefix,
+                "lib",
+                "python{0}".format(python.version.up_to(2)),
+                "site-packages",
+            )
+
+            env.prepend_path("PYTHONPATH", site_packages)

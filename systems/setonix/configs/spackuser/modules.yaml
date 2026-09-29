@@ -269,6 +269,7 @@ modules:
         matlab: 'utilities/{name}/{version}'
         nano: 'utilities/{name}/{version}'
         nextflow: 'utilities/{name}/{version}'
+        snakemake: 'utilities/{name}/{version}'
         parallel: 'utilities/{name}/{version}'
         py-pip: 'utilities/{name}/{version}-py{^python.version}'
         py-setuptools: 'utilities/{name}/{version}-py{^python.version}'

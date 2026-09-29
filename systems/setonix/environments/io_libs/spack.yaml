@@ -3,6 +3,8 @@
 # It describes a set of packages to be installed, along with
 # configuration settings.
 spack:
+  concretizer:
+    unify: false 
 # Commenting as already in packages.yaml ; leaving for reference
 #  packages:
 #    hdf:

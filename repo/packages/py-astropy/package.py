@@ -92,7 +92,7 @@ class PyAstropy(PythonPackage):
     depends_on('pkgconfig', type='build')
     depends_on('py-extension-helpers', when='@4.1:', type=('build', 'run'))
     depends_on('py-jinja2', when='@4.1:', type=('build', 'run'))
-    depends_on('py-erfa', type=('build', 'run'))
+    depends_on('py-pyerfa', type=('build', 'run'))
 
     # Optional dependencies
     depends_on('py-scipy@0.18:', when='+extras', type=('build', 'run'))
@@ -118,6 +118,15 @@ class PyAstropy(PythonPackage):
     depends_on('wcslib')
     depends_on('cfitsio')
     depends_on('expat')
+
+
+    def patch(self):
+        if self.spec.satisfies("@4.2.1:5.1"):
+            filter_file(
+                r"from setuptools\.dep_util import newer_group",
+                "from setuptools.modified import newer_group",
+                "astropy/wcs/setup_package.py",
+            )
 
     #def patch(self, spec):
     #    # forces the rebuild of files with cython
