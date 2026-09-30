@@ -5,7 +5,7 @@
 # Pawsey, Ilkhom: giant-squid@1.0.3 is moved to mwa-no-python to avoid concretization error.
 spack:
   concretizer:
-    unify: when_possible
+    unify: false 
     #static_analysis: true
   packages:
     'blas:':
