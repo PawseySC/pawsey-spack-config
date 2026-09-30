@@ -110,7 +110,7 @@ local singularity_ld_path = ""
 -- COS >=25.3
 singularity_ld_path = singularity_ld_path .. ":/host_lib64"
 -- add CRAY_PATHS START
-singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/mpich/" .. cray_mpich_ver .. "/ofi/gnu/12.3/lib-abi-mpich:/opt/cray/pe/mpich/" .. cray_mpich_ver .. "/gtl/lib:/opt/cray/xpmem/default/lib64:/opt/cray/pe/pmi/default/lib:/opt/cray/pe/pals/default/lib"
+singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/mpich/" .. cray_mpich_ver .. "/ofi/gnu/12.3/lib-abi-mpich:/opt/cray/pe/mpich/" .. cray_mpich_ver .. "/gtl/lib:/opt/xpmem/lib64:/opt/cray/pe/pmi/default/lib:/opt/cray/pe/pals/default/lib"
 --singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/gcc-libs"
 -- add CRAY_PATHS END
 -- add MPI START
