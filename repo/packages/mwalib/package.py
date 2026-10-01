@@ -5,10 +5,10 @@
 
 
 import os
-import llnl.util.filesystem as fs
-from pathlib import Path
 import shutil
+from pathlib import Path
 
+import llnl.util.filesystem as fs
 from spack.package import *
 
 
@@ -21,6 +21,7 @@ class Mwalib(Package):
     maintainers = ["gsleap", "d3v-null"]
 
     version("main", branch="main")
+    version("3.0.2", tag="v3.0.2")
     version("2.0.5", tag="v2.0.5")
     version("1.8.7", tag="v1.8.7")
     version("1.8.2", tag="v1.8.2")
@@ -37,6 +38,7 @@ class Mwalib(Package):
     depends_on("rust@1.64.0:", type="build")
     depends_on("rust@1.65.0:", type="build", when="@1.8:")
     depends_on("rust@1.85.0:", type="build", when="@2.0.5:")
+    depends_on("rust@1.88.0:", type="build", when="@3.0.0:")
 
     # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.
     # default spack cfitsio does not give the +reentrant option
@@ -48,14 +50,12 @@ class Mwalib(Package):
     depends_on("py-pip", type="build", when="+python")
     depends_on("patchelf", type="build")
 
-
     sanity_check_is_file = [
         join_path("include", "mwalib.h"),
         join_path("lib", "libmwalib.a"),
         join_path("lib", "libmwalib.so"),
     ]
     test_requires_compiler = True
-
 
     def get_features(self):
         features = []
@@ -80,7 +80,7 @@ class Mwalib(Package):
         if self.spec.satisfies("+cfitsio-static"):
             env.set("MWALIB_LINK_STATIC_CFITSIO", 1)
         if self.spec.satisfies("~portable"):
-            env.append_flags("RUSTFLAGS", f"-C target-cpu=native")
+            env.append_flags("RUSTFLAGS", "-C target-cpu=native")
 
     def install(self, spec, prefix):
         # os.system("env") # for debugging

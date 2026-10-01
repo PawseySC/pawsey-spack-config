@@ -46,11 +46,13 @@ spack:
               - wsclean@3.4 +mpi +idg +everybeam build_type=Release target=zen3
               - wsclean@3.4 ~mpi +idg +everybeam build_type=Release target=zen3
               - wsclean@2.9 +idg build_type=Release target=zen3
+              - mwalib@3.0.2+python~portable
               - mwalib@2.0.5+python~portable
               - mwalib@1.8.7+python~portable
               - aoflagger@3.4.0 build_type=Release target=zen3 ^cfitsio@3.49
               - hyperbeam@0.11.0 ~portable +python
               - hyperbeam@0.10.2 ~portable +python
+              - hyperdrive@=0.8.1 ~portable
               - hyperdrive@=0.8.0 ~portable
               - hyperdrive@=0.7.0 ~portable
               - birli@0.20.0 +aoflagger ~portable

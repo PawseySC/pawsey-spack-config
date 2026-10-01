@@ -10,6 +10,7 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
     maintainers = ["d3v-null", "gsleap"]
 
     version("main", branch="main")
+    version("0.8.1", tag="v0.8.1")
     version("0.8.0", tag="v0.8.0")
     version("0.7.0", tag="v0.7.0")
     version("0.6.1", tag="v0.6.1")
@@ -62,7 +63,7 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
             cuda_dir = self.spec["cuda"].prefix
             # print(f"cuda_dir: {cuda_dir}, cuda_arch: {cuda_arch}")
         if self.spec.satisfies("~portable"):
-            env.append_flags("RUSTFLAGS", f"-C target-cpu=native")
+            env.append_flags("RUSTFLAGS", "-C target-cpu=native")
 
     def get_features(self):
         features = []
