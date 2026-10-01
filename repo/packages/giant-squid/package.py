@@ -31,6 +31,12 @@ class GiantSquid(Package):
         env.set("CARGO_HOME", f"{build_dir}/.cargo")
         env.set("RUST_BACKTRACE", 1)
 
+        # aws-lc-sys@0.45.0 contains jitterentropy code that must be
+        # compiled with -O0. Our compiler configuration injects -O3
+        # through the Spack compiler wrapper, overriding aws-lc's -O0.
+        if self.spec.satisfies("@2.5.1"):
+            env.append_flags("SPACK_COMPILER_FLAGS_REPLACE", "-O3|")
+
     def install(self, spec, prefix):
         cargo = Executable("cargo")
         cargo("install", "--path=.", f"--root={prefix}")
