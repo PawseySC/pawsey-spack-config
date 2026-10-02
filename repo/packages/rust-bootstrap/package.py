@@ -221,6 +221,10 @@ class RustBootstrap(Package):
         if os in rust_releases[release] and target in rust_releases[release][os]:
             version(release, sha256=rust_releases[release][os][target])
 
+    # Core dependencies
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+
     # rust-ldd and libLLVM both depend on zlib, which is not vendored.
     depends_on("zlib-api")
     depends_on("zlib-ng +shared", when="^[virtuals=zlib-api] zlib-ng")
