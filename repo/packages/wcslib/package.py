@@ -26,6 +26,7 @@ class Wcslib(AutotoolsPackage):
         # Core dependencies
     depends_on("c", type="build")
     depends_on("cxx", type="build") 
+    depends_on("fortran", type="build")
 
     depends_on("gmake", type="build")
     depends_on("flex@2.5.9:", type="build")
