@@ -7,7 +7,7 @@
 from spack.package import *
 
 import os
-import llnl.util.filesystem as fs
+#import llnl.util.filesystem as fs
 from pathlib import Path
 import shutil
 
@@ -36,8 +36,6 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
 
     depends_on("c", type="build")
     depends_on("cxx", type="build")
-    depends_on("fortran", type="build")
-
     depends_on("rust@1.64.0:", type="build")
     depends_on("rust@1.80.0:", type="build", when="@0.10.0:")
     depends_on("rust@1.85.0:", type="build", when="@0.11.0:")
@@ -104,7 +102,8 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
     def install(self, spec, prefix):
         cargo = Executable("cargo")
         features = self.get_features()
-        with fs.working_dir(self.stage.source_path):
+        #with fs.working_dir(self.stage.source_path):
+        with working_dir(self.stage.source_path):
             cargo("build", "--locked", "--release", f"--features={','.join(features)}")
             shutil.copytree("include", f"{prefix}/include")
             os.mkdir(f"{prefix}/lib")
@@ -167,4 +166,4 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
         if self.spec.satisfies("+python") and dependent_spec.package.extends(self.spec):
             python_version = self.spec["python"].version.string
             python_version = python_version[: python_version.rfind(".")]
-            env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
+            env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib64/python{python_version}/site-packages")

@@ -5,7 +5,7 @@
 
 
 import os
-import llnl.util.filesystem as fs
+#import llnl.util.filesystem as fs
 from pathlib import Path
 import shutil
 
@@ -87,7 +87,8 @@ class Mwalib(Package):
     def install(self, spec, prefix):
         # os.system("env") # for debugging
         cargo = Executable("cargo")
-        with fs.working_dir(self.stage.source_path):
+        # with fs.working_dir(self.stage.source_path):
+        with working_dir(self.stage.source_path):
             cargo("build", *self.get_build_args())
             shutil.copytree("include", f"{prefix}/include")
             os.mkdir(f"{prefix}/lib")
@@ -132,7 +133,7 @@ class Mwalib(Package):
         if self.spec.satisfies("+python"):
             python_version = self.spec["python"].version.string
             python_version = python_version[: python_version.rfind(".")]
-            env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
+            env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib64/python{python_version}/site-packages")
 
     def setup_dependent_run_environment(self, env, dependent_spec):
         if not self.spec.satisfies("+cfitsio-static"):
@@ -140,4 +141,4 @@ class Mwalib(Package):
         if self.spec.satisfies("+python") and dependent_spec.package.extends(self.spec):
             python_version = self.spec["python"].version.string
             python_version = python_version[: python_version.rfind(".")]
-            env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
+            env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib64/python{python_version}/site-packages")
