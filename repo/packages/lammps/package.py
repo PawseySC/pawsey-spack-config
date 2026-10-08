@@ -40,6 +40,11 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
     # * patch releases older than a stable release should be marked deprecated=True
     version("develop", branch="develop")
     version(
+        "20250722",
+        sha256="38d7ab508433f33a53e11f0502aa0253945ce45d5595baf69665961c0a76da26",
+        preferred=True,
+    )
+    version(
         "20240829.1",
         sha256="3aea41869aa2fb8120fc4814cab645686f969e2eb7c66aa5587e500597d482dc",
         preferred=True,
@@ -417,6 +422,7 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
         depends_on("fortran", type="build", when=f"+{fc_pkg}")
 
     stable_versions = {
+        "20250722",
         "20240829.1",
         "20240829",
         "20230802.4",
@@ -718,6 +724,7 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
     depends_on("kokkos@3.7.01:", when="@20230208: +kokkos")
     depends_on("kokkos@4.3.00:", when="@20240417: +kokkos")
     depends_on("kokkos@4.3.01:", when="@20240627: +kokkos")
+    depends_on("kokkos@4.6.02:", when="@20250722: +kokkos")
     depends_on("adios2", when="+user-adios")
     depends_on("adios2", when="+adios")
     depends_on("plumed", when="+user-plumed")
@@ -739,6 +746,7 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
     depends_on("vtk", when="+user-vtk")
     depends_on("vtk", when="+vtk")
     depends_on("hipcub", when="~kokkos +rocm")
+    depends_on("hipcub@:6", when="@:20250722 ~kokkos +rocm")
     depends_on("llvm-amdgpu ", when="+rocm", type="build")
     # depends_on("rocm-openmp-extras", when="+rocm +openmp", type="build")
     depends_on("gsl@2.6:", when="+rheo")
