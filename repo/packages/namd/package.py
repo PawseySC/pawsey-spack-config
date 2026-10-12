@@ -152,6 +152,7 @@ class Namd(MakefilePackage, CudaPackage, ROCmPackage):
     depends_on("cuda@6.5.14:7.5.18", when="@2.12 +cuda")
     depends_on("cuda@8.0.61:", when="@2.13: +cuda")
 
+
     def _copy_arch_file(self, lib):
         config_filename = "arch/{0}.{1}".format(self.arch, lib)
         if self.arch == "linux-aarch64":
@@ -337,9 +338,18 @@ class Namd(MakefilePackage, CudaPackage, ROCmPackage):
 
         if "+rocm" in spec:
             self._copy_arch_file("hip")
+        
+            if spec.satisfies("@3.0.2 amdgpu_target=gfx90a"):
+                filter_file(
+                    "--offload-arch=gfx906,gfx908,gfx90a,gfx1030",
+                    "--offload-arch=gfx90a",
+                    join_path("arch", self.arch + ".hip"),
+                    string=True,
+                )
+        
             opts.append("--with-hip")
             opts.extend(["--rocm-prefix", os.environ["ROCM_PATH"]])
-
+        
             if "+single_node_gpu" in spec:
                 opts.extend(["--with-single-node-hip"])
 
