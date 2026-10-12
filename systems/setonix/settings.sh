@@ -160,7 +160,7 @@ quay.io/biocontainers/maker:3.01.03--pl5262h8f1cd36_2
 quay.io/biocontainers/megahit:1.2.9--haf24da9_8
 quay.io/biocontainers/metaphlan:4.2.6--pyhdfd78af_0
 quay.io/biocontainers/minimap2:2.31--h118bc1c_0
-quay.io/biocontainers/mrbayes:3.2.7--h5465cc4_4
+quay.io/biocontainers/mrbayes:3.2.7--hd0d793b_7
 quay.io/biocontainers/multiqc:1.35--pyhdfd78af_1
 quay.io/biocontainers/mummer:3.23--pl5321h87f3376_14
 quay.io/biocontainers/ncbi-datasets-cli:14.26.0
