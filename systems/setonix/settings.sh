@@ -153,7 +153,7 @@ quay.io/biocontainers/filtlong:0.3.1--h077b44d_0
 quay.io/biocontainers/freebayes:1.3.10--hbefcdb2_0
 quay.io/biocontainers/gatk4:4.6.2.0--py310hdfd78af_1
 quay.io/biocontainers/hisat2:2.2.2--h503566f_0
-quay.io/biocontainers/humann:3.9--py312hdfd78af_0
+quay.io/biocontainers/humann:3.8--pyh7cba7a3_0
 quay.io/biocontainers/kraken2:2.17.1--pl5321h077b44d_0
 quay.io/biocontainers/macs3:3.0.4--py310h5a5e57a_0
 quay.io/biocontainers/maker:3.01.03--pl5262h8f1cd36_2
