@@ -4,12 +4,12 @@
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 
-from spack.package import *
-
 import os
-import llnl.util.filesystem as fs
-from pathlib import Path
 import shutil
+from pathlib import Path
+
+import llnl.util.filesystem as fs
+from spack.package import *
 
 
 class Hyperbeam(Package, ROCmPackage, CudaPackage):
@@ -21,6 +21,8 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
     maintainers = ["d3v-null", "gsleap"]
 
     version("main", branch="main")
+    version("0.11.1", tag="v0.11.1")
+    version("0.11.0", tag="v0.11.0")
     version("0.10.2", tag="v0.10.2")
     version("0.10.0", tag="v0.10.0")
     version("0.9.3", tag="v0.9.3")
@@ -35,6 +37,7 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
 
     depends_on("rust@1.64.0:", type="build")
     depends_on("rust@1.80.0:", type="build", when="@0.10.0:")
+    depends_on("rust@1.85.0:", type="build", when="@0.11.0:")
     depends_on("cmake", type="build")
 
     # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.
@@ -83,7 +86,7 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
             cuda_dir = self.spec["cuda"].prefix
             # print(f"cuda_dir: {cuda_dir}, cuda_arch: {cuda_arch}")
         if self.spec.satisfies("~portable"):
-            env.append_flags("RUSTFLAGS", f"-C target-cpu=native")
+            env.append_flags("RUSTFLAGS", "-C target-cpu=native")
 
     def get_features(self):
         features = []
