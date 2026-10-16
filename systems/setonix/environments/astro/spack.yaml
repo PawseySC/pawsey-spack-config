@@ -50,14 +50,12 @@ spack:
               - mwalib@2.0.5+python~portable
               - mwalib@1.8.7+python~portable
               - aoflagger@3.4.0 build_type=Release target=zen3 ^cfitsio@3.49
-              - hyperbeam@0.11.1 ~portable +python
-              - hyperbeam@0.10.2 ~portable +python
+              - hyperbeam@0.13.0 ~portable +python
+              - hyperbeam@0.12.0 ~portable +python
               - hyperdrive@=0.8.1 ~portable
-              - hyperdrive@=0.8.0 ~portable
-              - hyperdrive@=0.7.0 ~portable
-              - birli@0.20.0 +aoflagger ~portable
-              - birli@0.19.1 +aoflagger ~portable
-              - birli@0.18.2 +aoflagger ~portable
+              - hyperdrive@=0.8.0 ~portable              
+              - birli@0.21.0 +aoflagger ~portable
+              - birli@0.20.0 +aoflagger ~portable                            
               - calceph@3.5.5 target=zen3
               - presto@5.0.1 target=zen3
 

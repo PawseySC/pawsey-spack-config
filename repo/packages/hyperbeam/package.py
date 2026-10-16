@@ -21,6 +21,8 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
     maintainers = ["d3v-null", "gsleap"]
 
     version("main", branch="main")
+    version("0.13.0", tag="v0.13.0")
+    version("0.12.0", tag="v0.12.0")
     version("0.11.1", tag="v0.11.1")
     version("0.11.0", tag="v0.11.0")
     version("0.10.2", tag="v0.10.2")
