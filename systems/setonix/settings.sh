@@ -69,11 +69,11 @@ singularity_version="4.3.5-nompi" # has to match the version in the Spack env ya
 singularity_mpi_version="4.3.5-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.32"
 # TODO: update with final commit hash when the registry is ready
-shpc_registry_version="bf0d6db12b1fe478e11c53dad966e25bb7d0a1b3"
+shpc_registry_version="e6db73f445b947a4b6d1bd83bd005a41186f71d6"
 cpe_version="26.03"
-                     
+
 # python (and py tools) versions
-python_name="python" 
+python_name="python"
 python_version="3.11.6" # has to match the version in the Spack env yaml
 setuptools_version="80.9.0" # has to match the version in the Spack env yaml
 pip_version="23.1.2" # has to match the version in the Spack env yaml
@@ -191,22 +191,22 @@ quay.io/sarahbeecroft9/interproscan:5.56-89.0
 
 
 container_list_mpi="
-quay.io/pawsey/openfoam:v2412
-quay.io/pawsey/openfoam:v2212
-quay.io/pawsey/openfoam:v2206
-quay.io/pawsey/openfoam:v2012
-quay.io/pawsey/openfoam-org:12
-quay.io/pawsey/openfoam-org:10
-quay.io/pawsey/openfoam-org:9
-quay.io/pawsey/openfoam-org:8
-quay.io/pawsey/tensorflow:2.15.1-rocm6.3.3
-quay.io/pawsey/tensorflow:2.17-rocm6.3.3
-quay.io/pawsey/pytorch:2.7.1-rocm6.3.3
-quay.io/pawsey/cp2k:2024.3-rocm6.3.0
-quay.io/pawsey/namd:3.0.1
-quay.io/pawsey/namd:3.0.1-rocm6.3.0
+quay.io/pawsey/openfoam:v2606-gcc13DPInt32Opt-mpich4.2.2-ubuntu24.04
+quay.io/pawsey/openfoam:v2412-gcc13DPInt32Opt-mpich4.2.2-ubuntu24.04
+quay.io/pawsey/openfoam:v2406-gcc13DPInt32Opt-mpich4.2.2-ubuntu24.04
+quay.io/pawsey/openfoam:v2212-gcc13DPInt32Opt-mpich4.2.2-ubuntu24.04
+quay.io/pawsey/openfoam:v2206-gcc13DPInt32Opt-mpich4.2.2-ubuntu24.04
+quay.io/pawsey/openfoam:v2012-gcc13DPInt32Opt-mpich4.2.2-ubuntu24.04
+quay.io/pawsey/openfoam-org:14-gcc13DPInt32Opt-mpich4.2.2-ubuntu24.04
+quay.io/pawsey/openfoam-org:12-gcc13DPInt32Opt-mpich4.2.2-ubuntu24.04
+quay.io/pawsey/openfoam-org:10-gcc13DPInt32Opt-mpich4.2.2-ubuntu24.04
+quay.io/pawsey/tensorflow:2.21.0-rocm7.2.4
+quay.io/pawsey/pytorch:2.13.0-rocm7.2.4
+quay.io/pawsey/cp2k:2026.2-rocm7.0.1
+quay.io/pawsey/namd:3.0.3
+quay.io/pawsey/namd:3.0.3-rocm7.1.0
 "
-#quay.io/pawsey/hpc-python:2022.03						
+#quay.io/pawsey/hpc-python:2022.03
 #quay.io/pawsey/hpc-python:2022.03-hdf5mpi
 
 #hpc-python containers need to be rebuild due to security bugs
