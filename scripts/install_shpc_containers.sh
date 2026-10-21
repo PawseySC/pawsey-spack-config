@@ -13,7 +13,7 @@ fi
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
-module load cpe/25.03
+module load cpe/26.03
 module load gcc-native/14.2
 module use "${INSTALL_PREFIX}/staff_modulefiles"
 # we need the python module to be available in order to run spack
