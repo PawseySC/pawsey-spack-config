@@ -1,0 +1,49 @@
+#!/bin/bash -l
+#SBATCH --job-name=openfoam-shpc-test
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=230G
+#SBATCH --time=1-00:00:00
+#SBATCH --account=pawsey0001
+#SBATCH --partition=work
+
+# Allocate a compute node and run the OpenFOAM installation test driver.
+# This launcher contains no installation logic. All arguments are forwarded to
+# test_install_shpc_openfoam.sh, including registry and single-image selection.
+# The memory request follows the existing OpenFOAM test's conversion allowance.
+# Override Slurm resources with sbatch options if your test needs more time/RAM.
+#
+# Submit from the repository root, for example:
+#   sbatch scripts/submit_shpc_openfoam_test_job.slm --date-tag 2026.09 \
+#     --repository /scratch/pawsey0001/espinosa/shpc-registry
+# Add --image <exact-repository:tag> to test one image from settings.sh.
+
+# =============================================================================
+# 1. Select the same system configuration as the official installation jobs
+# =============================================================================
+# Joey also uses the Setonix configuration. This does not select a Slurm cluster.
+export SYSTEM=setonix
+
+# =============================================================================
+# 2. Locate the test driver, including when Slurm runs a spooled script copy
+# =============================================================================
+# Slurm copies this file elsewhere; BASH_SOURCE alone cannot locate the repo.
+# Submit from the repo root or scripts/, or export PAWSEY_SPACK_CONFIG_REPO.
+if [ -n "${PAWSEY_SPACK_CONFIG_REPO:-}" ]; then
+    driver="$PAWSEY_SPACK_CONFIG_REPO/scripts/test_install_shpc_openfoam.sh"
+elif [ -f "${SLURM_SUBMIT_DIR:-$PWD}/scripts/test_install_shpc_openfoam.sh" ]; then
+    driver="${SLURM_SUBMIT_DIR:-$PWD}/scripts/test_install_shpc_openfoam.sh"
+else
+    driver="${SLURM_SUBMIT_DIR:-$PWD}/test_install_shpc_openfoam.sh"
+fi
+if [ ! -f "$driver" ]; then
+    echo 'Cannot locate test driver. Submit from the repository root or scripts/.' >&2
+    exit 1
+fi
+
+# =============================================================================
+# 3. Run the test and preserve its exit status for Slurm accounting
+# =============================================================================
+# Quoted "$@" passes each option unchanged; no test settings are duplicated here.
+exec bash "$driver" "$@"

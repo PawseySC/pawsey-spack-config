@@ -25,16 +25,59 @@ of_dir="${INSTALL_PREFIX}/${containers_root_dir}/openfoam-sif"
 mkdir -p "${of_dir}"
 
 
-# Pawsey only - move module files in ${tool} dirs to a directory with name ${tool}-container
-#  Contents are moved instead of renaming ${tool} dir in order to avoid nesting of directories when
-#   the ${tool}-container directory already exists
+# Pawsey view names: move entries into <tool>-container, without changing the
+# long module files, wrappers or SIF names. Only OpenFOAM versions are shortened
+# (e.g. v2606-gcc13... -> v2606), and only when that release has one variant.
+# Include earlier installations in the collision check: restore their full tag
+# from the symlink target first, then merge new entries and count the variants.
+# This also makes repeated patch calls and single-image installs safe. If a new
+# variant collides with an existing short name, BOTH entries keep their full tag.
 for tool in "${short_dir}/openfoam" "${short_dir}/openfoam-org" "${short_dir}/hpc-python" ; do
-  if [ -d ${tool} ] ; then
-    mkdir -p ${tool}${shpc_spackuser_container_tag}
-    for module in ${tool}/*.lua ; do
-      mv ${module} ${tool}${shpc_spackuser_container_tag}
+  destination="${tool}${shpc_spackuser_container_tag}"
+  if [ "${tool##*/}" != "hpc-python" ] && [ -d "$destination" ]; then
+    # Restore old short links BEFORE moving new files: a new bare version such
+    # as v2606 must not overwrite an old v2606 link pointing at a longer tag.
+    for module in "$destination"/*.lua; do
+      [ -L "$module" ] || continue
+      target=$(readlink -f "$module")
+      full_version="${target%/module.lua}"
+      full_version="${full_version##*/}"
+      if [ "${module##*/}" != "$full_version.lua" ]; then
+        mv -- "$module" "$destination/$full_version.lua"
+      fi
     done
-    rmdir $tool
+  fi
+
+  # Move contents rather than the directory, so an existing destination is not
+  # nested. SHPC can recreate these original entries when reinstalling an image.
+  if [ -d "$tool" ]; then
+    mkdir -p "$destination"
+    for module in "$tool"/*.lua; do
+      [ -e "$module" ] || [ -L "$module" ] || continue
+      mv -- "$module" "$destination/"
+    done
+    rmdir "$tool"
+  fi
+
+  if [ "${tool##*/}" != "hpc-python" ] && [ -d "$destination" ]; then
+    # Count full-tag entries per release within this OpenFOAM family. The two
+    # families are independent, and hpc-python keeps its original version names.
+    declare -A release_counts=()
+    for module in "$destination"/*.lua; do
+      [ -e "$module" ] || [ -L "$module" ] || continue
+      version="${module##*/}"; version="${version%.lua}"
+      release="${version%%-*}"
+      release_counts["$release"]=$(( ${release_counts["$release"]:-0} + 1 ))
+    done
+    for module in "$destination"/*.lua; do
+      [ -e "$module" ] || [ -L "$module" ] || continue
+      version="${module##*/}"; version="${version%.lua}"
+      release="${version%%-*}"
+      if [ "${release_counts["$release"]}" -eq 1 ] && [ "$version" != "$release" ]; then
+        mv -- "$module" "$destination/$release.lua"
+      fi
+    done
+    unset release_counts
   fi
 done
 
