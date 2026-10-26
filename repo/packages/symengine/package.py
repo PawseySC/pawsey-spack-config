@@ -10,7 +10,10 @@
 import sys
 
 from spack.package import *
-from spack.pkg.builtin.boost import Boost
+try:
+    from spack_repo.builtin.packages.boost.package import Boost
+except ImportError:
+    from spack.pkg.builtin.boost import Boost
 
 
 class Symengine(CMakePackage):

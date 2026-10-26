@@ -15,7 +15,10 @@ from spack.build_environment import dso_suffix
 from spack.error import NoHeadersError
 from spack.operating_systems.mac_os import macos_version
 from spack.package import *
-from spack.pkg.builtin.kokkos import Kokkos
+try:
+    from spack_repo.builtin.packages.kokkos.package import Kokkos
+except ImportError:
+    from spack.pkg.builtin.kokkos import Kokkos
 
 # Trilinos is complicated to build, as an inspiration a couple of links to
 # other repositories which build it:

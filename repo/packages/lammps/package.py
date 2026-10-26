@@ -9,7 +9,10 @@ import datetime as dt
 import os
 
 from spack.build_environment import optimization_flags
-from spack.build_systems.python import PythonPipBuilder
+try:
+    from spack_repo.builtin.build_systems.python import PythonPipBuilder
+except ImportError:
+    from spack.build_systems.python import PythonPipBuilder
 from spack.package import *
 
 

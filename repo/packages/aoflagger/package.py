@@ -1,4 +1,5 @@
 from spack.patch import apply_patch
+from spack.package import *
 import os
 
 PATCHFILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "as.patch")

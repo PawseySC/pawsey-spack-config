@@ -2,8 +2,7 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-from spack.package import CMakePackage
-from spack.build_environment import EnvironmentModifications
+from spack.util.environment import EnvironmentModifications
 
 from spack.package import *
 

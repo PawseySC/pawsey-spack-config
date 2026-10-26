@@ -3,7 +3,7 @@ if [ -z ${__PSC_SETTINGS__+x} ]; then # include guard
 __PSC_SETTINGS__=1
 
 # EDIT at each rebuild of the software stack
-DATE_TAG="2026.08"
+DATE_TAG="${DATE_TAG:-2026.08}"
 
 # Must be set manually for the setonix-q software stack
 PAWSEY_CLUSTER="setonix-q"
@@ -40,8 +40,8 @@ fi
 USER_PERMANENT_FILES_PREFIX='/software/projects'
 #USER_TEMP_FILES_PREFIX='/scratch'
 USER_TEMP_FILES_PREFIX='/tmp'
-SPACK_USER_CONFIG_PATH="$MYSOFTWARE/setonix-q/$DATE_TAG/.spack_user_config"
-BOOTSTRAP_PATH='$MYSOFTWARE/setonix-q/'$DATE_TAG/.spack_user_config/bootstrap
+export SPACK_USER_CONFIG_PATH="${SPACK_USER_CONFIG_PATH:-$MYSOFTWARE/setonix-q/$DATE_TAG/.spack_user_config}"
+BOOTSTRAP_PATH='$user_cache_path/bootstrap'
 # Set a new mirror where to fetch prebuilt binaries, if any.
 SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
 # Durable, release-scoped provenance for the environment lockfile DAGs that
@@ -94,7 +94,9 @@ module_tree_compiler_list="gcc/${gcc_version} nvhpc/${nvidia_version}"
 cpu_arch="neoverse_v2"
 
 # tool versions
-spack_version="0.23.1" # the prefix "v" is added in setup_spack.sh
+spack_version="1.1.1" # the prefix "v" is added in install_spack.sh
+# Pin the builtin recipes to v2025.11.0, the release used by Spack 1.1.1.
+spack_packages_commit="119680aeee8ea802c6111b7167583bddef97e82f"
 singularity_version="4.3.5-nompi" # has to match the version in the Spack env yaml + nompi tag
 singularity_mpi_version="4.3.5-mpi" # has to match the version in the Spack env yaml + mpi tag
 shpc_version="0.1.32"

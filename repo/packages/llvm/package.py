@@ -13,7 +13,10 @@ import llnl.util.tty as tty
 from llnl.util.lang import classproperty
 
 import spack.util.executable
-from spack.build_systems.cmake import get_cmake_prefix_path
+try:
+    from spack_repo.builtin.build_systems.cmake import get_cmake_prefix_path
+except ImportError:
+    from spack.build_systems.cmake import get_cmake_prefix_path
 from spack.package import *
 from spack.package_base import PackageBase
 
@@ -412,9 +415,9 @@ class Llvm(CMakePackage, CudaPackage, LlvmDetection, CompilerPackage):
             },
         }.items():
             with when(v):
-                for comp in spack.compilers.supported_compilers():
-                    conflicts("%{0}{1}".format(comp, compiler_conflicts.get(comp, "")))
-        del v, compiler_conflicts, comp
+                for comp, constraint in compiler_conflicts.items():
+                    conflicts("%{0}{1}".format(comp, constraint))
+        del v, compiler_conflicts, comp, constraint
 
     # libomptarget
     conflicts("+cuda", when="@15:")  # +cuda variant is obselete since LLVM 15
