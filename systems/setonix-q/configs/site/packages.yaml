@@ -395,12 +395,6 @@ packages:
       dependencies: []
     buildable: false
 
-  libgcrypt:
-    externals:
-    - spec: libgcrypt@1.11.0
-      prefix: /usr
-    buildable: false
-  
   grep:
     externals:
     - spec: grep@3.11
