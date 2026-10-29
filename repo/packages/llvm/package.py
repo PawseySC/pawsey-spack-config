@@ -9,9 +9,6 @@ import os.path
 import re
 import sys
 
-import llnl.util.tty as tty
-from llnl.util.lang import classproperty
-
 import spack.util.executable
 try:
     from spack_repo.builtin.build_systems.cmake import get_cmake_prefix_path

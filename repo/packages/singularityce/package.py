@@ -6,8 +6,6 @@
 import os
 import shutil
 
-import llnl.util.tty as tty
-
 from spack.package import *
 
 

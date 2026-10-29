@@ -46,8 +46,6 @@ import re
 #AEG: Importing this module to use their tools for copying files
 import shutil
 
-import llnl.util.tty as tty
-
 from spack.package import *
 from spack.util.environment import EnvironmentModifications
 

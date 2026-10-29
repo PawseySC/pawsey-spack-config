@@ -5,8 +5,6 @@
 # Nektar builds its own boost and other packages - better than let spack handling it.
 from spack.package import *
 from spack.util.environment import is_system_path
-from llnl.util import tty
-from llnl.util.filesystem import FileFilter
 
 import os
 

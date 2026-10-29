@@ -8,8 +8,6 @@
 
 import os.path
 
-import llnl.util.lang as lang
-
 from spack.package import *
 
 
@@ -513,7 +511,7 @@ class Kokkos(CMakePackage, CudaPackage, ROCmPackage):
         )
 
         # Remove duplicate options
-        return lang.dedupe(options)
+        return dedupe(options)
 
     test_script_relative_path = join_path("scripts", "spack_test")
 

@@ -9,8 +9,6 @@ import os
 import platform
 import sys
 
-import llnl.util.tty as tty
-
 from spack.build_environment import optimization_flags
 from spack.package import *
 

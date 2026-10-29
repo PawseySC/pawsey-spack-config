@@ -15,7 +15,6 @@ import os
 
 from spack.package import *
 from spack.util.environment import EnvironmentModifications
-from llnl.util.tty import warn
 
 
 class PyMpi4py(PythonPackage):
@@ -170,7 +169,7 @@ class PyMpi4py(PythonPackage):
             )
 
         self._resolved_gtl_dir = gtl_dir  # noqa: B010
-        warn(f"[mpi4py +gtl] resolved GTL dir = {gtl_dir}")
+        tty.warn(f"[mpi4py +gtl] resolved GTL dir = {gtl_dir}")
 
         expected_lib = join_path(gtl_dir, self._gtl_soname())
         if not os.path.isfile(expected_lib):
@@ -185,9 +184,9 @@ class PyMpi4py(PythonPackage):
         cfg_fn = self._mpi_cfg_path()
         self.create_mpi_config_file(cfg_fn)
 
-        warn("===== mpi.cfg (debug) =====")
-        warn(open(cfg_fn, "r").read())
-        warn("===== end mpi.cfg =====")
+        tty.warn("===== mpi.cfg (debug) =====")
+        tty.warn(open(cfg_fn, "r").read())
+        tty.warn("===== end mpi.cfg =====")
 
     @run_before("install")
     def cythonize(self):

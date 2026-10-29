@@ -7,7 +7,6 @@
 from spack.package import *
 
 import os
-import llnl.util.filesystem as fs
 from pathlib import Path
 import shutil
 
@@ -99,7 +98,7 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
     def install(self, spec, prefix):
         cargo = Executable("cargo")
         features = self.get_features()
-        with fs.working_dir(self.stage.source_path):
+        with working_dir(self.stage.source_path):
             cargo("build", "--locked", "--release", f"--features={','.join(features)}")
             shutil.copytree("include", f"{prefix}/include")
             os.mkdir(f"{prefix}/lib")

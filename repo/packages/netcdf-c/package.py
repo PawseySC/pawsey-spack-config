@@ -17,8 +17,6 @@ import itertools
 import os
 import sys
 
-from llnl.util.lang import dedupe
-
 try:
     from spack.phase_callbacks import PhaseCallbacksMeta
 except ImportError:
