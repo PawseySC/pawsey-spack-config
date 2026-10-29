@@ -359,13 +359,13 @@ packages:
 
   hwloc:
     externals:
-    - spec: hwloc@2.10.0
+    - spec: hwloc@2.11.2
       prefix: /usr
     buildable: false
 
   numactl:
     externals:
-    - spec: numactl@2.0.14
+    - spec: numactl@2.0.14.20.g4ee5e0c
       prefix: /usr
     buildable: false
 
@@ -397,19 +397,19 @@ packages:
 
   libgcrypt:
     externals:
-    - spec: libgcrypt@1.10.3
+    - spec: libgcrypt@1.11.0
       prefix: /usr
     buildable: false
   
   grep:
     externals:
-    - spec: grep@3.1
+    - spec: grep@3.11
       prefix: /usr
     buildable: false
 
   sed:
     externals:
-    - spec: sed@4.9.0
+    - spec: sed@4.9
       prefix: /usr
     buildable: false
 
@@ -430,7 +430,7 @@ packages:
 # ----------------------------------------------------------------------------
   lustre:
     externals:
-    - spec: lustre@2.15.5.2_cray_1_g9231caa
+    - spec: lustre@2.15.7.2_cray_5_g607eea0
       prefix: /usr
     buildable: false
 
@@ -478,7 +478,7 @@ packages:
 
   openssl:
     externals:
-    - spec: openssl@3.1.4
+    - spec: openssl@3.5.0
       prefix: /usr
     buildable: false
 
@@ -499,7 +499,7 @@ packages:
 
   openssh:
     externals:
-    - spec: openssh@9.6
+    - spec: openssh@9.6p1
       prefix: /usr
     buildable: false
 
@@ -517,7 +517,8 @@ packages:
 
   openldap:
     externals:
-    - spec: openldap2@2.4.46
+    # Installed RPM reports 2.5.20+11; '+' denotes a variant in a Spack spec.
+    - spec: openldap2@2.5.20
       prefix: /usr
     buildable: false
 
@@ -529,7 +530,7 @@ packages:
 
   nghttp2:
     externals:
-    - spec: nghttp2@1.40.0
+    - spec: nghttp2@1.64.0
       prefix: /usr
     buildable: false
 
