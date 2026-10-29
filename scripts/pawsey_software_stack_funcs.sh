@@ -310,7 +310,7 @@ function install_and_record_spack_root()
         echo "Unsupported installation mode '${install_mode}' for ${requested_spec}."
         return 1
     fi
-    install_command+=" -f ${quoted_spec_file}"
+    install_command+=" ${quoted_spec_file}"
 
     if ! sg "${INSTALL_GROUP}" -c "${install_command}"; then
         echo "Installation failed for ${requested_spec}."
