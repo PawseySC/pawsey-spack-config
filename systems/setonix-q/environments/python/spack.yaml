@@ -2,13 +2,13 @@ spack:
 
   packages:
     python:
-      require: "@3.11.6 +ssl +optimizations +zlib %gcc@13.3.1"
+      require: "@3.11.6 +ssl +optimizations +zlib %gcc_compiler"
   
     py-numpy:
       require: "@2.1.2"
   
     cutensor:
-      require: "@2.4.1.4 %gcc@13.3.1"
+      require: "@2.4.1.4 %gcc_compiler"
       buildable: true
       externals: []
   
@@ -42,11 +42,11 @@ spack:
   # Root spec used by the quantum custom installers via the generated module.
   - matrix:
     - [cutensor@2.4.1.4]
-    - ["%gcc@13.3.1"]
+    - ["%gcc_compiler"]
 
   - matrix:
     - [$py_stack]
     - ["^python@3.11.6+optimizations+zlib+ssl"]
-    - ["%gcc@13.3.1"]
+    - ["%gcc_compiler"]
 
   view: false
