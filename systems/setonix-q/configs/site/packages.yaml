@@ -415,7 +415,7 @@ packages:
 
   binutils:
     externals:
-    - spec: binutils@2.45
+    - spec: binutils@2.45+ld
       prefix: /usr
     buildable: false
 
