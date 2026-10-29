@@ -42,7 +42,7 @@ for comp in ${pythoncompilers[@]}; do
         echo "Concretization of Python with $comp for $arch .."
         echo "Installing Python with $comp for $arch.."
         if [ "${SYSTEM}" = "setonix-q" ]; then
-            python_spec="python@${python_version} %${comp} target=${arch}"
+            python_spec="python@${python_version} target=${arch} %${comp%%@*}_compiler"
             install_and_record_spack_root standalone python "${python_spec}" root
         else
             spack spec python@${python_version} %$comp target=${arch}

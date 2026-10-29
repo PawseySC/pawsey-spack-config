@@ -37,7 +37,7 @@ if [ "${SYSTEM}" = "setonix" ]; then
 elif [ "${SYSTEM}" = "setonix-q" ]; then
     for comp in ${pythoncompilers[@]}; do
         for arch in ${archs[@]}; do
-            reframe_spec="reframe@${reframe_version} %${comp} target=${arch}"
+            reframe_spec="reframe@${reframe_version} target=${arch} %${comp%%@*}_compiler"
             echo "Concretization of ReFrame with $comp for $arch.."
             echo "Installing ReFrame with $comp for $arch.."
             install_and_record_spack_root standalone reframe "${reframe_spec}" root
