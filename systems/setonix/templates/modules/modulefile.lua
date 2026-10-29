@@ -180,6 +180,7 @@ singularity_bindpath = singularity_bindpath .. ",/usr/lib64/liblustreapi.so.1:/h
 singularity_bindpath = singularity_bindpath .. ",/usr/lib64/libnl-genl-3.so.200,/usr/lib64/libnl-3.so.200"
 singularity_bindpath = singularity_bindpath .. ",/usr/lib64/libnl-genl-3.so.200:/host_lib64/libnl-genl-3.so.200,/usr/lib64/libnl-3.so.200:/host_lib64/libnl-3.so.200"
 -- COS >=25.3
+singularity_bindpath = singularity_bindpath .. ",/usr/lib64/liblustreapi.so"
 singularity_bindpath = singularity_bindpath .. ",/usr/lib64/liblustreapi.so:/host_lib64/liblustreapi.so"
 -- this has to be conditional, path exists only in compute nodes
 if isDir("/var/spool/slurmd") then
