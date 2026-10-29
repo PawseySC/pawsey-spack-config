@@ -4,6 +4,9 @@ spack:
   packages:
     'fftw-api:':
       buildable: true
+    # Constrain Python where needed without requiring it in every root's DAG.
+    python:
+      require: "@3.11.6 +optimizations +zlib +ssl %gcc_compiler"
   definitions:
 
   - parallel:
@@ -51,5 +54,4 @@ spack:
   - matrix:
     - [$parallel]
     - ['%gcc_compiler']
-    - [^python@3.11.6+optimizations+zlib+ssl%gcc_compiler]
   view: false
