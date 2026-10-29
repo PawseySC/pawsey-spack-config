@@ -9,8 +9,3 @@ spack:
   view: false
   concretizer:
     unify: when_possible
-  config:
-    build_environment:
-      prepend_path:
-        PATH: /opt/cray/pe/cce/19.0.0/binutils/aarch64/bin
-
