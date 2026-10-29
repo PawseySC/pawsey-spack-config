@@ -17,6 +17,54 @@ Here is how to launch the software stack installation.
 
 You will need to ask the platforms team to apply root permissions to Singularity ss soon as it is installed. The script to run as root is found in the `bin` directory within the spack installation prefix.
 
+#### Updating Singularity modulefiles without reinstalling
+
+Use [scripts/update_singularity_modules.sh](scripts/update_singularity_modules.sh)
+to render the **current checkout's template, including uncommitted changes**, for
+an already installed SingularityCE. It uses the existing Spack 1.1.1 installation
+and repository variant generator; it does not install or concretize software,
+change package privileges, or overwrite the installed template.
+
+```bash
+bash scripts/update_singularity_modules.sh --date-tag 2026.09 --version 4.3.5
+```
+
+By default, each run writes only into a new directory below
+`$MYSCRATCH/singularity-module-updates/<date-tag>`. The script reads the checkout's
+Setonix settings and site/staff module configuration, selects one installed spec
+for its configured architecture and GCC, and syntax-checks the resulting source
+and variant modulefiles. It also checks each staged variant with Lmod and records
+the installed spec hash, repository revision/dirty state, input checksums, logs,
+and a diff against live modules. The printed `module use` command exposes the
+candidates for further testing; first unload an already-loaded `singularity`
+module so it cannot mask the candidate. The script does not run an MPI/container
+workload.
+
+Only `--apply-live` publishes the validated modules for that version. It backs up
+the Spack source module and all affected Pawsey variants to hidden names such as
+`.4.3.5-mpi.lua.<UTC-timestamp>-<unique-id>.bak` alongside the originals. Unselected
+versions, installed templates, shared Lmod helpers, and software remain unchanged.
+Live directories must already exist and be writable. Cooperating updater runs
+are locked out; each file replacement is atomic, but the whole set is not.
+Failed deployment attempts automatic rollback. After a successful deployment
+(or a hard interruption), use the printed restore command:
+
+```bash
+bash scripts/update_singularity_modules.sh --date-tag 2026.09 \
+  --apply-live --restore /scratch/.../singularity-module-updates/2026.09/<run-id>
+```
+
+Restore retains the backups and refuses to overwrite files changed since
+deployment. Keep the run directory and hidden backups until testing is complete.
+Do not run the script with sudo. See `--help` for alternate existing stack and
+staging locations.
+
+Driver safety tests use a temporary fake stack and the real variant generator:
+
+```bash
+python3 -m unittest discover -s scripts/tests -p 'test_update_*.py'
+```
+
 ### Software stack modulefile
 
 The platforms team will need to install the `$INSTALL_PREFIX/staff_modulefiles/pawseyenv/*lua` module such that it will be loaded before the Cray compilers. They will also need to update user account creation process, following the updated `$INSTALL_PREFIX/spack/bin/spack_create_user_moduletree.sh`.
