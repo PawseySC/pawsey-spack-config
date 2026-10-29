@@ -512,7 +512,7 @@ packages:
   openldap:
     externals:
     # Installed RPM reports 2.5.20+11; '+' denotes a variant in a Spack spec.
-    - spec: openldap2@2.5.20
+    - spec: openldap@2.5.20
       prefix: /usr
     buildable: false
 
