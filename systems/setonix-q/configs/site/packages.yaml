@@ -369,7 +369,7 @@ packages:
       prefix: /usr
     buildable: false
 
-  pcre:
+  pcre2:
     externals:
     - spec: pcre2@10.42
       prefix: /usr
