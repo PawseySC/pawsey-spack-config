@@ -32,6 +32,8 @@ class Wsclean(CMakePackage):
     variant('everybeam', default=False, when="@3:", description='To apply primary beams for version >=3')
     variant('mpi', default=False,when="@3:", description='To enable distributed mode')
 
+    depends_on("cxx", type="build")
+
     depends_on('casacore@3.2.1:')
     depends_on('fftw-api@3')
     depends_on('hdf5@1.10.7: +cxx ~mpi api=v110')

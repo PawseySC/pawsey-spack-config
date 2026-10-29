@@ -14,6 +14,8 @@ class PsrfitsUtils(AutotoolsPackage):
 
     version("2023-10-08", commit="284fd0ca259e2201d80a4bf3407a0bef127e77cf")
 
+    depends_on("c", type="build")
+
     depends_on("mpi")
     depends_on("cfitsio")
     depends_on("libtool", type="build")

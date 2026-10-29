@@ -19,7 +19,15 @@ class Idg(CMakePackage, CudaPackage):
     version("1.2.0", tag="1.2.0")
     version("1.1.0", tag="1.1.0")
     version("1.0.0", tag="1.0.0")
+    version(
+        "0.8.1",
+        git="https://git.astron.nl/RD/idg.git",
+        commit="a09f3c85094c592f9304fff4c31e920c7592c3c3",
+    )
     version("0.7", tag="0.7")
+
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
 
     depends_on('boost')
     depends_on('fftw-api@3')

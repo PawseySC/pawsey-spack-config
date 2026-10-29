@@ -53,6 +53,9 @@ class Exabayes(AutotoolsPackage):
 
     variant('mpi', default=True, description='Enable MPI parallel support')
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+
     depends_on('mpi', when='+mpi')
 
     # ExaBayes manual states the program succesfully compiles with GCC, version

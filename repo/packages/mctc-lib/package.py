@@ -22,6 +22,8 @@ class MctcLib(MesonPackage):
 
     variant("json", default=False, description="Enable support for JSON")
 
+    depends_on("fortran", type="build")
+
     depends_on("meson@0.57.2:", type="build")
     depends_on("json-fortran@8:", when="+json")
     depends_on("pkgconfig", type="build")

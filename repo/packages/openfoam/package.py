@@ -365,6 +365,9 @@ class Openfoam(Package):
     variant('source', default=True,
             description='Install library/application sources and tutorials')
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+
     depends_on('mpi')
 
     # After 1712, could suggest openmpi+thread_multiple for collated output

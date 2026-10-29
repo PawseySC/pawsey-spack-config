@@ -18,6 +18,9 @@ class ScalapackBase(CMakePackage):
 
     provides("scalapack")
 
+    depends_on("c", type="build")
+    depends_on("fortran", type="build")
+
     depends_on("mpi")
     depends_on("lapack")
     depends_on("blas")

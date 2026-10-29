@@ -26,6 +26,9 @@ class Cpmd(MakefilePackage):
             default=False)
     variant('mpi', description='Build with MPI support', default=False)
 
+    depends_on("c", type="build")
+    depends_on("fortran", type="build")
+
     depends_on("lapack")
     depends_on("mpi", when="+mpi")
 

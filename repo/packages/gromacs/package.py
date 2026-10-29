@@ -178,6 +178,11 @@ class Gromacs(CMakePackage, CudaPackage):
         msg="GROMACS requires oneMKL 2021.3 or later since version 2023",
     )
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+    depends_on("fortran", type="build", when="@:4.5.5")
+    depends_on("fortran", type="build", when="+cp2k")
+
     depends_on("mpi", when="+mpi")
 
     # Plumed 2.8.2 needs Gromacs 2022.5 2021.7, 2020.7, 2019.6

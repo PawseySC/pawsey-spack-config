@@ -56,6 +56,10 @@ class Vasp(MakefilePackage):
 
     variant('dftd4', default=False)
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+    depends_on("fortran", type="build")
+
     depends_on('rsync', type='build')
     depends_on('openblas')
     depends_on('lapack')

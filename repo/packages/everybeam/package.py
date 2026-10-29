@@ -27,6 +27,9 @@ class Everybeam(CMakePackage):
     variant('tests', default=False, description='Build tests')
     variant('lobes', default=False, description='Download and install the LOBEs coefficient files')
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+
     depends_on('casacore')
     depends_on('fftw-api@3')
     depends_on('boost', when="@0.3.1:")

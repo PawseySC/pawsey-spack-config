@@ -56,11 +56,13 @@ class Ncl(Package):
     # http://www.ncl.ucar.edu/Download/build_from_src.shtml
 
     variant("hdf4", default=False, description="Enable HDF4 support.")
-    variant("gdal", default=False, description="Enable GDAL support.")
     variant("triangle", default=True, description="Enable Triangle support.")
     variant("udunits2", default=True, description="Enable UDUNITS-2 support.")
     variant("openmp", default=True, description="Enable OpenMP support.")
     variant("grib", default=True, description="Enable GRIB support.")
+
+    depends_on("c", type="build")
+    depends_on("fortran", type="build")
 
     # Non-optional dependencies according to the manual:
     depends_on("jpeg")
@@ -105,7 +107,6 @@ class Ncl(Package):
 
     # Some of the optional dependencies according to the manual:
     depends_on("hdf", when="+hdf4")
-    depends_on("gdal@:2.4", when="+gdal")
     depends_on("udunits", when="+udunits2")
     depends_on("jasper@2.0.32", when="+grib")
 
@@ -280,7 +281,7 @@ class Ncl(Package):
                 # Did you build NetCDF with OPeNDAP support?
                 "y\n" if self.spec.satisfies("^netcdf-c+dap") else "n\n",
                 # Build GDAL support (optional) into NCL?
-                "y\n" if "+gdal" in self.spec else "n\n",
+                "n\n",
                 # Build EEMD support (optional) into NCL?
                 "n\n",
                 # Build Udunits-2 support (optional) into NCL?

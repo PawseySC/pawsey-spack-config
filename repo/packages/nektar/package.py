@@ -39,6 +39,9 @@ class Nektar(CMakePackage):
     # depends_on('cmake@2.8.8:', type='build', when="~hdf5")
     # depends_on('cmake@3.2:', type='build', when="+hdf5")
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+
     depends_on('tinyxml', when='platform=darwin')
     depends_on('mpi', when='+mpi')
     depends_on('blas')

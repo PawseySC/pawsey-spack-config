@@ -79,6 +79,9 @@ class Go(Package):
 
     provides("golang")
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+
     depends_on("bash", type="build")
     depends_on("sed", type="build")
     depends_on("grep", type="build")

@@ -40,6 +40,9 @@ class Pocl(CMakePackage):
     provides("opencl@2.0", when="^llvm@:13")
     provides("opencl@3.0", when="@3: ^llvm@14:")
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+
     depends_on("cmake @2.8.12:", type="build")
     depends_on("hwloc")
     depends_on("hwloc@:1", when="@:1.1")

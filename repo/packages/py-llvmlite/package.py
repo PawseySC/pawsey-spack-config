@@ -44,6 +44,7 @@ class PyLlvmlite(PythonPackage):
     depends_on("c", type="build")
     depends_on("cxx", type="build")
 
+    depends_on("cmake", when="@0.45:", type="build")
     depends_on("py-setuptools", type="build")
     depends_on("binutils", type="build")
 

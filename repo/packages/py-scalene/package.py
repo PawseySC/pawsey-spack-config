@@ -50,6 +50,9 @@ class PyScalene(PythonPackage):
     "pydantic>=2.6",
     "pyyaml>=6.0",
     """
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+
     # Based on PyPI wheel availability
     with default_args(type=("build", "link", "run")):
         depends_on("python@3.8:3.14", when="@2:")
@@ -59,8 +62,8 @@ class PyScalene(PythonPackage):
         depends_on("py-cython", when="@2:")
 
     with default_args(type=("build", "link", "run")):
-        depends_on("py-numpy@1.24.0:", when="python@:3.13")
-        depends_on("py-numpy@2.3.43:", when="python@3.14:")
+        depends_on("py-numpy@1.24.0:", when="^python@:3.13")
+        depends_on("py-numpy@2.3.4:", when="^python@3.14:")
         depends_on("py-rich@10.7.0:", when="@2:")
         depends_on("py-cloudpickle@2.2.1:", when="@2:")
         depends_on("py-pydantic@2.6:", when="@2")

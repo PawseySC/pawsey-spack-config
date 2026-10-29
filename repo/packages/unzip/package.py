@@ -20,6 +20,8 @@ class Unzip(MakefilePackage):
     # There is no problem with it on gcc, so make it a catch all
     patch("configure-cflags.patch")
 
+    depends_on("c", type="build")
+
     # The Cray cc wrapper doesn't handle the '-s' flag (strip) cleanly.
     @when("platform=cray")
     def patch(self):
