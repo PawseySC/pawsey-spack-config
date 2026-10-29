@@ -58,7 +58,7 @@ fi
 
 if [ "${SPACK_POPULATE_CACHE}" -eq 1 ]; then
   for spec in "${public_specs[@]}"; do
-    spack buildcache create -a -m systemwide_buildcache "${spec}"
+    spack buildcache push systemwide_buildcache "${spec}"
   done
 fi
 
