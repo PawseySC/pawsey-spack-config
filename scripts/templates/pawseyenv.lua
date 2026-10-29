@@ -137,6 +137,10 @@ if current_mode == "load" or current_mode == "unload" then
 end
 
 local function prepend_compiler_paths(base_path, suffix)
+  local core_path = pathJoin(base_path, "Core", suffix)
+  if isDir(core_path) then
+    prepend_path("MODULEPATH", core_path)
+  end
   for _, compiler in ipairs(compilers) do
     local path = pathJoin(base_path, compiler.dir, compiler.version, suffix)
     if isDir(path) then
