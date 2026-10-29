@@ -31,10 +31,7 @@ class SingularityBase(MakefilePackage):
     depends_on("automake", type="build", when="@4.0:")
     depends_on("libtool", type="build", when="@4.0:")
     depends_on("go@1.25:", when="@4.3:")
-    # The binutils was added as a dependency to fix 
-    # the ld missing library errors seen on arm nodes
-    # however errors still present. 
-    #depends_on("binutils+ld", type="build")
+    depends_on("binutils+ld", type="build")
 
     conflicts("platform=darwin", msg="singularity requires a Linux VM on Windows & Mac")
 
@@ -111,10 +108,13 @@ class SingularityBase(MakefilePackage):
     def setup_build_environment(self, env):
         # Point GOPATH at the top of the staging dir for the build step.
         env.prepend_path("GOPATH", self.gopath)
+        # Resolve linker tools from the declared build dependency.
+        binutils_path = str(self.spec["binutils"].prefix.bin)
+        env.prepend_path("PATH", binutils_path)
         # Some systems do not provide ld.gold, may be request by Singularity's Go link step
         # Force bfd when ld.gold is unavailable.
-        if shutil.which("ld.gold") is None:
-            ld_bfd = shutil.which("ld.bfd")
+        if shutil.which("ld.gold", path=binutils_path) is None:
+            ld_bfd = shutil.which("ld.bfd", path=binutils_path)
             if ld_bfd:
                 env.append_flags("GOFLAGS", "-ldflags=-extldflags=-fuse-ld=bfd")
                 env.append_flags("CGO_LDFLAGS", "-fuse-ld=bfd")
