@@ -29,6 +29,21 @@ change package privileges, or overwrite the installed template.
 bash scripts/update_singularity_modules.sh --date-tag 2026.09 --version 4.3.5
 ```
 
+The base version is configured as `singularityce_version` in
+`systems/setonix/settings.sh`. The `-nompi` and `-mpi` module versions are derived
+from it for other stack scripts. The updater has **no default version**:
+`--version VERSION` is mandatory on every invocation, including restore.
+The selected version must already be installed in the target stack for generation.
+
+Use `--suffix recreated` to name the generated variants, for example,
+`singularity/4.3.5-mpi-recreated`. The generated Spack source module is also
+labelled (`4.3.5-recreated.lua`); the installed package version is unchanged.
+This works with staging, `--replace-in-test`, and `--apply-live`. Publication
+leaves unlabelled modulefiles untouched; repeated publication with the same
+suffix backs up the existing labelled files. Restore uses the saved manifest,
+so no `--suffix` option is needed when restoring. Labels must start with a
+letter or digit and contain only letters, digits, underscores, or hyphens.
+
 By default, each run writes only into a new directory below
 `$MYSCRATCH/singularity-module-updates/<date-tag>`. The script reads the checkout's
 Setonix settings and site/staff module configuration, selects one installed spec
@@ -51,13 +66,30 @@ Failed deployment attempts automatic rollback. After a successful deployment
 
 ```bash
 bash scripts/update_singularity_modules.sh --date-tag 2026.09 \
-  --apply-live --restore /scratch/.../singularity-module-updates/2026.09/<run-id>
+  --version 4.3.5 --apply-live --restore /scratch/.../singularity-module-updates/2026.09/<run-id>
 ```
 
 Restore retains the backups and refuses to overwrite files changed since
 deployment. Keep the run directory and hidden backups until testing is complete.
 Do not run the script with sudo. See `--help` for alternate existing stack and
 staging locations.
+
+To exercise the same replacement and backup logic without touching live
+modules, pass `--replace-in-test` with the run directory of an earlier staged
+generation:
+
+```bash
+bash scripts/update_singularity_modules.sh \
+  --version 4.3.5 \
+  --replace-in-test /scratch/.../singularity-module-updates/2026.11/<earlier-run>
+```
+
+This writes fresh candidates and a deployment manifest in a new run, while
+replacing only the earlier run's `tree` modulefiles. Hidden backups are created
+beside those test modulefiles. The script prints a `--restore` command that
+names both the test target and the replacement run; use it to put the staged
+tree back exactly as it was. `--replace-in-test` and `--apply-live` cannot be
+combined.
 
 Driver safety tests use a temporary fake stack and the real variant generator:
 

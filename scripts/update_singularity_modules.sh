@@ -13,13 +13,18 @@
 # inputs. Every run gets a new directory under MYSCRATCH for candidates and reports.
 # Uncommitted template edits are deliberately included.
 #
-# --apply-live is the only way to publish candidates. Before replacing anything,
-# we make hidden, timestamped backups alongside ALL affected live modulefiles.
+# --apply-live publishes candidates to live module directories. The
+# --replace-in-test option exercises that same backup-and-replace path against a
+# previous private staging run instead. Both modes back up affected modulefiles.
 # A saved manifest supports --restore; a failed deployment attempts rollback.
 # Individual replacements are atomic, but the complete set is not one filesystem
 # transaction. A killed process or machine failure may require explicit restore.
-# Do not run this script with sudo.
-
+# Do not run this script with sudo unless you fully understand the implications.
+#
+# NOTE: Initially developed by Alexis Espinosa with assistance from an AI
+#       assistant using GitHub Copilot SDK in Visual Studio Code, with automatic
+#       model selection and the Balanced setting.
+#       The initial version was fully reviewed and tested by Alexis Espinosa.
 set -eE -o pipefail
 
 # =============================================================================
@@ -28,23 +33,26 @@ set -eE -o pipefail
 die() { printf 'ERROR: %s\n' "$*" >&2; exit 1; }
 usage() {
     cat <<'USAGE'
-Usage: update_singularity_modules.sh [OPTIONS]
+Usage: update_singularity_modules.sh --version VERSION [OPTIONS]
 
   --date-tag TAG       Existing stack release; default: DATE_TAG or PAWSEY_STACK_VERSION.
-  --version VERSION    One installed SingularityCE version; default: settings.sh.
+  --version VERSION    Required installed SingularityCE version; no default.
+  --suffix LABEL       Append -LABEL to generated module names, leaving unlabelled files untouched.
   --stack-prefix DIR   Existing stack; default: /software/setonix/<date-tag>.
   --prefix DIR         Staging parent below MYSCRATCH; each run gets a new directory.
                        Default: $MYSCRATCH/singularity-module-updates/<date-tag>.
+  --replace-in-test RUN_DIR
+                       Replace an earlier staging run under MYSCRATCH.
+                       Keep hidden backups beside the replaced test modulefiles.
   --apply-live         Publish validated candidates, with hidden timestamped backups.
-  --restore RUN_DIR    Restore a previous deployment; also requires --apply-live.
-                       Use the same --date-tag and --stack-prefix as that deployment.
+  --restore RUN_DIR    Restore; requires --apply-live or --replace-in-test.
   -h, --help           Show this help.
 
 Examples:
   bash scripts/update_singularity_modules.sh --date-tag 2026.09 --version 4.3.5
-  bash scripts/update_singularity_modules.sh --date-tag 2026.09 --apply-live
+  bash scripts/update_singularity_modules.sh --version 4.3.5 --date-tag 2026.09 --apply-live
   bash scripts/update_singularity_modules.sh --date-tag 2026.09 \
-    --apply-live --restore /scratch/.../singularity-module-updates/2026.09/<run-id>
+    --version 4.3.5 --apply-live --restore /scratch/.../singularity-module-updates/2026.09/<run-id>
 
 Nothing is installed, concretized, fetched, or rebuilt. Only the selected version
 for settings.sh's cpu_arch and GCC is refreshed. Other versions remain untouched.
@@ -55,20 +63,24 @@ USAGE
 
 date_tag=${DATE_TAG:-${PAWSEY_STACK_VERSION:-}}
 version=""
+suffix=""
 stack_prefix=""
 prefix=""
 apply_live=0
 restore=""
+test_run=""
 while [ "$#" -gt 0 ]; do
     case "$1" in
-        --date-tag|--version|--stack-prefix|--prefix|--restore)
+        --date-tag|--version|--suffix|--stack-prefix|--prefix|--restore|--replace-in-test)
             [[ "$#" -ge 2 && -n "$2" ]] || die "Missing value for $1"
             case "$1" in
                 --date-tag) date_tag=$2 ;;
                 --version) version=$2 ;;
+                --suffix) suffix=$2 ;;
                 --stack-prefix) stack_prefix=$2 ;;
                 --prefix) prefix=$2 ;;
                 --restore) restore=$2 ;;
+                --replace-in-test) test_run=$2 ;;
             esac
             shift 2 ;;
         --apply-live) apply_live=1; shift ;;
@@ -77,12 +89,18 @@ while [ "$#" -gt 0 ]; do
     esac
 done
 
+[ -n "$version" ] || die "--version VERSION is required (use --help)."
+[[ "$version" =~ ^[0-9]+(\.[0-9]+)*$ ]] || die "Supply a numeric SingularityCE --version."
+
 # =============================================================================
 # 2. Identify the existing stack and read this checkout's official settings
 # =============================================================================
 [ "$(id -u)" -ne 0 ] || die "Do not run this script as root."
 [[ "$date_tag" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || die "Supply a valid --date-tag."
-[ -z "$restore" ] || [ "$apply_live" -eq 1 ] || die "--restore requires --apply-live."
+[ -z "$restore" ] || [ "$apply_live" -eq 1 ] || [ -n "$test_run" ] ||
+    die "--restore requires --apply-live or --replace-in-test."
+[ "$apply_live" -eq 0 ] || [ -z "$test_run" ] ||
+    die "Choose either --apply-live or --replace-in-test, not both."
 PAWSEY_SPACK_CONFIG_REPO=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 stack_prefix=$(realpath -e "${stack_prefix:-/software/setonix/$date_tag}")
 [[ "${stack_prefix##*/}" == "$date_tag" ]] || die "The stack prefix must end in /$date_tag."
@@ -97,8 +115,9 @@ set -a
 # shellcheck source=/dev/null
 . "$PAWSEY_SPACK_CONFIG_REPO/systems/$SYSTEM/settings.sh"
 set +a
-version=${version:-${singularity_mpi_version%-mpi}}
-[[ "$version" =~ ^[0-9]+(\.[0-9]+)*$ ]] || die "Supply a numeric SingularityCE --version."
+[[ -z "$suffix" || "$suffix" =~ ^[A-Za-z0-9][A-Za-z0-9_-]*$ ]] ||
+    die "--suffix must start with a letter or digit and contain only letters, digits, underscores, or hyphens."
+module_suffix=${suffix:+-$suffix}
 : "${cpu_arch:?Missing cpu_arch in settings.sh}" "${gcc_version:?Missing gcc_version in settings.sh}"
 : "${singularity_name_general:?Missing singularity_name_general in settings.sh}"
 : "${singularity_name:?Missing singularity_name in settings.sh}"
@@ -106,6 +125,27 @@ version=${version:-${singularity_mpi_version%-mpi}}
 : "${python_name:?Missing python_name in settings.sh}" "${python_version:?Missing python_version in settings.sh}"
 source_relative="modules/$cpu_arch/gcc/$gcc_version/utilities/$singularity_name_general"
 variants_relative="$singularity_symlink_module_dir"
+
+# A test replacement must target an earlier run created below this user's
+# MYSCRATCH. The canonicalized run and module directories must not be symlinks.
+test_tree=""
+if [ -n "$test_run" ]; then
+    [[ -n "${MYSCRATCH:-}" && -d "$MYSCRATCH" ]] || die "MYSCRATCH must be an existing directory."
+    scratch=$(realpath -e "$MYSCRATCH")
+    test_parent="$scratch/singularity-module-updates/$date_tag"
+    test_run=$(realpath -e "$test_run")
+    [[ "$test_run" == "$test_parent/"* && -d "$test_run/tree" ]] ||
+        die "--replace-in-test must name an earlier run below $test_parent."
+    [ -O "$test_run" ] || die "The test run directory must belong to you."
+    test_tree="$test_run/tree"
+    [[ "$(realpath -e "$test_tree")" = "$test_tree" ]] ||
+        die "The test module tree must not be redirected through a symlink."
+    [[ "$test_tree" =~ ^/[A-Za-z0-9_./-]+$ ]] || die "Unsupported characters in test tree path."
+    for relative in "$source_relative" "$variants_relative"; do
+        [[ -d "$test_tree/$relative" && "$(realpath -e "$test_tree/$relative")" = "$test_tree/$relative" ]] ||
+            die "Test module directory is missing or redirected: $test_tree/$relative"
+    done
+fi
 
 # =============================================================================
 # 3. Small deployment helpers: back up first, replace atomically, restore safely
@@ -125,17 +165,17 @@ atomic_copy() {
     replacement=""
 }
 
-lock_live_directories() {
+lock_target_directories() {
     local directory
     # Refuse redirected target directories; never follow a modulefile symlink.
-    for directory in "$stack_prefix/$source_relative" "$stack_prefix/$variants_relative"; do
+    for directory in "$target_root/$source_relative" "$target_root/$variants_relative"; do
         [[ -d "$directory" && "$(realpath -e "$directory")" = "$directory" ]] ||
             die "Live module directory is missing or redirected: $directory"
         [ -w "$directory" ] || die "Live module directory is not writable: $directory"
     done
-    exec 8>"$stack_prefix/$source_relative/.singularity-module-update.lock"
+    exec 8>"$target_root/$source_relative/.singularity-module-update.lock"
     flock -n 8 || die "Another updater holds the Spack module directory lock."
-    exec 9>"$stack_prefix/$variants_relative/.singularity-module-update.lock"
+    exec 9>"$target_root/$variants_relative/.singularity-module-update.lock"
     flock -n 9 || die "Another updater holds the Pawsey module directory lock."
 }
 
@@ -187,6 +227,22 @@ if [ -n "$restore" ]; then
     # not whatever architecture/compiler happens to be configured today.
     [[ -f "$run/source-relative" && -f "$run/variants-relative" ]] ||
         die "Missing deployment directory metadata."
+    expected_mode=live
+    target_root=$stack_prefix
+    if [ -n "$test_run" ]; then
+        expected_mode="test"
+        target_root=$test_tree
+    fi
+    recorded_mode=live
+    [ ! -f "$run/deployment-mode" ] || recorded_mode=$(cat "$run/deployment-mode")
+    [[ "$recorded_mode" = "$expected_mode" ]] ||
+        die "Deployment mode mismatch: expected $expected_mode, found $recorded_mode."
+    if [ -f "$run/deployment-root" ]; then
+        [[ "$(cat "$run/deployment-root")" = "$target_root" ]] ||
+            die "Restore target does not match the deployment target."
+    elif [ "$expected_mode" = test ]; then
+        die "This deployment has no test-target metadata."
+    fi
     source_relative=$(cat "$run/source-relative")
     variants_relative=$(cat "$run/variants-relative")
     [[ "$source_relative" =~ ^modules/[A-Za-z0-9_-]+/gcc/[0-9.]+/utilities/singularityce$ &&
@@ -195,14 +251,14 @@ if [ -n "$restore" ]; then
     [[ -f "$run/deployment-state" && "$(cat "$run/deployment-state")" != restored ]] ||
         die "This run has no deployment to restore (or was already restored)."
     [ -s "$run/deployment.tsv" ] || die "Missing deployment manifest."
-    lock_live_directories
+    lock_target_directories
     while IFS=$'\t' read -r target backup old_hash new_hash; do
         # Limit restore targets to this driver's two module directories.
         case "${target%/*}" in
-            "$stack_prefix/$source_relative"|"$stack_prefix/$variants_relative") ;;
+            "$target_root/$source_relative"|"$target_root/$variants_relative") ;;
             *) die "Unexpected restore target: $target" ;;
         esac
-        [[ "${target##*/}" =~ ^[0-9]+(\.[0-9]+)*(-[a-z-]+)?\.lua$ ]] ||
+        [[ "${target##*/}" =~ ^[0-9]+(\.[0-9]+)*(-[A-Za-z0-9][A-Za-z0-9_-]*)?\.lua$ ]] ||
             die "Unexpected module filename in manifest: $target"
         [ ! -L "$target" ] || die "Refusing to restore over a symlink: $target"
         # A hard interruption may leave some originals and some new files.
@@ -242,6 +298,7 @@ mkdir -p "$stage" "$run/templates" "$run/site" "$run/staff" "$run/overrides" "$r
 printf '%s\n' "$stack_prefix" > "$run/stack-prefix"
 printf '%s\n' "$source_relative" > "$run/source-relative"
 printf '%s\n' "$variants_relative" > "$run/variants-relative"
+printf '%s\n' "$suffix" > "$run/module-suffix"
 printf 'Run directory: %s\nExisting stack: %s\nSingularityCE: %s\n' "$run" "$stack_prefix" "$version"
 
 # Save the actual inputs, including uncommitted edits, for later diagnosis.
@@ -368,6 +425,15 @@ variant_directory="$stage/$variants_relative"
 shopt -s nullglob
 candidates=("$source_module" "$variant_directory/$version-"*.lua)
 [ "${#candidates[@]}" -gt 1 ] || die "The repository generator produced no variants."
+if [ -n "$suffix" ]; then
+    for index in "${!candidates[@]}"; do
+        candidate=${candidates[$index]}
+        labelled="${candidate%.lua}$module_suffix.lua"
+        mv -- "$candidate" "$labelled"
+        candidates[$index]=$labelled
+    done
+    source_module=${candidates[0]}
+fi
 
 # =============================================================================
 # 8. Validate and report candidates before any possible live deployment
@@ -396,8 +462,9 @@ done
 
 # A diff is a report, not a failure: status 1 means the candidate is different.
 : > "$run/changes.diff"
+comparison_root=${test_tree:-$stack_prefix}
 for candidate in "${candidates[@]}"; do
-    target="$stack_prefix/${candidate#"$stage/"}"
+    target="$comparison_root/${candidate#"$stage/"}"
     if [ -e "$target" ]; then
         status=0
         diff -u "$target" "$candidate" >> "$run/changes.diff" || status=$?
@@ -409,16 +476,25 @@ done
 printf '\nValidated %s modulefiles. Diff: %s/changes.diff\n' "${#candidates[@]}" "$run"
 printf 'Test with: module unload %q\n' "$singularity_name"
 printf '           module use %q\n' "$stage/${variants_relative%/"$singularity_name"}"
-printf '           module load %s/%s-mpi\n' "$singularity_name" "$version"
-if [ "$apply_live" -eq 0 ]; then
+printf '           module load %s/%s-mpi%s\n' "$singularity_name" "$version" "$module_suffix"
+if [ "$apply_live" -eq 0 ] && [ -z "$test_run" ]; then
     printf 'Staging only: no live modulefiles, templates, or software were changed.\n'
     exit 0
 fi
 
 # =============================================================================
-# 9. Explicit live deployment: prepare ALL backups before the first replacement
+# 9. Explicit publication: choose the target, then prepare ALL backups first
 # =============================================================================
-lock_live_directories
+deployment_mode=live
+target_root=$stack_prefix
+if [ -n "$test_run" ]; then
+    deployment_mode="test"
+    target_root=$test_tree
+    printf '\nReplacing only files in test tree: %s\n' "$test_tree"
+else
+    printf '\nPublishing only to live module directories.\n'
+fi
+lock_target_directories
 # Staged modules retain real helper paths. Do not silently deploy helper changes.
 for helper in pawsey_fix_initial_bash.lua pawsey_init_bash; do
     [ -r "$stack_prefix/pawsey/lmod-variable-fixes/$helper" ] ||
@@ -426,8 +502,10 @@ for helper in pawsey_fix_initial_bash.lua pawsey_init_bash; do
 done
 printf '\nPublishing ONLY these files (all other versions stay untouched):\n'
 : > "$run/deployment.tsv"
+printf '%s\n' "$deployment_mode" > "$run/deployment-mode"
+printf '%s\n' "$target_root" > "$run/deployment-root"
 for candidate in "${candidates[@]}"; do
-    target="$stack_prefix/${candidate#"$stage/"}"
+    target="$target_root/${candidate#"$stage/"}"
     backup="$(dirname "$target")/.${target##*/}.${run##*/}.bak"
     [ ! -L "$target" ] || die "Refusing to replace a symlink: $target"
     [[ ! -e "$backup" && ! -L "$backup" ]] || die "Backup already exists: $backup"
@@ -446,10 +524,15 @@ done
 printf 'deploying\n' > "$run/deployment-state"
 deploying=1
 for candidate in "${candidates[@]}"; do
-    atomic_copy "$candidate" "$stack_prefix/${candidate#"$stage/"}" 1
+    atomic_copy "$candidate" "$target_root/${candidate#"$stage/"}" 1
 done
 printf 'deployed\n' > "$run/deployment-state"
 deploying=0
 printf 'Deployment complete. Hidden backups retained; manifest: %s/deployment.tsv\n' "$run"
-printf 'Restore with: bash %q --date-tag %q --stack-prefix %q --apply-live --restore %q\n' \
-    "$PAWSEY_SPACK_CONFIG_REPO/scripts/update_singularity_modules.sh" "$date_tag" "$stack_prefix" "$run"
+if [ "$deployment_mode" = test ]; then
+    printf 'Restore with: bash %q --version %q --date-tag %q --replace-in-test %q --restore %q\n' \
+        "$PAWSEY_SPACK_CONFIG_REPO/scripts/update_singularity_modules.sh" "$version" "$date_tag" "$test_run" "$run"
+else
+    printf 'Restore with: bash %q --version %q --date-tag %q --stack-prefix %q --apply-live --restore %q\n' \
+        "$PAWSEY_SPACK_CONFIG_REPO/scripts/update_singularity_modules.sh" "$version" "$date_tag" "$stack_prefix" "$run"
+fi
