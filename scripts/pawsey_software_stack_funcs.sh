@@ -294,6 +294,8 @@ function install_and_record_spack_root()
     local install_command
 
     ensure_spack_install_manifest_run || return 1
+    # Keep bootstrap progress out of the concrete JSON spec.
+    spack bootstrap now || return 1
     temporary_spec_file=$(mktemp "${INSTALLATION_METADATA_DIR}/.concrete-spec.XXXXXX.json") || return 1
 
     if ! spack spec --json ${SPACK_SPEC_ARGS:-} "${requested_spec}" > "${temporary_spec_file}"; then
@@ -313,8 +315,7 @@ function install_and_record_spack_root()
     install_command+=" ${quoted_spec_file}"
 
     if ! sg "${INSTALL_GROUP}" -c "${install_command}"; then
-        echo "Installation failed for ${requested_spec}."
-        rm -f "${temporary_spec_file}"
+        echo "Installation failed for ${requested_spec}; concrete spec retained at ${temporary_spec_file}."
         return 1
     fi
 
