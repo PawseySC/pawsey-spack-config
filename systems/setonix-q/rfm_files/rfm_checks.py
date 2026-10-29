@@ -45,7 +45,7 @@ full_mod_paths = get_module_paths_if_installed()
 
 
 def quantum_allocation_pack(num_gpus=1):
-    # --gpus=N allocates N GH200 packs, including their CPU cores and memory.
+    # Each GH200 pack requires 72 allocation tasks in the explicit node form.
     return {
         'gpu': {
             'num_gpus': num_gpus,
@@ -105,6 +105,7 @@ class concretise_check(rfm.RunOnlyRegressionTest):
         self.valid_systems = [quantum_compute_system()]
         self.valid_prog_environs = ['PrgEnv-gnu']
         self.extra_resources = quantum_allocation_pack()
+        self.num_tasks = self.num_tasks_per_node = 72
 
         # Execution
         self.executable = 'echo'
@@ -170,6 +171,7 @@ class module_existence_check(rfm.RunOnlyRegressionTest):
         self.valid_systems = [quantum_shell_system()]
         self.valid_prog_environs = ['PrgEnv-gnu']
         self.extra_resources = quantum_allocation_pack()
+        self.num_tasks = self.num_tasks_per_node = 72
 
         # Execution - ls to check the module exists
         self.executable = 'ls'
@@ -202,6 +204,7 @@ class module_load_check(rfm.RunOnlyRegressionTest):
         self.valid_systems = [quantum_shell_system()]
         self.valid_prog_environs = ['PrgEnv-gnu']
         self.extra_resources = quantum_allocation_pack()
+        self.num_tasks = self.num_tasks_per_node = 72
 
         # Execution
         self.executable = 'module'
@@ -283,6 +286,7 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
         self.valid_systems = [quantum_compute_system()]
         self.valid_prog_environs = ['PrgEnv-gnu']
         self.extra_resources = quantum_allocation_pack()
+        self.num_tasks = self.num_tasks_per_node = 72
 
         # Load the module we are testing
         self.name_ver = '/'.join(self.mod.split('/')[-2:])[:-4]

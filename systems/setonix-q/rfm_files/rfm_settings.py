@@ -63,11 +63,11 @@ site_configuration = {
                     'resources': [
                         {
                             'name': 'gpu',
-                            'options': ['--gpus={num_gpus}']
+                            'options': ['--nodes=1', '--gres=gpu:{num_gpus}']
                         },
                         {
                             'name': 'gpu_nvme',
-                            'options': ['--gpus={num_gpus}', '--gres=tmp:{nvme_gb}G']
+                            'options': ['--nodes=1', '--gres=gpu:{num_gpus},tmp:{nvme_gb}G']
                         }
                     ],
                     'processor': {
@@ -91,7 +91,7 @@ site_configuration = {
                     'resources': [
                         {
                             'name': 'gpu',
-                            'options': ['--gpus={num_gpus}']
+                            'options': ['--nodes=1', '--gres=gpu:{num_gpus}']
                         },
                     ],
                     'processor': {
@@ -115,7 +115,7 @@ site_configuration = {
                     'resources': [
                         {
                             'name': 'gpu',
-                            'options': ['--gpus={num_gpus}']
+                            'options': ['--nodes=1', '--gres=gpu:{num_gpus}']
                         },
                     ],
                     'processor': {
@@ -139,7 +139,7 @@ site_configuration = {
                     'resources': [
                         {
                             'name': 'gpu',
-                            'options': ['--gpus={num_gpus}']
+                            'options': ['--nodes=1', '--gres=gpu:{num_gpus}']
                         },
                     ],
                     'processor': {
