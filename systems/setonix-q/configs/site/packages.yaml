@@ -617,7 +617,7 @@ packages:
   nccl:
       buildable: false
       externals:
-      - spec: nccl@2.27.7
+      - spec: nccl@2.27.7 +cuda cuda_arch=90
         prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/comm_libs/13.0/nccl
 
   cublas:
