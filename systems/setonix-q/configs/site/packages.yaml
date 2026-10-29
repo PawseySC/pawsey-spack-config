@@ -3,9 +3,9 @@ packages:
   # Provider lists express preferences. Compiler packages now provide the
   # language virtuals; packages:all:compiler is ignored by Spack 1.x.
     providers:
-      c: [ nvhpc@25.9, gcc@13.3.1 ]
-      cxx: [ nvhpc@25.9, gcc@13.3.1 ]
-      fortran: [ nvhpc@25.9, gcc@13.3.1 ]
+      c: [ gcc@13.3.1, nvhpc@25.9 ]
+      cxx: [ gcc@13.3.1, nvhpc@25.9 ]
+      fortran: [ gcc@13.3.1, nvhpc@25.9 ]
       mpi: [ cray-mpich ]
       blas: [ openblas ] #, cray-libsci ] # commenting out cray-libsci as bug was identified
       lapack: [ openblas, netlib-lapack ] #, cray-libsci ]
