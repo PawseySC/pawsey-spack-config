@@ -25,8 +25,8 @@ fi
 
 # make sure Clingo is bootstrapped
 if [ "${SYSTEM}" = "setonix-q" ]; then
-    echo "Running 'spack spec nano %${main_compiler} target=${main_arch}' to bootstrap Clingo.."
-    spack spec nano %${main_compiler} target=${main_arch}
+    echo "Running 'spack spec nano target=${main_arch} %${main_compiler}_compiler' to bootstrap Clingo.."
+    spack spec nano target=${main_arch} %${main_compiler}_compiler
 else
     echo "Running 'spack spec nano' to bootstrap Clingo.."
     spack spec nano
