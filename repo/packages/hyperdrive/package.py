@@ -10,6 +10,7 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
     maintainers = ["d3v-null", "gsleap"]
 
     version("main", branch="main")
+    version("0.9.0", tag="v0.9.0")
     version("0.8.1", tag="v0.8.1")
     version("0.8.0", tag="v0.8.0")
     version("0.7.0", tag="v0.7.0")
@@ -23,7 +24,6 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
     # unknown issue on setonix when enabled https://github.com/PawseySC/pawsey-spack-config/pull/280#issuecomment-2296128762
     variant("cfitsio-static", default=False, description="Enable the fitsio_src feature of the fitsio-sys crate.")
     variant("hdf5-static", default=False, description="Link statically to hdf5 via hdf5-sys crate.")
-    variant("plotting", default=True, description="Enable plotting subcommands like plot-solutions")
     variant("portable", default=True, description="Disable native CPU optimizations")
 
     depends_on("rust@1.64.0:")
