@@ -10,6 +10,10 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
     maintainers = ["d3v-null", "gsleap"]
 
     version("main", branch="main")
+    version("0.9.0", tag="v0.9.0")
+    version("0.8.1", tag="v0.8.1")
+    version("0.8.0", tag="v0.8.0")
+    version("0.7.0", tag="v0.7.0")
     version("0.6.1", tag="v0.6.1")
     version("0.6.1-devel", tag="v0.6.1-devel")
     version("0.6.1-autos", tag="v0.6.1-autos")
@@ -20,11 +24,11 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
     # unknown issue on setonix when enabled https://github.com/PawseySC/pawsey-spack-config/pull/280#issuecomment-2296128762
     variant("cfitsio-static", default=False, description="Enable the fitsio_src feature of the fitsio-sys crate.")
     variant("hdf5-static", default=False, description="Link statically to hdf5 via hdf5-sys crate.")
-    variant("plotting", default=True, description="Enable plotting subcommands like plot-solutions")
     variant("portable", default=True, description="Disable native CPU optimizations")
 
     depends_on("rust@1.64.0:")
     depends_on("rust@1.80.0:", when="@0.5.0:")
+    depends_on("rust@1.85.0:", when="@0.8.0:")
     depends_on("cmake", type="build")
     # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.
     # default spack cfitsio does not give the +reentrant option
@@ -33,9 +37,8 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
     depends_on("hdf5@1.10 +cxx ~mpi api=v110", when="~hdf5-static")
 
     depends_on("aoflagger@3.0.0:")  # because of Birli
-    depends_on("erfa")  # because of Marlu
-    depends_on("fontconfig", when="+plotting")
-    depends_on("libpng", when="+plotting")
+    depends_on("erfa")  # because of Marlu    
+    depends_on("libpng")
 
     test_requires_compiler = True
 
@@ -59,7 +62,7 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
             cuda_dir = self.spec["cuda"].prefix
             # print(f"cuda_dir: {cuda_dir}, cuda_arch: {cuda_arch}")
         if self.spec.satisfies("~portable"):
-            env.append_flags("RUSTFLAGS", f"-C target-cpu=native")
+            env.append_flags("RUSTFLAGS", "-C target-cpu=native")
 
     def get_features(self):
         features = []
@@ -70,9 +73,7 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
         if self.spec.satisfies("+rocm"):
             features += ["hip"]
         if self.spec.satisfies("+cuda"):
-            features += ["cuda"]
-        if self.spec.satisfies("+plotting"):
-            features += ["plotting"]
+            features += ["cuda"]        
         return features
 
     def install(self, spec, prefix):
