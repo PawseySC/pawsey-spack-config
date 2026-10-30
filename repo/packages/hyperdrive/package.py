@@ -37,9 +37,8 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
     depends_on("hdf5@1.10 +cxx ~mpi api=v110", when="~hdf5-static")
 
     depends_on("aoflagger@3.0.0:")  # because of Birli
-    depends_on("erfa")  # because of Marlu
-    depends_on("fontconfig", when="+plotting")
-    depends_on("libpng", when="+plotting")
+    depends_on("erfa")  # because of Marlu    
+    depends_on("libpng")
 
     test_requires_compiler = True
 
@@ -74,9 +73,7 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
         if self.spec.satisfies("+rocm"):
             features += ["hip"]
         if self.spec.satisfies("+cuda"):
-            features += ["cuda"]
-        if self.spec.satisfies("+plotting"):
-            features += ["plotting"]
+            features += ["cuda"]        
         return features
 
     def install(self, spec, prefix):
