@@ -25,6 +25,29 @@ an already installed SingularityCE. It uses the existing Spack 1.1.1 installatio
 and repository variant generator; it does not install or concretize software,
 change package privileges, or overwrite the installed template.
 
+Installation and updating share
+[scripts/singularity_module_pipeline.sh](scripts/singularity_module_pipeline.sh).
+It prepares the checkout's templates/module configuration, expands stack paths,
+selects installed specs, renders their Spack modules, and calls the existing
+Pawsey variant generator. Both installation entry points call
+[scripts/generate_singularity_modules.sh](scripts/generate_singularity_modules.sh),
+which runs this pipeline for all installed SingularityCE versions matching the
+configured architecture/compiler. The updater runs it for one required version
+in a private tree, then handles validation, labels, and safe deployment.
+Installation generation logs are retained under
+`$INSTALL_PREFIX/module-generation-runs/`.
+
+The Spack installer also uses the shared input-preparation/path-expansion
+functions. Changes to template preparation, rendering, or variant generation
+belong in this shared pipeline, not in a second updater implementation. This
+shares generation logic, not concrete dependencies: equivalence assumes the
+same installed specs, Spack, configuration, templates, and runtime helpers.
+Spack API/layout changes can still require changes to the shared pipeline.
+
+The pre-refactor updater is preserved as
+[scripts/update_singularity_modules.sh.prototype01](scripts/update_singularity_modules.sh.prototype01)
+for reference; it is a frozen snapshot, not another maintained entry point.
+
 ```bash
 bash scripts/update_singularity_modules.sh --date-tag 2026.09 --version 4.3.5
 ```
@@ -40,8 +63,8 @@ Use `--suffix recreated` to name the generated variants, for example,
 labelled (`4.3.5-recreated.lua`); the installed package version is unchanged.
 This works with staging, `--replace-in-test`, and `--apply-live`. Publication
 leaves unlabelled modulefiles untouched; repeated publication with the same
-suffix backs up the existing labelled files. Restore uses the saved manifest,
-so no `--suffix` option is needed when restoring. Labels must start with a
+suffix backs up the existing labelled files. Restore requires the same
+`--suffix` to select that labelled history. Labels must start with a
 letter or digit and contain only letters, digits, underscores, or hyphens.
 
 By default, each run writes only into a new directory below
@@ -66,11 +89,37 @@ Failed deployment attempts automatic rollback. After a successful deployment
 
 ```bash
 bash scripts/update_singularity_modules.sh --date-tag 2026.09 \
-  --version 4.3.5 --apply-live --restore /scratch/.../singularity-module-updates/2026.09/<run-id>
+  --version 4.3.5 --apply-live --restore
 ```
 
-Restore retains the backups and refuses to overwrite files changed since
-deployment. Keep the run directory and hidden backups until testing is complete.
+`--restore` takes no value. It undoes the latest outstanding replacement matching
+the destination, version, and suffix, and reports how many earlier replacements
+remain. Repeat the same command to undo one more replacement at a time.
+It retains backups and refuses to overwrite files changed since deployment or
+use damaged backups; it never skips a conflicting latest replacement.
+If no matching history remains, it reports an error without changing modules.
+Use `--restore --force` to undo a replacement despite subsequent manual edits.
+Before undoing it, changed current files are preserved beside the modules as
+`.<filename>.before-restore.<UTC-timestamp>-<unique-id>.bak`. Force does not bypass
+original-backup validation or symlink protection.
+
+Use `--repair` instead of `--restore` to recover the exact saved contents of the
+latest active deployment, without undoing it or regenerating from current
+templates. Use the same destination, version, and suffix as publication.
+Repair validates all saved candidates against deployment checksums before making
+changes. Edited current files are preserved beside the modules as
+`.<filename>.before-repair.<UTC-timestamp>-<unique-id>.bak`; missing files are
+recreated and unchanged files are left alone. Backup paths are printed, and a
+preservation manifest is retained inside the deployment run. Failed repair
+attempts rollback to the pre-repair files. Successful repair leaves deployment
+history unchanged. Interrupted deployments must be restored, not repaired.
+`--repair` and `--restore` cannot be combined; `--force` is only for restore.
+
+Keep the run directories and hidden backups until testing is complete.
+New deployments register their run paths in a hidden destination history index,
+so runs created with a custom `--prefix` are also discoverable. Legacy deployments
+are discovered below the default staging parent; for older custom locations,
+pass the same `--prefix` when restoring.
 Do not run the script with sudo. See `--help` for alternate existing stack and
 staging locations.
 
@@ -87,8 +136,8 @@ bash scripts/update_singularity_modules.sh \
 This writes fresh candidates and a deployment manifest in a new run, while
 replacing only the earlier run's `tree` modulefiles. Hidden backups are created
 beside those test modulefiles. The script prints a `--restore` command that
-names both the test target and the replacement run; use it to put the staged
-tree back exactly as it was. `--replace-in-test` and `--apply-live` cannot be
+names the test target but needs no replacement-run path; use it to undo the
+latest matching replacement. `--replace-in-test` and `--apply-live` cannot be
 combined.
 
 Driver safety tests use a temporary fake stack and the real variant generator:

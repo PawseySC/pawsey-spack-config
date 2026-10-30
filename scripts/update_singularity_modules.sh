@@ -45,14 +45,18 @@ Usage: update_singularity_modules.sh --version VERSION [OPTIONS]
                        Replace an earlier staging run under MYSCRATCH.
                        Keep hidden backups beside the replaced test modulefiles.
   --apply-live         Publish validated candidates, with hidden timestamped backups.
-  --restore RUN_DIR    Restore; requires --apply-live or --replace-in-test.
+  --restore            Undo the latest matching replacement; repeat to go back further.
+                       Requires --apply-live or --replace-in-test and the same --suffix.
+  --repair             Recover the latest active deployment's exact saved files.
+                       Preserve edited files beside the modules before replacement.
+  --force              With --restore only: preserve and overwrite later manual edits.
   -h, --help           Show this help.
 
 Examples:
   bash scripts/update_singularity_modules.sh --date-tag 2026.09 --version 4.3.5
   bash scripts/update_singularity_modules.sh --version 4.3.5 --date-tag 2026.09 --apply-live
   bash scripts/update_singularity_modules.sh --date-tag 2026.09 \
-    --version 4.3.5 --apply-live --restore /scratch/.../singularity-module-updates/2026.09/<run-id>
+    --version 4.3.5 --apply-live --restore
 
 Nothing is installed, concretized, fetched, or rebuilt. Only the selected version
 for settings.sh's cpu_arch and GCC is refreshed. Other versions remain untouched.
@@ -68,10 +72,12 @@ stack_prefix=""
 prefix=""
 apply_live=0
 restore=""
+repair=""
+force=0
 test_run=""
 while [ "$#" -gt 0 ]; do
     case "$1" in
-        --date-tag|--version|--suffix|--stack-prefix|--prefix|--restore|--replace-in-test)
+        --date-tag|--version|--suffix|--stack-prefix|--prefix|--replace-in-test)
             [[ "$#" -ge 2 && -n "$2" ]] || die "Missing value for $1"
             case "$1" in
                 --date-tag) date_tag=$2 ;;
@@ -79,11 +85,13 @@ while [ "$#" -gt 0 ]; do
                 --suffix) suffix=$2 ;;
                 --stack-prefix) stack_prefix=$2 ;;
                 --prefix) prefix=$2 ;;
-                --restore) restore=$2 ;;
                 --replace-in-test) test_run=$2 ;;
             esac
             shift 2 ;;
         --apply-live) apply_live=1; shift ;;
+        --restore) restore=1; shift ;;
+        --repair) repair=1; shift ;;
+        --force) force=1; shift ;;
         -h|--help) usage; exit 0 ;;
         *) die "Unknown option: $1 (use --help)" ;;
     esac
@@ -91,6 +99,8 @@ done
 
 [ -n "$version" ] || die "--version VERSION is required (use --help)."
 [[ "$version" =~ ^[0-9]+(\.[0-9]+)*$ ]] || die "Supply a numeric SingularityCE --version."
+[ -z "$restore" ] || [ -z "$repair" ] || die "--restore and --repair cannot be combined."
+[ "$force" -eq 0 ] || [ -n "$restore" ] || die "--force requires --restore."
 
 # =============================================================================
 # 2. Identify the existing stack and read this checkout's official settings
@@ -99,6 +109,8 @@ done
 [[ "$date_tag" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || die "Supply a valid --date-tag."
 [ -z "$restore" ] || [ "$apply_live" -eq 1 ] || [ -n "$test_run" ] ||
     die "--restore requires --apply-live or --replace-in-test."
+[ -z "$repair" ] || [ "$apply_live" -eq 1 ] || [ -n "$test_run" ] ||
+    die "--repair requires --apply-live or --replace-in-test."
 [ "$apply_live" -eq 0 ] || [ -z "$test_run" ] ||
     die "Choose either --apply-live or --replace-in-test, not both."
 PAWSEY_SPACK_CONFIG_REPO=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
@@ -123,8 +135,9 @@ module_suffix=${suffix:+-$suffix}
 : "${singularity_name:?Missing singularity_name in settings.sh}"
 : "${singularity_symlink_module_dir:?Missing singularity_symlink_module_dir in settings.sh}"
 : "${python_name:?Missing python_name in settings.sh}" "${python_version:?Missing python_version in settings.sh}"
-source_relative="modules/$cpu_arch/gcc/$gcc_version/utilities/$singularity_name_general"
-variants_relative="$singularity_symlink_module_dir"
+# shellcheck source=scripts/singularity_module_pipeline.sh
+. "$PAWSEY_SPACK_CONFIG_REPO/scripts/singularity_module_pipeline.sh"
+psc_singularity_module_paths
 
 # A test replacement must target an earlier run created below this user's
 # MYSCRATCH. The canonicalized run and module directories must not be symlinks.
@@ -216,11 +229,88 @@ trap on_exit EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
+collect_restore_history() {
+    local directory manifest recorded_root recorded_mode state order entry
+    local history_parent="${prefix:-${MYSCRATCH:?MYSCRATCH is required}/singularity-module-updates/$date_tag}"
+    local -A directories=()
+    local -a ordered=()
+    # Include older deployments made before the destination history index existed.
+    for manifest in "$history_parent"/*/deployment.tsv; do
+        [ -f "$manifest" ] || continue
+        directories["${manifest%/*}"]=0
+    done
+    if [ -f "$history_index" ]; then
+        while IFS= read -r directory; do
+            [ -n "$directory" ] || die "Empty deployment history entry: $history_index"
+            [ -d "$directory" ] || die "Saved deployment history is missing: $directory"
+            directories["$directory"]=1
+        done < "$history_index"
+    fi
+    for directory in "${!directories[@]}"; do
+        manifest="$directory/deployment.tsv"
+        [[ -f "$directory/stack-prefix" &&
+            "$(cat "$directory/stack-prefix")" = "$stack_prefix" ]] || continue
+        recorded_mode=live
+        [ ! -f "$directory/deployment-mode" ] ||
+            recorded_mode=$(cat "$directory/deployment-mode")
+        recorded_root=$stack_prefix
+        [ ! -f "$directory/deployment-root" ] ||
+            recorded_root=$(cat "$directory/deployment-root")
+        [[ "$recorded_mode" = "$expected_mode" && "$recorded_root" = "$target_root" ]] || continue
+        # A failed backup-preparation phase has not published any files.
+        if [ ! -f "$directory/deployment-state" ]; then
+            [ "${directories[$directory]}" -eq 0 ] && continue
+            die "Missing deployment state: $directory"
+        fi
+        # The source filename identifies version and suffix even for legacy runs.
+        [ -f "$manifest" ] || die "Missing deployment manifest: $manifest"
+        IFS=$'\t' read -r entry _ < "$manifest" || die "Empty deployment manifest: $manifest"
+        [ "$entry" = "$target_root/$source_relative/$version$module_suffix.lua" ] || continue
+        state=$(cat "$directory/deployment-state")
+        [ "$state" != restored ] || continue
+        [[ "$state" = deploying || "$state" = deployed ]] ||
+            die "Unexpected deployment state in $directory: $state"
+        if [ -f "$directory/deployment-order" ]; then
+            order=$(cat "$directory/deployment-order")
+        else
+            order="$(stat -c %Y "$manifest")000000000"
+        fi
+        [[ "$order" =~ ^[0-9]+$ ]] || die "Invalid deployment order: $directory"
+        ordered+=("$order"$'\t'"$directory")
+    done
+    restore_history=()
+    if [ "${#ordered[@]}" -gt 0 ]; then
+        mapfile -t restore_history < <(printf '%s\n' "${ordered[@]}" | LC_ALL=C sort -rn)
+    fi
+}
+
 # Restore is deliberately independent of Spack: it must work even if rendering is
 # broken. Check EVERY backup and current checksum before changing the first file.
-if [ -n "$restore" ]; then
-    [ -z "$prefix" ] || die "--prefix cannot be combined with --restore."
-    run=$(realpath -e "$restore")
+if [ -n "$restore$repair" ]; then
+    expected_mode=live
+    target_root=$stack_prefix
+    if [ -n "$test_run" ]; then
+        expected_mode="test"
+        target_root=$test_tree
+    fi
+    lock_target_directories
+    history_index="$target_root/$source_relative/.singularity-module-history"
+    collect_restore_history
+    [ "${#restore_history[@]}" -gt 0 ] ||
+        die "No replacements remain in saved history for this destination, version, and suffix."
+    run=${restore_history[0]#*$'\t'}
+    if [ -n "$repair" ]; then
+        printf 'Repairing latest active replacement: %s\n' "$run"
+        [ "$(cat "$run/deployment-state")" = deployed ] ||
+            die "Cannot repair an interrupted deployment; restore it first."
+    else
+        printf 'Undoing latest replacement: %s\n' "$run"
+    fi
+    if [ -f "$run/deployment-time" ]; then
+        printf 'Replacement time (UTC): %s\n' "$(cat "$run/deployment-time")"
+    else
+        printf 'Legacy replacement run: %s\n' "${run##*/}"
+    fi
     [[ -f "$run/stack-prefix" && "$(cat "$run/stack-prefix")" = "$stack_prefix" ]] ||
         die "This run does not belong to the selected stack."
     # Settings may have changed since deployment. Restore the recorded tree,
@@ -251,7 +341,9 @@ if [ -n "$restore" ]; then
     [[ -f "$run/deployment-state" && "$(cat "$run/deployment-state")" != restored ]] ||
         die "This run has no deployment to restore (or was already restored)."
     [ -s "$run/deployment.tsv" ] || die "Missing deployment manifest."
-    lock_target_directories
+    changed_targets=()
+    changed_hashes=()
+    repair_candidates=()
     while IFS=$'\t' read -r target backup old_hash new_hash; do
         # Limit restore targets to this driver's two module directories.
         case "${target%/*}" in
@@ -261,12 +353,27 @@ if [ -n "$restore" ]; then
         [[ "${target##*/}" =~ ^[0-9]+(\.[0-9]+)*(-[A-Za-z0-9][A-Za-z0-9_-]*)?\.lua$ ]] ||
             die "Unexpected module filename in manifest: $target"
         [ ! -L "$target" ] || die "Refusing to restore over a symlink: $target"
+        [[ ! -e "$target" || -f "$target" ]] || die "Module is not a regular file: $target"
         # A hard interruption may leave some originals and some new files.
         current_hash=absent
         if [ -f "$target" ]; then current_hash=$(sha256sum "$target" | cut -d ' ' -f1); fi
-        [[ "$current_hash" = "$new_hash" || "$current_hash" = "$old_hash" ]] ||
-            die "Module changed since deployment; refusing to overwrite it: $target"
-        if [ "$old_hash" != absent ]; then
+        if [ -n "$repair" ]; then
+            candidate="$run/tree/${target#"$target_root/"}"
+            [[ -f "$candidate" && ! -L "$candidate" &&
+                "$(sha256sum "$candidate" | cut -d ' ' -f1)" = "$new_hash" ]] ||
+                die "Missing or changed saved candidate: $candidate"
+            if [ "$current_hash" != "$new_hash" ]; then
+                changed_targets+=("$target")
+                changed_hashes+=("$current_hash")
+                repair_candidates+=("$candidate")
+            fi
+        elif [[ "$current_hash" != "$new_hash" && "$current_hash" != "$old_hash" ]]; then
+            [ "$force" -eq 1 ] ||
+                die "Module changed since deployment; use --repair or --restore --force: $target"
+            changed_targets+=("$target")
+            changed_hashes+=("$current_hash")
+        fi
+        if [ -z "$repair" ] && [ "$old_hash" != absent ]; then
             [ "$backup" = "$(dirname "$target")/.${target##*/}.${run##*/}.bak" ] ||
                 die "Unexpected backup filename: $backup"
             [[ -f "$backup" && ! -L "$backup" &&
@@ -274,8 +381,56 @@ if [ -n "$restore" ]; then
                 die "Missing or changed backup: $backup"
         fi
     done < "$run/deployment.tsv"
+    # Validate every input first, then preserve every affected current file before
+    # changing any module. A repair has its own rollback journal, not a deployment.
+    if [ "${#changed_targets[@]}" -gt 0 ]; then
+        operation=restore
+        [ -z "$repair" ] || operation=repair
+        recovery=$(mktemp -d "$run/before-$operation.$(date -u +%Y%m%dT%H%M%SZ)-XXXXXXXX")
+        : > "$recovery/deployment.tsv"
+        for index in "${!changed_targets[@]}"; do
+            target=${changed_targets[$index]}
+            current_hash=${changed_hashes[$index]}
+            backup="$(dirname "$target")/.${target##*/}.${recovery##*/}.bak"
+            [[ ! -e "$backup" && ! -L "$backup" ]] || die "Preservation backup already exists: $backup"
+            if [ "$current_hash" != absent ]; then
+                cp -p -- "$target" "$backup"
+                [ "$(sha256sum "$backup" | cut -d ' ' -f1)" = "$current_hash" ] ||
+                    die "Preservation backup checksum mismatch: $backup"
+                printf 'Preserved current file: %s\n' "$backup"
+            else
+                printf 'Module missing; no current file to preserve: %s\n' "$target"
+            fi
+            printf '%s\t%s\t%s\t%s\n' "$target" "$backup" "$current_hash" unused \
+                >> "$recovery/deployment.tsv"
+        done
+    fi
+    if [ -n "$repair" ]; then
+        if [ "${#changed_targets[@]}" -eq 0 ]; then
+            printf 'No repair needed: all modules match the saved deployment.\n'
+        else
+            deployment_run=$run
+            run=$recovery
+            deploying=1
+            for index in "${!changed_targets[@]}"; do
+                atomic_copy "${repair_candidates[$index]}" "${changed_targets[$index]}" 1
+            done
+            deploying=0
+            printf 'repaired\n' > "$run/deployment-state"
+            run=$deployment_run
+            printf 'Repair complete. Deployment history unchanged; preserved files recorded in %s/deployment.tsv\n' "$recovery"
+        fi
+        exit 0
+    fi
     rollback
     printf 'Restored deployment from %s; hidden backups have been retained.\n' "$run"
+    remaining=$((${#restore_history[@]} - 1))
+    if [ "$remaining" -gt 0 ]; then
+        printf '%s earlier replacement(s) remain in saved history for this destination, version, and suffix.\n' "$remaining"
+        printf 'Run the same restore command again to undo the next one; backups will be validated first.\n'
+    else
+        printf 'No earlier replacements remain in saved history for this destination, version, and suffix.\n'
+    fi
     exit 0
 fi
 
@@ -304,123 +459,11 @@ printf 'Run directory: %s\nExisting stack: %s\nSingularityCE: %s\n' "$run" "$sta
 # Save the actual inputs, including uncommitted edits, for later diagnosis.
 git -C "$PAWSEY_SPACK_CONFIG_REPO" rev-parse HEAD > "$run/repository-commit"
 git -C "$PAWSEY_SPACK_CONFIG_REPO" status --short --branch > "$run/repository-status"
-cp -R "$PAWSEY_SPACK_CONFIG_REPO/systems/$SYSTEM/templates/." "$run/templates/"
-generator="$PAWSEY_SPACK_CONFIG_REPO/scripts/create_custom_singularity_modules_from_general_singularity_container_engine.sh"
-sha256sum "$generator" "$PAWSEY_SPACK_CONFIG_REPO/systems/$SYSTEM/templates/modules/modulefile.lua" \
-    > "$run/input-checksums"
-
 # =============================================================================
-# 5. Give Spack temporary configuration, not a new software installation
+# 5. Run the same preparation, Spack rendering, and variants as installation
 # =============================================================================
-# Use the real executable: Pawsey's wrapper does not preserve quoted arguments.
-spack="$stack_prefix/spack/bin/realspack"
-[ -x "$spack" ] || die "Installed Spack executable not found: $spack"
-cp "$PAWSEY_SPACK_CONFIG_REPO/systems/$SYSTEM/configs/site/modules.yaml" "$run/site/"
-cp "$PAWSEY_SPACK_CONFIG_REPO/systems/$SYSTEM/configs/spackuser/modules.yaml" "$run/staff/"
-
-# Match install_spack.sh's placeholder substitutions, but only in private copies.
-# INSTALL_PREFIX remains the REAL stack: package and helper paths must stay real.
-sed -i \
-    -e "s|INSTALL_PREFIX|$stack_prefix|g" \
-    -e "s|DATE_TAG|$date_tag|g" \
-    -e "s|USER_PERMANENT_FILES_PREFIX|$USER_PERMANENT_FILES_PREFIX|g" \
-    -e "s|USER_TEMP_FILES_PREFIX|$USER_TEMP_FILES_PREFIX|g" \
-    -e "s|BOOTSTRAP_PATH|$BOOTSTRAP_PATH|g" \
-    "$run/templates/modules/modulefile.lua" "$run/site/modules.yaml" "$run/staff/modules.yaml"
-
-# Configuration precedence: installed site, checkout site, checkout staff, then
-# these final safety overrides. Double colons REPLACE lists/mappings in Spack.
-cat > "$run/overrides/config.yaml" <<EOF
-config:
-  install_tree:
-    root: '$stack_prefix/software'
-  template_dirs::
-    - '$run/templates'
-  misc_cache: '$run/cache/misc'
-  source_cache: '$run/cache/sources'
-EOF
-cat > "$run/overrides/modules.yaml" <<EOF
-modules:
-  default:
-    roots:
-      lmod: '$stage/modules'
-EOF
-printf 'upstreams:: {}\n' > "$run/overrides/upstreams.yaml"
-printf 'bootstrap:\n  enable: false\n' > "$run/overrides/bootstrap.yaml"
-
-# Reuse ONLY existing recipe repositories; no registry fetch or user-repo init.
-# This is the layout installed by this repository for Spack 1.1.1.
-builtin="$stack_prefix/spack/var/spack/repos/builtin/repos/spack_repo/builtin"
-pawsey="$stack_prefix/spack/var/spack/repos/pawsey"
-[[ -f "$builtin/repo.yaml" && -f "$pawsey/repo.yaml" ]] ||
-    die "Expected installed Spack 1.1.1 recipe repositories are missing."
-cat > "$run/overrides/repos.yaml" <<EOF
-repos::
-  pawsey_repo: '$pawsey'
-  builtin: '$builtin'
-EOF
-export SPACK_DISABLE_LOCAL_CONFIG=1
-export SPACK_USER_CONFIG_PATH="$run/user-config" SPACK_USER_CACHE_PATH="$run/cache/user"
-export SPACK_SYSTEM_CONFIG_PATH="$run/system-config"
-# Importing recipes must not create bytecode files in the installed Spack tree.
-export PYTHONDONTWRITEBYTECODE=1
-# Spack's Python command otherwise executes a personal startup file as well.
-unset PYTHONSTARTUP
-spack_command=("$spack" -E -C "$run/site" -C "$run/staff" -C "$run/overrides")
-
-# Like the installed Spack module, use the stack's Python, not the OS Python.
-# Old system interpreters may start Spack but cannot import installed recipes.
-type module >/dev/null 2>&1 || die "The Lmod module command must be available."
-module use "$stack_prefix/modules/$cpu_arch/gcc/$gcc_version/programming-languages"
-module load "$python_name/$python_version"
-export SPACK_PYTHON
-SPACK_PYTHON=$(command -v python3) || die "The stack's Python module did not expose python3."
-
-# =============================================================================
-# 6. Find ONE installed spec and ask Spack to render its source module
-# =============================================================================
-# Compiler constraint parsing can initialize compiler recipes. Query by package
-# and target, then compare the compiler metadata from the installed records.
-"${spack_command[@]}" find --format '{hash} {prefix} {compiler.name} {compiler.version}' \
-    "$singularity_name_general@=$version target=$cpu_arch" > "$run/installed-specs.txt"
-matches=()
-while read -r hash installed_prefix compiler compiler_version; do
-    if [ "$compiler" = gcc ] && [ "$compiler_version" = "$gcc_version" ]; then
-        matches+=("$hash")
-        package_prefix=$installed_prefix
-    fi
-done < "$run/installed-specs.txt"
-[ "${#matches[@]}" -eq 1 ] ||
-    die "Expected one installed $singularity_name_general@$version for $cpu_arch/GCC $gcc_version; found ${#matches[@]}. See $run/installed-specs.txt"
-[[ "$package_prefix" == "$stack_prefix/software/"* && -d "$package_prefix" ]] ||
-    die "Selected package is not installed inside this stack."
-hash=${matches[0]}
-[[ "$hash" =~ ^[a-z0-9]+$ ]] || die "Unexpected installed spec hash: $hash"
-printf '%s\n' "$hash" > "$run/spec-hash"
-printf 'Reusing installed package: %s\n' "$package_prefix"
-
-# Check Spack's layout BEFORE asking it to write anything. Unlike `module find`,
-# this API can calculate the filename before a module actually exists.
+psc_generate_singularity_modules "$stack_prefix" "$stage" "$run" "$version"
 source_module="$stage/$source_relative/$version.lua"
-resolved=$("${spack_command[@]}" python -c \
-    "import spack.store, spack.modules.lmod; spec = spack.store.STORE.db.query('/$hash')[0]; print(spack.modules.lmod.LmodModulefileWriter(spec, 'default').layout.filename)")
-[ "$resolved" = "$source_module" ] ||
-    die "Spack resolved an unexpected output path: $resolved (expected $source_module)"
-"${spack_command[@]}" module lmod refresh -y "/$hash" 2>&1 | tee "$run/spack-refresh.log"
-# Spack can warn about a rendering error but still exit zero; verify its product.
-[ -s "$source_module" ] || die "Spack did not produce the expected source module."
-if grep -Eq '\{\{|\{%' "$source_module"; then die "Source module contains unrendered template expressions."; fi
-grep -Fq "$package_prefix/bin" "$source_module" || die "Source module does not reference the installed binary."
-
-# =============================================================================
-# 7. Call the EXISTING variant generator, confined to this fresh staging tree
-# =============================================================================
-# Its include guard preserves the staged INSTALL_PREFIX instead of re-sourcing
-# settings.sh. It can freely clean its destination here: there are no live files.
-(
-    export INSTALL_PREFIX="$stage"
-    bash -e "$generator"
-) 2>&1 | tee "$run/variant-generation.log"
 variant_directory="$stage/$variants_relative"
 shopt -s nullglob
 candidates=("$source_module" "$variant_directory/$version-"*.lua)
@@ -436,7 +479,7 @@ if [ -n "$suffix" ]; then
 fi
 
 # =============================================================================
-# 8. Validate and report candidates before any possible live deployment
+# 6. Validate and report candidates before any possible live deployment
 # =============================================================================
 command -v luac >/dev/null || die "luac is required to syntax-check generated Lua."
 type module >/dev/null 2>&1 || die "The Lmod module command must be available."
@@ -483,7 +526,7 @@ if [ "$apply_live" -eq 0 ] && [ -z "$test_run" ]; then
 fi
 
 # =============================================================================
-# 9. Explicit publication: choose the target, then prepare ALL backups first
+# 7. Explicit publication: choose the target, then prepare ALL backups first
 # =============================================================================
 deployment_mode=live
 target_root=$stack_prefix
@@ -522,6 +565,9 @@ for candidate in "${candidates[@]}"; do
     printf '  %s\n' "$target"
 done
 printf 'deploying\n' > "$run/deployment-state"
+date -u +%Y-%m-%dT%H:%M:%SZ > "$run/deployment-time"
+date +%s%N > "$run/deployment-order"
+printf '%s\n' "$run" >> "$target_root/$source_relative/.singularity-module-history"
 deploying=1
 for candidate in "${candidates[@]}"; do
     atomic_copy "$candidate" "$target_root/${candidate#"$stage/"}" 1
@@ -529,10 +575,12 @@ done
 printf 'deployed\n' > "$run/deployment-state"
 deploying=0
 printf 'Deployment complete. Hidden backups retained; manifest: %s/deployment.tsv\n' "$run"
+printf 'Restore with: bash %q --version %q --date-tag %q --stack-prefix %q' \
+    "$PAWSEY_SPACK_CONFIG_REPO/scripts/update_singularity_modules.sh" "$version" "$date_tag" "$stack_prefix"
+[ -z "$suffix" ] || printf ' --suffix %q' "$suffix"
 if [ "$deployment_mode" = test ]; then
-    printf 'Restore with: bash %q --version %q --date-tag %q --replace-in-test %q --restore %q\n' \
-        "$PAWSEY_SPACK_CONFIG_REPO/scripts/update_singularity_modules.sh" "$version" "$date_tag" "$test_run" "$run"
+    printf ' --replace-in-test %q' "$test_run"
 else
-    printf 'Restore with: bash %q --version %q --date-tag %q --stack-prefix %q --apply-live --restore %q\n' \
-        "$PAWSEY_SPACK_CONFIG_REPO/scripts/update_singularity_modules.sh" "$version" "$date_tag" "$stack_prefix" "$run"
+    printf ' --apply-live'
 fi
+printf ' --restore\n'

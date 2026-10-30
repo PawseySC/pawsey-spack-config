@@ -36,7 +36,7 @@ echo "Install environments.."
 echo "Update singularity modules.."
 # note that moving forward using the singularityce recipes. Comment out the singularity_modules, kept for reference
 #"${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_custom_singularity_modules.sh"
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_custom_singularity_modules_from_general_singularity_container_engine.sh"
+bash "${PAWSEY_SPACK_CONFIG_REPO}/scripts/generate_singularity_modules.sh"
 
 echo "Installing shpc..."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_shpc.sh"

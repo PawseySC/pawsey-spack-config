@@ -17,6 +17,8 @@ fi
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
+# shellcheck source=scripts/singularity_module_pipeline.sh
+. "${PAWSEY_SPACK_CONFIG_REPO}/scripts/singularity_module_pipeline.sh"
 
 
 #
@@ -184,29 +186,21 @@ cp -r \
 # Custom module templates
 #
 
-[ -e "${INSTALL_PREFIX}/spack/templates" ] || \
-    mkdir -p "${INSTALL_PREFIX}/spack/templates"
-
-cp -r \
-    "${PAWSEY_SPACK_CONFIG_REPO}"/systems/"${SYSTEM}"/templates/* \
-    "${INSTALL_PREFIX}/spack/templates/"
+psc_prepare_module_inputs \
+    "${INSTALL_PREFIX}/spack/templates" \
+    "${INSTALL_PREFIX}/spack/etc/spack/site" \
+    "${SPACK_USER_CONFIG_PATH}"
 
 
 #
 # Customise configuration files with the actual software-stack paths.
 #
 
-sed -i \
-    -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g" \
-    -e "s|DATE_TAG|${DATE_TAG}|g" \
-    -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g" \
-    -e "s|USER_TEMP_FILES_PREFIX|${USER_TEMP_FILES_PREFIX}|g" \
-    -e "s|BOOTSTRAP_PATH|${BOOTSTRAP_PATH}|g" \
+psc_expand_stack_paths \
     "${INSTALL_PREFIX}"/spack/etc/spack/*.yaml \
     "${SPACK_USER_CONFIG_PATH}"/*.yaml \
     "${INSTALL_PREFIX}"/spack/etc/spack/project/*.yaml \
-    "${INSTALL_PREFIX}"/spack/etc/spack/site/*.yaml \
-    "${INSTALL_PREFIX}/spack/templates/modules/modulefile.lua"
+    "${INSTALL_PREFIX}"/spack/etc/spack/site/*.yaml
 
 
 #
