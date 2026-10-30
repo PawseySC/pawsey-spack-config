@@ -110,7 +110,6 @@ class SingularityBase(MakefilePackage):
         env.prepend_path("GOPATH", self.gopath)
         # Resolve linker tools from the declared build dependency.
         binutils_path = str(self.spec["binutils"].prefix.bin)
-        env.prepend_path("PATH", binutils_path)
         # Some systems do not provide ld.gold, may be request by Singularity's Go link step
         # Force bfd when ld.gold is unavailable.
         if shutil.which("ld.gold", path=binutils_path) is None:
