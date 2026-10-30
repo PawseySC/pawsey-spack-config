@@ -55,6 +55,8 @@ class Magma(CMakePackage, CudaPackage, ROCmPackage):
     depends_on("hipsparse", when="+rocm")
     depends_on("rocm-core", when="@2.8.0: +rocm")
     depends_on("python", when="@master", type="build")
+    # make generate uses Perl to write CMake.src for development sources.
+    depends_on("perl", when="@master", type="build")
 
     conflicts("~cuda", when="~rocm", msg="magma: Either CUDA or HIP support must be enabled")
     conflicts("+rocm", when="+cuda", msg="magma: CUDA must be disabled to support HIP (ROCm)")
