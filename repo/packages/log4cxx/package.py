@@ -45,6 +45,9 @@ class Log4cxx(CMakePackage):
         when="@1.2:",
     )
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+
     depends_on("cmake@3.13:", type="build")
 
     depends_on("apr-util")

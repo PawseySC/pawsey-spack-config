@@ -46,8 +46,6 @@ import re
 #AEG: Importing this module to use their tools for copying files
 import shutil
 
-import llnl.util.tty as tty
-
 from spack.package import *
 from spack.util.environment import EnvironmentModifications
 
@@ -364,6 +362,9 @@ class Openfoam(Package):
             description='With VTK runTimePostProcessing')
     variant('source', default=True,
             description='Install library/application sources and tutorials')
+
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
 
     depends_on('mpi')
 

@@ -18,6 +18,8 @@ class Vdifio(AutotoolsPackage):
 
     version("master", branch="master")
 
+    depends_on("c", type="build")
+
     depends_on("autoconf", type="build")
     depends_on("automake", type="build")
     depends_on("libtool", type="build")

@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-from spack import *
+from spack.package import *
 
 
 class Wsclean(CMakePackage):
@@ -31,6 +31,8 @@ class Wsclean(CMakePackage):
     variant('idg', default=False, description='To enable Image Domain Gridder (a fast GPU-enabled gridder)')
     variant('everybeam', default=False, when="@3:", description='To apply primary beams for version >=3')
     variant('mpi', default=False,when="@3:", description='To enable distributed mode')
+
+    depends_on("cxx", type="build")
 
     depends_on('casacore@3.2.1:')
     depends_on('fftw-api@3')

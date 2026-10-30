@@ -26,6 +26,8 @@ class PyErfa(PythonPackage):
     version('2.0.0.1', sha256='2fd4637ffe2c1e6ede7482c13f583ba7c73119d78bef90175448ce506a0ede30')
     version('1.7.3', sha256='6cf3a645d63e0c575a357797903eac5d2c6591d7cdb89217c8c4d39777cf18cb')
 
+    depends_on("c", type="build")
+
     depends_on('python@3:', type=('build', 'link', 'run'))
     depends_on('py-setuptools@3.2:', type='build')
     depends_on('py-pip', type='build')

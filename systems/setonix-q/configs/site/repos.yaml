@@ -1,12 +1,8 @@
 repos:
-# this list is interpreted as a priority list, 
-# in that items higher up in the list are inspected first
-# and take precedence
-#
-# User and project recipe repositories are added by the Spack wrapper at
-# runtime when the corresponding repo.yaml files exist.
-
-# 
-# Spack user (Pawsey staff) populates this one with fixed recipes for Setonix
-# that are not (yet) in the Spack public repo
-- INSTALL_PREFIX/spack/var/spack/repos/pawsey
+  # User/project repositories are added by the wrapper when they exist.
+  # Pawsey overrides take precedence over the separately versioned builtin repo.
+  pawsey_repo: INSTALL_PREFIX/spack/var/spack/repos/pawsey
+  builtin:
+    git: https://github.com/spack/spack-packages.git
+    commit: SPACK_PACKAGES_COMMIT
+    destination: INSTALL_PREFIX/spack/var/spack/repos/builtin

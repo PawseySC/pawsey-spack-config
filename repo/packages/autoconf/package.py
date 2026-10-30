@@ -19,6 +19,7 @@
 # >                     '#! {0} -w'.format(self.spec['perl'].command.path),
 
 import re
+from spack.package import *
 
 
 class Autoconf(AutotoolsPackage, GNUMirrorPackage):

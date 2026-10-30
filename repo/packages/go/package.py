@@ -6,8 +6,6 @@
 import os
 import re
 
-from llnl.util import tty
-
 from spack.package import *
 
 # - vanilla CentOS 7, and possibly other systems, fail a test:
@@ -78,6 +76,9 @@ class Go(Package):
     )
 
     provides("golang")
+
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
 
     depends_on("bash", type="build")
     depends_on("sed", type="build")

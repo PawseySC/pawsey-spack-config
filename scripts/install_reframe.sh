@@ -7,8 +7,8 @@ set_compilation_sets_for_arch
 # initialise spack 
 . "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh"
 
-# GPG/buildcache setup and the Clingo bootstrap are performed by
-# install_python.sh immediately before this script, so do not repeat them here.
+# GPG/buildcache setup is performed by install_python.sh. The shared install
+# helper checks bootstrap dependencies so this script can also be retried alone.
 # if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
 #     spack gpg init
 #     spack gpg create Spack spack@pawsey.org.au
@@ -37,7 +37,7 @@ if [ "${SYSTEM}" = "setonix" ]; then
 elif [ "${SYSTEM}" = "setonix-q" ]; then
     for comp in ${pythoncompilers[@]}; do
         for arch in ${archs[@]}; do
-            reframe_spec="reframe@${reframe_version} %${comp} target=${arch}"
+            reframe_spec="reframe@${reframe_version} target=${arch} %${comp%%@*}_compiler"
             echo "Concretization of ReFrame with $comp for $arch.."
             echo "Installing ReFrame with $comp for $arch.."
             install_and_record_spack_root standalone reframe "${reframe_spec}" root

@@ -1,10 +1,11 @@
 packages:
   all:
-  # note the compiler and providers specifications
-  # only suggest a priority order, they do not exclude other options
-  # suggested priority for compilers.
-    compiler: [ nvhpc@25.9, gcc@13.3.1 ]
+  # Provider lists express preferences. Compiler packages now provide the
+  # language virtuals; packages:all:compiler is ignored by Spack 1.x.
     providers:
+      c: [ gcc@13.3.1, nvhpc@25.9 ]
+      cxx: [ gcc@13.3.1, nvhpc@25.9 ]
+      fortran: [ gcc@13.3.1, nvhpc@25.9 ]
       mpi: [ cray-mpich ]
       blas: [ openblas ] #, cray-libsci ] # commenting out cray-libsci as bug was identified
       lapack: [ openblas, netlib-lapack ] #, cray-libsci ]
@@ -49,12 +50,70 @@ packages:
     buildable: false
   gcc:
     buildable: false
+    externals:
+    - spec: gcc@13.3.1 languages=c,c++,fortran arch=linux-sles15-aarch64
+      modules:
+      - PrgEnv-gnu
+      - gcc-native/13
+      - craype
+      - craype-arm-grace
+      - craype-network-ofi
+      - xpmem
+      extra_attributes:
+        compilers:
+          c: cc
+          cxx: CC
+          fortran: ftn
+        flags:
+          cflags: -O3
+          cxxflags: -O3
+          cppflags: -O3
+          # Keep package-specific GNU compatibility flags local to the package.
+          fflags: -O3
+        environment:
+          set:
+            PE_ENV: "GNU"
+            CARGO_HOME: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/cargo
+            GOCACHE: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/go-cache/build
+            GOMODCACHE: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/go-cache/mod
+            GOFLAGS: "-ldflags=-extldflags=-fuse-ld=bfd"
+          unset:
+          - CRAY_CUDATOOLKIT_POST_LINK_OPTS
+        extra_rpaths: []
   intel:
     buildable: false
   pgi:
     buildable: false
   nvhpc:
     buildable: false
+    externals:
+    - spec: nvhpc@25.9 arch=linux-sles15-aarch64
+      # CUDA is supplied by the cuda external, not by this compiler entry.
+      modules:
+      - PrgEnv-nvidia
+      - nvidia/25.9
+      - gcc-native-mixed/13
+      - craype
+      - craype-arm-grace
+      - craype-network-ofi
+      - xpmem
+      extra_attributes:
+        compilers:
+          c: cc
+          cxx: CC
+          fortran: ftn
+        flags:
+          cflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/13/bin/gcc
+          cxxflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/13/bin/gcc
+          cppflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/13/bin/gcc
+          fflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/13/bin/gcc
+        environment:
+          set:
+            PE_ENV: "NVIDIA"
+            CARGO_HOME: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/cargo
+            GOCACHE: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/go-cache/build
+            GOMODCACHE: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/go-cache/mod
+        extra_rpaths: []
 
   # GENERAL NOTES:
   # 1. for each package, only one entry must exist in this yaml
@@ -300,17 +359,17 @@ packages:
 
   hwloc:
     externals:
-    - spec: hwloc@2.10.0
+    - spec: hwloc@2.11.2
       prefix: /usr
     buildable: false
 
   numactl:
     externals:
-    - spec: numactl@2.0.14
+    - spec: numactl@2.0.14.20.g4ee5e0c
       prefix: /usr
     buildable: false
 
-  pcre:
+  pcre2:
     externals:
     - spec: pcre2@10.42
       prefix: /usr
@@ -330,25 +389,21 @@ packages:
 
   libseccomp:
     externals:
-    - spec: libseccomp@2.5.3
+    # The system C library does not provide bindings for a Spack Python.
+    - spec: libseccomp@2.5.3 ~python
       prefix: /usr
+      dependencies: []
     buildable: false
 
-  libgcrypt:
-    externals:
-    - spec: libgcrypt@1.10.3
-      prefix: /usr
-    buildable: false
-  
   grep:
     externals:
-    - spec: grep@3.1
+    - spec: grep@3.11
       prefix: /usr
     buildable: false
 
   sed:
     externals:
-    - spec: sed@4.9.0
+    - spec: sed@4.9
       prefix: /usr
     buildable: false
 
@@ -360,7 +415,7 @@ packages:
 
   binutils:
     externals:
-    - spec: binutils@2.45
+    - spec: binutils@2.45+ld
       prefix: /usr
     buildable: false
 
@@ -369,7 +424,7 @@ packages:
 # ----------------------------------------------------------------------------
   lustre:
     externals:
-    - spec: lustre@2.15.5.2_cray_1_g9231caa
+    - spec: lustre@2.15.7.2_cray_5_g607eea0
       prefix: /usr
     buildable: false
 
@@ -390,11 +445,6 @@ packages:
       - cudatoolkit/25.9_13.0
       - craype-accel-nvidia90
       prefix: /opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3
-    - spec: cray-mpich@9.1.0%cce
-      modules:
-      - cray-mpich/9.1.0
-      - craype-network-ofi
-      prefix: /opt/cray/pe/mpich/9.1.0/ofi/crayclang/17.0
     buildable: false
 
   cray-pmi:
@@ -422,7 +472,7 @@ packages:
 
   openssl:
     externals:
-    - spec: openssl@3.1.4
+    - spec: openssl@3.5.0
       prefix: /usr
     buildable: false
 
@@ -443,7 +493,7 @@ packages:
 
   openssh:
     externals:
-    - spec: openssh@9.6
+    - spec: openssh@9.6p1
       prefix: /usr
     buildable: false
 
@@ -461,7 +511,8 @@ packages:
 
   openldap:
     externals:
-    - spec: openldap2@2.4.46
+    # Installed RPM reports 2.5.20+11; '+' denotes a variant in a Spack spec.
+    - spec: openldap@2.5.20
       prefix: /usr
     buildable: false
 
@@ -473,7 +524,7 @@ packages:
 
   nghttp2:
     externals:
-    - spec: nghttp2@1.40.0
+    - spec: nghttp2@1.64.0
       prefix: /usr
     buildable: false
 
@@ -561,7 +612,7 @@ packages:
   nccl:
       buildable: false
       externals:
-      - spec: nccl@2.27.7
+      - spec: nccl@2.27.7 +cuda cuda_arch=90
         prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/comm_libs/13.0/nccl
 
   cublas:

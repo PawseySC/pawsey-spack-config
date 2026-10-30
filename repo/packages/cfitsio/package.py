@@ -33,6 +33,9 @@ class Cfitsio(AutotoolsPackage):
     variant("shared", default=True, description="Build shared libraries")
     variant("reentrant", default=False, description="Build shared libraries")
 
+    depends_on("c", type="build")
+    depends_on("fortran", type="build")
+
     depends_on("curl")
     depends_on("bzip2", when="+bzip2")
 

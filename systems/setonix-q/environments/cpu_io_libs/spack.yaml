@@ -15,7 +15,7 @@ spack:
   specs:
   - matrix:
     - [$hdf5-set]
-    - ['%gcc@13.3.1']
+    - ['%gcc_compiler']
     - [api=v112, api=v110]
     - [+mpi, ~mpi+cxx]
     - [+hl +fortran +szip build_type=Release]
@@ -23,7 +23,7 @@ spack:
     - [^libaec generator=make]
   - matrix:
     - [$adios-set]
-    - ['%gcc@13.3.1']
+    - ['%gcc_compiler']
     - [+python ^python@3.11.6+optimizations+zlib+ssl, ~python]
     - [~hdf5, +hdf5 ^hdf5@1.14.5 +hl +fortran +szip api=v112 build_type=Release generator=make ^libaec generator=make]
     - [+pic]

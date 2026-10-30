@@ -25,6 +25,9 @@ class Dftd4(MesonPackage):
     variant("openmp", default=True, description="Use OpenMP parallelisation")
     variant("python", default=False, description="Build Python extension module")
 
+    depends_on("c", type="build")
+    depends_on("fortran", type="build")
+
     depends_on("blas")
     depends_on("cmake", type="build")
     depends_on("lapack")

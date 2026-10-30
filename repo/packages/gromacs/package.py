@@ -10,7 +10,10 @@
 #variant lapack added
 import os
 
-import llnl.util.filesystem as fs
+try:
+    from spack_repo.builtin.build_systems import cmake
+except ImportError:
+    from spack.build_systems import cmake
 
 from spack.package import *
 
@@ -172,6 +175,11 @@ class Gromacs(CMakePackage, CudaPackage):
         when="@2023:",
         msg="GROMACS requires oneMKL 2021.3 or later since version 2023",
     )
+
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+    depends_on("fortran", type="build", when="@:4.5.5")
+    depends_on("fortran", type="build", when="+cp2k")
 
     depends_on("mpi", when="+mpi")
 
@@ -366,7 +374,7 @@ class Gromacs(CMakePackage, CudaPackage):
                 )
 
 
-class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
+class CMakeBuilder(cmake.CMakeBuilder):
     @run_after("build")
     def build_test_binaries(self):
         """Build the test binaries.
@@ -384,7 +392,7 @@ class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
         not be intended with ``--test``.
         """
         if self.pkg.run_tests:
-            with fs.working_dir(self.build_directory):
+            with working_dir(self.build_directory):
                 make("tests")
 
     def check(self):
@@ -393,7 +401,7 @@ class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
         Override the standard CMakeBuilder behavior. GROMACS has both `test`
         and `check` targets, but we are only interested in the latter.
         """
-        with fs.working_dir(self.build_directory):
+        with working_dir(self.build_directory):
             if self.generator == "Unix Makefiles":
                 make("check")
             elif self.generator == "Ninja":

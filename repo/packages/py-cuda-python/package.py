@@ -47,6 +47,9 @@ class PyCudaPython(PythonPackage):
     def url_for_version(self, version):
         return "https://github.com/NVIDIA/cuda-python/archive/refs/tags/v{0}.tar.gz".format(version)
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+
     # Python requirements
     depends_on("python@3.10:", type=("build", "run"))
 

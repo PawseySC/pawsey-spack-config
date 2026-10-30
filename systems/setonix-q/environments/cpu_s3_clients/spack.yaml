@@ -18,8 +18,8 @@ spack:
     # as awscli and boto3 require SSL to connect with S3
     # via HTTPS.
     - [^python@3.11.6+optimizations+zlib+ssl]
-    - ['%gcc@13.3.1']
+    - ['%gcc_compiler']
   - matrix:
     - [$s3-go-set]
-    - ['%gcc@13.3.1']
+    - ['%gcc_compiler']
   view: false

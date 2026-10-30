@@ -1,22 +1,42 @@
 #!/bin/bash -e
 # 
 # Install Spack on a supercomputing system.
-# 
+#
+
+scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+. "${scriptdir}/pawsey_software_stack_funcs.sh"
 
 check_installation_environment
 set_spack_config_repo
 set_compilation_sets_for_arch
 
+# Reject a different Spack version before changing any existing configuration.
+if [ -d "${INSTALL_PREFIX}/spack" ]; then
+  installed_spack_version=$(awk -F '"' '/^(__version__|spack_version) = "/ {print $2; exit}' \
+    "${INSTALL_PREFIX}/spack/lib/spack/spack/__init__.py")
+  if [ "${installed_spack_version}" != "${spack_version}" ]; then
+    echo "Spack ${installed_spack_version:-unknown} already exists at ${INSTALL_PREFIX}/spack; use a fresh INSTALL_PREFIX for Spack ${spack_version}." >&2
+    exit 1
+  fi
+fi
+
+# A new Q prefix must not replace configuration belonging to another stack.
+if [ "${SYSTEM}" = "setonix-q" ] && [ ! -e "${INSTALL_PREFIX}/spack" ] && \
+    [ -f "${SPACK_USER_CONFIG_PATH}/config.yaml" ]; then
+  echo "Staff configuration already exists at ${SPACK_USER_CONFIG_PATH}; set SPACK_USER_CONFIG_PATH to a fresh directory for this installation." >&2
+  exit 1
+fi
+
 # The $SPACK_USER_CONFIG_PATH directory for the 'spack' user dictates where and how the system-wide
 # software stack installation takes place. We must make sure that current settings
 # are used instead of old ones. 
-if [ -e $SPACK_USER_CONFIG_PATH ]; then
-  mv $SPACK_USER_CONFIG_PATH $SPACK_USER_CONFIG_PATH.old.$( date -Iminutes | sed 's/+.*//' | tr ':' '.' )
+if [ -e "${SPACK_USER_CONFIG_PATH}" ]; then
+  mv "${SPACK_USER_CONFIG_PATH}" "${SPACK_USER_CONFIG_PATH}.old.$( date -Iminutes | sed 's/+.*//' | tr ':' '.' )"
 fi
-mkdir -p ${SPACK_USER_CONFIG_PATH}
+mkdir -p "${SPACK_USER_CONFIG_PATH}"
 
 if ! [ -e ${INSTALL_PREFIX}/spack ]; then
-  git clone https://github.com/spack/spack.git ${INSTALL_PREFIX}/spack
+  git clone --depth 1 --branch "v${spack_version}" https://github.com/spack/spack.git "${INSTALL_PREFIX}/spack"
   cd "${INSTALL_PREFIX}/spack"
   git checkout v${spack_version}
 
@@ -41,8 +61,20 @@ fi
 # Next we will overwrite/create spack configuration files that rule the installation
 # process for both the Pawsey staff installations (spack user), and the user and 
 # project-wide ones.
-cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/site/*.yaml ${INSTALL_PREFIX}/spack/etc/spack/
-cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/spackuser/*.yaml ${SPACK_USER_CONFIG_PATH}/
+site_config_dir="${INSTALL_PREFIX}/spack/etc/spack"
+if [ -f "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/site/include.yaml" ]; then
+  # In Spack 1.1 the root scope includes the lower-precedence site/user scopes.
+  site_config_dir="${INSTALL_PREFIX}/spack/etc/spack/site"
+  mkdir -p "${site_config_dir}"
+  cp "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/site/include.yaml" \
+    "${INSTALL_PREFIX}/spack/etc/spack/include.yaml"
+fi
+for config_file in "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/site/"*.yaml; do
+  if [ "$(basename "${config_file}")" != "include.yaml" ]; then
+    cp "${config_file}" "${site_config_dir}/"
+  fi
+done
+cp "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/spackuser/"*.yaml "${SPACK_USER_CONFIG_PATH}/"
 
 # copy project-wide configs into spack tree, too
 mkdir -p ${INSTALL_PREFIX}/spack/etc/spack/project
@@ -57,16 +89,23 @@ cp -r ${PAWSEY_SPACK_CONFIG_REPO}/repo/* "${INSTALL_PREFIX}/spack/var/spack/repo
 cp -r ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/templates/* "${INSTALL_PREFIX}/spack/templates/"
 
 # and finally customise them with the actual software stack installation path.
+config_files=(
+  "${INSTALL_PREFIX}/spack/etc/spack/"*.yaml
+  "${SPACK_USER_CONFIG_PATH}/"*.yaml
+  "${INSTALL_PREFIX}/spack/etc/spack/project/"*.yaml
+  "${INSTALL_PREFIX}/spack/templates/modules/modulefile.lua"
+)
+if [ "${site_config_dir}" != "${INSTALL_PREFIX}/spack/etc/spack" ]; then
+  config_files+=("${site_config_dir}/"*.yaml)
+fi
 sed -i \
   -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g" \
   -e "s|DATE_TAG|$DATE_TAG|g"\
   -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
   -e "s|USER_TEMP_FILES_PREFIX|${USER_TEMP_FILES_PREFIX}|g"\
   -e "s|BOOTSTRAP_PATH|${BOOTSTRAP_PATH}|g"\
-  ${INSTALL_PREFIX}/spack/etc/spack/*.yaml \
-  ${SPACK_USER_CONFIG_PATH}/*.yaml \
-  ${INSTALL_PREFIX}/spack/etc/spack/project/*.yaml \
-  ${INSTALL_PREFIX}/spack/templates/modules/modulefile.lua
+  -e "s|SPACK_PACKAGES_COMMIT|${spack_packages_commit:-}|g"\
+  "${config_files[@]}"
 
 
 # Instantiate utility scripts and copy them within the spack installation directory.
@@ -107,6 +146,7 @@ sed \
   -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g" \
   -e "s|DATE_TAG|$DATE_TAG|g"\
   -e "s|PAWSEY_SYSTEM|${SYSTEM}|g"\
+  -e "s|SPACK_VERSION|${spack_version}|g"\
   -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
   ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack \
   >${INSTALL_PREFIX}/spack/bin/spack

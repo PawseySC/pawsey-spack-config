@@ -53,27 +53,7 @@ class Magma(CMakePackage, CudaPackage, ROCmPackage):
     depends_on("cuda@8:", when="@2.5.1: +cuda")  # See PR #14471
     depends_on("hipblas", when="+rocm")
     depends_on("hipsparse", when="+rocm")
-    # This ensures that rocm-core matches the hip package version in the case that
-    # hip is an external package.
-    for ver in [
-        "5.5.0",
-        "5.5.1",
-        "5.6.0",
-        "5.6.1",
-        "5.7.0",
-        "5.7.1",
-        "6.0.0",
-        "6.0.2",
-        "6.1.0",
-        "6.1.1",
-        "6.1.2",
-        "6.1.3",
-        "6.2.0",
-        "6.2.1",
-        "6.3.0",
-        "6.3.2",
-    ]:
-        depends_on(f"rocm-core@{ver}", when=f"@2.8.0: +rocm ^hip@{ver}")
+    depends_on("rocm-core", when="@2.8.0: +rocm")
     depends_on("python", when="@master", type="build")
 
     conflicts("~cuda", when="~rocm", msg="magma: Either CUDA or HIP support must be enabled")

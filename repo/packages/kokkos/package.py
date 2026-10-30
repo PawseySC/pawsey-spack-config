@@ -8,8 +8,6 @@
 
 import os.path
 
-import llnl.util.lang as lang
-
 from spack.package import *
 
 
@@ -186,6 +184,7 @@ class Kokkos(CMakePackage, CudaPackage, ROCmPackage):
     options_variants = {
         "aggressive_vectorization": [False, "Aggressively vectorize loops"],
         "compiler_warnings": [False, "Print all compiler warnings"],
+        "complex_align": [True, "Align complex numbers"],
         "cuda_constexpr": [False, "Activate experimental constexpr features"],
         "cuda_lambda": [False, "Activate experimental lambda features"],
         "cuda_ldg_intrinsic": [False, "Use CUDA LDG intrinsics"],
@@ -512,7 +511,7 @@ class Kokkos(CMakePackage, CudaPackage, ROCmPackage):
         )
 
         # Remove duplicate options
-        return lang.dedupe(options)
+        return dedupe(options)
 
     test_script_relative_path = join_path("scripts", "spack_test")
 
@@ -547,7 +546,7 @@ class Kokkos(CMakePackage, CudaPackage, ROCmPackage):
         cmake = self.spec["cmake"].command
         cmake_args = ["-DEXECUTABLE_OUTPUT_PATH=" + cmake_path]
         if self.spec.satisfies("+rocm"):
-            prefix_paths = ";".join(spack.build_systems.cmake.get_cmake_prefix_path(self))
+            prefix_paths = ";".join(get_cmake_prefix_path(self))
             cmake_args.append("-DCMAKE_PREFIX_PATH={0}".format(prefix_paths))
 
         cmake(cmake_path, *cmake_args)

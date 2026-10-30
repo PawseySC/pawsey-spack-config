@@ -44,13 +44,18 @@ def get_module_paths_if_installed():
 full_mod_paths = get_module_paths_if_installed()
 
 
-def quantum_allocation_pack(num_gpus_per_node=1):
-    # On Setonix-Q, --gres=gpu:N requests N GH200 allocation-packs.
+def quantum_allocation_pack(num_gpus=1):
+    # Each GH200 pack requires 72 allocation tasks in the explicit node form.
     return {
         'gpu': {
-            'num_gpus_per_node': num_gpus_per_node,
+            'num_gpus': num_gpus,
         },
     }
+
+
+def quantum_step_options():
+    # Specify execution resources separately from the GPU allocation request.
+    return ['--nodes=1', '--ntasks=1', '--cpus-per-task=72', '--gpus=1']
 
 
 def use_pinned_quantum_node():
@@ -100,6 +105,7 @@ class concretise_check(rfm.RunOnlyRegressionTest):
         self.valid_systems = [quantum_compute_system()]
         self.valid_prog_environs = ['PrgEnv-gnu']
         self.extra_resources = quantum_allocation_pack()
+        self.num_tasks = self.num_tasks_per_node = 72
 
         # Execution
         self.executable = 'echo'
@@ -109,7 +115,11 @@ class concretise_check(rfm.RunOnlyRegressionTest):
     
     env = parameter([os.environ['SPACK_ENV']])
 
-    
+    @run_after('setup')
+    def configure_quantum_step(self):
+        self.job.launcher.options += quantum_step_options()
+
+
     @sanity_function
     def assert_concretisation(self):
         abstract_specs = get_abstract_specs()
@@ -161,6 +171,7 @@ class module_existence_check(rfm.RunOnlyRegressionTest):
         self.valid_systems = [quantum_shell_system()]
         self.valid_prog_environs = ['PrgEnv-gnu']
         self.extra_resources = quantum_allocation_pack()
+        self.num_tasks = self.num_tasks_per_node = 72
 
         # Execution - ls to check the module exists
         self.executable = 'ls'
@@ -193,6 +204,7 @@ class module_load_check(rfm.RunOnlyRegressionTest):
         self.valid_systems = [quantum_shell_system()]
         self.valid_prog_environs = ['PrgEnv-gnu']
         self.extra_resources = quantum_allocation_pack()
+        self.num_tasks = self.num_tasks_per_node = 72
 
         # Execution
         self.executable = 'module'
@@ -274,6 +286,7 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
         self.valid_systems = [quantum_compute_system()]
         self.valid_prog_environs = ['PrgEnv-gnu']
         self.extra_resources = quantum_allocation_pack()
+        self.num_tasks = self.num_tasks_per_node = 72
 
         # Load the module we are testing
         self.name_ver = '/'.join(self.mod.split('/')[-2:])[:-4]
@@ -307,6 +320,10 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
             self.executable_opts = [self.baseline_cmd[1] + ' 2>&1']
         
         self.tags = {'spack', 'installation', 'software_stack'}
+
+    @run_after('setup')
+    def configure_quantum_step(self):
+        self.job.launcher.options += quantum_step_options()
 
     # Dependency - this test only runs if the corresponding `module_load_check` test passes
     @run_after('init')

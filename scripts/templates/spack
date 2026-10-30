@@ -1,9 +1,10 @@
 #!/bin/bash
 
-SPACK_DIR=INSTALL_PREFIX/spack
+SPACK_DIR="INSTALL_PREFIX/spack"
 REALSPACK="${SPACK_DIR}/bin/realspack"
 PAWSEY_STACK_SYSTEM="PAWSEY_SYSTEM"
 PAWSEY_STACK_VERSION="DATE_TAG"
+PAWSEY_SPACK_RELEASE="SPACK_VERSION"
 PAWSEY_PROJECT_FILES_PREFIX="USER_PERMANENT_FILES_PREFIX"
 
 function pawsey_project()
@@ -15,41 +16,57 @@ function pawsey_project()
     fi
 }
 
+# Resolve this outside command substitution so Spack receives the project that
+# was selected from ~/.pawsey_project as well as one supplied in the environment.
+PAWSEY_PROJECT="$(pawsey_project)"
+if [ -n "${PAWSEY_PROJECT}" ]; then
+    export PAWSEY_PROJECT
+fi
+
+function pawsey_write_repo()
+{
+    local name="$1"
+    local repo_path="$2"
+
+    # Single-quoted YAML strings also support paths containing spaces or quotes.
+    repo_path="${repo_path//\'/\'\'}"
+    if [[ "${PAWSEY_SPACK_RELEASE}" == 0.* ]]; then
+        printf -- "- '%s'\n" "${repo_path}"
+    else
+        printf "  %s: '%s'\n" "${name}" "${repo_path}"
+    fi
+}
+
 function pawsey_runtime_config()
 {
-    local project
     local config_dir
     local user_repo
     local project_repo
 
-    project="$(pawsey_project)"
-    if [ -n "${project}" ]; then
-        export PAWSEY_PROJECT="${project}"
-    fi
-
-    config_dir="${HOME}/.spack/pawsey/${PAWSEY_STACK_SYSTEM}/${PAWSEY_STACK_VERSION}"
-    mkdir -p "${config_dir}"
+    config_dir="${SPACK_USER_CACHE_PATH:-${HOME}/.spack}/pawsey/${PAWSEY_STACK_SYSTEM}/${PAWSEY_STACK_VERSION}"
+    mkdir -p "${config_dir}" || return 1
 
     {
         echo "repos:"
-        if [ -n "${project}" ]; then
-            user_repo="${PAWSEY_PROJECT_FILES_PREFIX}/${project}/${USER}/${PAWSEY_STACK_SYSTEM}/${PAWSEY_STACK_VERSION}/spack_repo"
-            project_repo="${PAWSEY_PROJECT_FILES_PREFIX}/${project}/${PAWSEY_STACK_SYSTEM}/${PAWSEY_STACK_VERSION}/spack_repo"
+        if [ -n "${PAWSEY_PROJECT}" ]; then
+            user_repo="${PAWSEY_PROJECT_FILES_PREFIX}/${PAWSEY_PROJECT}/${USER}/${PAWSEY_STACK_SYSTEM}/${PAWSEY_STACK_VERSION}/spack_repo"
+            project_repo="${PAWSEY_PROJECT_FILES_PREFIX}/${PAWSEY_PROJECT}/${PAWSEY_STACK_SYSTEM}/${PAWSEY_STACK_VERSION}/spack_repo"
 
             if [ -f "${user_repo}/repo.yaml" ]; then
-                echo "- ${user_repo}"
+                pawsey_write_repo user_repo "${user_repo}"
             fi
             if [ -f "${project_repo}/repo.yaml" ]; then
-                echo "- ${project_repo}"
+                pawsey_write_repo project_repo "${project_repo}"
             fi
         fi
-        echo "- ${SPACK_DIR}/var/spack/repos/pawsey"
-    } > "${config_dir}/repos.yaml"
+        # Merge these overrides with the site configuration, including builtin.
+        pawsey_write_repo pawsey_repo "${SPACK_DIR}/var/spack/repos/pawsey"
+    } > "${config_dir}/repos.yaml" || return 1
 
     echo "${config_dir}"
 }
 
-PAWSEY_RUNTIME_CONFIG="$(pawsey_runtime_config)"
+PAWSEY_RUNTIME_CONFIG="$(pawsey_runtime_config)" || exit 1
 
 if (( $# > 0 )) && [ "$1" = "project" ]; then
     # enable group access and writing to the stack

@@ -25,6 +25,8 @@ class Presto(MesonPackage):
 
     version("5.0.1", tag="v5.0.1")
 
+    depends_on("c", type="build")
+
     depends_on("glib")
     depends_on("fftw-api@3:")
     depends_on("pgplot")

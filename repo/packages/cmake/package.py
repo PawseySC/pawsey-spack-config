@@ -9,7 +9,10 @@ import re
 import sys
 
 import spack.build_environment
-from spack.build_systems.cmake import get_cmake_prefix_path
+try:
+    from spack_repo.builtin.build_systems.cmake import get_cmake_prefix_path
+except ImportError:
+    from spack.build_systems.cmake import get_cmake_prefix_path
 from spack.package import *
 
 

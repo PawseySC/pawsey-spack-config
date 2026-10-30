@@ -2,7 +2,6 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-# Pawsey, Ilkhom: added mkdirp(rubygems_certs_path) in line 162 
 # Pawsey, Ilkhom: added env.set("CFLAGS", "-fcommon") to handle error: duplicate symbol for cce compiler
 # Pawsey, Ilkhom: added  patch("fix_CFLAGS.patch") for cce compiler
 
@@ -10,8 +9,10 @@
 
 import re
 
-import spack.build_systems.autotools
-import spack.build_systems.nmake
+try:
+    from spack_repo.builtin.build_systems import autotools, nmake
+except ImportError:
+    from spack.build_systems import autotools, nmake
 from spack.package import *
 
 
@@ -51,7 +52,6 @@ class Ruby(AutotoolsPackage, NMakePackage):
 
     for _platform_condition in ("platform=linux", "platform=darwin"):
         with when(_platform_condition):
-            variant("openssl", default=True, description="Enable OpenSSL support")
             variant("readline", default=False, description="Enable Readline support")
             variant("yjit", default=False, description="Enable Rust JIT", when="@3.2:")
             depends_on("pkgconfig", type="build")
@@ -62,9 +62,6 @@ class Ruby(AutotoolsPackage, NMakePackage):
             depends_on("readline", when="+readline")
             depends_on("zlib-api")
             depends_on("libyaml", when="@3:")
-            with when("+openssl"):
-                depends_on("openssl@:1")
-                depends_on("openssl@:1.0", when="@:2.3")
             with when("+yjit"):
                 depends_on("rust@1.58:")
 
@@ -79,16 +76,6 @@ class Ruby(AutotoolsPackage, NMakePackage):
     patch("ruby_23_gcc7.patch", level=0, when="@2.3.0:2.3.4 %gcc@7:")
     patch("ruby_24_gcc7.patch", level=1, when="@2.4.0 %gcc@7:")
     patch("fix_CFLAGS.patch", when="@3.3.5: %cce@18:")
-
-    resource(
-        name="rubygems-updated-ssl-cert",
-        url="https://raw.githubusercontent.com/rubygems/rubygems/master/lib/rubygems/ssl_certs/index.rubygems.org/GlobalSignRootCA.pem",
-        sha256="df68841998b7fd098a9517fe971e97890be0fc93bbe1b2a1ef63ebdea3111c80",
-        when="+openssl",
-        destination="",
-        placement="rubygems-updated-ssl-cert",
-        expand=False,
-    )
 
     executables = ["^ruby$"]
 
@@ -132,7 +119,7 @@ class SetupEnvironment:
         env.set("GEM_HOME", dependent_spec.prefix)
 
 
-class AutotoolsBuilder(spack.build_systems.autotools.AutotoolsBuilder, SetupEnvironment):
+class AutotoolsBuilder(autotools.AutotoolsBuilder, SetupEnvironment):
     def setup_build_environment(self, env):
         if self.spec.compiler.name == "cce":
             env.set("CFLAGS", "-fcommon")
@@ -140,8 +127,6 @@ class AutotoolsBuilder(spack.build_systems.autotools.AutotoolsBuilder, SetupEnvi
 
     def configure_args(self):
         args = []
-        if "+openssl" in self.spec:
-            args.append("--with-openssl-dir=%s" % self.spec["openssl"].prefix)
         if "+readline" in self.spec:
             args.append("--with-readline-dir=%s" % self.spec["readline"].prefix)
         if "^tk" in self.spec:
@@ -153,26 +138,7 @@ class AutotoolsBuilder(spack.build_systems.autotools.AutotoolsBuilder, SetupEnvi
 
     @run_after("install")
     def post_install(self):
-        """RubyGems updated their SSL certificates at some point, so
-        new certificates must be installed after Ruby is installed
-        in order to download gems; see
-        https://guides.rubygems.org/ssl-certificate-update/
-        for details.
-        """
-        if self.spec.satisfies("+openssl"):
-            rubygems_updated_cert_path = join_path(
-                self.pkg.stage.source_path, "rubygems-updated-ssl-cert", "GlobalSignRootCA.pem"
-            )
-            rubygems_certs_path = join_path(
-                self.spec.prefix.lib,
-                "ruby",
-                "{0}.0".format(self.spec.version.up_to(2)),
-                "rubygems",
-                "ssl_certs",
-            )
-            mkdirp(rubygems_certs_path)
-            install(rubygems_updated_cert_path, rubygems_certs_path)
-
+        """Record the underlying compiler paths for Ruby extension builds."""
         rbconfig = find(self.prefix, "rbconfig.rb")[0]
         filter_file(
             r'^(\s*CONFIG\["CXX"\]\s*=\s*).*', r'\1"{0}"'.format(self.pkg.compiler.cxx), rbconfig
@@ -187,7 +153,7 @@ class AutotoolsBuilder(spack.build_systems.autotools.AutotoolsBuilder, SetupEnvi
         )
 
 
-class NMakeBuilder(spack.build_systems.nmake.NMakeBuilder, SetupEnvironment):
+class NMakeBuilder(nmake.NMakeBuilder, SetupEnvironment):
     def edit(self, pkg, spec, prefix):
         with working_dir(self.pkg.stage.source_path, create=True):
             Executable("win32\\configure.bat")("--prefix=%s" % self.prefix)

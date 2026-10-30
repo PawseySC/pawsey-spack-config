@@ -9,8 +9,6 @@ import os
 import platform
 import sys
 
-import llnl.util.tty as tty
-
 from spack.build_environment import optimization_flags
 from spack.package import *
 
@@ -104,6 +102,9 @@ class Namd(MakefilePackage, CudaPackage, ROCmPackage):
     patch("inherited-member-2.14.patch", when="@2.14")
     # Handle change in python-config for python@3.8:
     patch("namd-python38.patch", when="interface=python ^python@3.8:")
+
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
 
     depends_on("charmpp@7.0.0:", when="@3.0:")
     depends_on("charmpp@6.10.1:6", when="@2.14:2")

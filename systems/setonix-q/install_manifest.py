@@ -184,15 +184,15 @@ def load_receipt(root, run, kind, name, complete=False):
 
 
 def parse_spec(data, label):
-    """Validate a concrete Spack spec in format 4 and index its nodes by hash."""
+    """Validate a concrete Spack spec in format 4 or 5 and index its nodes by hash."""
     fail_unless(
         isinstance(data, dict) and isinstance(data.get("spec"), dict),
         f"{label} is not a Spack spec",
     )
     spec = data["spec"]
     fail_unless(
-        spec.get("_meta", {}).get("version") == 4,
-        f"{label} must use Spack spec format 4",
+        spec.get("_meta", {}).get("version") in (4, 5),
+        f"{label} must use Spack spec format 4 or 5",
     )
     nodes = spec.get("nodes")
     fail_unless(isinstance(nodes, list) and nodes, f"{label} contains no nodes")
@@ -327,8 +327,8 @@ def load_lockfile(path):
     lock = read_json(path, "Spack lockfile")
     meta = lock.get("_meta", {}) if isinstance(lock, dict) else {}
     fail_unless(
-        meta.get("lockfile-version") == 5 and meta.get("specfile-version") == 4,
-        "Spack lockfile must use lockfile version 5 and spec format 4",
+        (meta.get("lockfile-version"), meta.get("specfile-version")) in ((5, 4), (6, 5)),
+        "Spack lockfile must use lockfile/spec format 5/4 or 6/5",
     )
     roots = lock.get("roots")
     specs = lock.get("concrete_specs")
@@ -346,7 +346,7 @@ def load_lockfile(path):
 
 
 def export_lock_root(lock, root_hash):
-    """Export one lockfile root package and its graph as a format-4 concrete spec."""
+    """Export one lockfile root package and its graph in the original spec format."""
     indexed = lock["concrete_specs"]
     ordered = []
     seen = set()
@@ -364,7 +364,9 @@ def export_lock_root(lock, root_hash):
             visit(node["build_spec"]["hash"])
 
     visit(root_hash)
-    document = {"spec": {"_meta": {"version": 4}, "nodes": ordered}}
+    document = {
+        "spec": {"_meta": {"version": lock["_meta"]["specfile-version"]}, "nodes": ordered}
+    }
     parsed_root, _ = parse_spec(document, f"lockfile root {root_hash}")
     fail_unless(
         parsed_root == root_hash, f"exported lockfile root changed from {root_hash}"

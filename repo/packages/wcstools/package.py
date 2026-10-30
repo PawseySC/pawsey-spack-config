@@ -25,6 +25,8 @@ class Wcstools(MakefilePackage):
     version('3.9.7', sha256='525f6970eb818f822db75c1526b3122b1af078affa572dce303de37df5c7b088')
     #version('3.9.7', sha256='efebf6970f6158ed002fdfe320d4ff4738e3a049b333a749da6cc464b3579860')
 
+    depends_on("c", type="build")
+
     def _make(self, *args, **kwargs):
         # PREFIX must be defined on macOS even when building the library, since
         # it gets hardcoded into the library's install_path
@@ -35,17 +37,11 @@ class Wcstools(MakefilePackage):
         makefile = FileFilter('Makefile')
 
         makefile.filter(r'^\s*CC\s*=.*',  'CC = '  + spack_cc)
-        makefile.filter(r'^\s*CXX\s*=.*', 'CXX = ' + spack_cxx)
-        makefile.filter(r'^\s*F77\s*=.*', 'F77 = ' + spack_f77)
-        makefile.filter(r'^\s*FC\s*=.*',  'FC = '  + spack_fc)
         makefile.filter(r'^\s*CFLAGS\s*',  'COMPILEFLAGS')
 
         libmakefile = FileFilter('libwcs/Makefile')
 
         libmakefile.filter(r'^\s*CC\s*=.*',  'CC = '  + spack_cc)
-        libmakefile.filter(r'^\s*CXX\s*=.*', 'CXX = ' + spack_cxx)
-        libmakefile.filter(r'^\s*F77\s*=.*', 'F77 = ' + spack_f77)
-        libmakefile.filter(r'^\s*FC\s*=.*',  'FC = '  + spack_fc)
         libmakefile.filter(r'^\s*CFLAGS\s*',  'COMPILEFLAGS')
 
     # there is no make install command

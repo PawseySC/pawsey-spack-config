@@ -1,4 +1,5 @@
 from spack.patch import apply_patch
+from spack.package import *
 import os
 
 PATCHFILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "as.patch")
@@ -12,6 +13,8 @@ class Aoflagger(CMakePackage):
 
     version('3.4.0', git='https://gitlab.com/aroffringa/aoflagger.git', tag='v3.4.0', submodules=True)
     version('3.2.0', git='https://gitlab.com/aroffringa/aoflagger.git', tag='v3.2.0', submodules=True)
+
+    depends_on("cxx", type="build")
 
     depends_on('casacore@3.2.1:')
     depends_on('fftw@3.3.8:')

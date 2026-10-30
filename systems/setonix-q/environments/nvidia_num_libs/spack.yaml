@@ -4,22 +4,25 @@ spack:
   packages:
     'fftw-api:':
       buildable: true
+    # Constrain Python where needed without requiring it in every root's DAG.
+    python:
+      require: "@3.11.6 +optimizations +zlib +ssl %gcc_compiler"
   definitions:
 
   - parallel:
-    - blaspp@2024.10.26 +cuda cuda_arch=90 build_type=Release ^openblas%gcc ^cmake ~doc~qtgui %gcc
+    - blaspp@2024.10.26 +cuda cuda_arch=90 build_type=Release ^openblas%gcc_compiler ^cmake ~doc~qtgui %gcc_compiler
     # hpx bumped 1.9.1 -> 1.11.0: 1.9.1 headers (just.hpp/pack.hpp) don't compile
     # under CUDA-13 nvcc. 1.11.0 closes the Grace Hopper (#6563) and Kokkos (#6696)
     # build issues. 1.11.0 is the last HPX supporting C++17.
     - hpx@1.11.0 +cuda cuda_arch=90 +async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi 
-      build_type=Release ^boost %gcc ^cmake ~doc~qtgui %gcc ^asio %gcc
+      build_type=Release ^boost %gcc_compiler ^cmake ~doc~qtgui %gcc_compiler ^asio %gcc_compiler
     # rather silly kokkos has std=98,11, etc setting cxxstd. BUT all other packages 
     # use the flag cxxstd ... Update in recipes might fix this but for the moment, we fix 
     # this in our repo
-    - kokkos@4.7.04 +cuda cuda_arch=90 +hwloc +memkind +numactl +openmp +tuning +wrapper build_type=Release ^cmake ~doc~qtgui %gcc
+    - kokkos@4.7.04 +cuda cuda_arch=90 +hwloc +memkind +numactl +openmp +tuning +wrapper build_type=Release ^cmake ~doc~qtgui %gcc_compiler
     # for hpx must explicitly set openmp off 
     - kokkos@4.7.04 +cuda cuda_arch=90 +wrapper +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ~openmp
-      build_type=Release ^hpx@1.11.0 +async_mpi max_cpu_count=128 networking=mpi build_type=Release ^cmake ~doc~qtgui %gcc
+      build_type=Release ^hpx@1.11.0 +async_mpi max_cpu_count=128 networking=mpi build_type=Release ^cmake ~doc~qtgui %gcc_compiler
     - magma@master ~rocm +cuda cuda_arch=90
     # Re-enabled to retry after the kokkos/CUDA-13 nvcc_wrapper (sm_80) fix.
     # Previously slate failed: openmp taskloops not implemented in the cuda
@@ -50,6 +53,5 @@ spack:
   # jemalloc, asio, boost and kokkos.
   - matrix:
     - [$parallel]
-    - ['%gcc@13.3.1']
-    - [^python@3.11.6+optimizations+zlib+ssl%gcc@13.3.1]
+    - ['%gcc_compiler']
   view: false

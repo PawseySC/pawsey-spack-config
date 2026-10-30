@@ -35,6 +35,8 @@ else
   end
 end
 
+local generic_arch = arch == "neoverse_v2" and "aarch64" or "x86_64"
+
 --------------------------------------------------------------------------------
 -- Configuration: sed-replaced template values
 --------------------------------------------------------------------------------
@@ -99,13 +101,16 @@ local function is_stale_partition_path(path)
     return contains(path, "/setonix/")
       or contains(path, "/zen2/")
       or contains(path, "/zen3/")
+      or contains(path, "/x86_64/")
   elseif arch == "zen3" then
     return contains(path, "/setonix-q/")
       or contains(path, "/neoverse_v2/")
+      or contains(path, "/aarch64/")
       or contains(path, "/zen2/")
   else
     return contains(path, "/setonix-q/")
       or contains(path, "/neoverse_v2/")
+      or contains(path, "/aarch64/")
       or contains(path, "/zen3/")
   end
 end
@@ -137,6 +142,10 @@ if current_mode == "load" or current_mode == "unload" then
 end
 
 local function prepend_compiler_paths(base_path, suffix)
+  local core_path = pathJoin(base_path, "Core", suffix)
+  if isDir(core_path) then
+    prepend_path("MODULEPATH", core_path)
+  end
   for _, compiler in ipairs(compilers) do
     local path = pathJoin(base_path, compiler.dir, compiler.version, suffix)
     if isDir(path) then
@@ -189,7 +198,13 @@ prepend_path("MODULEPATH", pathJoin(install_prefix, utilities_modules_dir))
 
 -- Spack modules
 local spack_root = pathJoin(install_prefix, "modules", arch)
+local generic_core_root = pathJoin(install_prefix, "modules", generic_arch, "Core")
 for _, category in ipairs(module_categories) do
+  -- Spack 1.1 assigns generic targets to external packages.
+  local external_core = pathJoin(generic_core_root, category)
+  if isDir(external_core) then
+    prepend_path("MODULEPATH", external_core)
+  end
   prepend_compiler_paths(spack_root, category)
 end
 

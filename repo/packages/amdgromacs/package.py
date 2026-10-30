@@ -34,6 +34,9 @@ class Amdgromacs(CMakePackage, ROCmPackage):
     variant("openmp", default=True)
     # variant("plumed", default=False)
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+
 #    depends_on("fftw-api@3:")
     depends_on("cray-libsci")
     depends_on("cray-fftw")

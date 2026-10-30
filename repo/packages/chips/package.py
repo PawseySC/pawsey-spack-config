@@ -11,6 +11,8 @@ class Chips(MakefilePackage):
     version("main", branch="main")
     version("setonix2024.05", tag="setonix2024.05")
 
+    depends_on("c", type="build")
+
     depends_on('cfitsio')
     depends_on('openblas')
     depends_on('fftw')

@@ -32,6 +32,8 @@ class KokkosNvccWrapper(Package):
     version("4.7.04", sha256="4213b248c39e112299fa94ee08817e51126fc02996ed6e2ab56aec4cdb80ee1f")
     version("4.4.01", sha256="3413f0cb39912128d91424ebd92e8832009e7eeaf6fa8da58e99b0d37860d972")
 
+    depends_on("cxx", type="build")
+
     depends_on("cuda")
 
     def install(self, spec, prefix):
