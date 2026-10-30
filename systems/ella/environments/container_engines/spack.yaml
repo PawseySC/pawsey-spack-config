@@ -1,0 +1,11 @@
+spack:
+  definitions:
+  - packages:
+    - singularityce@4.3.5 cflags="-O0" cppflags="-O0" cxxflags="-O0" %gcc_compiler
+  specs:
+  - matrix:
+    - [$packages]
+    - [target=neoverse_v2]
+  view: false
+  concretizer:
+    unify: when_possible

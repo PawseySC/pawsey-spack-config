@@ -1,0 +1,654 @@
+packages:
+  all:
+  # Provider lists express preferences. Compiler packages now provide the
+  # language virtuals; packages:all:compiler is ignored by Spack 1.x.
+    providers:
+      c: [ gcc@13.3.1, nvhpc@25.9 ]
+      cxx: [ gcc@13.3.1, nvhpc@25.9 ]
+      fortran: [ gcc@13.3.1, nvhpc@25.9 ]
+      mpi: [ cray-mpich ]
+      blas: [ openblas ] #, cray-libsci ] # commenting out cray-libsci as bug was identified
+      lapack: [ openblas, netlib-lapack ] #, cray-libsci ]
+      scalapack: [ netlib-scalapack ] #, cray-libsci ]
+      fftw-api: [ fftw ] #, cray-fftw ] # commenting out cray-fftw for now, similar to cray-libsci
+      pkgconfig: [ pkg-config ]
+      zlib-api: [ zlib-ng ]
+    permissions:
+      read: world
+      # this should be user, we do not want pawsey0001 users 
+      # to accidentally edit the system wide installation
+      write: user
+      # using default group
+      # fine, considering world readable and user writable
+      # could not use $PAWSEY_PROJECT, as variables are apparently not evaluated here
+
+  # Use GCC for host compilation; CUDA supplies the device compiler separately.
+  c:
+    require: gcc@13.3.1
+  cxx:
+    require: gcc@13.3.1
+  fortran:
+    require: gcc@13.3.1
+
+# don't build virtuals with an external provider
+  mpi:
+    buildable: false
+# Left buildable, as currently built by Spack, 
+# because cray-libsci and cray-fftw are not in use (see below)
+#  blas:
+#    buildable: false
+  blas:
+    # Setonix-Q deliberately uses OpenBLAS instead of Cray LibSci. Make that a
+    # requirement, not just a provider preference, so CUDA BLAS++ cannot pick
+    # a second BLIS-backed DAG.
+    require: openblas
+#  lapack:
+#    buildable: false
+#  scalapack:
+#    buildable: false
+# FFTW non buildable, to avoid proliferation of variants, 
+# that are ultimately a subset of the system-wide one (num_libs)
+# Edit: FFTW buildable, otherwise in Spack 0.17.0 the concretiser crashes
+#  fftw-api:
+#    buildable: false
+  pkgconfig:
+    buildable: false
+# don't build compilers neither
+  cce:
+    buildable: false
+  gcc:
+    buildable: false
+    externals:
+    - spec: gcc@13.3.1 languages=c,c++,fortran arch=linux-sles15-aarch64
+      modules:
+      - PrgEnv-gnu
+      - gcc-native/13
+      - craype
+      - craype-arm-grace
+      - craype-network-ofi
+      - xpmem
+      extra_attributes:
+        compilers:
+          c: cc
+          cxx: CC
+          fortran: ftn
+        flags:
+          cflags: -O3
+          cxxflags: -O3
+          cppflags: -O3
+          # Keep package-specific GNU compatibility flags local to the package.
+          fflags: -O3
+        environment:
+          set:
+            PE_ENV: "GNU"
+            CARGO_HOME: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/cargo
+            GOCACHE: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/go-cache/build
+            GOMODCACHE: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/go-cache/mod
+            GOFLAGS: "-ldflags=-extldflags=-fuse-ld=bfd"
+          unset:
+          - CRAY_CUDATOOLKIT_POST_LINK_OPTS
+        extra_rpaths: []
+  intel:
+    buildable: false
+  pgi:
+    buildable: false
+  nvhpc:
+    buildable: false
+    externals:
+    - spec: nvhpc@25.9 arch=linux-sles15-aarch64
+      # CUDA is supplied by the cuda external, not by this compiler entry.
+      modules:
+      - PrgEnv-nvidia
+      - nvidia/25.9
+      - gcc-native-mixed/13
+      - craype
+      - craype-arm-grace
+      - craype-network-ofi
+      - xpmem
+      extra_attributes:
+        compilers:
+          c: cc
+          cxx: CC
+          fortran: ftn
+        flags:
+          cflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/13/bin/gcc
+          cxxflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/13/bin/gcc
+          cppflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/13/bin/gcc
+          fflags: -O3 --gcc-toolchain=/opt/cray/pe/gcc-native/13/bin/gcc
+        environment:
+          set:
+            PE_ENV: "NVIDIA"
+            CARGO_HOME: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/cargo
+            GOCACHE: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/go-cache/build
+            GOMODCACHE: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/software/$USER/go-cache/mod
+        extra_rpaths: []
+
+  # GENERAL NOTES:
+  # 1. for each package, only one entry must exist in this yaml
+  # otherwise only the last one is considered, and the previous ones are ingored
+  # 2. when externals are specified, the preferred version is respected only if it is one of the externals
+
+  #TODO for next stack builds: consider adding more +pic as default variant
+
+  # preferred versions and variants, dependencies
+  # required by devel/hpctoolkit, but good to have for everything
+  libunwind:
+    variants: '+pic'
+  mbedtls:
+    variants: '+pic'
+#  libseccomp:
+#    version: [2.5.4]
+  zlib:
+    version: [1.3.1]
+  zstd:
+    version: [1.5.6]
+  json-c:
+    version: [0.16]
+  krb5:
+    version: [1.21.3]
+  # Prefer the usual CMake build while allowing an environment to select a
+  # compatible alternative. Dependency-only modules are hidden and hashed.
+  cmake:
+    version: [3.31.7]
+    variants: ~doc+ncurses+ownlibs~qtgui
+# Commented out - see GENERAL NOTES above
+#    externals:
+#  # manual addition with the latest version
+#    - spec: cmake@3.21.4
+#      prefix: /lus/joey/home/mdelapierre/Spack-sprints/v0.17.0_new/spack/opt/spack/cray-sles15-zen2/gcc-10.3.0/cmake-3.21.4-dgyicf6mmctyfw2fdzeja2jt5jf5gzl5
+#    - spec: cmake@3.10.2
+#      prefix: /usr
+  ffmpeg:
+    version: [7.0.2]
+  meson:
+    version: [1.5.1]
+    require: '@1.5.1'
+  gnuplot:
+    version: [6.0.0]
+    variants: '+X'
+  llvm:
+    # Prefer a lean llvm for py-llvmlite, but keep +clang possible: binder (via
+    # trilinos +python) needs llvm+clang, so ~clang must stay a soft preference.
+    # ~gold is hard-required: the gold linker is not installed on this system.
+    require: '~gold targets=aarch64,nvptx'
+    prefer:
+      - '~clang ~lldb ~flang ~polly'
+  # preferred versions and variants, python
+  python:
+    version: [3.11.6]
+    variants: '+optimizations +zlib +ssl'
+  gdbm:
+    version: [1.24]
+  apr:
+    version: [1.7.5] #subversion needs older apr version
+  gettext:
+    version: [0.22.5]
+  py-cython:
+    # py-cuda and py-nvmath-python require the newer 3.2.3 version, but this 
+    # breaks older packages in the stack. Listing the two versions here avoids 
+    # increases instances of 'accidental' reuse when not using '--reuse' in
+    # during concretization.
+    version: [3.2.3, 3.0.11]
+  py-dask:
+    version: [2024.7.1]
+  py-h5py:
+    version: [3.12.1]
+  py-ipython:
+    version: [8.28.0]
+  py-matplotlib:
+    version: [3.9.2]
+    variants: '+movies'
+  py-mpi4py:
+    version: [4.0.1]
+    # Setonix-Q uses CUDA-aware Cray MPICH throughout. Apply GTL to indirect
+    # mpi4py dependencies as well as explicitly requested roots.
+    require: '@4.0.1 +gtl gtl_backend=cuda gtl_lib_path=/opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3/lib'
+  py-meson-python:
+    version: [0.16.0]
+    require: '@0.16.0'
+  py-numba:
+    version: [0.61.0]
+    require: '@0.61.0'
+  py-numpy:
+    # This cannot be a global requirement: Boost 1.86 requires NumPy 1.x.
+    # Python packages that must share 2.1.2 constrain it individually.
+    version: [2.1.2]
+  py-pandas:
+    version: [2.2.3]
+  py-pip:
+    # This remains a preference because py-fastrlock and py-symengine require
+    # pip <=23.0. Modern consumers constrain 23.1.2 in their requirements.
+    version: [23.1.2]
+  py-plotly:
+    version: [5.20.0]
+  py-pybind11:
+    # Pinning to 2.13.4 to share one pybind11 build across the Qiskit Aer
+    # and SciPy DAGs. Qiskit Aer 0.17.2 requires >2.6, while Spack's
+    # SciPy 1.14.1 recipe permits @2.12.
+    version: [2.13.4]
+    require: '@2.13.4'
+  py-scikit-learn:
+    version: [1.5.2]
+  py-scipy:
+    version: [1.14.1]
+    require: '@1.14.1'
+  py-setuptools:
+    # This remains a preference because NumPy <=1.25 requires setuptools
+    # <=63. Modern consumers constrain 80.0.0 in their requirements.
+    version: [80.0.0]
+  py-pennylane:
+    version: [0.45.0]
+    require: '@0.45.0'
+  # preferred versions and variants, compilers
+  go:
+    version: [1.25.5]
+  julia:
+     version: [1.11.0]
+  openjdk:
+    version: [17.0.8.1_1]
+#    version: [21.0.3_9]
+  r:
+    version: [4.4.1]
+# Commented out - see GENERAL NOTES above
+#    externals:
+#    - spec: r@4.0.5.1
+#      prefix: /opt/cray/pe/R/4.0.5.1
+  perl:
+    version: [5.40.0]
+# Commented out - see GENERAL NOTES above
+#    externals:
+#    - spec: perl@5.26.1~cpanm
+#      prefix: /usr
+  ruby:
+    version: [3.3.5]
+  blaspp:
+    version: [2024.10.26]
+    variants: '~cuda build_type=Release'
+    require: '@2024.10.26 build_type=Release'
+  boost:
+    version: [1.86.0]
+    variants: '+mpi +numpy +python'
+  eigen:
+    version: [3.4.0]
+    variants: 'build_type=Release'
+  fftw:
+    version: [3.3.10,2.1.5]
+    variants: '+openmp precision=float,double,long_double'
+  gsl:
+    version: [2.8]
+  hpx:
+    version: [1.11.0]
+    variants: '+async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi cxxstd=17 build_type=Release'
+  kokkos:
+    version: [4.7.04]
+    variants: '+hwloc +memkind +numactl +openmp +tuning cxxstd=17 build_type=Release'
+  netlib-lapack:
+    version: [3.11.0]
+    variants: 'build_type=Release'
+  openblas:
+    version: [0.3.28]
+    variants: 'threads=openmp'
+  opencv:
+     version: [4.13.0]
+     variants: 'build_type=Release'
+  plasma:
+    version: [24.8.7]
+    variants: 'build_type=Release'
+  petsc:
+    version: [3.22.1]
+    variants: '+fftw' # commenting out trilinos as per environment note # +trilinos'
+  plumed:
+    version: [2.9.2]
+  netlib-scalapack:
+    version: [2.2.0]
+  slate:
+    version: [2024.10.29]
+    variants: '~cuda build_type=Release'
+  trilinos:
+    version: [15.0.0]
+    variants: '+adios2 +openmp +python build_type=Release'
+# preferred versions and variants, io_libs
+  hdf5:
+    version: [1.14.5]
+    variants: 'api=v112 +hl +fortran +szip build_type=Release'
+  hdf:
+    version: [4.2.15]
+    variants: '+shared+external-xdr'
+  adios2:
+    version: [2.10.2]
+    variants: '+python +hdf5 build_type=Release'
+  netcdf-c:
+    version: [4.9.2]
+    variants: '+hdf4 +parallel-netcdf'
+  netcdf-cxx:
+    version: [4.2]
+  netcdf-cxx4:
+    version: [4.3.1]
+  netcdf-fortran:
+    version: [4.6.1]
+  parallel-netcdf:
+    version: [1.12.3]
+  py-h5netcdf:
+    version: [1.3.0]
+  py-netcdf4:
+    version: [1.6.5]
+# for end users apps, prefer cmake variant build_type=Release
+  caliper:
+    variants: 'build_type=Release'
+  gromacs:
+    variants: 'build_type=Release'
+  lammps:
+    variants: 'build_type=Release'
+  nektar:
+    variants: 'build_type=Release'
+  visit:
+    variants: 'build_type=Release'
+
+  #for astro packages prefer release
+  casacore:
+    variants: 'build_type=Release'
+  everybeam:
+    variants: 'build_type=Release'
+  wsclean:
+    variants: 'build_type=Release'
+  idg:
+    variants: 'build_type=Release'
+  cghcentre:
+    variants: 'build_type=Release'
+
+  # ===========================================================================
+  #                                  EXTERNALS
+  # ===========================================================================
+  pkg-config:
+    externals:
+    - spec: pkg-config@0.29.2
+      prefix: /usr
+    buildable: false
+
+  hwloc:
+    externals:
+    - spec: hwloc@2.11.2
+      prefix: /usr
+    buildable: false
+
+  numactl:
+    externals:
+    - spec: numactl@2.0.14.20.g4ee5e0c
+      prefix: /usr
+    buildable: false
+
+  pcre2:
+    externals:
+    - spec: pcre2@10.42
+      prefix: /usr
+    buildable: false
+
+  libssh:
+    externals:
+    - spec: libssh@0.9.8
+      prefix: /usr
+    buildable: false
+
+#  rust:
+#    externals:
+#    - spec: rust@1.84.1
+#      prefix: /software/setonix/2025.02/software/linux-sles15-zen3/gcc-13.3.0/rust-1.84.1/toolchains/stable-x86_64-unknown-linux-gnu
+#    buildable: false
+
+  libseccomp:
+    externals:
+    # The system C library does not provide bindings for a Spack Python.
+    - spec: libseccomp@2.5.3 ~python
+      prefix: /usr
+      dependencies: []
+    buildable: false
+
+  grep:
+    externals:
+    - spec: grep@3.11
+      prefix: /usr
+    buildable: false
+
+  sed:
+    externals:
+    - spec: sed@4.9
+      prefix: /usr
+    buildable: false
+
+  bash:
+    externals:
+    - spec: bash@4.4.23
+      prefix: /usr
+    buildable: false
+
+  binutils:
+    externals:
+    - spec: binutils@2.45+ld
+      prefix: /usr
+    buildable: false
+
+# ----------------------------------------------------------------------------
+#                                        CRAY
+# ----------------------------------------------------------------------------
+  lustre:
+    externals:
+    - spec: lustre@2.15.7.2_cray_5_g607eea0
+      prefix: /usr
+    buildable: false
+
+  # adding prefixes as in NERSC Perlmutter configs
+  # -----
+  # MPI and communication related externals 
+  # ----- 
+  cray-mpich:
+    externals:
+    - spec: cray-mpich@9.1.0%gcc
+      modules:
+      - cray-mpich/9.1.0
+      - craype-network-ofi
+      # GPU-aware (CUDA-aware) MPICH for this GH200 (sm_90) system.
+      # craype-accel-nvidia90 makes the Cray wrappers link libmpi_gtl_cuda; it
+      # requires a cudatoolkit module (>=12.0), loaded here. Kept on the external
+      # (not the build base) so non-MPI CPU packages stay CUDA-free.
+      - cudatoolkit/25.9_13.0
+      - craype-accel-nvidia90
+      prefix: /opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3
+    buildable: false
+
+  cray-pmi:
+    externals:
+    - spec: cray-pmi@6.1.15
+      modules:
+      - cray-pmi/6.1.15
+    buildable: false
+
+  xpmem:
+    externals:
+    - spec: xpmem@0.2.119
+      modules:
+      - xpmem/0.2.119-1.3_gef379be13330
+    buildable: false
+
+  # libraries related to libfabric and mpi 
+  libfabric:
+    externals:
+    - spec: libfabric@1.22.0
+      modules:
+      - libfabric/1.22.0
+      prefix: /opt/cray/libfabric/1.22.0
+    buildable: false
+
+  openssl:
+    externals:
+    - spec: openssl@3.5.0
+      prefix: /usr
+    buildable: false
+
+  brotli:
+    externals:
+    - spec: brotli@1.0.7
+      prefix: /usr
+    buildable: false
+
+  curl:
+    externals:
+    # /usr/bin/curl reports libidn2 and the IDN feature. Declare the external
+    # precisely so independent environments cannot assign it conflicting
+    # +libidn2/~libidn2 hashes.
+    - spec: curl@8.14.1+libidn2
+      prefix: /usr
+    buildable: false
+
+  openssh:
+    externals:
+    - spec: openssh@9.6p1
+      prefix: /usr
+    buildable: false
+
+  keyutils:
+    externals:
+    - spec: keyutils@1.6.3
+      prefix: /usr
+    buildable: false
+
+  # cryptopp:
+  #   externals:
+  #   - spec: cryptopp@8.6.0
+  #     prefix: /usr
+  #   buildable: false
+
+  openldap:
+    externals:
+    # Installed RPM reports 2.5.20+11; '+' denotes a variant in a Spack spec.
+    - spec: openldap@2.5.20
+      prefix: /usr
+    buildable: false
+
+  libpsl:
+    externals:
+    - spec: libpsl@0.20.1
+      prefix: /usr
+    buildable: false
+
+  nghttp2:
+    externals:
+    - spec: nghttp2@1.64.0
+      prefix: /usr
+    buildable: false
+
+  libidn2:
+    externals:
+    - spec: libidn2@2.2.0
+      prefix: /usr
+    buildable: false
+
+  libyaml:
+    externals:
+    - spec: libyaml@0.1.7
+      prefix: /usr
+    buildable: false
+  # ----- 
+  # other external packages not related to communication
+  # -----
+  papi:
+    externals:
+    - spec: papi@7.2.0.2
+      modules:
+      - papi/7.2.0.2
+      prefix: /opt/cray/pe/papi/7.2.0.2
+    buildable: false
+# # Cray-LibSci: commenting out, as bug was identified (21 December 2021)
+#   cray-libsci:
+#     externals:
+#     - spec: cray-libsci@25.03.0%gcc
+#       modules:
+#       - cray-libsci/25.03.0
+#       prefix: /opt/cray/pe/libsci/24.07.0/GNU/12.3/x86_64
+#     - spec: cray-libsci@25.03.0%cce
+#       modules:
+#       - cray-libsci/25.03.0
+#       prefix: /opt/cray/pe/libsci/25.03.0/CRAYCLANG/17.0/x86_64
+#     #- spec: cray-libsci@23.09.1.1%aocc
+#     #  modules:
+#     #  - cray-libsci/23.09.1.1
+#     #  prefix: /opt/cray/pe/libsci/23.09.1.1/aocc/2.0/x86_64
+#     buildable: false
+# # Cray-FFTW: commenting out, as for Cray-Libsci
+#   cray-fftw:
+#     externals:
+#     - spec: cray-fftw@3.3.10.10 target=zen3
+#       modules:
+#       - craype-x86-milan
+#       - cray-fftw/3.3.10.10
+#       prefix: /opt/cray/pe/fftw/3.3.10.10/x86_milan
+#     buildable: false
+
+
+# =====================================================================
+#                       NVIDIA EXTERNALS
+# =====================================================================
+
+  cuda:
+    buildable: false
+    externals:
+    # Provide cuda via the Cray PE module rather than a bare prefix. The NVIDIA
+    # HPC SDK splits the toolkit across cuda/<ver> (core runtime) and
+    # math_libs/<ver> (libcublas, libcufft, libcusolver, ...). 
+    # The Cray PE module ensures that both are on LD_LIBRARY_PATH/CPATH.
+    - spec: cuda@13.0.0
+      modules:
+      - cuda/13.0
+
+  cutensor:
+      buildable: true
+      externals:
+      - spec: cutensor@2.3.0
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/13.0/targets/sbsa-linux/
+
+  # nvhpc:
+  #     buildable: false
+  #     externals:
+  #     - spec: nvhpc@25.9
+  #       prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/
+
+  nvidia-nsight-systems:
+      buildable: false
+      externals:
+      - spec: nvidia-nsight-systems@2024.3.2
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/
+
+  nccl:
+      buildable: false
+      externals:
+      - spec: nccl@2.27.7 +cuda cuda_arch=90
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/comm_libs/13.0/nccl
+
+  cublas:
+      buildable: false
+      externals:
+      - spec: cublas@13.0.0
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/13.0/
+
+  cufft:
+      buildable: false
+      externals:
+      - spec: cufft@12.0.0
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/13.0/
+
+  curand:
+      buildable: false
+      externals:
+      - spec: curand@10.4.0
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/13.0/
+
+  cusolver:
+      buildable: false
+      externals:
+      - spec: cusolver@12.0.3
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/13.0/
+
+  cusparse:
+      buildable: false
+      externals:
+      - spec: cusparse@12.6.2
+        prefix: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/13.0/
