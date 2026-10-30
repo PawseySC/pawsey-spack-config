@@ -15,7 +15,8 @@ class PyNumbaCuda(PythonPackage):
     depends_on('py-setuptools', type='build')
     depends_on('py-numpy', type='build')
     depends_on('py-numba@0.60:', type=('build', 'run'))
-    depends_on('py-cuda-python@12.9.1:13 cuda_core=0.3.2', type=('build', 'run'))
+    depends_on('py-cuda-bindings@12.9.1:13', type=('build', 'run'))
+    depends_on('py-cuda-core@0.3.2:0', type=('build', 'run'))
     depends_on('py-packaging', type='run')
     depends_on('cuda', type=('build', 'link', 'run'))
 
@@ -27,3 +28,9 @@ class PyNumbaCuda(PythonPackage):
 
     def url_for_version(self, version):
         return f"https://files.pythonhosted.org/packages/source/n/numba_cuda/numba_cuda-{version}.tar.gz"
+
+    @run_after('install')
+    def activate_backend(self):
+        # PYTHONPATH prefixes do not execute the upstream .pth activation hook.
+        with open(join_path(self.prefix, self.python_spec.package.platlib, 'sitecustomize.py'), 'w') as stream:
+            stream.write('import _numba_cuda_redirector\n')

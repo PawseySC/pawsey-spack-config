@@ -81,7 +81,7 @@ python-packages:
   py-numba: ['python3', '-c "import numba; print(numba)"', "module 'numba'"]
   py-cuda-python: ['python3', '-c "import cuda.bindings; print(cuda.bindings)"', "module 'cuda.bindings'"]
   py-cupy: ['python3', '-c "import cupy; print(cupy)"', "module 'cupy'"]
-  py-numba-cuda: ['python3', '-c "import numba_cuda; print(numba_cuda)"', "module 'numba_cuda'"]
+  py-numba-cuda: ['python3', '-c "from numba import cuda; print(cuda.__file__)"', 'numba_cuda/numba/cuda']
   py-nvmath-python: ['python3', '-c "import nvmath; print(nvmath)"', "module 'nvmath'"]
   py-scikit-learn: ['python3', '-c "import sklearn; print(sklearn)"', "module 'sklearn'"]
   py-h5py: ['python3', '-c "import h5py; print(h5py)"', "module 'h5py'"]
