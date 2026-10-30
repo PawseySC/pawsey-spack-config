@@ -22,6 +22,14 @@ packages:
       # fine, considering world readable and user writable
       # could not use $PAWSEY_PROJECT, as variables are apparently not evaluated here
 
+  # Use GCC for host compilation; CUDA supplies the device compiler separately.
+  c:
+    require: gcc@13.3.1
+  cxx:
+    require: gcc@13.3.1
+  fortran:
+    require: gcc@13.3.1
+
 # don't build virtuals with an external provider
   mpi:
     buildable: false
