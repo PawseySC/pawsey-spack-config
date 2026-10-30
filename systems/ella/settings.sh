@@ -75,11 +75,12 @@ RFM_STORAGE_DIR=${INSTALL_PREFIX}/rfm_results
 RFM_TEST_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_checks.py
 
 archs="neoverse_v2"
-# compiler versions (needed for module trees with compiler dependency)
-gcc_version="13.4.0"
-nvidia_version="26.3"
-# Retain the Setonix-Q application toolkit pin. NVHPC 26.3 bundles CUDA
-# 12.9/13.1, so CUDA 13.0 must be supplied separately for these environments.
+# Match Setonix-Q's toolchain versions where upstream releases are available.
+# Setonix-Q declares GCC 13.3.1; GNU's corresponding release archive is 13.3.0.
+# Use its actual version for the native bootstrap, external spec and module tree.
+gcc_version="13.3.0"
+nvidia_version="25.9"
+# NVHPC 25.9 includes CUDA 13.0, matching the Setonix-Q application toolkit pin.
 cuda_version="13.0"
 cuda_arch="90"
 main_compiler="gcc"
@@ -100,8 +101,8 @@ BOOTSTRAP_FC="${BOOTSTRAP_FC:-/usr/bin/gfortran}"
 BOOTSTRAP_PYTHON="${BOOTSTRAP_PYTHON:-/usr/bin/python3}"
 gcc_module="gcc/${gcc_version}"
 # Use the SDK's MPI-free module to keep Ella's system HPC-X MPI independent.
-nvhpc_module="nvhpc-nompi-cuda13/${nvidia_version}"
-nvhpc_cuda_version="13.1"
+nvhpc_module="nvhpc-nompi/${nvidia_version}"
+nvhpc_cuda_version="${cuda_version}"
 
 # Existing system MPI. These values describe HPC-X's Open MPI installation,
 # whose version differs from the HPC-X distribution version (2.20).
