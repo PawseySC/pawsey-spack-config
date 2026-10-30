@@ -9,10 +9,15 @@ class PyNumbaCuda(PythonPackage):
 
     version("0.24.0", sha256="f15a11a8d224e160e9cb2345049c5fa0bbd49eb255b2e8f661086746a7feb378")
 
-    depends_on('python@3.7:', type=('build', 'run'))
+    depends_on('c', type='build')
+    depends_on('cxx', type='build')
+    depends_on('python@3.9:', type=('build', 'run'))
     depends_on('py-setuptools', type='build')
-    depends_on('py-numba', type=('build', 'run'))
-    depends_on('cuda')
+    depends_on('py-numpy', type='build')
+    depends_on('py-numba@0.60:', type=('build', 'run'))
+    depends_on('py-cuda-python@12.9.1:13 cuda_core=0.3.2', type=('build', 'run'))
+    depends_on('py-packaging', type='run')
+    depends_on('cuda', type=('build', 'link', 'run'))
 
     def setup_build_environment(self, env):
         # Set CUDA_HOME and CUDA_PATH for builds using CUDA
