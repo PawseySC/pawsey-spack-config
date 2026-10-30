@@ -3,10 +3,10 @@ spack:
   definitions:
 
   - mwa-with-python:
-    - hyperbeam@0.10.2 ~portable +rocm +python amdgpu_target=gfx90a
-    - hyperdrive@=0.6.1 ~portable amdgpu_target=gfx90a +rocm
-    - hyperdrive@=0.6.1-autos ~portable amdgpu_target=gfx90a +rocm
-    - hyperdrive@=0.6.1-devel ~portable amdgpu_target=gfx90a +rocm
+    - hyperbeam@0.13.1 ~portable +rocm +python amdgpu_target=gfx90a
+    - hyperdrive@=0.8.1 ~portable amdgpu_target=gfx90a +rocm
+    - hyperdrive@=0.8.1-autos ~portable amdgpu_target=gfx90a +rocm
+    - hyperdrive@=0.8.1-devel ~portable amdgpu_target=gfx90a +rocm
 
   - packages-with-python:
     - kokkos@4.4.01 +rocm amdgpu_target=gfx90a +hwloc +memkind +numactl +openmp +tuning build_type=Release
