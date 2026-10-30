@@ -62,6 +62,7 @@ class PyCudaPython(PythonPackage):
     depends_on("py-wheel", type="build")
     depends_on("py-cython@3.2:3.2", type="build")
     depends_on("py-cuda-pathfinder@1.3.4", when="@12.9:", type=("build", "run"))
+    depends_on("py-numpy", type="run")
 
     # Source builds require toolkit headers from the same major/minor API
     depends_on("cuda@12.6", when="@12.6", type=("build", "link", "run"))
@@ -71,6 +72,21 @@ class PyCudaPython(PythonPackage):
 
     variant("all", default=False, description="Install all CUDA Python component subpackages found in the repo")
     variant("cufile", default=False, description="Build CUDA cuFile Python bindings")
+    variant(
+        "cuda_core",
+        default="bundled",
+        values=("bundled", "0.3.2"),
+        description="CUDA Core version to install alongside the bindings",
+    )
+
+    # nvmath 0.6 requires Core <0.4; Core 0.3.2 supports CUDA 13 bindings.
+    resource(
+        name="cuda-core-0.3.2",
+        url="https://github.com/NVIDIA/cuda-python/archive/refs/tags/cuda-core-v0.3.2.tar.gz",
+        sha256="ef6898e81cd81c1ba0e16278d25192615bc69acc558cd036947847617fd09e95",
+        placement={"cuda_core": "cuda_core_0_3_2"},
+        when="cuda_core=0.3.2",
+    )
 
     def patch(self):
         if "~cufile" in self.spec:
@@ -131,7 +147,8 @@ class PyCudaPython(PythonPackage):
     def _find_repo_subdists(self):
         """Return candidate subproject dirs in install order."""
         # Minimum set needed by downstream CUDA Python consumers (e.g. nvmath).
-        required = ["cuda_bindings", "cuda_core", "cuda_python"]
+        core = "cuda_core_0_3_2" if self.spec.satisfies("cuda_core=0.3.2") else "cuda_core"
+        required = ["cuda_bindings", core, "cuda_python"]
 
         # Always install required ones if present.
         dists = []
