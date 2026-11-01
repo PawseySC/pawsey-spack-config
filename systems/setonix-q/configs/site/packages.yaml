@@ -279,6 +279,7 @@ packages:
   hpx:
     version: [1.11.0]
     variants: '+async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi cxxstd=17 build_type=Release'
+    require: '^asio@1.30.2'
   kokkos:
     version: [4.7.04]
     variants: '+hwloc +memkind +numactl +openmp +tuning cxxstd=17 build_type=Release'
