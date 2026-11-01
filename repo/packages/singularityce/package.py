@@ -6,6 +6,7 @@
 import os
 import shutil
 
+import spack.tengine
 from spack.package import *
 
 
