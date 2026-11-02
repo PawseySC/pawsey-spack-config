@@ -58,15 +58,8 @@ SPACK_INSTALL_MANIFEST=${INSTALLATION_METADATA_DIR}/spack_install_manifest.json
 SPACK_POPULATE_CACHE=0
 # Cap build parallelism well below single node core count. To prevent OOM errors when building large packages (e.g. LLVM).
 NCPUS=32
-# Using --reuse in SPACK_SPEC_ARGS and SPACK_CONCRETIZE_ARGS leads to hangs during concretization
-# removed --reuse here, reverting to the behaviour of the 'setonix' system.
-# The issue with --reuse is unclear. During initial concretization of the 'quantum' environment 
-# (a pythonic dominated environment) Spack hangs indefinitely. So much so that the process cannot 
-# be interrupted with a ctrl-C signal. Testing does not show issues with file locks, or other 
-# IO hangs. It is unclear why this is not working and could be a bug in Clingo. 
-# For the moment, we do not need to enforce --reuse but in the future this may require
-# more investigation. It is also possible that this will fixed in later version of spack and 
-# clingo. 
+# Limit reuse to installed Python in configs/site/concretizer.yaml; broad
+# --reuse previously caused quantum environment concretization to hang.
 SPACK_SPEC_ARGS=""
 SPACK_INSTALL_ARGS=" --no-checksum "
 SPACK_CONCRETIZE_ARGS=""

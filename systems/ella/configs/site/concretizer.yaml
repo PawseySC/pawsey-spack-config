@@ -1,9 +1,10 @@
 concretizer:
-  # Whether to consider installed packages or packages from buildcaches when
-  # concretizing specs. If `true`, we'll try to use as many installs/binaries
-  # as possible, rather than building. If `false`, we'll always give you a fresh
-  # concretization.
-  reuse: false
+  # Reuse installed Python while retaining the configured system externals.
+  reuse:
+    from:
+    - type: local
+      include: [python]
+    - type: external
   # Options that tune which targets are considered for concretization. The
   # concretization process is very sensitive to the number targets, and the time
   # needed to reach a solution increases noticeably with the number of targets
