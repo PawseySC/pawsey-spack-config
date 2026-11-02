@@ -6,7 +6,11 @@ __PSC_SETTINGS__=1
 DATE_TAG="2026.08"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
-    INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
+    if [ -n "${BASE_INSTALL_DIR:-}" ]; then
+        INSTALL_PREFIX="${BASE_INSTALL_DIR}/setonix/${DATE_TAG}"
+    else
+        INSTALL_PREFIX="/software/setonix/${DATE_TAG}"
+    fi
 fi
 
 if [ "${INSTALL_PREFIX%$DATE_TAG}" = "${INSTALL_PREFIX}" ]; then

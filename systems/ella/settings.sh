@@ -9,7 +9,11 @@ DATE_TAG="${DATE_TAG:-2026.08}"
 PAWSEY_CLUSTER="ella"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
-    INSTALL_PREFIX="/software/ella/${DATE_TAG}"
+    if [ -n "${BASE_INSTALL_DIR:-}" ]; then
+        INSTALL_PREFIX="${BASE_INSTALL_DIR}/ella/aarch64/${DATE_TAG}"
+    else
+        INSTALL_PREFIX="/software/ella/${DATE_TAG}"
+    fi
 fi
 
 if [ "${INSTALL_PREFIX%$DATE_TAG}" = "${INSTALL_PREFIX}" ]; then
@@ -40,7 +44,7 @@ fi
 USER_PERMANENT_FILES_PREFIX='/software/projects'
 #USER_TEMP_FILES_PREFIX='/scratch'
 USER_TEMP_FILES_PREFIX='/tmp'
-export SPACK_USER_CONFIG_PATH="${SPACK_USER_CONFIG_PATH:-${MYSOFTWARE:-$HOME}/ella/$DATE_TAG/.spack_user_config}"
+export SPACK_USER_CONFIG_PATH="${SPACK_USER_CONFIG_PATH:-$MYSOFTWARE/ella/$DATE_TAG/.spack_user_config}"
 BOOTSTRAP_PATH='$user_cache_path/bootstrap'
 # Set a new mirror where to fetch prebuilt binaries, if any.
 SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache

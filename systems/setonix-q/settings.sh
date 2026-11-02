@@ -9,7 +9,11 @@ DATE_TAG="${DATE_TAG:-2026.08}"
 PAWSEY_CLUSTER="setonix-q"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
-    INSTALL_PREFIX="/software/setonix-q/${DATE_TAG}"
+    if [ -n "${BASE_INSTALL_DIR:-}" ]; then
+        INSTALL_PREFIX="${BASE_INSTALL_DIR}/setonix-q/aarch64/${DATE_TAG}"
+    else
+        INSTALL_PREFIX="/software/setonix-q/${DATE_TAG}"
+    fi
 fi
 
 if [ "${INSTALL_PREFIX%$DATE_TAG}" = "${INSTALL_PREFIX}" ]; then
