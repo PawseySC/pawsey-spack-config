@@ -24,5 +24,3 @@ fi
 
 # Fix modules with '++' (boost and log4cxx variants)
 find ${INSTALL_PREFIX}/modules -type f -name '*__*' -exec bash -c 'echo mv "$1" "${1//__/++}"' _ {} \;
-# Fix hpl manually as the only module with a single '+' in module name
-mv ${INSTALL_PREFIX}modules/zen3/gcc/12.2.0/benchmarking/hpl/2.3_openmp.lua ${INSTALL_PREFIX}modules/zen3/gcc/12.2.0/benchmarking/hpl/2.3+openmp.lua
