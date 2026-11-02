@@ -40,7 +40,9 @@ class PySymengine(PythonPackage):
     )
     version("0.2.0", sha256="78a14aea7aad5e7cbfb5cabe141581f9bba30e3c319690e5db8ad99fdf2d8885")
 
-    depends_on("cxx", type="build")  # generated
+    # CMake's project(python_wrapper) enables both C and C++ compiler checks.
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
 
     # Build dependencies
     depends_on("python@2.7:2.8,3.3:", type=("build", "run"), when="@0.2.0")
