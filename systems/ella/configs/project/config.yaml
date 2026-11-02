@@ -2,6 +2,6 @@
 
 config:
   install_tree:
-    root: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/setonix-q/DATE_TAG/software
+    root: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/ella/DATE_TAG/software
 
-  environments_root: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/setonix-q/DATE_TAG/environments
+  environments_root: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/ella/DATE_TAG/environments

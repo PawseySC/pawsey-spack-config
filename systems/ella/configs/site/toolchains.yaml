@@ -3,11 +3,11 @@ toolchains:
   # Python and binary packages participate in a compiler-selected environment.
   gcc_compiler:
   - spec: target=neoverse_v2
-  - spec: "%c=gcc@13.3.1"
+  - spec: "%c=gcc@13.3.0"
     when: "%c"
-  - spec: "%cxx=gcc@13.3.1"
+  - spec: "%cxx=gcc@13.3.0"
     when: "%cxx"
-  - spec: "%fortran=gcc@13.3.1"
+  - spec: "%fortran=gcc@13.3.0"
     when: "%fortran"
 
   nvhpc_compiler:

@@ -3,7 +3,7 @@ upstreams:
   # dependencies. They are also listed before the system-wide upstream because 
   # project-wide installations may depend on system-wide ones.
   project_wide:
-    install_tree: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/setonix-q/DATE_TAG/software
+    install_tree: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/ella/DATE_TAG/software
 
   # this is the location of the system wide installation
   # it acts as an upstream installation for project-wide and user-specific installations

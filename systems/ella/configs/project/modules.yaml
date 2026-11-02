@@ -3,4 +3,4 @@
 modules:
   default:
     roots:
-      lmod: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/setonix-q/DATE_TAG/modules
+      lmod: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/ella/DATE_TAG/modules

@@ -20,7 +20,7 @@ modules:
     enable::
       - lmod 
     roots:
-      lmod: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/modules
+      lmod: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/$USER/ella/DATE_TAG/modules
     lmod:
       # set the hierarchy. Typical start point is mpi 
       # however, since there will only be a single 
@@ -63,6 +63,15 @@ modules:
         # autoload+upstream currently does not work, 
         # so better to turn off autoload completely for user installations
         autoload: none
+
+      # The HPC SDK keeps CUDA math libraries outside the toolkit prefix.
+      cuda:
+        environment:
+          prepend_path:
+            CPATH: '{prefix}/../../math_libs/13.0/targets/sbsa-linux/include'
+            LIBRARY_PATH: '{prefix}/../../math_libs/13.0/targets/sbsa-linux/lib'
+            LD_LIBRARY_PATH: '{prefix}/../../math_libs/13.0/targets/sbsa-linux/lib'
+            CMAKE_PREFIX_PATH: '{prefix}/../../math_libs/13.0/targets/sbsa-linux'
 
       # needed by bug in cray-mpich logic,
       # see https://github.com/spack/spack/issues/21696
