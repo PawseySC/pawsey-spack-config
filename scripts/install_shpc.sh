@@ -13,7 +13,7 @@ fi
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
-module load cpe/25.03
+module load cpe/26.03
 module load gcc-native/14.2
 module use "${INSTALL_PREFIX}/staff_modulefiles"
 # we need the python module to be available in order to run spack
@@ -56,7 +56,7 @@ cd -
 # get registry from github repo
 if ! [ -e "${INSTALL_PREFIX}/${shpc_install_dir}/registry" ]; then
     # get registry from github repo
-    git clone https://github.com/singularityhub/shpc-registry ${INSTALL_PREFIX}/${shpc_install_dir}/registry
+    git clone https://github.com/pawseySC/shpc-registry ${INSTALL_PREFIX}/${shpc_install_dir}/registry
     # checkout registry, too, for reproducibility
     cd ${INSTALL_PREFIX}/${shpc_install_dir}/registry
     git checkout ${shpc_registry_version}

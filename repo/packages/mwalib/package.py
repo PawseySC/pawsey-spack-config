@@ -6,7 +6,6 @@
 
 import os
 #import llnl.util.filesystem as fs
-import spack.util.filesystem as fs
 from pathlib import Path
 import shutil
 
@@ -22,6 +21,7 @@ class Mwalib(Package):
     maintainers = ["gsleap", "d3v-null"]
 
     version("main", branch="main")
+    version("2.0.5", tag="v2.0.5")
     version("1.8.7", tag="v1.8.7")
     version("1.8.2", tag="v1.8.2")
     version("1.5.0", tag="v1.5.0")
@@ -34,8 +34,11 @@ class Mwalib(Package):
     variant("cfitsio-static", default=False, description="Enable the fitsio_src feature of the fitsio-sys crate.")
     variant("portable", default=True, description="Disable native CPU optimizations")
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
     depends_on("rust@1.64.0:", type="build")
     depends_on("rust@1.65.0:", type="build", when="@1.8:")
+    depends_on("rust@1.85.0:", type="build", when="@2.0.5:")
 
     # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.
     # default spack cfitsio does not give the +reentrant option
@@ -84,7 +87,8 @@ class Mwalib(Package):
     def install(self, spec, prefix):
         # os.system("env") # for debugging
         cargo = Executable("cargo")
-        with fs.working_dir(self.stage.source_path):
+        # with fs.working_dir(self.stage.source_path):
+        with working_dir(self.stage.source_path):
             cargo("build", *self.get_build_args())
             shutil.copytree("include", f"{prefix}/include")
             os.mkdir(f"{prefix}/lib")
@@ -129,7 +133,7 @@ class Mwalib(Package):
         if self.spec.satisfies("+python"):
             python_version = self.spec["python"].version.string
             python_version = python_version[: python_version.rfind(".")]
-            env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
+            env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib64/python{python_version}/site-packages")
 
     def setup_dependent_run_environment(self, env, dependent_spec):
         if not self.spec.satisfies("+cfitsio-static"):
@@ -137,4 +141,4 @@ class Mwalib(Package):
         if self.spec.satisfies("+python") and dependent_spec.package.extends(self.spec):
             python_version = self.spec["python"].version.string
             python_version = python_version[: python_version.rfind(".")]
-            env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib/python{python_version}/site-packages")
+            env.prepend_path("PYTHONPATH", f"{self.spec.prefix}/lib64/python{python_version}/site-packages")

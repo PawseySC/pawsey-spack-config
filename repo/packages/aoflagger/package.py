@@ -10,8 +10,13 @@ class Aoflagger(CMakePackage):
 
     maintainers("dipietrantonio")
 
-    version('3.4.0', git='https://gitlab.com/aroffringa/aoflagger.git', tag='v3.4.0', submodules=True)
-    version('3.2.0', git='https://gitlab.com/aroffringa/aoflagger.git', tag='v3.2.0', submodules=True)
+    git='https://gitlab.com/aroffringa/aoflagger.git'
+    version('3.4.0', tag='v3.4.0', submodules=True)
+    version('3.2.0', tag='v3.2.0', submodules=True)
+
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+    depends_on("fortran", type="build")
 
     depends_on('casacore@3.2.1:')
     depends_on('fftw@3.3.8:')

@@ -10,6 +10,8 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
     maintainers = ["d3v-null", "gsleap"]
 
     version("main", branch="main")
+    version("0.8.0", tag="v0.8.0")
+    version("0.7.0", tag="v0.7.0")
     version("0.6.1", tag="v0.6.1")
     version("0.6.1-devel", tag="v0.6.1-devel")
     version("0.6.1-autos", tag="v0.6.1-autos")
@@ -23,8 +25,13 @@ class Hyperdrive(Package, ROCmPackage, CudaPackage):
     variant("plotting", default=True, description="Enable plotting subcommands like plot-solutions")
     variant("portable", default=True, description="Disable native CPU optimizations")
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+    depends_on("fortran", type="build")
+
     depends_on("rust@1.64.0:")
     depends_on("rust@1.80.0:", when="@0.5.0:")
+    depends_on("rust@1.85.0:", when="@0.8.0:")
     depends_on("cmake", type="build")
     # cfitsio > 4 introduces a breaking change, is incompatible with mwalib.
     # default spack cfitsio does not give the +reentrant option

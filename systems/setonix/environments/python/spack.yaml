@@ -19,6 +19,7 @@ spack:
     - py-plotly@5.20.0
     - py-scikit-learn@1.5.2
     - py-scipy@1.13.0
+    - snakemake@9.6.3
   # need these here, too, for the python collection
   - utilities:
     - py-pip@23.1.2

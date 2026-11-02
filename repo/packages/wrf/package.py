@@ -11,7 +11,7 @@ from os.path import basename
 from pathlib import Path
 from subprocess import PIPE, Popen
 
-from llnl.util import tty
+from spack.llnl.util import tty
 
 from spack.package import *
 

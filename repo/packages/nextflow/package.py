@@ -165,6 +165,8 @@ class Nextflow(Package):
         expand=False,
     )
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
     depends_on("java", type="run")
 
     def install(self, spec, prefix):

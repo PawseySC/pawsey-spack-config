@@ -219,26 +219,3 @@ prepend_path("MODULEPATH", pathJoin(install_prefix, utilities_modules_dir))
 local spack_root = pathJoin(install_prefix, "modules", arch)
 for _, category in ipairs(module_categories) do
   prepend_compiler_paths(spack_root, category)
-end
-
--- System SHPC containers
-prepend_path("MODULEPATH", pathJoin(install_prefix, shpc_modules_dir))
-
--- Custom modules
-local custom_modules_root = pathJoin(install_prefix, custom_modules_dir, arch)
-prepend_compiler_paths(custom_modules_root, custom_modules_suffix)
-
-local active_compiler = os.getenv("LMOD_FAMILY_COMPILER") or ""
--- isPending() is true while this module is being loaded, but false when Lmod
--- re-evaluates an already loaded module during `module refresh`.
--- We use this here to prevent the warning from being displayed when refreshing.
-local pawseyenv_is_loading = isPending(myModuleFullName())
-if current_mode == "load"
-  and pawseyenv_is_loading
-  and active_compiler ~= ""
-then
-  LmodWarning(
-    "A compiler environment is already loaded (", active_compiler, "). ",
-    "Run 'module refresh' to activate the architecture-specific module paths."
-  )
-end

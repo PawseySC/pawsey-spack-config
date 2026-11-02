@@ -33,6 +33,10 @@ class Cfitsio(AutotoolsPackage):
     variant("shared", default=True, description="Build shared libraries")
     variant("reentrant", default=False, description="Build shared libraries")
 
+    # Core dependencies
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+
     depends_on("curl")
     depends_on("bzip2", when="+bzip2")
 

@@ -15,15 +15,27 @@ class GiantSquid(Package):
 
     maintainers = ["gsleap", "d3v-null"]
 
+    version("2.5.1", tag="v2.5.1")
     version("2.3.0", tag="v2.3.0")
     version("2.2.0", tag="v2.2.0")
-        
-    depends_on("rust@1.82:", when="@2.2.0:", type="build")
 
+
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+    depends_on("fortran", type="build")
+    depends_on("rust@1.97.0:", when="@2.2.0:", type="build")
+    depends_on("rust@1.97.0:", when="@2.5.1:", type="build") # actually 2.4.0:
+    
     def setup_build_environment(self, env):
         build_dir = self.stage.source_path
         env.set("CARGO_HOME", f"{build_dir}/.cargo")
         env.set("RUST_BACKTRACE", 1)
+
+        # aws-lc-sys@0.45.0 contains jitterentropy code that must be
+        # compiled with -O0. Our compiler configuration injects -O3
+        # through the Spack compiler wrapper, overriding aws-lc's -O0.
+        if self.spec.satisfies("@2.5.1"):
+            env.append_flags("SPACK_COMPILER_FLAGS_REPLACE", "-O3|")
 
     def install(self, spec, prefix):
         cargo = Executable("cargo")

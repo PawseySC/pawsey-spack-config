@@ -46,13 +46,13 @@ import re
 #AEG: Importing this module to use their tools for copying files
 import shutil
 
-try:
-    import llnl.util.tty as tty
-except ImportError:
-    try:
-        from spack.util import tty
-    except ImportError:
-        from spack.package import tty
+#try:
+#    import llnl.util.tty as tty
+#except ImportError:
+#    try:
+#        from spack.util import tty
+#    except ImportError:
+from spack.package import tty
 
 from spack.package import *
 from spack.util.environment import EnvironmentModifications
