@@ -78,7 +78,7 @@ else
 fi
 
 if [ "${USER_OR_PROJECT_INSTALL}" = "project" ]; then
-    "${spack_dir}/bin/spack" project edit "${PACKAGE_NAME}"
+    "${spack_dir}/bin/spack" project edit --repo "${recipe_repo}" "${PACKAGE_NAME}"
 else
-    "${spack_dir}/bin/spack" edit "${PACKAGE_NAME}"
+    "${spack_dir}/bin/spack" edit --repo "${recipe_repo}" "${PACKAGE_NAME}"
 fi
