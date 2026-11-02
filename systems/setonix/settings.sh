@@ -45,6 +45,8 @@ SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
 # The operation will be executed after having installed the environments.
 # Useful when building the stack on the test system.
 SPACK_POPULATE_CACHE=0
+# Number of processes to use for building software with Spack.
+NCPUS="${NCPUS:-${NPROCS:-128}}"
 
 pawseyenv_version="${DATE_TAG}"
 
