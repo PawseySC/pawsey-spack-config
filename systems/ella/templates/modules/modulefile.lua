@@ -99,12 +99,6 @@ setenv("NXF_SINGULARITY_CACHEDIR", user_software.."/.nextflow_singularity")
 {% if spec.name == 'openjdk' %}setenv("GRADLE_USER_HOME", user_software.."/.gradle")
 {% endif %}
 {% if spec.name == 'singularity' or spec.name == 'singularityce' %}setenv("SINGULARITY_CACHEDIR", user_software.."/.singularity")
--- Patch lmod messages in singularity shells
-local patch_dir = "INSTALL_PREFIX" .. "/pawsey/lmod-variable-fixes"
-local patch_file = patch_dir .. "/pawsey_fix_initial_bash.lua"
-local func = assert(loadfile(patch_file))()
-func(patch_dir)
-
 {% endif %}
 {% if spec.name == 'r' %}setenv("R_LIBS_USER", user_software.."/ella/DATE_TAG/r/%v")
 {% endif %}

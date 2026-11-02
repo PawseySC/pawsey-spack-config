@@ -10,70 +10,19 @@ import reframe.utility.udeps as udeps
 import re
 import os
 import sys
-import yaml
-import json
 
 # Import file with helper methods for processing spack files needed by below tests
 curr_dir = os.path.dirname(__file__).replace('\\','/')
 parent_dir = os.path.abspath(os.path.join(curr_dir, os.pardir))
 sys.path.append(parent_dir)
 from rfm_files.rfm_helper_methods import *
-from rfm_files.install_manifest import (
-    get_library_path,
-    get_module_dependencies,
-    get_module_paths,
-    installation_manifest_is_complete,
-)
 
 # Dictionary holding commands for every package used in baseline sanity check
 pkg_cmds = get_pkg_cmds()
 
 
-def get_module_paths_if_installed():
-    # ReFrame imports this file before applying tag filters. Do not let
-    # installation-test parameter generation hide concretization failures or
-    # derive expected installation hashes from the environment lockfile.
-    if not installation_manifest_is_complete():
-        return []
-
-    return get_module_paths()
-
-
-# List of full absolute paths for every installed root module. This is empty
-# until the installation manifest has been finalized.
-full_mod_paths = get_module_paths_if_installed()
-
-
-def quantum_allocation_pack(num_gpus=1):
-    # Each GH200 pack requires 72 allocation tasks in the explicit node form.
-    return {
-        'gpu': {
-            'num_gpus': num_gpus,
-        },
-    }
-
-
-def quantum_step_options():
-    # Specify execution resources separately from the GPU allocation request.
-    return ['--nodes=1', '--ntasks=1', '--cpus-per-task=72', '--gpus=1']
-
-
-def use_pinned_quantum_node():
-    return bool(os.environ.get('SETONIX_Q_RFM_NODE'))
-
-
-def quantum_compute_system():
-    if use_pinned_quantum_node():
-        return 'setonix-q:quantum-node'
-
-    return 'setonix-q:quantum'
-
-
-def quantum_shell_system():
-    if use_pinned_quantum_node():
-        return 'setonix-q:quantum-node-shell'
-
-    return 'setonix-q:quantum-shell'
+# ReFrame imports all checks before tag filtering; query modules only after installation.
+full_mod_paths = get_module_paths() if os.getenv('RFM_CHECK_MODULES') == '1' else []
 
 
 def module_setup_commands():
@@ -82,10 +31,10 @@ def module_setup_commands():
 
     return [
         'module purge',
-        'module load pawsey pawseytools',
+        'module load pawsey',
         f'module use {install_prefix}/staff_modulefiles',
         f'module load pawseyenv/{date_tag}',
-        'module load PrgEnv-gnu',
+        f'module load gcc/{os.environ["gcc_version"]}',
     ]
 
 
@@ -102,10 +51,9 @@ class concretise_check(rfm.RunOnlyRegressionTest):
         self.maintainers = ['Craig Meyer']
 
         # Valid systems and PEs
-        self.valid_systems = [quantum_compute_system()]
-        self.valid_prog_environs = ['PrgEnv-gnu']
-        self.extra_resources = quantum_allocation_pack()
-        self.num_tasks = self.num_tasks_per_node = 72
+        self.valid_systems = ['ella:compute']
+        self.valid_prog_environs = ['gcc']
+        self.num_tasks = self.num_tasks_per_node = self.num_cpus_per_task = 1
 
         # Execution
         self.executable = 'echo'
@@ -114,11 +62,6 @@ class concretise_check(rfm.RunOnlyRegressionTest):
         self.tags = {'spack', 'concretization', 'software_stack'}
     
     env = parameter([os.environ['SPACK_ENV']])
-
-    @run_after('setup')
-    def configure_quantum_step(self):
-        self.job.launcher.options += quantum_step_options()
-
 
     @sanity_function
     def assert_concretisation(self):
@@ -168,10 +111,9 @@ class module_existence_check(rfm.RunOnlyRegressionTest):
         self.maintainers = ['Craig Meyer']
 
         # Valid systems and PEs
-        self.valid_systems = [quantum_shell_system()]
-        self.valid_prog_environs = ['PrgEnv-gnu']
-        self.extra_resources = quantum_allocation_pack()
-        self.num_tasks = self.num_tasks_per_node = 72
+        self.valid_systems = ['ella:shell']
+        self.valid_prog_environs = ['gcc']
+        self.num_tasks = self.num_tasks_per_node = self.num_cpus_per_task = 1
 
         # Execution - ls to check the module exists
         self.executable = 'ls'
@@ -201,10 +143,9 @@ class module_load_check(rfm.RunOnlyRegressionTest):
         self.maintainers = ['Craig Meyer']
 
         # Valid systems and PEs
-        self.valid_systems = [quantum_shell_system()]
-        self.valid_prog_environs = ['PrgEnv-gnu']
-        self.extra_resources = quantum_allocation_pack()
-        self.num_tasks = self.num_tasks_per_node = 72
+        self.valid_systems = ['ella:shell']
+        self.valid_prog_environs = ['gcc']
+        self.num_tasks = self.num_tasks_per_node = self.num_cpus_per_task = 1
 
         # Execution
         self.executable = 'module'
@@ -280,13 +221,12 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
 
         # Metadata
         self.descr = 'Test to check that, once the module is loaded, the software shows the most minimal functionality (--help or --version)'
-        self.amintainers = ['Craig Meyer']
+        self.maintainers = ['Craig Meyer']
 
         # Valid systems and PEs
-        self.valid_systems = [quantum_compute_system()]
-        self.valid_prog_environs = ['PrgEnv-gnu']
-        self.extra_resources = quantum_allocation_pack()
-        self.num_tasks = self.num_tasks_per_node = 72
+        self.valid_systems = ['ella:compute']
+        self.valid_prog_environs = ['gcc']
+        self.num_tasks = self.num_tasks_per_node = self.num_cpus_per_task = 1
 
         # Load the module we are testing
         self.name_ver = '/'.join(self.mod.split('/')[-2:])[:-4]
@@ -320,10 +260,6 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
             self.executable_opts = [self.baseline_cmd[1] + ' 2>&1']
         
         self.tags = {'spack', 'installation', 'software_stack'}
-
-    @run_after('setup')
-    def configure_quantum_step(self):
-        self.job.launcher.options += quantum_step_options()
 
     # Dependency - this test only runs if the corresponding `module_load_check` test passes
     @run_after('init')

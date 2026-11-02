@@ -18,7 +18,7 @@ PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /d
 grep -Elr "^load\(.*\.llvm.*\)" ${INSTALL_PREFIX}/modules | xargs -r sed -i "s/\(load(.*llvm.*)\)/--\1/"
 grep -Elr "^depends_on\(.*\.llvm.*\)" ${INSTALL_PREFIX}/modules | xargs -r sed -i "s/\(depends_on(.*llvm.*)\)/--\1/"
 
-if [ "${SYSTEM}" = "setonix-q" ]; then
+if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
     exit 0
 fi
 

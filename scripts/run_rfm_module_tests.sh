@@ -16,15 +16,13 @@ fi
 # This should most often be the repo where this script is located
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 
-if [ "${SYSTEM}" = "setonix-q" ]; then
-    # Setonix-Q (aarch64/GH200) sets up its programming environment through the
-    # shared stack helpers, mirroring the concretization runner. The manual x86
-    # PrgEnv handling below does not apply on aarch64.
+if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
+    # Use the system's module setup instead of the legacy Setonix PrgEnv refresh.
     . "${PAWSEY_SPACK_CONFIG_REPO}/scripts/pawsey_software_stack_funcs.sh"
     check_installation_environment
     set_spack_config_repo
     set_compilation_sets_for_arch
-    set_modulepaths_for_arch
+    set_modulepaths_for_arch || exit 1
 else
     . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
@@ -42,6 +40,7 @@ else
 fi
 
 # These need to be exported to be accessible within Reframe tests
+export SYSTEM
 export PAWSEY_SPACK_CONFIG_REPO=${PAWSEY_SPACK_CONFIG_REPO}
 export INSTALL_PREFIX=${INSTALL_PREFIX}
 export DATE_TAG=${DATE_TAG}
@@ -52,6 +51,9 @@ export reframe_version=${reframe_version}
 export pawseyenv_version=${pawseyenv_version}
 export env_list
 export cray_env_list
+if [ "${SYSTEM}" = "ella" ]; then
+    export RFM_CHECK_MODULES=1
+fi
 
 if [ "${SYSTEM}" = "setonix-q" ]; then
     export SPACK_INSTALL_MANIFEST=${SPACK_INSTALL_MANIFEST:-${INSTALL_PREFIX}/installation_metadata/spack_install_manifest.json}
@@ -77,17 +79,20 @@ if [[ $hn == *"nid"* ]]; then
 fi
 
 # Reframe testing for modules
-module load reframe/${reframe_version}
+module load reframe/${reframe_version} || exit 1
 #module load reframe/3.12.0
 # Add rocm environment to environment list for testing (x86 stack only)
 # Can't be added to setting.sh since spack tries to install those packages straightaway
-if [ "${SYSTEM}" != "setonix-q" ]; then
+if [ "${SYSTEM}" = "setonix" ]; then
     env_list+="rocm"
 fi
 for env in $env_list; do
   echo "Running ReFrame tests for modules in env $env"
   export SPACK_ENV=${env}
-  reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_install_report_${env}.json -t installation -r
+  if [ "${SYSTEM}" = "ella" ]; then
+    spack -e "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments/${env}" python "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_helper_methods.py" >/dev/null || exit 1
+  fi
+  reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_install_report_${env}.json -t installation -r || exit 1
   unset SPACK_ENV
   mv reframe.out ${RFM_STORAGE_DIR}/reframe_${env}_install.out
   mv reframe.log ${RFM_STORAGE_DIR}/reframe_${env}_install.log
@@ -96,7 +101,7 @@ done
 for env in $cray_env_list; do
   echo "Running ReFrame tests for modules in env $env"
   export SPACK_ENV=${env}
-  reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_install_report_${env}.json -t installation -r
+  reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_install_report_${env}.json -t installation -r || exit 1
   unset SPACK_ENV
   mv reframe.out ${RFM_STORAGE_DIR}/reframe_${env}_install.out
   mv reframe.log ${RFM_STORAGE_DIR}/reframe_${env}_install.log
