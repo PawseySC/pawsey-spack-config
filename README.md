@@ -15,136 +15,58 @@ Here is how to launch the software stack installation.
 
 ### Singularity
 
-You will need to ask the platforms team to apply root permissions to Singularity ss soon as it is installed. The script to run as root is found in the `bin` directory within the spack installation prefix.
+Ask the platforms team to apply the required root permissions to SingularityCE
+after it is installed; the script to run as root is in the Spack installation's
+`bin` directory.
 
-#### Updating Singularity modulefiles without reinstalling
+The full-stack installer runs
+[`scripts/generate_singularity_modules.sh`](scripts/generate_singularity_modules.sh)
+after installing environments. SingularityCE must already be installed in that
+stack, and the configured stack Python/Lmod modules must be available. The driver
+renders the current checkout's template with the installed Spack into a fresh
+private staging run, then uses the existing
+[`create_custom_singularity_modules_from_general_singularity_container_engine.sh`](scripts/create_custom_singularity_modules_from_general_singularity_container_engine.sh)
+generator to create custom variants. The general Spack installer remains
+unchanged; the SHPC-only installer checks that its configured Singularity
+modules can be loaded and does not regenerate them.
 
-Use [scripts/update_singularity_modules.sh](scripts/update_singularity_modules.sh)
-to render the **current checkout's template, including uncommitted changes**, for
-an already installed SingularityCE. It uses the existing Spack 1.1.1 installation
-and repository variant generator; it does not install or concretize software,
-change package privileges, or overwrite the installed template.
-
-Installation and updating share
-[scripts/singularity_module_pipeline.sh](scripts/singularity_module_pipeline.sh).
-It prepares the checkout's templates/module configuration, expands stack paths,
-selects installed specs, renders their Spack modules, and calls the existing
-Pawsey variant generator. Both installation entry points call
-[scripts/generate_singularity_modules.sh](scripts/generate_singularity_modules.sh),
-which runs this pipeline for all installed SingularityCE versions matching the
-configured architecture/compiler. The updater runs it for one required version
-in a private tree, then handles validation, labels, and safe deployment.
-Installation generation logs are retained under
-`$INSTALL_PREFIX/module-generation-runs/`.
-
-The Spack installer also uses the shared input-preparation/path-expansion
-functions. Changes to template preparation, rendering, or variant generation
-belong in this shared pipeline, not in a second updater implementation. This
-shares generation logic, not concrete dependencies: equivalence assumes the
-same installed specs, Spack, configuration, templates, and runtime helpers.
-Spack API/layout changes can still require changes to the shared pipeline.
-
-The pre-refactor updater is preserved as
-[scripts/update_singularity_modules.sh.prototype01](scripts/update_singularity_modules.sh.prototype01)
-for reference; it is a frozen snapshot, not another maintained entry point.
+The driver requires `--install-type official|testing` and `--version VERSION|all`.
+A selected version (or all selected with `--version all`) must already be installed
+for the configured architecture and GCC compiler. Omit `--flavour` to generate
+all seven variants (`nompi`, `mpi`, `mpi-gpu`, `askap`, `askap-gpu`, `nohost`,
+and `slurm`), or provide one comma-separated `--flavour` list to choose a
+subset. Empty entries are rejected; duplicate valid names are generated once.
+For example:
 
 ```bash
-bash scripts/update_singularity_modules.sh --date-tag 2026.09 --version 4.3.5
+./scripts/generate_singularity_modules.sh --install-type testing \
+  --stack-prefix /software/setonix/2026.11 \
+  --version 4.3.5 --flavour mpi,mpi-gpu --suffix qa
 ```
 
-The base version is configured as `singularityce_version` in
-`systems/setonix/settings.sh`. The `-nompi` and `-mpi` module versions are derived
-from it for other stack scripts. The updater has **no default version**:
-`--version VERSION` is mandatory on every invocation, including restore.
-The selected version must already be installed in the target stack for generation.
+`--date-tag`, `--stack-prefix`, and `--prefix` select the stack release, existing
+stack, and staging parent. Defaults are derived from the current settings and
+environment; the staging parent defaults to
+`$MYSCRATCH/singularity-module-updates/<date-tag>`. The staging parent must be
+strictly below `MYSCRATCH`; the existing input stack can be outside scratch,
+including under `/software`. Each invocation creates a new staging run. Testing mode
+validates and retains its generated files there without publishing them.
+Official mode publishes only validated custom variants and helpers. `--suffix`
+labels only custom variants. Spack base modules are rendered privately and
+never published.
 
-Use `--suffix recreated` to name the generated variants, for example,
-`singularity/4.3.5-mpi-recreated`. The generated Spack source module is also
-labelled (`4.3.5-recreated.lua`); the installed package version is unchanged.
-This works with staging, `--replace-in-test`, and `--apply-live`. Publication
-leaves unlabelled modulefiles untouched; repeated publication with the same
-suffix backs up the existing labelled files. Restore requires the same
-`--suffix` to select that labelled history. Labels must start with a
-letter or digit and contain only letters, digits, underscores, or hyphens.
-
-By default, each run writes only into a new directory below
-`$MYSCRATCH/singularity-module-updates/<date-tag>`. The script reads the checkout's
-Setonix settings and site/staff module configuration, selects one installed spec
-for its configured architecture and GCC, and syntax-checks the resulting source
-and variant modulefiles. It also checks each staged variant with Lmod and records
-the installed spec hash, repository revision/dirty state, input checksums, logs,
-and a diff against live modules. The printed `module use` command exposes the
-candidates for further testing; first unload an already-loaded `singularity`
-module so it cannot mask the candidate. The script does not run an MPI/container
-workload.
-
-Only `--apply-live` publishes the validated modules for that version. It backs up
-the Spack source module and all affected Pawsey variants to hidden names such as
-`.4.3.5-mpi.lua.<UTC-timestamp>-<unique-id>.bak` alongside the originals. Unselected
-versions, installed templates, shared Lmod helpers, and software remain unchanged.
-Live directories must already exist and be writable. Cooperating updater runs
-are locked out; each file replacement is atomic, but the whole set is not.
-Failed deployment attempts automatic rollback. After a successful deployment
-(or a hard interruption), use the printed restore command:
-
-```bash
-bash scripts/update_singularity_modules.sh --date-tag 2026.09 \
-  --version 4.3.5 --apply-live --restore
-```
-
-`--restore` takes no value. It undoes the latest outstanding replacement matching
-the destination, version, and suffix, and reports how many earlier replacements
-remain. Repeat the same command to undo one more replacement at a time.
-It retains backups and refuses to overwrite files changed since deployment or
-use damaged backups; it never skips a conflicting latest replacement.
-If no matching history remains, it reports an error without changing modules.
-Use `--restore --force` to undo a replacement despite subsequent manual edits.
-Before undoing it, changed current files are preserved beside the modules as
-`.<filename>.before-restore.<UTC-timestamp>-<unique-id>.bak`. Force does not bypass
-original-backup validation or symlink protection.
-
-Use `--repair` instead of `--restore` to recover the exact saved contents of the
-latest active deployment, without undoing it or regenerating from current
-templates. Use the same destination, version, and suffix as publication.
-Repair validates all saved candidates against deployment checksums before making
-changes. Edited current files are preserved beside the modules as
-`.<filename>.before-repair.<UTC-timestamp>-<unique-id>.bak`; missing files are
-recreated and unchanged files are left alone. Backup paths are printed, and a
-preservation manifest is retained inside the deployment run. Failed repair
-attempts rollback to the pre-repair files. Successful repair leaves deployment
-history unchanged. Interrupted deployments must be restored, not repaired.
-`--repair` and `--restore` cannot be combined; `--force` is only for restore.
-
-Keep the run directories and hidden backups until testing is complete.
-New deployments register their run paths in a hidden destination history index,
-so runs created with a custom `--prefix` are also discoverable. Legacy deployments
-are discovered below the default staging parent; for older custom locations,
-pass the same `--prefix` when restoring.
-Do not run the script with sudo. See `--help` for alternate existing stack and
-staging locations.
-
-To exercise the same replacement and backup logic without touching live
-modules, pass `--replace-in-test` with the run directory of an earlier staged
-generation:
-
-```bash
-bash scripts/update_singularity_modules.sh \
-  --version 4.3.5 \
-  --replace-in-test /scratch/.../singularity-module-updates/2026.11/<earlier-run>
-```
-
-This writes fresh candidates and a deployment manifest in a new run, while
-replacing only the earlier run's `tree` modulefiles. Hidden backups are created
-beside those test modulefiles. The script prints a `--restore` command that
-names the test target but needs no replacement-run path; use it to undo the
-latest matching replacement. `--replace-in-test` and `--apply-live` cannot be
-combined.
-
-Driver safety tests use a temporary fake stack and the real variant generator:
-
-```bash
-python3 -m unittest discover -s scripts/tests -p 'test_update_*.py'
-```
+The driver validates generated Lua with `luac` and checks each selected custom
+module with Lmod. It does not execute containers. It stages the two shared Lmod
+helpers alongside variants; replacing a shared helper may affect every module
+that loads it. Generated variants locate these helpers relative to their module
+tree, so testing uses the staged helpers even before a first publication.
+The Spack generation timestamp is omitted from custom variants so unchanged
+content remains identical across runs. Before publishing, the driver lists every destination, reuses
+identical files, and reports all differing files before writing. `--force` is
+available only for official installs; it atomically replaces differences.
+Symlink destinations and parent directories are rejected, and publication is
+serialized under a stack-wide lock. No backups or automatic deletions are made.
+Partial publication failures report exact changed paths and retain staging.
 
 ### Software stack modulefile
 

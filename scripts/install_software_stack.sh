@@ -11,6 +11,7 @@ if [ -z ${SYSTEM+x} ]; then
 fi
 
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
+# shellcheck disable=SC1090
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
 echo "Setting up spack.."
@@ -36,7 +37,10 @@ echo "Install environments.."
 echo "Update singularity modules.."
 # note that moving forward using the singularityce recipes. Comment out the singularity_modules, kept for reference
 #"${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_custom_singularity_modules.sh"
-bash "${PAWSEY_SPACK_CONFIG_REPO}/scripts/generate_singularity_modules.sh"
+# Official installation path: regenerate custom modules for all matching
+# installed SingularityCE versions. --force keeps reruns operational.
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/generate_singularity_modules.sh" \
+    --install-type official --version all --force
 
 echo "Installing shpc..."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_shpc.sh"
