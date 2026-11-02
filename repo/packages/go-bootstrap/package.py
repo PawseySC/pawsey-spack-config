@@ -34,13 +34,13 @@ class GoBootstrap(Package):
     go_releases = {
         "1.25.5": {
             "darwin": {
-                "amd64": "88a09c085b4c385abae7d35b9155195d5e584d14988347ac7f18e4cbe3b5ef3d", # checksum needs update
-                "arm64": "8163be1998835a13f00dfc869a8e3cdebf86984ad41ff2fff43e35ac2a0d8344", # checksum needs update
+                "amd64": "b69d51bce599e5381a94ce15263ae644ec84667a5ce23d58dc2e63e2c12a9f56",
+                "arm64": "bed8ebe824e3d3b27e8471d1307f803fc6ab8e1d0eb7a4ae196979bd9b801dd3",
             },
             "linux": {
-                "amd64": "b945ae2bb5db01a0fb4786afde64e6fbab50b67f6fa0eb6cfa4924f16a7ff1ea", # checksum needs update
+                "amd64": "9e9b755d63b36acf30c12a9a3fc379243714c1c6d3dd72861da637f336ebb35b",
                 "arm64": "b00b694903d126c588c378e72d3545549935d3982635ba3f7a964c9fa23fe3b9",
-                "ppc64le": "a1b91a42a40bba54bfd5c96c23d72250e0c424038d0d2b5c7950b828b490582a", # checksum needs update
+                "ppc64le": "f0904b647b5b8561efc5d48bb59a34f2b7996afab83ccd41c93b1aeb2c0067e4",
             },
         },
         "1.20.6": {
