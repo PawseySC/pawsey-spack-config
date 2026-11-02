@@ -3,15 +3,15 @@ packages:
   # Provider lists express preferences. Compiler packages now provide the
   # language virtuals; packages:all:compiler is ignored by Spack 1.x.
     providers:
-      c: [ gcc@13.3.0, nvhpc@25.9 ]
-      cxx: [ gcc@13.3.0, nvhpc@25.9 ]
-      fortran: [ gcc@13.3.0, nvhpc@25.9 ]
+      c: [ gcc@13.3.1, nvhpc@25.9 ]
+      cxx: [ gcc@13.3.1, nvhpc@25.9 ]
+      fortran: [ gcc@13.3.1, nvhpc@25.9 ]
       mpi: [ openmpi ]
       blas: [ openblas ]
       lapack: [ openblas, netlib-lapack ]
       scalapack: [ netlib-scalapack ]
       fftw-api: [ fftw ]
-      pkgconfig: [ pkg-config ]
+      pkgconfig: [ pkgconf, pkg-config ]
       zlib-api: [ zlib-ng ]
     permissions:
       read: world
@@ -24,11 +24,11 @@ packages:
 
   # Use GCC for host compilation; CUDA supplies the device compiler separately.
   c:
-    require: gcc@13.3.0
+    require: gcc@13.3.1
   cxx:
-    require: gcc@13.3.0
+    require: gcc@13.3.1
   fortran:
-    require: gcc@13.3.0
+    require: gcc@13.3.1
 
 # don't build virtuals with an external provider
   mpi:
@@ -51,10 +51,10 @@ packages:
   gcc:
     buildable: false
     externals:
-    - spec: gcc@13.3.0 languages=c,c++,fortran arch=linux-rocky9-aarch64
+    - spec: gcc@13.3.1 languages=c,c++,fortran arch=linux-rocky9-aarch64
       prefix: GCC_INSTALL_PREFIX
       modules:
-      - gcc/13.3.0
+      - gcc/13.3.1
       extra_attributes:
         compilers:
           c: GCC_INSTALL_PREFIX/bin/gcc
@@ -79,7 +79,7 @@ packages:
     - spec: nvhpc@25.9 ~mpi arch=linux-rocky9-aarch64
       prefix: NVHPC_INSTALL_PREFIX
       modules:
-      - gcc/13.3.0
+      - gcc/13.3.1
       - nvhpc-nompi/25.9
       extra_attributes:
         compilers:
@@ -315,10 +315,17 @@ packages:
   cghcentre:
     variants: 'build_type=Release'
 
-  # Retain upstream version preferences without assuming Ella has the SLES
-  # system libraries. Spack may build these until native externals are verified.
+  # Native externals verified on Ella; retain version preferences for builds.
+  pkgconf:
+    externals:
+    - spec: pkgconf@1.7.3
+      prefix: /usr
   pkg-config:
     version: [0.29.2]
+  libffi:
+    externals:
+    - spec: libffi@3.4.2
+      prefix: /usr
   hwloc:
     prefer: ['@2.11.2']
   numactl:
@@ -339,6 +346,9 @@ packages:
     version: [1.22.0]
   openssl:
     prefer: ['@3.5.0']
+    externals:
+    - spec: openssl@3.5.8 +shared certs=system
+      prefix: /usr
   brotli:
     version: [1.0.7]
   curl:

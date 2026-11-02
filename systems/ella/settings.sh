@@ -75,10 +75,8 @@ RFM_STORAGE_DIR=${INSTALL_PREFIX}/rfm_results
 RFM_TEST_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_checks.py
 
 archs="neoverse_v2"
-# Match Setonix-Q's toolchain versions where upstream releases are available.
-# Setonix-Q declares GCC 13.3.1; GNU's corresponding release archive is 13.3.0.
-# Use its actual version for the native bootstrap, external spec and module tree.
-gcc_version="13.3.0"
+# Match Setonix-Q using Ella's installed GCC Toolset 13.
+gcc_version="13.3.1"
 nvidia_version="25.9"
 # NVHPC 25.9 includes CUDA 13.0, matching the Setonix-Q application toolkit pin.
 cuda_version="13.0"
@@ -86,18 +84,13 @@ cuda_arch="90"
 main_compiler="gcc"
 main_arch="neoverse_v2"
 
-# Native toolchain bootstrap configuration. Sourcing settings only declares
-# paths; installation and module setup belong in an Ella-local bootstrap script.
-# Keep compiler installations separate from Spack's ${INSTALL_PREFIX}/software.
+# Reuse system GCC; install NVIDIA separately from Spack's software tree.
 TOOLCHAIN_PREFIX="${TOOLCHAIN_PREFIX:-${INSTALL_PREFIX}/toolchains}"
 TOOLCHAIN_MODULE_PREFIX="${TOOLCHAIN_MODULE_PREFIX:-${TOOLCHAIN_PREFIX}/modules}"
 TOOLCHAIN_BUILD_PREFIX="${TOOLCHAIN_BUILD_PREFIX:-${TMPDIR:-/tmp}/${USER}/ella/${DATE_TAG}/toolchains}"
-GCC_INSTALL_PREFIX="${TOOLCHAIN_PREFIX}/gcc-${gcc_version}"
+GCC_INSTALL_PREFIX="${GCC_INSTALL_PREFIX:-/opt/rh/gcc-toolset-13/root/usr}"
 NVHPC_INSTALL_PREFIX="${TOOLCHAIN_PREFIX}/nvhpc-${nvidia_version}"
 NVHPC_MODULE_PREFIX="${NVHPC_INSTALL_PREFIX}/modulefiles"
-BOOTSTRAP_CC="${BOOTSTRAP_CC:-/usr/bin/gcc}"
-BOOTSTRAP_CXX="${BOOTSTRAP_CXX:-/usr/bin/g++}"
-BOOTSTRAP_FC="${BOOTSTRAP_FC:-/usr/bin/gfortran}"
 BOOTSTRAP_PYTHON="${BOOTSTRAP_PYTHON:-/usr/bin/python3}"
 gcc_module="gcc/${gcc_version}"
 # Use the SDK's MPI-free module to keep Ella's system HPC-X MPI independent.

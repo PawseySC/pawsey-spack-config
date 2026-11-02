@@ -11,32 +11,16 @@ export SYSTEM=ella
 export PAWSEY_SPACK_CONFIG_REPO=$(cd -- "${ella_dir}/../.." && pwd)
 source "${ella_dir}/settings.sh"
 
-mkdir -p "${TOOLCHAIN_BUILD_PREFIX}" "${TOOLCHAIN_MODULE_PREFIX}/gcc"
-cd "${TOOLCHAIN_BUILD_PREFIX}"
-export CC="${BOOTSTRAP_CC}" CXX="${BOOTSTRAP_CXX}" FC="${BOOTSTRAP_FC}"
-
-# Build GCC with the host compiler before NVIDIA configures its GCC integration.
-if [[ ! -x "${GCC_INSTALL_PREFIX}/bin/gfortran" ]]; then
-    curl --fail --location --retry 3 -o "gcc-${gcc_version}.tar.gz" \
-        "https://ftp.gnu.org/gnu/gcc/gcc-${gcc_version}/gcc-${gcc_version}.tar.gz"
-    tar -xzf "gcc-${gcc_version}.tar.gz"
-    (cd "gcc-${gcc_version}" && ./contrib/download_prerequisites)
-    mkdir -p "gcc-${gcc_version}-build"
-    (
-        cd "gcc-${gcc_version}-build"
-        "../gcc-${gcc_version}/configure" --prefix="${GCC_INSTALL_PREFIX}" \
-            --enable-languages=c,c++,fortran --disable-multilib
-        make -j"${SLURM_CPUS_PER_TASK:-${NCPUS}}"
-        make install
-    )
-fi
-
+# Use the installed GCC before NVIDIA configures its GCC integration.
 export PATH="${GCC_INSTALL_PREFIX}/bin:${PATH}"
 export LD_LIBRARY_PATH="${GCC_INSTALL_PREFIX}/lib64:${GCC_INSTALL_PREFIX}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
 export CC="${GCC_INSTALL_PREFIX}/bin/gcc" CXX="${GCC_INSTALL_PREFIX}/bin/g++" FC="${GCC_INSTALL_PREFIX}/bin/gfortran"
 for compiler in gcc g++ gfortran; do
     "${GCC_INSTALL_PREFIX}/bin/${compiler}" -dumpfullversion | grep -Fx "${gcc_version}"
 done
+
+mkdir -p "${TOOLCHAIN_BUILD_PREFIX}" "${TOOLCHAIN_MODULE_PREFIX}/gcc"
+cd "${TOOLCHAIN_BUILD_PREFIX}"
 
 # Regenerate the module even when reusing an existing compiler installation.
 cat > "${TOOLCHAIN_MODULE_PREFIX}/${gcc_module}.lua" <<EOF
