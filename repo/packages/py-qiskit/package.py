@@ -94,7 +94,7 @@ class PyQiskit(PythonPackage, CudaPackage):
     depends_on("cuquantum@25.11.1:", type=("build", "link", "run"))
     depends_on("cutensor@2.4.1.4:", type=("build", "link", "run"))
     depends_on("mpi", when="+mpi", type=("build", "link", "run"))
-    depends_on("py-mpi4py+gtl", when="+mpi", type=("build", "run"))
+    depends_on("py-mpi4py", when="+mpi", type=("build", "run"))
 
     def url_for_version(self, version):
         aer_version = _aer_versions[str(version)]
@@ -186,20 +186,19 @@ class PyQiskit(PythonPackage, CudaPackage):
         if "+mpi" in self.spec:
             env.set("MPICC", self.spec["mpi"].mpicc)
             env.set("MPICXX", self.spec["mpi"].mpicxx)
-            env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
-            env.set("MPICH_GPU_IPC_ENABLED", "0")
-
             gtl_path = self._gtl_lib_path()
             if gtl_path:
+                env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
+                env.set("MPICH_GPU_IPC_ENABLED", "0")
                 env.prepend_path("LD_LIBRARY_PATH", gtl_path)
                 env.prepend_path("CRAY_LD_LIBRARY_PATH", gtl_path)
 
     def setup_run_environment(self, env):
         if "+mpi" in self.spec:
-            env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
-            env.set("MPICH_GPU_IPC_ENABLED", "0")
             gtl_path = self._gtl_lib_path()
             if gtl_path:
+                env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
+                env.set("MPICH_GPU_IPC_ENABLED", "0")
                 env.prepend_path("LD_LIBRARY_PATH", gtl_path)
                 env.prepend_path("CRAY_LD_LIBRARY_PATH", gtl_path)
 
