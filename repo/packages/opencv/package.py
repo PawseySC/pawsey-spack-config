@@ -84,12 +84,22 @@ class Opencv(CMakePackage, CudaPackage):
         "4.13.0",
     ]
     for cv in contrib_vers:
-        resource(
-            name="contrib",
-            git="https://github.com/opencv/opencv_contrib.git",
-            tag="{0}".format(cv),
-            when="@{0} +contrib".format(cv),
-        )
+        if cv == "4.13.0":
+            # Pawsey: checksum-pin the archive to avoid the annotated Git tag warning.
+            resource(
+                name="contrib",
+                url="https://github.com/opencv/opencv_contrib/archive/refs/tags/4.13.0.tar.gz",
+                sha256="1e0077a4fd2960a7d2f4c9e49d6ba7bb891cac2d1be36d7e8e47aa97a9d1039b",
+                placement="opencv_contrib",
+                when="@4.13.0 +contrib",
+            )
+        else:
+            resource(
+                name="contrib",
+                git="https://github.com/opencv/opencv_contrib.git",
+                tag="{0}".format(cv),
+                when="@{0} +contrib".format(cv),
+            )
 
     # Patch to fix conflict between CUDA and OpenCV (reproduced with 3.3.0
     # and 3.4.1) header file that have the same name. Problem is fixed in
