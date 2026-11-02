@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Record concrete specs and publish Setonix-Q installation metadata."""
+"""Record concrete specs and publish Setonix-Q or Ella installation metadata."""
 from __future__ import annotations
 
 import argparse
@@ -17,6 +17,7 @@ from pathlib import Path
 
 
 SCHEMA_VERSION = 1
+SUPPORTED_SYSTEMS = ("setonix-q", "ella")
 HASH_RE = re.compile(r"^[a-z0-9]{7,64}$")
 NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.+-]*$")
 RUN_FILE = "current_run.json"
@@ -133,14 +134,14 @@ def invalidate_assembly(root):
 
 
 def load_run(root):
-    """Load and validate the active Setonix-Q installation run."""
+    """Load and validate the active installation run."""
     run = read_json(root / RUN_FILE, "active installation run")
     fail_unless(
         run.get("schema_version") == SCHEMA_VERSION,
         "unsupported installation run schema",
     )
     fail_unless(
-        run.get("system") == "setonix-q", "installation run is not for setonix-q"
+        run.get("system") in SUPPORTED_SYSTEMS, "unsupported installation run system"
     )
     fail_unless(isinstance(run.get("run_id"), str), "installation run has no run_id")
     return run
@@ -379,8 +380,8 @@ def command_init(args):
     root = metadata_root(args)
     prefix = absolute_path(args.install_prefix, "install prefix")
     fail_unless(
-        args.system == "setonix-q",
-        "the installation manifest is currently supported only for setonix-q",
+        args.system in SUPPORTED_SYSTEMS,
+        "the installation manifest supports only setonix-q and ella",
     )
     fail_unless(
         root == prefix / "installation_metadata",
@@ -401,7 +402,7 @@ def command_init(args):
     run = {
         "schema_version": SCHEMA_VERSION,
         "run_id": run_id,
-        "system": "setonix-q",
+        "system": args.system,
         "date_tag": date_tag,
         "install_prefix": str(prefix),
         "spack_version": spack_version,
@@ -642,7 +643,7 @@ def validate_manifest(manifest, complete, check_paths):
         else manifest.get("status") in ("candidate", "complete")
     )
     fail_unless(valid_status, "invalid manifest status")
-    fail_unless(manifest.get("system") == "setonix-q", "manifest is not for setonix-q")
+    fail_unless(manifest.get("system") in SUPPORTED_SYSTEMS, "unsupported manifest system")
     fail_unless(
         isinstance(manifest.get("sources"), dict)
         and isinstance(manifest.get("specs"), dict),
@@ -784,6 +785,7 @@ def command_publish(args):
         manifest["status"] == "candidate" and manifest["run_id"] == run["run_id"],
         "candidate is stale or already published",
     )
+    fail_unless(manifest["system"] == run["system"], "candidate system does not match run")
     annotations = read_annotations(args.annotations)
     installed = {
         node_hash for node_hash, spec in manifest["specs"].items() if spec["installed"]
@@ -864,7 +866,7 @@ def prepare_lmod_modules(rows, hashes, spack_modules, spack_store):
         )
         specs.append(record.spec)
 
-    # Setonix-Q gives implicit modules hidden, hash-qualified names. Lmod uses
+    # Both systems give implicit modules hidden, hash-qualified names. Lmod uses
     # these flags to name dependency autoloads, so set every flag first.
     with spack_store.STORE.db.write_transaction():
         for row, spec in zip(rows, specs):
