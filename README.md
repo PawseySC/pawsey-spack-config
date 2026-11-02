@@ -13,15 +13,14 @@ Here is how to launch the software stack installation.
 5. Set and export the `SYSTEM` variable to the system you want to run the installation for, if it differs from the content of the `PAWSEY_CLUSTER` environment variable.
 6. Run the `scripts/install_software_stack.sh` script, preferably in a Slurm job or as a process detached from the login shell to prevent the installation from being aborted in case the SSH connection were to be interrupted unexpectedly.
 
-### Setonix-Q installation metadata
+### Installation metadata
 
-A completed Setonix-Q deployment publishes
+Completed Setonix-Q and Ella deployments publish
 `$INSTALL_PREFIX/installation_metadata/spack_install_manifest.json`. It records
 the concrete hashes actually installed, their source environments, installation
 prefixes, and generated module paths. This is the authoritative input to the
-Setonix-Q module tests. The environment lockfiles remain the record of the
-earlier validation concretization and may differ when installation reconcretizes
-individual roots to reuse software already in the store.
+module tests on both systems. Environment installation reuses the lockfiles
+validated by the concretization tests.
 
 The same directory retains each concrete spec used by the installer and a
 small receipt for each installation source. The final manifest can be inspected
@@ -62,7 +61,7 @@ one to deploy Spack and SHPC (a software package to manage containers), and the 
 The deployment of Spack and SHPC is implemented through the following executables BASH scripts within the `scripts` directory:
 
 * `install_spack.sh` installs Spack on the system and creates the directory structure for the system-wide software stack installation.
-* `install_python.sh` installs Python using Spack. To do so, and only in this case, Spack chooses `cray-python` as interpreter. Once Python is installed for different architectures and versions, `cray-python` won't be used anymore.
+* `install_python.sh` installs Python using Spack, initially using the system Python on Ella and `cray-python` on the Setonix systems.
 * `install_shpc.sh` installs SHPC, a tool used to deploy containers.
 
 The software stack deployment is implemented in these scripts instead:
