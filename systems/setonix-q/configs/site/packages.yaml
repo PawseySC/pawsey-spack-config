@@ -234,8 +234,8 @@ packages:
     require: '@1.14.1'
   py-setuptools:
     # This remains a preference because NumPy <=1.25 requires setuptools
-    # <=63. Modern consumers constrain 80.0.0 in their requirements.
-    version: [80.0.0]
+    # <=63. Modern consumers constrain 80.9.0 in their requirements.
+    version: [80.9.0]
   py-pennylane:
     version: [0.45.0]
     require: '@0.45.0'
