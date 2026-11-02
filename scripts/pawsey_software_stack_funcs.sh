@@ -160,7 +160,8 @@ function bootstrap()
     # Prepare the system toolchains and Python before setting up Spack.
     if [ "${SYSTEM}" = "ella" ]; then
         echo "Bootstrapping Ella toolchains.."
-        DATE_TAG="${DATE_TAG}" "${PAWSEY_SPACK_CONFIG_REPO}/systems/ella/bootstrap_toolchains.sh" || return 1
+        export TOOLCHAIN_PREFIX TOOLCHAIN_MODULE_PREFIX TOOLCHAIN_BUILD_PREFIX GCC_INSTALL_PREFIX
+        "${PAWSEY_SPACK_CONFIG_REPO}/systems/ella/bootstrap_toolchains.sh" || return 1
         module use "${TOOLCHAIN_MODULE_PREFIX}" "${NVHPC_MODULE_PREFIX}" "${MPI_MODULE_PATH}" || return 1
         module unload gcc || return 1
         module load "${gcc_module}" || return 1

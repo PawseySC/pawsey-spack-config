@@ -99,7 +99,6 @@ BOOTSTRAP_PYTHON="${BOOTSTRAP_PYTHON:-/usr/bin/python3}"
 gcc_module="gcc/${gcc_version}"
 # Use the SDK's MPI-free module to keep Ella's system HPC-X MPI independent.
 nvhpc_module="nvhpc-nompi/${nvidia_version}"
-nvhpc_cuda_version="${cuda_version}"
 
 # Existing system MPI. These values describe HPC-X's Open MPI installation,
 # whose version differs from the HPC-X distribution version (2.20).

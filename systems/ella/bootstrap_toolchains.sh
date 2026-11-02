@@ -19,8 +19,7 @@ for compiler in gcc g++ gfortran; do
     "${GCC_INSTALL_PREFIX}/bin/${compiler}" -dumpfullversion | grep -Fx "${gcc_version}"
 done
 
-mkdir -p "${TOOLCHAIN_BUILD_PREFIX}" "${TOOLCHAIN_MODULE_PREFIX}/gcc"
-cd "${TOOLCHAIN_BUILD_PREFIX}"
+mkdir -p "${TOOLCHAIN_MODULE_PREFIX}/gcc"
 
 # Regenerate the module even when reusing an existing compiler installation.
 cat > "${TOOLCHAIN_MODULE_PREFIX}/${gcc_module}.lua" <<EOF
@@ -35,7 +34,9 @@ prepend_path("LD_LIBRARY_PATH", pathJoin(root, "lib"))
 EOF
 
 nvhpc_root="${NVHPC_INSTALL_PREFIX}/Linux_aarch64/${nvidia_version}"
-if [[ ! -x "${nvhpc_root}/compilers/bin/nvc" ]]; then
+if [[ ! -x "${nvhpc_root}/cuda/${cuda_version}/bin/nvcc" ]]; then
+    mkdir -p "${TOOLCHAIN_BUILD_PREFIX}"
+    cd "${TOOLCHAIN_BUILD_PREFIX}"
     archive="nvhpc_20${nvidia_version%.*}_${nvidia_version/./}_Linux_aarch64_cuda_multi"
     curl --fail --location --retry 3 -o "${archive}.tar.gz" \
         "https://developer.download.nvidia.com/hpc-sdk/${nvidia_version}/${archive}.tar.gz"
@@ -44,10 +45,10 @@ if [[ ! -x "${nvhpc_root}/compilers/bin/nvc" ]]; then
         cd "${archive}"
         NVHPC_SILENT=true NVHPC_INSTALL_TYPE=single \
             NVHPC_INSTALL_DIR="${NVHPC_INSTALL_PREFIX}" \
-            NVHPC_DEFAULT_CUDA="${nvhpc_cuda_version}" ./install
+            NVHPC_DEFAULT_CUDA="${cuda_version}" ./install
     )
 fi
-"${nvhpc_root}/cuda/${nvhpc_cuda_version}/bin/nvcc" --version
+"${nvhpc_root}/cuda/${cuda_version}/bin/nvcc" --version
 if [[ ! -f "${NVHPC_MODULE_PREFIX}/${nvhpc_module}" && ! -f "${NVHPC_MODULE_PREFIX}/${nvhpc_module}.lua" ]]; then
     echo "Missing NVIDIA module: ${NVHPC_MODULE_PREFIX}/${nvhpc_module}" >&2
     exit 1
