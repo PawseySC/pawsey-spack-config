@@ -373,6 +373,11 @@ packages:
     - spec: openmpi@4.1.7a1 +cuda arch=linux-rocky9-aarch64
       prefix: MPI_PREFIX
       modules: [hpcx-mt-ompi]
+      # Preserve HPC-X relocation after Open MPI's build hook clears OPAL_*.
+      extra_attributes:
+        environment:
+          set:
+            OPAL_PREFIX: MPI_PREFIX
 
   # NVIDIA libraries from the bootstrapped SDK, using the CUDA 13.0 variant.
   cuda:
