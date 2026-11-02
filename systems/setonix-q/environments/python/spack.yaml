@@ -32,7 +32,7 @@ spack:
 
   - utilities:
     - py-pip@23.1.2
-    - py-setuptools@80.0.0
+    - py-setuptools@80.9.0
 
   - py_stack:
     - $py_packages

@@ -19,7 +19,7 @@ spack:
     # - rust@1.70.0 ^python@3.11.6+optimizations+zlib~ssl
   - py-utilities:
     - py-pip@23.1.2
-    - py-setuptools@80.0.0
+    - py-setuptools@80.9.0
   specs:
   - matrix:
     - [$py-utilities]
