@@ -98,7 +98,7 @@ for version in $( ls ${src_dir}/*.lua 2>/dev/null ) ; do
   # 1.D singularity does not add any thing at all from host 
   sed \
     -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
-    -e '/^-- add MPI START/,/^-- add MPI END/{/^-- add MPI START/!{/^ add MPI END/!d}}' \
+    -e '/^-- add MPI START/,/^-- add MPI END/{/^-- add MPI START/!{/^-- add MPI END/!d}}' \
     -e '/^-- add SLURM START/,/^-- add SLURM END/{/^-- add SLURM START/!{/^-- add SLURM END/!d}}' \
     -e '/^-- add GPUMPI START/,/^-- add GPUMPI END/{/^-- add GPUMPI START/!{/^-- add GPUMPI END/!d}}' \
     -e '/^-- add CRAY_PATHS START/,/^-- add CRAY_PATHS END/{/^-- add CRAY_PATHS START/!{/^-- add CRAY_PATHS END/!d}}' \

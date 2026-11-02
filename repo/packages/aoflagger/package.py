@@ -1,3 +1,4 @@
+from spack.patch import apply_patch
 from spack.package import *
 import os
 

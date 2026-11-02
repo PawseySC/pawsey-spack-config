@@ -45,6 +45,8 @@ SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
 # The operation will be executed after having installed the environments.
 # Useful when building the stack on the test system.
 SPACK_POPULATE_CACHE=0
+# Number of processes to use for building software with Spack.
+NCPUS="${NCPUS:-${NPROCS:-128}}"
 
 pawseyenv_version="${DATE_TAG}"
 
@@ -59,6 +61,18 @@ gcc_version="14.2.0"
 gcc_versionO="14.2.1"
 cce_version="21.0.0"
 aocc_version="5.1.0"
+# CPE 26.03 compiler aliases used in the LMOD_CUSTOM_COMPILER variable names.
+gcc_compat_version="12.0"
+cce_compat_version="21.0"
+aocc_compat_version="4.1"
+
+# The Setonix stack has no NVIDIA compiler module tree. 
+# Empty values used when generating the pawseyenv modulefile.
+nvidia_version=""
+nvidia_compat_version=""
+
+main_compiler="gcc"
+main_arch="zen3"
 
 # architecture of login/compute nodes (needed by Singularity symlink module)
 cpu_arch="zen3"

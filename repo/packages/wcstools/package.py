@@ -40,17 +40,11 @@ class Wcstools(MakefilePackage):
         makefile = FileFilter('Makefile')
 
         makefile.filter(r'^\s*CC\s*=.*',  'CC = '  + spack_cc)
-        makefile.filter(r'^\s*CXX\s*=.*', 'CXX = ' + spack_cxx)
-        makefile.filter(r'^\s*F77\s*=.*', 'F77 = ' + spack_f77)
-        makefile.filter(r'^\s*FC\s*=.*',  'FC = '  + spack_fc)
         makefile.filter(r'^\s*CFLAGS\s*',  'COMPILEFLAGS')
 
         libmakefile = FileFilter('libwcs/Makefile')
 
         libmakefile.filter(r'^\s*CC\s*=.*',  'CC = '  + spack_cc)
-        libmakefile.filter(r'^\s*CXX\s*=.*', 'CXX = ' + spack_cxx)
-        libmakefile.filter(r'^\s*F77\s*=.*', 'F77 = ' + spack_f77)
-        libmakefile.filter(r'^\s*FC\s*=.*',  'FC = '  + spack_fc)
         libmakefile.filter(r'^\s*CFLAGS\s*',  'COMPILEFLAGS')
 
     # there is no make install command

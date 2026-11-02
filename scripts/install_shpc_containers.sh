@@ -1,27 +1,12 @@
 #!/bin/bash -e
 
-if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
-    SYSTEM="$PAWSEY_CLUSTER"
-fi
+scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+. "${scriptdir}/pawsey_software_stack_funcs.sh"
 
-if [ -z ${SYSTEM+x} ]; then
-    echo "The 'SYSTEM' variable is not set. Please specify the system you want to
-    build Spack for."
-    exit 1
-fi
-
-PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
-. "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
-
-module load cpe/26.03
-module load gcc-native/14.2
-module use "${INSTALL_PREFIX}/staff_modulefiles"
-# we need the python module to be available in order to run spack
-module --ignore-cache load pawseyenv/${pawseyenv_version}
-module load gcc-native/14.2
-# swap is needed for the pawsey_temp module to work
-#module swap PrgEnv-gnu PrgEnv-cray
-#module swap PrgEnv-cray PrgEnv-gnu
+check_installation_environment
+set_spack_config_repo
+set_compilation_sets_for_arch
+set_modulepaths_for_arch
 
 # assumes using PrgEnv-gnu
 # load needed python toolkit

@@ -5,7 +5,6 @@
 
 
 import os
-#import llnl.util.filesystem as fs
 from pathlib import Path
 import shutil
 
@@ -78,6 +77,7 @@ class Mwalib(Package):
     def setup_build_environment(self, env):
         build_dir = self.stage.source_path
         env.set("CARGO_HOME", f"{build_dir}/.cargo")
+        env.set("CARGO_BUILD_JOBS", str(make_jobs))
         # env.set('RUST_BACKTRACE', 1) # for debugging
         if self.spec.satisfies("+cfitsio-static"):
             env.set("MWALIB_LINK_STATIC_CFITSIO", 1)
@@ -87,7 +87,6 @@ class Mwalib(Package):
     def install(self, spec, prefix):
         # os.system("env") # for debugging
         cargo = Executable("cargo")
-        # with fs.working_dir(self.stage.source_path):
         with working_dir(self.stage.source_path):
             cargo("build", *self.get_build_args())
             shutil.copytree("include", f"{prefix}/include")
