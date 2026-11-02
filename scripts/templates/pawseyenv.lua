@@ -11,20 +11,12 @@
 
 ]]--
 
-
 local user = os.getenv("USER")
 if user == "root" then
   return
 end
 
 family("pawseyenv")
-
---------------------------------------------------------------------------------
--- Lmod Mode
---------------------------------------------------------------------------------
--- Configure variable caching or cleanup based on the current Lmod mode.
-local current_mode = mode()
-
 
 --------------------------------------------------------------------------------
 -- Runtime Detection
@@ -42,6 +34,8 @@ else
     arch = "zen2"
   end
 end
+
+local generic_arch = arch == "neoverse_v2" and "aarch64" or "x86_64"
 
 --------------------------------------------------------------------------------
 -- Configuration: sed-replaced template values
@@ -96,6 +90,8 @@ add_compiler(
 --------------------------------------------------------------------------------
 -- Cross-partition Cleanup
 --------------------------------------------------------------------------------
+local current_mode = mode()
+
 local function contains(path, fragment)
   return string.find(path, fragment, 1, true) ~= nil
 end
@@ -105,13 +101,16 @@ local function is_stale_partition_path(path)
     return contains(path, "/setonix/")
       or contains(path, "/zen2/")
       or contains(path, "/zen3/")
+      or contains(path, "/x86_64/")
   elseif arch == "zen3" then
     return contains(path, "/setonix-q/")
       or contains(path, "/neoverse_v2/")
+      or contains(path, "/aarch64/")
       or contains(path, "/zen2/")
   else
     return contains(path, "/setonix-q/")
       or contains(path, "/neoverse_v2/")
+      or contains(path, "/aarch64/")
       or contains(path, "/zen3/")
   end
 end
@@ -143,6 +142,10 @@ if current_mode == "load" or current_mode == "unload" then
 end
 
 local function prepend_compiler_paths(base_path, suffix)
+  local core_path = pathJoin(base_path, "Core", suffix)
+  if isDir(core_path) then
+    prepend_path("MODULEPATH", core_path)
+  end
   for _, compiler in ipairs(compilers) do
     local path = pathJoin(base_path, compiler.dir, compiler.version, suffix)
     if isDir(path) then
@@ -217,5 +220,32 @@ prepend_path("MODULEPATH", pathJoin(install_prefix, utilities_modules_dir))
 
 -- Spack modules
 local spack_root = pathJoin(install_prefix, "modules", arch)
+local generic_spack_root = pathJoin(install_prefix, "modules", generic_arch)
 for _, category in ipairs(module_categories) do
+  -- External packages can use generic targets in Core or compiler hierarchies.
+  -- Add these first so architecture-specific modules keep precedence.
+  prepend_compiler_paths(generic_spack_root, category)
   prepend_compiler_paths(spack_root, category)
+end
+
+-- System SHPC containers
+prepend_path("MODULEPATH", pathJoin(install_prefix, shpc_modules_dir))
+
+-- Custom modules
+local custom_modules_root = pathJoin(install_prefix, custom_modules_dir, arch)
+prepend_compiler_paths(custom_modules_root, custom_modules_suffix)
+
+local active_compiler = os.getenv("LMOD_FAMILY_COMPILER") or ""
+-- isPending() is true while this module is being loaded, but false when Lmod
+-- re-evaluates an already loaded module during `module refresh`.
+-- We use this here to prevent the warning from being displayed when refreshing.
+local pawseyenv_is_loading = isPending(myModuleFullName())
+if current_mode == "load"
+  and pawseyenv_is_loading
+  and active_compiler ~= ""
+then
+  LmodWarning(
+    "A compiler environment is already loaded (", active_compiler, "). ",
+    "Run 'module refresh' to activate the architecture-specific module paths."
+  )
+end

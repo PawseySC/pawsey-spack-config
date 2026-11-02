@@ -1,0 +1,11 @@
+--- a/libs/core/execution_base/include/hpx/execution_base/any_sender.hpp
++++ b/libs/core/execution_base/include/hpx/execution_base/any_sender.hpp
+@@ -33,7 +33,7 @@ namespace hpx::detail {
+ 
+ #if !defined(HPX_MSVC) && defined(HPX_HAVE_CXX20_TRIVIAL_VIRTUAL_DESTRUCTOR)
+     template <typename T>
+-    inline constexpr empty_vtable_t<T> empty_vtable{};
++    inline empty_vtable_t<T> empty_vtable{};
+ 
+     template <typename T>
+     T const* get_empty_vtable()

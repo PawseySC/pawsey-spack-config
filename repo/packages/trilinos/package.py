@@ -50,6 +50,8 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
 
     version("master", branch="master")
     version("develop", branch="develop")
+    # Pawsey: 16.2.1 bundles kokkos 4.7.04
+    version("16.2.1", sha256="c68a9d28fc9e7b06f33804c1f5e998234820878c21ae075649483b56992cea05")
     version("16.1.0", sha256="e9651c88f581049457036cfc01b527a9d3903c257338eeeab942befd7452f23a")
     version("16.0.0", sha256="46bfc40419ed2aa2db38c144fb8e61d4aa8170eaa654a88d833ba6b92903f309")
     version("15.1.1", sha256="2108d633d2208ed261d09b2d6b2fbae7a9cdc455dd963c9c94412d38d8aaefe4")
@@ -422,6 +424,7 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
 
     # External Kokkos
     depends_on("kokkos@4.4.01", when="@master: +kokkos")
+    depends_on("kokkos@4.7.04", when="@16.2.1 +kokkos")
     depends_on("kokkos@4.3.01", when="@16.0.0 +kokkos")
     depends_on("kokkos@4.2.01", when="@15.1.0:15.1.1 +kokkos")
     depends_on("kokkos@4.1.00", when="@14.4.0:15.0.0 +kokkos")
@@ -542,7 +545,6 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
         when="@15.0.0 ^hip@6.0 +rocm",
     )
     patch("cstdint_gcc13.patch", when="@13.4.0:13.4.1 %gcc@13.0.0:")
-
     # Allow building with +teko gotype=long
     patch(
         "https://github.com/trilinos/Trilinos/commit/b17f20a0b91e0b9fc5b1b0af3c8a34e2a4874f3f.patch?full_index=1",
@@ -550,7 +552,8 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
         when="@13.0.0:13.0.1 +teko gotype=long",
     )
     # patch("fix_gather_ETI.patch", when="@15.1.1")
-    patch ("fix_Kokkos_HIP_Instance.cpp.patch", when="@15.0.0")
+    # ROCm-only compatibility fix; CUDA sources do not contain this file.
+    patch("fix_Kokkos_HIP_Instance.cpp.patch", when="@:16.0.0 +rocm")
 
     patch(
     "fix_kokkos_kernels_spadd_sort_option.patch",
@@ -718,7 +721,13 @@ message(
             if "+stk%intel" in spec:
                 # Workaround for Intel compiler segfaults with STK and IPO
                 flags.append("-no-ipo")
-            if "+wrapper" in spec:
+            if "+wrapper" in spec and not spec.satisfies("@14.4.0: +kokkos"):
+                # Only needed for Trilinos' *internal* Kokkos build. With external
+                # Kokkos (@14.4.0:), the exported Kokkos::kokkos target already
+                # carries --extended-lambda on its INTERFACE_COMPILE_OPTIONS, so
+                # injecting it globally here is redundant and breaks CMake's
+                # compiler-ABI try-compile (a host-only .cxx that never links
+                # Kokkos), since plain g++ rejects the nvcc-only flag.
                 flags.append("--expt-extended-lambda")
         elif name == "ldflags":
             if spec.satisfies("%cce@:14"):
@@ -791,7 +800,6 @@ message(
             if "+stk" in spec:
                 # Using CXXFLAGS for hipcc which doesn't use flags in the spack wrappers
                 env.set("CXXFLAGS", "-DSTK_NO_BOOST_STACKTRACE")
-
 
     def cmake_args(self):
         options = []

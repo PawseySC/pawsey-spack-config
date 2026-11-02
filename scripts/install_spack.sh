@@ -1,343 +1,192 @@
 #!/bin/bash -e
-
 #
 # Install Spack on a supercomputing system.
 #
 
-if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
-    SYSTEM="$PAWSEY_CLUSTER"
-fi
+scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+. "${scriptdir}/pawsey_software_stack_funcs.sh"
 
-if [ -z ${SYSTEM+x} ]; then
-    echo "The 'SYSTEM' variable is not set. Please specify the system you want to
-build Spack for."
+check_installation_environment
+set_spack_config_repo
+set_compilation_sets_for_arch
+
+# Reject a different Spack version before changing any existing configuration.
+if [ -d "${INSTALL_PREFIX}/spack" ]; then
+  installed_spack_version=$(awk -F '"' '/^(__version__|spack_version) = "/ {print $2; exit}' \
+    "${INSTALL_PREFIX}/spack/lib/spack/spack/__init__.py")
+  if [ "${installed_spack_version}" != "${spack_version}" ]; then
+    echo "Spack ${installed_spack_version:-unknown} already exists at ${INSTALL_PREFIX}/spack; use a fresh INSTALL_PREFIX for Spack ${spack_version}." >&2
     exit 1
+  fi
 fi
 
-PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
+# A new Q prefix must not replace configuration belonging to another stack.
+if [ "${SYSTEM}" = "setonix-q" ] && [ ! -e "${INSTALL_PREFIX}/spack" ] && \
+    [ -f "${SPACK_USER_CONFIG_PATH}/config.yaml" ]; then
+  echo "Staff configuration already exists at ${SPACK_USER_CONFIG_PATH}; set SPACK_USER_CONFIG_PATH to a fresh directory for this installation." >&2
+  exit 1
+fi
 
-. "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
-
-
-#
-# The $SPACK_USER_CONFIG_PATH directory for the 'spack' user dictates
-# where and how the system-wide software stack installation takes place.
-# We must make sure that current settings are used instead of old ones.
-#
-
+# The $SPACK_USER_CONFIG_PATH directory for the 'spack' user dictates where and how the system-wide
+# software stack installation takes place. We must make sure that current settings
+# are used instead of old ones.
 if [ -e "${SPACK_USER_CONFIG_PATH}" ]; then
-    mv "${SPACK_USER_CONFIG_PATH}" \
-       "${SPACK_USER_CONFIG_PATH}.old.$( date -Iminutes | sed 's/+.*//' | tr ':' '.' )"
+  mv "${SPACK_USER_CONFIG_PATH}" "${SPACK_USER_CONFIG_PATH}.old.$( date -Iminutes | sed 's/+.*//' | tr ':' '.' )"
 fi
-
 mkdir -p "${SPACK_USER_CONFIG_PATH}"
 
+if ! [ -e ${INSTALL_PREFIX}/spack ]; then
+  git clone --depth 1 --branch "v${spack_version}" https://github.com/spack/spack.git "${INSTALL_PREFIX}/spack"
+  cd "${INSTALL_PREFIX}/spack"
+  git checkout v${spack_version}
 
-#
-# We will use the Pawsey Spack mirror, to which several patches will
-# be applied.
-#
+  # apply Marco's LMOD fixes into spack tree
+  patch ${INSTALL_PREFIX}/spack/lib/spack/spack/modules/lmod.py \
+    ${PAWSEY_SPACK_CONFIG_REPO}/fixes/lmod_arch_family.patch
+  # Pascal's enhancements to modulefiles
+  patch ${INSTALL_PREFIX}/spack/lib/spack/spack/modules/common.py \
+    ${PAWSEY_SPACK_CONFIG_REPO}/fixes/modulenames_plus_common.patch
+  patch ${INSTALL_PREFIX}/spack/lib/spack/spack/cmd/modules/__init__.py \
+    ${PAWSEY_SPACK_CONFIG_REPO}/fixes/modulenames_plus_init.patch
+  patch ${INSTALL_PREFIX}/spack/lib/spack/spack/paths.py \
+    ${PAWSEY_SPACK_CONFIG_REPO}/fixes/dot_spack.patch
+  sed -i -e "s|DATE_TAG|$DATE_TAG|g"\
+    -e "s|PAWSEY_SYSTEM|$SYSTEM|g"\
+    ${INSTALL_PREFIX}/spack/lib/spack/spack/paths.py
 
-if ! [ -e "${INSTALL_PREFIX}/spack" ]; then
-
-    git clone https://github.com/spack/spack.git "${INSTALL_PREFIX}/spack"
-
-    cd "${INSTALL_PREFIX}/spack"
-
-    git checkout "v${spack_version}"
-
-
-    #
-    # Apply Marco's LMOD fixes into Spack tree
-    #
-
-    patch \
-        "${INSTALL_PREFIX}/spack/lib/spack/spack/modules/lmod.py" \
-        "${PAWSEY_SPACK_CONFIG_REPO}/fixes/lmod_arch_family.patch"
-
-
-    #
-    # Pascal's enhancements to modulefiles
-    #
-
-    patch \
-        "${INSTALL_PREFIX}/spack/lib/spack/spack/modules/common.py" \
-        "${PAWSEY_SPACK_CONFIG_REPO}/fixes/modulenames_plus_common.patch"
-
-    patch \
-        "${INSTALL_PREFIX}/spack/lib/spack/spack/cmd/modules/__init__.py" \
-        "${PAWSEY_SPACK_CONFIG_REPO}/fixes/modulenames_plus_init.patch"
-
-    patch \
-        "${INSTALL_PREFIX}/spack/lib/spack/spack/paths.py" \
-        "${PAWSEY_SPACK_CONFIG_REPO}/fixes/dot_spack.patch"
-
-
-    sed -i \
-        -e "s|DATE_TAG|${DATE_TAG}|g" \
-        -e "s|PAWSEY_SYSTEM|${SYSTEM}|g" \
-        "${INSTALL_PREFIX}/spack/lib/spack/spack/paths.py"
-
-
-    rm -rf "${INSTALL_PREFIX}/spack/.git"
-
-    cd -
+  rm "${INSTALL_PREFIX}/spack/.git" -rf
+  cd -
 fi
 
-
-#
-# Next we overwrite/create Spack configuration files that rule the
-# installation process for:
-#
-#   1. normal Pawsey users
-#   2. Pawsey staff/system-wide installations
-#   3. project-wide installations
-#
-# With Spack 1.1.1 the normal Pawsey site configuration must be under
-# etc/spack/site rather than directly under etc/spack.
-#
-
-
-#
-# Remove configuration files that may have been left in the old
-# high-precedence etc/spack scope.
-#
-
-for f in config.yaml modules.yaml packages.yaml repos.yaml toolchains.yaml; do
-    rm -f "${INSTALL_PREFIX}/spack/etc/spack/${f}"
-done
-
-
-#
-# Normal Pawsey site configuration
-#
-
-mkdir -p "${INSTALL_PREFIX}/spack/etc/spack/site"
-
-
-#
-# include.yaml defines the additional configuration scopes, therefore
-# it must stay directly under etc/spack.
-#
-
-cp \
-    "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/site/include.yaml" \
+# Next we will overwrite/create spack configuration files that rule the installation
+# process for both the Pawsey staff installations (spack user), and the user and
+# project-wide ones.
+site_config_dir="${INSTALL_PREFIX}/spack/etc/spack"
+if [ -f "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/site/include.yaml" ]; then
+  # In Spack 1.1 the root scope includes the lower-precedence site/user scopes.
+  site_config_dir="${INSTALL_PREFIX}/spack/etc/spack/site"
+  # Remove site defaults left in Spack's higher-precedence root scope.
+  for config_name in config modules packages repos toolchains; do
+    rm -f "${INSTALL_PREFIX}/spack/etc/spack/${config_name}.yaml"
+  done
+  mkdir -p "${site_config_dir}"
+  cp "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/site/include.yaml" \
     "${INSTALL_PREFIX}/spack/etc/spack/include.yaml"
-
-
-#
-# All remaining normal Pawsey site configuration files belong to the
-# site scope.
-#
-
-for f in "${PAWSEY_SPACK_CONFIG_REPO}"/systems/"${SYSTEM}"/configs/site/*.yaml; do
-
-    if [ "$(basename "$f")" != "include.yaml" ]; then
-        cp "$f" "${INSTALL_PREFIX}/spack/etc/spack/site/"
-    fi
-
+fi
+for config_file in "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/site/"*.yaml; do
+  if [ "$(basename "${config_file}")" != "include.yaml" ]; then
+    cp "${config_file}" "${site_config_dir}/"
+  fi
 done
+cp "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/spackuser/"*.yaml "${SPACK_USER_CONFIG_PATH}/"
 
+# copy project-wide configs into spack tree, too
+mkdir -p ${INSTALL_PREFIX}/spack/etc/spack/project
+cp ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/configs/project/*.yaml ${INSTALL_PREFIX}/spack/etc/spack/project/
 
-#
-# System-wide build configuration.
-#
-# Keep using SPACK_USER_CONFIG_PATH from settings.sh.
-# This is important because spackuser/config.yaml defines the
-# system-wide software install_tree under INSTALL_PREFIX/software,
-# and spackuser/modules.yaml defines INSTALL_PREFIX/modules.
-#
+# Copy over custom Pawsey recipes in a spack pawsey repo within the spack installation
+[ -e "${INSTALL_PREFIX}/spack/var/spack/repos/pawsey" ] || mkdir -p "${INSTALL_PREFIX}/spack/var/spack/repos/pawsey"
+cp -r ${PAWSEY_SPACK_CONFIG_REPO}/repo/* "${INSTALL_PREFIX}/spack/var/spack/repos/pawsey/"
 
-cp \
-    "${PAWSEY_SPACK_CONFIG_REPO}"/systems/"${SYSTEM}"/configs/spackuser/*.yaml \
-    "${SPACK_USER_CONFIG_PATH}/"
+# .. and custom module templates
+[ -e "${INSTALL_PREFIX}/spack/templates" ] || mkdir -p "${INSTALL_PREFIX}/spack/templates"
+cp -r ${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/templates/* "${INSTALL_PREFIX}/spack/templates/"
 
-
-#
-# Copy project-wide configs into Spack tree.
-#
-
-mkdir -p "${INSTALL_PREFIX}/spack/etc/spack/project"
-
-cp \
-    "${PAWSEY_SPACK_CONFIG_REPO}"/systems/"${SYSTEM}"/configs/project/*.yaml \
-    "${INSTALL_PREFIX}/spack/etc/spack/project/"
-
-
-# Ilkhom: Disabling setonix packages for now.
-
-
-#
-# Copy over custom Pawsey recipes in a Spack Pawsey repo within the
-# Spack installation.
-#
-
-[ -e "${INSTALL_PREFIX}/spack/var/spack/repos/pawsey" ] || \
-    mkdir -p "${INSTALL_PREFIX}/spack/var/spack/repos/pawsey"
-
-cp -r \
-    "${PAWSEY_SPACK_CONFIG_REPO}"/repo/* \
-    "${INSTALL_PREFIX}/spack/var/spack/repos/pawsey/"
-
-
-#
-# Custom module templates
-#
-
-[ -e "${INSTALL_PREFIX}/spack/templates" ] || \
-    mkdir -p "${INSTALL_PREFIX}/spack/templates"
-
-cp -r \
-    "${PAWSEY_SPACK_CONFIG_REPO}"/systems/"${SYSTEM}"/templates/* \
-    "${INSTALL_PREFIX}/spack/templates/"
-
-
-#
-# Customise configuration files with the actual software-stack paths.
-#
-
+# and finally customise them with the actual software stack installation path.
+config_files=(
+  "${INSTALL_PREFIX}/spack/etc/spack/"*.yaml
+  "${SPACK_USER_CONFIG_PATH}/"*.yaml
+  "${INSTALL_PREFIX}/spack/etc/spack/project/"*.yaml
+  "${INSTALL_PREFIX}/spack/templates/modules/modulefile.lua"
+)
+if [ "${site_config_dir}" != "${INSTALL_PREFIX}/spack/etc/spack" ]; then
+  config_files+=("${site_config_dir}/"*.yaml)
+fi
 sed -i \
-    -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g" \
-    -e "s|DATE_TAG|${DATE_TAG}|g" \
-    -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g" \
-    -e "s|USER_TEMP_FILES_PREFIX|${USER_TEMP_FILES_PREFIX}|g" \
-    -e "s|BOOTSTRAP_PATH|${BOOTSTRAP_PATH}|g" \
-    "${INSTALL_PREFIX}"/spack/etc/spack/*.yaml \
-    "${SPACK_USER_CONFIG_PATH}"/*.yaml \
-    "${INSTALL_PREFIX}"/spack/etc/spack/project/*.yaml \
-    "${INSTALL_PREFIX}"/spack/etc/spack/site/*.yaml \
-    "${INSTALL_PREFIX}/spack/templates/modules/modulefile.lua"
+  -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g" \
+  -e "s|DATE_TAG|$DATE_TAG|g"\
+  -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
+  -e "s|USER_TEMP_FILES_PREFIX|${USER_TEMP_FILES_PREFIX}|g"\
+  -e "s|BOOTSTRAP_PATH|${BOOTSTRAP_PATH}|g"\
+  -e "s|SPACK_PACKAGES_COMMIT|${spack_packages_commit:-}|g"\
+  "${config_files[@]}"
 
 
-#
-# Instantiate utility scripts and copy them within the Spack
-# installation directory.
-#
+# Instantiate utility scripts and copy them within the spack installation directory.
 
-#
-# spack_create_user_moduletree.sh:
-# Used to create a user module-tree directory.
-#
+# spack_create_user_moduletree.sh: as the name says, the following script is used to create a user module tree directory.
+module_tree_arch_list="${module_tree_arch_list:-${archs[*]}}"
+if [ -z "${module_tree_compiler_list+x}" ]; then
+  module_tree_compiler_list=""
+  for comp in "${compilers[@]}"; do
+    module_tree_compiler_list+="${comp/@/\/} "
+  done
+fi
 
 sed \
-    -e "s;GCC_VERSION;${gcc_version};g" \
-    -e "s;AOCC_VERSION;${aocc_version};g" \
-    -e "s;CCE_VERSION;${cce_version};g" \
-    -e "s;PROJECT_MODULES_SUFFIX;${project_modules_suffix};g" \
-    -e "s;USER_MODULES_SUFFIX;${user_modules_suffix};g" \
-    -e "s|DATE_TAG|${DATE_TAG}|g" \
-    -e "s;SHPC_CONTAINERS_MODULES_DIR;${shpc_containers_modules_dir};g" \
-    -e "s;R_VERSION_MAJORMINOR;${r_version_majorminor};g" \
-    -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g" \
-    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_create_user_moduletree.sh" \
-    > "${INSTALL_PREFIX}/spack/bin/spack_create_user_moduletree.sh"
+  -e "s;PROJECT_MODULES_SUFFIX;${project_modules_suffix};g" \
+  -e "s;USER_MODULES_SUFFIX;${user_modules_suffix};g" \
+  -e "s|DATE_TAG|$DATE_TAG|g"\
+  -e "s;SHPC_CONTAINERS_MODULES_DIR;${shpc_containers_modules_dir};g" \
+  -e "s;R_VERSION_MAJORMINOR;${r_version_majorminor};g" \
+  -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
+  -e "s|PAWSEY_SYSTEM|${SYSTEM}|g"\
+  -e "s;MODULE_TREE_ARCH_LIST;${module_tree_arch_list};g" \
+  -e "s;MODULE_TREE_COMPILER_LIST;${module_tree_compiler_list};g" \
+  ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_create_user_moduletree.sh \
+  >${INSTALL_PREFIX}/spack/bin/spack_create_user_moduletree.sh
 
 
-cp \
-    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_refresh_modules.sh" \
-    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_rm_modules.sh" \
-    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/spack_generate_migration_scripts.sh" \
-    "${INSTALL_PREFIX}/spack/bin/"
+cp ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_refresh_modules.sh \
+   ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack_rm_modules.sh \
+   ${PAWSEY_SPACK_CONFIG_REPO}/scripts/spack_generate_migration_scripts.sh \
+   ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/pawsey_spack_customise.sh \
+   ${INSTALL_PREFIX}/spack/bin/
 
-
-#
-# Install a Spack wrapper to handle project installations.
-#
-
-if ! [ -e "${INSTALL_PREFIX}/spack/bin/realspack" ]; then
-
-    mv \
-        "${INSTALL_PREFIX}/spack/bin/spack" \
-        "${INSTALL_PREFIX}/spack/bin/realspack"
-
-    sed \
-        -e "s;INSTALL_PREFIX;${INSTALL_PREFIX};g" \
-        "${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack" \
-        > "${INSTALL_PREFIX}/spack/bin/spack"
-
+# Install a spack wrapper to handle project installations
+if ! [ -e ${INSTALL_PREFIX}/spack/bin/realspack ]; then
+  mv ${INSTALL_PREFIX}/spack/bin/spack ${INSTALL_PREFIX}/spack/bin/realspack
 fi
-
+sed \
+  -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g" \
+  -e "s|DATE_TAG|$DATE_TAG|g"\
+  -e "s|PAWSEY_SYSTEM|${SYSTEM}|g"\
+  -e "s|SPACK_VERSION|${spack_version}|g"\
+  -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
+  ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack \
+  >${INSTALL_PREFIX}/spack/bin/spack
 
 chmod a+rx \
-    "${INSTALL_PREFIX}/spack/bin/spack_create_user_moduletree.sh" \
-    "${INSTALL_PREFIX}/spack/bin/spack_refresh_modules.sh" \
-    "${INSTALL_PREFIX}/spack/bin/spack_rm_modules.sh" \
-    "${INSTALL_PREFIX}/spack/bin/spack_generate_migration_scripts.sh" \
-    "${INSTALL_PREFIX}/spack/bin/spack"
+  ${INSTALL_PREFIX}/spack/bin/spack_create_user_moduletree.sh \
+  ${INSTALL_PREFIX}/spack/bin/spack_refresh_modules.sh \
+  ${INSTALL_PREFIX}/spack/bin/spack_rm_modules.sh \
+  ${INSTALL_PREFIX}/spack/bin/spack_generate_migration_scripts.sh \
+  ${INSTALL_PREFIX}/spack/bin/pawsey_spack_customise.sh \
+  ${INSTALL_PREFIX}/spack/bin/spack
 
-
-#
-# Edit and copy over Spack modulefile.
-#
-
-mkdir -p "${INSTALL_PREFIX}/${spack_module_dir}"
-
+# edit and copy over Spack modulefile
+mkdir -p ${INSTALL_PREFIX}/${spack_module_dir}
 sed \
-    -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g" \
-    -e "s|DATE_TAG|${DATE_TAG}|g" \
-    -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g" \
-    -e "s/SPACK_VERSION/${spack_version}/g" \
-    -e "s|PYTHON_MODULEFILE|${python_name}/${python_version}|g" \
-    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack.lua" \
-    > "${INSTALL_PREFIX}/${spack_module_dir}/${spack_version}.lua"
+  -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g"\
+  -e "s|DATE_TAG|$DATE_TAG|g"\
+  -e "s|PAWSEY_SYSTEM|${SYSTEM}|g"\
+  -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\
+  -e "s/SPACK_VERSION/${spack_version}/g" \
+  -e "s/PYTHON_MODULEFILE/${python_name}\/${python_version}/g" \
+  ${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/spack.lua \
+  > ${INSTALL_PREFIX}/${spack_module_dir}/${spack_version}.lua
 
 
-#
-# Create base directories for Pawsey custom builds and Pawsey utilities.
-#
+# create base directories for Pawsey custom builds and Pawsey utilities
+mkdir -p ${INSTALL_PREFIX}/${custom_modules_dir}
+mkdir -p ${INSTALL_PREFIX}/${custom_software_dir}
+mkdir -p ${INSTALL_PREFIX}/${utilities_modules_dir}
+mkdir -p ${INSTALL_PREFIX}/${utilities_software_dir}
 
-mkdir -p "${INSTALL_PREFIX}/${custom_modules_dir}"
-mkdir -p "${INSTALL_PREFIX}/${custom_software_dir}"
-mkdir -p "${INSTALL_PREFIX}/${utilities_modules_dir}"
-mkdir -p "${INSTALL_PREFIX}/${utilities_software_dir}"
-
-
-#
-# Create backbone of module directories.
-#
-
+# create backbone of module directories
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_system_moduletree.sh"
 
 
-#
-# Create a template for the Pawsey module inside INSTALL_PREFIX,
-# containing the software-stack-related snippet to be handed over to
-# the Platforms team.
-#
-
-mkdir -p "${INSTALL_PREFIX}/staff_modulefiles/pawseyenv/"
-
-module_lua_cat_list=""
-
-for mod_cat in ${module_cat_list}; do
-    module_lua_cat_list+="\"${mod_cat}\", "
-done
-
-# Generate the suffixes used by the Cray Lmod compiler hierarchy variables.
-gcc_lmod_ver="${gcc_compat_version//./_}"
-cce_lmod_ver="${cce_compat_version//./_}"
-aocc_lmod_ver="${aocc_compat_version//./_}"
-nvidia_lmod_ver="${nvidia_compat_version//./_}"
-
-sed \
-    -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g" \
-    -e "s|SYSTEM|${SYSTEM}|g" \
-    -e "s|DATE_TAG|${DATE_TAG}|g" \
-    -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g" \
-    -e "s;CUSTOM_MODULES_DIR;${custom_modules_dir};g" \
-    -e "s;UTILITIES_MODULES_DIR;${utilities_modules_dir};g" \
-    -e "s;SHPC_CONTAINERS_MODULES_DIR;${shpc_containers_modules_dir};g" \
-    -e "s;CUSTOM_MODULES_SUFFIX;${custom_modules_suffix};g" \
-    -e "s;PROJECT_MODULES_SUFFIX;${project_modules_suffix};g" \
-    -e "s;USER_MODULES_SUFFIX;${user_modules_suffix};g" \
-    -e "s;GCC_VERSION;${gcc_version};g" \
-    -e "s;CCE_VERSION;${cce_version};g" \
-    -e "s;AOCC_VERSION;${aocc_version};g" \
-    -e "s;NVIDIA_VERSION;${nvidia_version};g" \
-    -e "s;GCC_LMOD_VERSION;${gcc_lmod_ver};g" \
-    -e "s;CCE_LMOD_VERSION;${cce_lmod_ver};g" \
-    -e "s;AOCC_LMOD_VERSION;${aocc_lmod_ver};g" \
-    -e "s;NVIDIA_LMOD_VERSION;${nvidia_lmod_ver};g" \
-    -e "s;MODULE_LUA_CAT_LIST;${module_lua_cat_list};g" \
-    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/templates/pawseyenv.lua" \
-    > "${INSTALL_PREFIX}/staff_modulefiles/pawseyenv/${pawseyenv_version}.lua"
+# Generate pawseyenv module
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/generate_pawseyenv.sh" \
+  "${INSTALL_PREFIX}/staff_modulefiles/pawseyenv/${pawseyenv_version}.lua"

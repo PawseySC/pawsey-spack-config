@@ -1,17 +1,9 @@
 #!/bin/bash 
 
-if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
-    SYSTEM="$PAWSEY_CLUSTER"
-fi
-
-if [ -z ${SYSTEM+x} ]; then
-    echo "The 'SYSTEM' variable is not set. Please specify the system you want to
-    build Spack for."
-    exit 1
-fi
-
-PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
-. "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
+check_installation_environment
+set_spack_config_repo
+set_compilation_sets_for_arch
+set_modulepaths_for_arch
 
 module use ${INSTALL_PREFIX}/staff_modulefiles
 # we need the python module to be available in order to run spack

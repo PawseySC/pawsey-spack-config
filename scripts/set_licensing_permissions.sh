@@ -40,8 +40,14 @@ function apply_permissions()
 }
 
 # list of archs/compilers to find all modulefiles
-archs="zen3 zen2"
-compilers="gcc/${gcc_version} aocc/${aocc_version} cce/${cce_version}"
+archs="${module_tree_arch_list:-${archs}}"
+if [ -n "${module_tree_compiler_list+x}" ]; then
+  compilers="${module_tree_compiler_list}"
+else
+  compilers="gcc/${gcc_version}"
+  [ -n "${aocc_version}" ] && compilers="${compilers} aocc/${aocc_version}"
+  [ -n "${cce_version}" ] && compilers="${compilers} cce/${cce_version}"
+fi
 
 # source tarballs
 lic_tar_dir="${top_root_dir}/licensed_src"

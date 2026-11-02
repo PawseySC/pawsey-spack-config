@@ -1,0 +1,12 @@
+include:
+  # Staff builds override this with a release-specific SPACK_USER_CONFIG_PATH.
+  - name: user
+    path_override_env_var: SPACK_USER_CONFIG_PATH
+    path: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/$USER/setonix-q/DATE_TAG/.spack_user_config
+    optional: true
+    prefer_modify: true
+    when: '"SPACK_DISABLE_LOCAL_CONFIG" not in env'
+
+  - name: site
+    path: $spack/etc/spack/site
+    optional: true

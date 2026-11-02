@@ -69,6 +69,9 @@ aocc_compat_version="4.1"
 nvidia_version=""
 nvidia_compat_version=""
 
+main_compiler="gcc"
+main_arch="zen3"
+
 # architecture of login/compute nodes (needed by Singularity symlink module)
 cpu_arch="zen3"
 
