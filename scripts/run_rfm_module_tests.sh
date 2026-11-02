@@ -51,23 +51,19 @@ export reframe_version=${reframe_version}
 export pawseyenv_version=${pawseyenv_version}
 export env_list
 export cray_env_list
-if [ "${SYSTEM}" = "ella" ]; then
-    export RFM_CHECK_MODULES=1
-fi
-
-if [ "${SYSTEM}" = "setonix-q" ]; then
+if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
     export SPACK_INSTALL_MANIFEST=${SPACK_INSTALL_MANIFEST:-${INSTALL_PREFIX}/installation_metadata/spack_install_manifest.json}
     manifest_args=(
         validate
         --manifest "${SPACK_INSTALL_MANIFEST}"
-        --system setonix-q
+        --system "${SYSTEM}"
         --install-prefix "${INSTALL_PREFIX}"
     )
     for env in $env_list $cray_env_list; do
         manifest_args+=(--environment "${env}")
     done
     "${SPACK_PYTHON:-python3}" \
-        "${PAWSEY_SPACK_CONFIG_REPO}/systems/setonix-q/install_manifest.py" \
+        "$(spack_install_manifest_tool)" \
         "${manifest_args[@]}" || exit 1
 fi
 
@@ -89,9 +85,6 @@ fi
 for env in $env_list; do
   echo "Running ReFrame tests for modules in env $env"
   export SPACK_ENV=${env}
-  if [ "${SYSTEM}" = "ella" ]; then
-    spack -e "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments/${env}" python "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_helper_methods.py" >/dev/null || exit 1
-  fi
   reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_install_report_${env}.json -t installation -r || exit 1
   unset SPACK_ENV
   mv reframe.out ${RFM_STORAGE_DIR}/reframe_${env}_install.out

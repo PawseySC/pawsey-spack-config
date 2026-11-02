@@ -15,12 +15,6 @@ fi
 set_compilation_sets_for_arch
 . "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh"
 
-if [ "${SYSTEM}" = "ella" ]; then
-  # Refresh the release's installed DAGs, including standalone dependencies.
-  spack module lmod refresh -y --delete-tree || exit 1
-  exit 0
-fi
-
 function refresh_module_specs()
 {
   local delete_tree=$1
@@ -39,7 +33,7 @@ function refresh_module_specs()
   done
 }
 
-if [ "${SYSTEM}" = "setonix-q" ]; then
+if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
   python_candidate="${INSTALLATION_METADATA_DIR}/standalone_python_manifest.candidate.json"
   python_plan="${INSTALLATION_METADATA_DIR}/standalone_python_module_plan.tsv"
   standalone_candidate="${INSTALLATION_METADATA_DIR}/standalone_manifest.candidate.json"
@@ -90,6 +84,6 @@ if [ "${SYSTEM}" = "setonix-q" ]; then
   echo "Regenerating standalone ReFrame modules.."
   refresh_module_specs 0 "${reframe_only_specs[@]}"
 else
-  echo "Standalone manifest module refresh is supported only for setonix-q."
+  echo "Standalone manifest module refresh is supported only for setonix-q and ella."
   exit 1
 fi

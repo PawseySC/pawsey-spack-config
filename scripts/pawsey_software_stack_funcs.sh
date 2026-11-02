@@ -225,24 +225,23 @@ function set_modulepaths_for_arch()
     fi
 }
 
-# Print the path to the Setonix-Q manifest helper. Allows easy modification
-# or system-specific locations in the future.
+# Setonix-Q and Ella share the existing manifest implementation.
 function spack_install_manifest_tool()
 {
     echo "${PAWSEY_SPACK_CONFIG_REPO}/systems/setonix-q/install_manifest.py"
 }
 
-# Start a Setonix-Q manifest run and initialise its metadata paths. A run ties
+# Start an installation manifest run and initialise its metadata paths. A run ties
 # all later source receipts to one stack release, preventing records from an
 # earlier or different installation from being published with this one.
 function initialize_spack_install_manifest()
 {
-    [ "${SYSTEM}" = "setonix-q" ] || return 0
+    [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ] || return 0
     : "${INSTALLATION_METADATA_DIR:=${INSTALL_PREFIX}/installation_metadata}"
     : "${SPACK_INSTALL_MANIFEST:=${INSTALLATION_METADATA_DIR}/spack_install_manifest.json}"
 
     mkdir -p "${INSTALLATION_METADATA_DIR}"
-    # Validate the Setonix-Q metadata location, archive any published manifest,
+    # Validate the metadata location, archive any published manifest,
     # remove stale candidate outputs, and write current_run.json with a new run
     # ID and the release details supplied below.
     "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" init \
@@ -253,12 +252,12 @@ function initialize_spack_install_manifest()
         --spack-version "${spack_version}"
 }
 
-# Ensure that Setonix-Q has an active manifest run before recording install
+# Ensure that the system has an active manifest run before recording install
 # results. This makes the individual install entry points safe to run without
 # first running the top-level stack installer.
 function ensure_spack_install_manifest_run()
 {
-    [ "${SYSTEM}" = "setonix-q" ] || return 0
+    [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ] || return 0
     : "${INSTALLATION_METADATA_DIR:=${INSTALL_PREFIX}/installation_metadata}"
     : "${SPACK_INSTALL_MANIFEST:=${INSTALLATION_METADATA_DIR}/spack_install_manifest.json}"
 
@@ -360,10 +359,8 @@ function install_and_record_spack_root()
     rm -f "${temporary_spec_file}"
 }
 
-# Install a Spack environment and, on Setonix-Q, record its lockfile in
-# the installation manifest. Reusing the pre-generated Setonix-Q lockfile
-# preserves the concretization. Other systems re-concretize at install
-# time.
+# Install a Spack environment and record its lockfile for Setonix-Q and Ella.
+# Reuse the tested lockfile; other systems re-concretize at install time.
 function build_environment() {
     local envdir=$1
     local env=$2
@@ -380,7 +377,7 @@ function build_environment() {
         cd "${previous_dir}" || true
         return 1
     fi
-    if [ "${SYSTEM}" = "setonix-q" ]; then
+    if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
         lock_file="${envdir}/${env}/spack.lock"
         if [ ! -f "${lock_file}" ]; then
             echo "Environment ${env} has no spack.lock; run concretize_environments.sh first."
@@ -419,7 +416,7 @@ function build_environment() {
             return 1
         fi
     fi
-    if [ "${SYSTEM}" = "setonix-q" ]; then
+    if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
         # Validate the lockfile format, replace this environment's receipt, and
         # record every root package together with its concrete dependency graph.
         # The helper seals the populated receipt as part of the same operation.

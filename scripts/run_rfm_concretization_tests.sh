@@ -29,11 +29,7 @@ export python_version=${python_version}
 export reframe_version=${reframe_version}
 export env_list
 export cray_env_list
-if [ "${SYSTEM}" = "ella" ]; then
-  export RFM_CHECK_MODULES=0
-fi
-
-if [ "${SYSTEM}" = "setonix-q" ]; then
+if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
   # ReFrame imports installation checks before applying tag filters. Keep the
   # concretization run independent of any manifest from an earlier deployment.
   export SPACK_INSTALL_MANIFEST="${INSTALL_PREFIX}/installation_metadata/.concretization-only"

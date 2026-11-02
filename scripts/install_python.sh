@@ -36,7 +36,7 @@ else
     spack spec nano
 fi
 
-if [ "${SYSTEM}" = "setonix-q" ]; then
+if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
     reset_spack_install_receipt standalone python
 fi
 
@@ -45,13 +45,9 @@ for comp in ${pythoncompilers[@]}; do
     for arch in ${archs[@]}; do
         echo "Concretization of Python with $comp for $arch .."
         echo "Installing Python with $comp for $arch.."
-        if [ "${SYSTEM}" = "setonix-q" ]; then
+        if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
             python_spec="python@${python_version} target=${arch} %${comp%%@*}_compiler"
             install_and_record_spack_root standalone python "${python_spec}" root
-        elif [ "${SYSTEM}" = "ella" ]; then
-            python_spec="python@${python_version} target=${arch} %${comp%%@*}_compiler"
-            spack spec "${python_spec}"
-            sg $INSTALL_GROUP -c "spack install -j${NCPUS} --no-checksum ${python_spec}"
         else
             spack spec python@${python_version} %$comp target=${arch}
             sg $INSTALL_GROUP -c "spack install -j${NCPUS} --no-checksum python@${python_version} %$comp target=${arch}"
@@ -59,6 +55,6 @@ for comp in ${pythoncompilers[@]}; do
     done
 done
 
-if [ "${SYSTEM}" = "setonix-q" ]; then
+if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
     seal_spack_install_receipt standalone python
 fi

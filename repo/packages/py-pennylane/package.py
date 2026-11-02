@@ -108,10 +108,11 @@ class PyPennylane(PythonPackage, CudaPackage):
 
         env.set("MPICC", self.spec["mpi"].mpicc)
         env.set("MPICXX", self.spec["mpi"].mpicxx)
-        gtl_path = self._gtl_lib_path()
-        if gtl_path:
+        if self.spec["mpi"].name == "cray-mpich":
             env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
             env.set("MPICH_GPU_IPC_ENABLED", "0")
+        gtl_path = self._gtl_lib_path()
+        if gtl_path:
             env.prepend_path("LD_LIBRARY_PATH", gtl_path)
             env.prepend_path("CRAY_LD_LIBRARY_PATH", gtl_path)
             env.append_flags("LDFLAGS", "-L{0} -lmpi_gtl_cuda -Wl,-rpath,{0}".format(gtl_path))

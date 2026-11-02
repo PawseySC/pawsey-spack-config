@@ -47,9 +47,6 @@ if [[ ! -x "${nvhpc_root}/compilers/bin/nvc" ]]; then
             NVHPC_DEFAULT_CUDA="${nvhpc_cuda_version}" ./install
     )
 fi
-for compiler in nvc nvc++ nvfortran; do
-    "${nvhpc_root}/compilers/bin/${compiler}" -V 2>&1 | grep -F " ${nvidia_version}-"
-done
 "${nvhpc_root}/cuda/${nvhpc_cuda_version}/bin/nvcc" --version
 if [[ ! -f "${NVHPC_MODULE_PREFIX}/${nvhpc_module}" && ! -f "${NVHPC_MODULE_PREFIX}/${nvhpc_module}.lua" ]]; then
     echo "Missing NVIDIA module: ${NVHPC_MODULE_PREFIX}/${nvhpc_module}" >&2

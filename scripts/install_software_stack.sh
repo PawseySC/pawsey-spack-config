@@ -16,8 +16,8 @@ set_compilation_sets_for_arch
 echo "Setting up spack.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_spack.sh"
 
-if [ "${SYSTEM}" = "setonix-q" ]; then
-    echo "Initialising Setonix-Q installation metadata.."
+if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
+    echo "Initialising ${SYSTEM} installation metadata.."
     initialize_spack_install_manifest
 fi
 

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # Publish modules and the installation manifest from the concrete specs that
-# were actually installed by the Setonix-Q workflow.
+# were actually installed by the Setonix-Q/Ella workflow.
 
 set -o pipefail
 
@@ -10,12 +10,16 @@ scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 check_installation_environment
 set_spack_config_repo
-resolve_compatible_python_interpreter
+if [ "${SYSTEM}" = "ella" ]; then
+  export SPACK_PYTHON="${SPACK_PYTHON:-${BOOTSTRAP_PYTHON}}"
+else
+  resolve_compatible_python_interpreter
+fi
 set_compilation_sets_for_arch
 set_modulepaths_for_arch
 
-if [ "${SYSTEM}" != "setonix-q" ]; then
-  echo "Installation manifests are currently enabled only for setonix-q."
+if [ "${SYSTEM}" != "setonix-q" ] && [ "${SYSTEM}" != "ella" ]; then
+  echo "Installation manifests are currently enabled only for setonix-q and ella."
   exit 1
 fi
 if (($# == 0)); then
@@ -52,7 +56,7 @@ while IFS=$'\t' read -r hash name version role standalone standalone_root enviro
 done < "${plan}"
 
 if ((${#active_specs[@]} == 0 || ${#public_specs[@]} == 0)); then
-  echo "The Setonix-Q installation manifest contains no installed specs or roots."
+  echo "The installation manifest contains no installed specs or roots."
   exit 1
 fi
 
@@ -76,4 +80,4 @@ spack python "$(spack_install_manifest_tool)" annotate-modules \
   --annotations "${annotations}" \
   --output "${SPACK_INSTALL_MANIFEST}"
 
-echo "Published Setonix-Q installation manifest: ${SPACK_INSTALL_MANIFEST}"
+echo "Published ${SYSTEM} installation manifest: ${SPACK_INSTALL_MANIFEST}"

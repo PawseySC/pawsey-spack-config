@@ -16,13 +16,30 @@ curr_dir = os.path.dirname(__file__).replace('\\','/')
 parent_dir = os.path.abspath(os.path.join(curr_dir, os.pardir))
 sys.path.append(parent_dir)
 from rfm_files.rfm_helper_methods import *
+from rfm_files.install_manifest import (
+    get_library_path,
+    get_module_dependencies,
+    get_module_paths,
+    installation_manifest_is_complete,
+)
 
 # Dictionary holding commands for every package used in baseline sanity check
 pkg_cmds = get_pkg_cmds()
 
 
-# ReFrame imports all checks before tag filtering; query modules only after installation.
-full_mod_paths = get_module_paths() if os.getenv('RFM_CHECK_MODULES') == '1' else []
+def get_module_paths_if_installed():
+    # ReFrame imports this file before applying tag filters. Do not let
+    # installation-test parameter generation hide concretization failures or
+    # derive expected installation hashes from the environment lockfile.
+    if not installation_manifest_is_complete():
+        return []
+
+    return get_module_paths()
+
+
+# List of full absolute paths for every installed root module. This is empty
+# until the installation manifest has been finalized.
+full_mod_paths = get_module_paths_if_installed()
 
 
 def module_setup_commands():

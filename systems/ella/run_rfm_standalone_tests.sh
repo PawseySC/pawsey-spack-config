@@ -6,8 +6,8 @@ scriptdir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 export SYSTEM=ella
 set_spack_config_repo
 check_installation_environment
-set_modulepaths_for_arch || exit 1
-module load "reframe/${reframe_version}" || exit 1
+set_modulepaths_for_arch
+module load "reframe/${reframe_version}"
 export INSTALL_PREFIX DATE_TAG gcc_version python_version reframe_version
 reframe -C "${RFM_SETTINGS_FILE}" -c "${scriptdir}/rfm_files/standalone_checks.py" \
     --prefix="${RFM_STORAGE_DIR}" -r "$@"

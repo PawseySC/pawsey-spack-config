@@ -17,7 +17,7 @@ set_compilation_sets_for_arch
 # echo "Running 'spack spec nano' to bootstrap Clingo.."
 # spack spec nano
 
-if [ "${SYSTEM}" = "setonix-q" ]; then
+if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
     reset_spack_install_receipt standalone reframe
 fi
 
@@ -34,21 +34,13 @@ if [ "${SYSTEM}" = "setonix" ]; then
         #sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %cce@18.0.1 ^py-maturin@1.1.0%gcc@14.2.0 target=$arch"
         #sg $INSTALL_GROUP -c "spack install --no-checksum reframe@${reframe_version} %cce@${cce_version} target=$arch"
     done
-elif [ "${SYSTEM}" = "setonix-q" ]; then
+elif [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
     for comp in ${pythoncompilers[@]}; do
         for arch in ${archs[@]}; do
             reframe_spec="reframe@${reframe_version} target=${arch} %${comp%%@*}_compiler"
             echo "Concretization of ReFrame with $comp for $arch.."
             echo "Installing ReFrame with $comp for $arch.."
             install_and_record_spack_root standalone reframe "${reframe_spec}" root
-        done
-    done
-elif [ "${SYSTEM}" = "ella" ]; then
-    for comp in ${pythoncompilers[@]}; do
-        for arch in ${archs[@]}; do
-            reframe_spec="reframe@${reframe_version} target=${arch} %${comp%%@*}_compiler"
-            spack spec --reuse "${reframe_spec}" || exit 1
-            sg $INSTALL_GROUP -c "spack install -j${NCPUS} --no-checksum --reuse ${reframe_spec}" || exit 1
         done
     done
 else
@@ -62,6 +54,6 @@ else
     done
 fi
 
-if [ "${SYSTEM}" = "setonix-q" ]; then
+if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
     seal_spack_install_receipt standalone reframe
 fi

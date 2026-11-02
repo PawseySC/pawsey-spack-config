@@ -43,7 +43,7 @@ fi
 # list of environments included in variables.sh (sourced above)
 envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 
-if [ "${SYSTEM}" = "setonix-q" ]; then
+if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
   ensure_spack_install_manifest_run
 fi
 
@@ -60,13 +60,12 @@ for env in $cray_env_list; do
   build_environment "${envdir}" "${env}" || exit 1
 done
 
-if [ "${SYSTEM}" = "setonix-q" ]; then
+if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
   deployment_environments=($env_list $cray_env_list)
   "${PAWSEY_SPACK_CONFIG_REPO}/scripts/publish_spack_install_manifest.sh" \
     "${deployment_environments[@]}" || exit 1
 else
-  # This is the Setonix module publication path from main. Setonix-Q instead
-  # refreshes only hashes in its installation manifest.
+  # The legacy Setonix publication path refreshes the store without a manifest.
   if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
     for hash in `spack find -x --format "{hash}"`; do spack buildcache create -a -m systemwide_buildcache /$hash; done
   fi
