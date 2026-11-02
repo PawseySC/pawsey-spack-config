@@ -154,6 +154,21 @@ function resolve_compatible_python_interpreter()
     fi
 }
 
+function bootstrap()
+{
+    # Prepare the system toolchains and Python before setting up Spack.
+    if [ "${SYSTEM}" = "ella" ]; then
+        echo "Bootstrapping Ella toolchains.."
+        DATE_TAG="${DATE_TAG}" "${PAWSEY_SPACK_CONFIG_REPO}/systems/ella/bootstrap_toolchains.sh" || return 1
+        module use "${TOOLCHAIN_MODULE_PREFIX}" "${NVHPC_MODULE_PREFIX}" "${MPI_MODULE_PATH}" || return 1
+        module unload gcc || return 1
+        module load "${gcc_module}" || return 1
+        export SPACK_PYTHON="${BOOTSTRAP_PYTHON}"
+    else
+        resolve_compatible_python_interpreter || return 1
+    fi
+}
+
 function set_modulepaths_for_arch()
 {
 
@@ -423,6 +438,7 @@ export -f set_modulepaths_for_arch
 export -f spack_install_manifest_tool
 export -f check_python_version
 export -f resolve_compatible_python_interpreter
+export -f bootstrap
 export -f initialize_spack_install_manifest
 export -f ensure_spack_install_manifest_run
 export -f reset_spack_install_receipt

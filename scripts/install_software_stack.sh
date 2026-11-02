@@ -10,7 +10,7 @@ scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 check_installation_environment
 set_spack_config_repo
-resolve_compatible_python_interpreter
+bootstrap || exit 1
 set_compilation_sets_for_arch
 
 echo "Setting up spack.."
