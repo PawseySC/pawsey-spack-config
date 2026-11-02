@@ -8,15 +8,11 @@ set -o pipefail
 scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 . "${scriptdir}/pawsey_software_stack_funcs.sh"
 
-check_installation_environment
 set_spack_config_repo
-if [ "${SYSTEM}" = "ella" ]; then
-  export SPACK_PYTHON="${SPACK_PYTHON:-${BOOTSTRAP_PYTHON}}"
-else
-  resolve_compatible_python_interpreter
-fi
+check_installation_environment
 set_compilation_sets_for_arch
 set_modulepaths_for_arch
+resolve_compatible_python_interpreter
 
 if [ "${SYSTEM}" != "setonix-q" ] && [ "${SYSTEM}" != "ella" ]; then
   echo "Installation manifests are currently enabled only for setonix-q and ella."

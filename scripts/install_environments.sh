@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
-check_installation_environment
 set_spack_config_repo
+check_installation_environment
 set_compilation_sets_for_arch
 set_modulepaths_for_arch
 
@@ -43,9 +43,7 @@ fi
 # list of environments included in variables.sh (sourced above)
 envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 
-if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
-  ensure_spack_install_manifest_run
-fi
+ensure_spack_install_manifest_run
 
 echo "Running installation with $NCPUS cores.."
 

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
-check_installation_environment
 set_spack_config_repo
+check_installation_environment
 set_compilation_sets_for_arch
 
 # initialise spack 

@@ -13,11 +13,6 @@ function check_installation_environment() {
         exit 1
     fi
 
-    if [ "${SYSTEM}" = "ella" ]; then
-        load_system_settings
-        export DATE_TAG
-    fi
-
     if [ -z ${INSTALL_PREFIX+x} ]; then
         if [ -z ${BASE_INSTALL_DIR+x} ]; then
             echo "The 'INSTALL_PREFIX' variable and the 'BASE_INSTALL_PREFIX' is not set. 
@@ -51,6 +46,7 @@ function check_installation_environment() {
             export INSTALL_PREFIX
         fi
     fi
+    export DATE_TAG
 }
 
 function load_system_settings()

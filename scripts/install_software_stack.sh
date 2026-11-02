@@ -8,18 +8,15 @@
 scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 . "${scriptdir}/pawsey_software_stack_funcs.sh"
 
-check_installation_environment
 set_spack_config_repo
+check_installation_environment
 bootstrap || exit 1
 set_compilation_sets_for_arch
 
 echo "Setting up spack.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_spack.sh"
 
-if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
-    echo "Initialising ${SYSTEM} installation metadata.."
-    initialize_spack_install_manifest
-fi
+initialize_spack_install_manifest
 
 echo "Running first python install"
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_python.sh"

@@ -19,8 +19,8 @@ PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /d
 if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
     # Use the system's module setup instead of the legacy Setonix PrgEnv refresh.
     . "${PAWSEY_SPACK_CONFIG_REPO}/scripts/pawsey_software_stack_funcs.sh"
-    check_installation_environment
     set_spack_config_repo
+    check_installation_environment
     set_compilation_sets_for_arch
     set_modulepaths_for_arch || exit 1
 else

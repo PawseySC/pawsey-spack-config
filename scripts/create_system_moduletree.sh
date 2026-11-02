@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
-check_installation_environment
 set_spack_config_repo
+check_installation_environment
 set_compilation_sets_for_arch
 # This script only creates directories. Avoid loading modules here because it is
 # called during initial Spack setup before pawseyenv/spack modules exist.
