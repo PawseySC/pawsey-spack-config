@@ -7,9 +7,19 @@ scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 check_installation_environment
 set_spack_config_repo
-resolve_compatible_python_interpreter
+if [ "${SYSTEM}" = "ella" ]; then
+  export SPACK_PYTHON="${SPACK_PYTHON:-${BOOTSTRAP_PYTHON}}"
+else
+  resolve_compatible_python_interpreter
+fi
 set_compilation_sets_for_arch
 . "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh"
+
+if [ "${SYSTEM}" = "ella" ]; then
+  # Refresh the release's installed DAGs, including standalone dependencies.
+  spack module lmod refresh -y --delete-tree || exit 1
+  exit 0
+fi
 
 function refresh_module_specs()
 {

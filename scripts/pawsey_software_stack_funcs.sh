@@ -172,7 +172,11 @@ function bootstrap()
 function set_modulepaths_for_arch()
 {
 
-    if [ "$( uname -m )" == "x86_64" ]; then
+    if [ "${SYSTEM}" = "ella" ]; then
+        module use "${INSTALL_PREFIX}/staff_modulefiles" || return 1
+        module --ignore-cache load "pawseyenv/${pawseyenv_version}" || return 1
+        module load "${gcc_module}" "spack/${spack_version}" || return 1
+    elif [ "$( uname -m )" == "x86_64" ]; then
         module load cpe/25.03
         # The Setonix module is named for its major/minor version (14.2), while
         # the Spack compiler and module tree use the full version (14.2.0).

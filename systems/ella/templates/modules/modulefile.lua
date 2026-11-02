@@ -68,12 +68,6 @@ setenv("LMOD_{{ name|upper() }}_VERSION", "{{ version_part }}")
 {% block autoloads %}
 {% for module in autoload %}
 {% set module_name = module |replace("astro-applications/", "") |replace("bio-applications/", "") |replace("py-keras-applications/", "pawsey-temporary-string/") |replace("applications/", "") |replace("pawsey-temporary-string/", "py-keras-applications/") |replace("libraries/", "") |replace("programming-languages/", "") |replace("utilities/", "") |replace("visualisation/", "") |replace("python-packages/", "") |replace("benchmarking/", "") |replace("developer-tools/", "") |replace("dependencies/", "") |replace("project-apps/", "") |replace("user-apps/", "") %}
-{# CUDA is provided by the site module cuda/<major.minor>, not by a Spack wrapper module. #}
-{% if module_name.startswith("cuda/") or module_name.startswith(".cuda/") %}
-{% set cuda_version_parts = module_name.split('/')[1].split('-')[0].split('.') %}
-{% set cuda_version = cuda_version_parts[0] ~ "." ~ cuda_version_parts[1] %}
-{% set module_name = "cuda/" ~ cuda_version %}
-{% endif %}
 {% if verbose %}
 LmodMessage("Autoloading {{ module_name }}")
 {% endif %}
@@ -96,107 +90,15 @@ unsetenv("{{ cmd.name }}")
 {% endif %}
 {% endfor %}
 {% endblock %}
-{% if spec.name == 'nextflow' %}setenv("NXF_HOME", os.getenv("MYSOFTWARE").."/.nextflow")
-setenv("NXF_SINGULARITY_CACHEDIR", os.getenv("MYSOFTWARE").."/.nextflow_singularity")
+{% if spec.name in ['nextflow', 'openjdk', 'singularity', 'singularityce', 'r', 'python'] %}
+local user_software = os.getenv("MYSOFTWARE")
 {% endif %}
-{% if spec.name == 'openjdk' %}setenv("GRADLE_USER_HOME", os.getenv("MYSOFTWARE").."/.gradle")
+{% if spec.name == 'nextflow' %}setenv("NXF_HOME", user_software.."/.nextflow")
+setenv("NXF_SINGULARITY_CACHEDIR", user_software.."/.nextflow_singularity")
 {% endif %}
-{% if spec.name == 'singularity' or spec.name == 'singularityce' %}setenv("SINGULARITY_CACHEDIR", os.getenv("MYSOFTWARE").."/.singularity")
--- Singularity configuration START
--- LD_LIBRARY_PATH addition 
-local singularity_ld_path = ""
--- COS 25.3
-singularity_ld_path = singularity_ld_path .. ":/host_lib64"
--- add CRAY_PATHS START
-singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3/lib:/opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3/gtl/lib:/opt/cray/xpmem/default/lib64:/opt/cray/pe/pmi/default/lib:/opt/cray/pe/pals/default/lib"
---singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/gcc-libs"
--- add CRAY_PATHS END
--- add MPI START
--- for Cassini nics and SS>=11
--- add libfabric, might need version changes
-singularity_ld_path = singularity_ld_path .. ":/opt/cray/libfabric/1.22.0/lib64/"
--- add MPI END
--- add CURRENT_HOST_LD_PATH START
-singularity_ld_path = singularity_ld_path .. ":$LD_LIBRARY_PATH"
--- add CURRENT_HOST_LD_PATH END
-setenv("SINGULARITYENV_LD_LIBRARY_PATH", singularity_ld_path)
-
--- BIND_PATH addition
--- add LOCAL FILESYSTEM START
-local singularity_bindpath = "/askapbuffer,/scratch,/software"
--- add LOCAL FILESYSTEM END
--- add SLURM START
-singularity_bindpath = singularity_bindpath .. ",/var/run/munge/munge.socket.2,/etc/slurm"
--- add SLURM END
--- add CRAY_PATHS START
-singularity_bindpath = singularity_bindpath .. ",/var/opt/cray/pe,/opt/cray,/opt/xpmem"
--- commented out below, adding lib64. Could be useful
--- singularity_bindpath = singularity_bindpath .. ",/lib64/libc.so.6,/lib64/libpthread.so.0,/lib64/librt.so.1,/lib64/libdl.so.2,/lib64/libz.so.1,/lib64/libselinux.so.1,/lib64/libm.so.6"
--- add CRAY_PATHS END
--- add MPI START
--- for Cassini nics and SS>=11
--- added several different libraries to ensure that mpi works
-singularity_bindpath = singularity_bindpath .. ",/usr/lib64/libcxi.so.1,/usr/lib64/libcurl.so.4,/usr/lib64/libjson-c.so.3"
-singularity_bindpath = singularity_bindpath .. ",/usr/lib64/libnghttp2.so.14,/usr/lib64/libidn2.so.0,/usr/lib64/libssh.so.4,/usr/lib64/libpsl.so.5,/usr/lib64/libssl.so.3,/usr/lib64/libcrypto.so.3,/usr/lib64/libgssapi_krb5.so.2,/usr/lib64/libldap_r-2.4.so.2,/usr/lib64/liblber-2.4.so.2,/usr/lib64/libunistring.so.2,/usr/lib64/libkrb5.so.3,/usr/lib64/libk5crypto.so.3,/lib64/libcom_err.so.2,/usr/lib64/libkrb5support.so.0,/lib64/libresolv.so.2,/usr/lib64/libsasl2.so.3,/usr/lib64/libkeyutils.so.1,/usr/lib64/libpcre.so.1"
--- authentication
-singularity_bindpath = singularity_bindpath .. ",/usr/lib64/libmunge.so.2"
--- -- new additions for libfabric 1.15.2.0
--- singularity_bindpath = singularity_bindpath .. ",/usr/lib64/libjitterentropy.so.3,/usr/lib64/libbrotlidec.so.1,/usr/lib64/libbrotlicommon.so.1,/usr/lib64/libjansson.so.4"
--- singularity_bindpath = singularity_bindpath .. ",/usr/lib64/libzstd.so.1"
--- singularity_bindpath = singularity_bindpath .. ",/usr/lib64/libselinux.so.1"
--- -- above additions are not needed for libfabric 1.22.x
--- lustre 
-singularity_bindpath = singularity_bindpath .. ",/usr/lib64/liblustreapi.so.1,/usr/lib64/liblnetconfig.so.4,/usr/lib64/libyaml-0.so.2,/usr/lib64/libnl-genl-3.so.200,/usr/lib64/libnl-3.so.200"
--- COS 25.3
-singularity_bindpath = singularity_bindpath .. ",/usr/lib64:/host_lib64"
--- this has to be conditional, path exists only in compute nodes
-if isDir("/var/spool/slurmd") then
-  singularity_bindpath = singularity_bindpath .. ",/var/spool/slurmd"
-  singularity_bindpath = singularity_bindpath .. ",/var/run/munge"
-end
--- add MPI END
-setenv("SINGULARITY_BINDPATH",singularity_bindpath)
-
--- LD_PRELOAD addition 
-local singularity_ld_preload = ""
--- add MPI START
--- preload xpmem for fast mpi communication
-singularity_ld_preload = singularity_ld_preload .. ":/opt/xpmem/lib64/libxpmem.so.0"
--- singularity_ld_preload = singularity_ld_preload .. ":/lib64/libc.so.6:/lib64/libpthread.so.0:/lib64/librt.so.1:/lib64/libdl.so.2:/lib64/libz.so.1:/lib64/libselinux.so.1:/lib64/libm.so.6"
--- for Cassini nics and SS>=11
-singularity_ld_preload = singularity_ld_preload .. ":/usr/lib64/libcxi.so.1:/usr/lib64/libcurl.so.4:/usr/lib64/libjson-c.so.3"
-singularity_ld_preload = singularity_ld_preload .. ":/usr/lib64/libnghttp2.so.14:/usr/lib64/libidn2.so.0:/usr/lib64/libssh.so.4:/usr/lib64/libpsl.so.5:/usr/lib64/libssl.so.3:/usr/lib64/libcrypto.so.3:/usr/lib64/libgssapi_krb5.so.2:/usr/lib64/libldap_r-2.4.so.2:/usr/lib64/liblber-2.4.so.2:/usr/lib64/libunistring.so.2:/usr/lib64/libkrb5.so.3:/usr/lib64/libk5crypto.so.3:/lib64/libcom_err.so.2:/usr/lib64/libkrb5support.so.0:/lib64/libresolv.so.2:/usr/lib64/libsasl2.so.3:/usr/lib64/libkeyutils.so.1:/usr/lib64/libpcre.so.1"
--- authentication 
-singularity_ld_preload = singularity_ld_preload .. ":/usr/lib64/libmunge.so.2"
--- -- new additions for libfabric 1.15.2.0
--- singularity_ld_preload = singularity_ld_preload .. ":/usr/lib64/libjitterentropy.so.3:/usr/lib64/libbrotlidec.so.1:/usr/lib64/libbrotlicommon.so.1:/usr/lib64/libjansson.so.4"
--- singularity_ld_preload = singularity_ld_preload .. ":/usr/lib64/libzstd.so.1"
--- singularity_ld_preload = singularity_ld_preload .. ":/usr/lib64/libselinux.so.1"
--- -- above additions are not needed for libfabric 1.22.x
--- lustre
-singularity_ld_preload = singularity_ld_preload .. ":/usr/lib64/liblustreapi.so.1:/usr/lib64/liblnetconfig.so.4:/usr/lib64/libyaml-0.so.2:/usr/lib64/libnl-genl-3.so.200:/usr/lib64/libnl-3.so.200"
--- add MPI END
--- add GPUMPI START
-singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3/lib/libmpi_gtl_cuda.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/lib64/libmpi_nvidia.so.12"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libacchost.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libaccdevaux.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libaccdevice.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/cuda/13.0/lib64/libcudart.so.12"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libcudadevice.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libcudanvhpc.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libnvf.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/nvidia/hpc_sdk/Linux_aarch64/25.9/compilers/lib/libnvhpcatm.so"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/lib64/libsci_nvidia_mpi.so.6"
-singularity_ld_preload = singularity_ld_preload .. ":/opt/cray/pe/lib64/libsci_nvidia.so.6"
--- add GPUMPI END
-prepend_path("SINGULARITYENV_LD_PRELOAD", singularity_ld_preload)
-
--- add GPUMPI START
-setenv("MPICH_GPU_SUPPORT_ENABLED","1")
-setenv("SINGULARITYENV_MPICH_GPU_SUPPORT_ENABLED","1")
--- add GPUMPI END
-
+{% if spec.name == 'openjdk' %}setenv("GRADLE_USER_HOME", user_software.."/.gradle")
+{% endif %}
+{% if spec.name == 'singularity' or spec.name == 'singularityce' %}setenv("SINGULARITY_CACHEDIR", user_software.."/.singularity")
 -- Patch lmod messages in singularity shells
 local patch_dir = "INSTALL_PREFIX" .. "/pawsey/lmod-variable-fixes"
 local patch_file = patch_dir .. "/pawsey_fix_initial_bash.lua"
@@ -204,10 +106,11 @@ local func = assert(loadfile(patch_file))()
 func(patch_dir)
 
 {% endif %}
-{% if spec.name == 'r' %}setenv("R_LIBS_USER", os.getenv("MYSOFTWARE").."/setonix-q/DATE_TAG/r/%v")
+{% if spec.name == 'r' %}setenv("R_LIBS_USER", user_software.."/ella/DATE_TAG/r/%v")
 {% endif %}
-{% if spec.name == 'python' %}setenv("PYTHONUSERBASE", os.getenv("MYSOFTWARE").."/setonix-q/DATE_TAG/python")
-prepend_path("PATH", os.getenv("PYTHONUSERBASE").."/bin")
+{% if spec.name == 'python' %}local python_userbase = pathJoin(user_software, "ella/DATE_TAG/python")
+setenv("PYTHONUSERBASE", python_userbase)
+prepend_path("PATH", pathJoin(python_userbase, "bin"))
 {% endif %}
 
 {% block footer %}

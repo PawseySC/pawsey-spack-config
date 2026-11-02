@@ -27,7 +27,7 @@ echo "Running first python install"
 echo "Running first reframe install"
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_reframe.sh"
 
-if [ "${SYSTEM}" = "setonix-q" ]; then
+if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
     echo "Regenerating standalone Python and ReFrame modules.."
     "${PAWSEY_SPACK_CONFIG_REPO}/scripts/refresh_standalone_modules.sh"
 fi

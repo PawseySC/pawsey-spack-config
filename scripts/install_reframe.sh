@@ -43,6 +43,14 @@ elif [ "${SYSTEM}" = "setonix-q" ]; then
             install_and_record_spack_root standalone reframe "${reframe_spec}" root
         done
     done
+elif [ "${SYSTEM}" = "ella" ]; then
+    for comp in ${pythoncompilers[@]}; do
+        for arch in ${archs[@]}; do
+            reframe_spec="reframe@${reframe_version} target=${arch} %${comp%%@*}_compiler"
+            spack spec --reuse "${reframe_spec}" || exit 1
+            sg $INSTALL_GROUP -c "spack install -j${NCPUS} --no-checksum --reuse ${reframe_spec}" || exit 1
+        done
+    done
 else
     for comp in ${pythoncompilers[@]}; do
         for arch in ${archs[@]}; do
