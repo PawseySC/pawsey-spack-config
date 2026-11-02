@@ -13,8 +13,8 @@ from pathlib import Path
 from shutil import copy
 from typing import Dict, List
 
+from spack.build_environment import dso_suffix, stat_suffix
 from spack_repo.builtin.build_systems.generic import Package
-
 from spack.package import *
 
 
@@ -174,6 +174,7 @@ class Python(Package):
     variant("tix", default=False, description="Build Tix module", when="+tkinter")
     variant("crypt", default=True, description="Build crypt module", when="@:3.12 platform=linux")
     variant("crypt", default=True, description="Build crypt module", when="@:3.12 platform=darwin")
+
 
     depends_on("c", type="build")
     depends_on("cxx", type="build")
@@ -565,7 +566,7 @@ class Python(Package):
 
 
         arch = platform.machine()
-        if arch == "x86_64":
+        if arch in ("x86_64", "neoverse_v2", "aarch64"):
           config_args.append("--with-platlibdir=lib64")
 
         # setup.py needs to be able to read the CPPFLAGS and LDFLAGS

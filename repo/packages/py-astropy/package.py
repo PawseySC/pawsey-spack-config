@@ -76,6 +76,8 @@ class PyAstropy(PythonPackage):
     variant('extras', default=False, description='Enable extra functionality')
 
     # Required dependencies
+    depends_on("c", type="build")
+
     depends_on('python@3.6:', when='@4.0:', type=('build', 'run'))
     depends_on('python@3.5:', when='@3.0:', type=('build', 'run'))
     depends_on('python@2.7:2.8,3.4:', when='@2.0:', type=('build', 'run'))

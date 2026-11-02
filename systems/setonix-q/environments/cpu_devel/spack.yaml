@@ -1,0 +1,15 @@
+spack:
+  definitions:
+  - packages:
+    - hpcviewer@2025.2.0
+  - gpu-packages:
+    # currently issues with scorep, missing bfd so can't compile
+    - scorep@9.4 +cuda
+  specs:
+  - matrix:
+    - [$packages]
+    - ['%gcc_compiler']
+  #- matrix:
+  #  - [$gpu-packages]
+  #  - ['%gcc@13.3.1']
+  view: false
