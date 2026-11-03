@@ -97,7 +97,7 @@ setenv("NXF_SINGULARITY_CACHEDIR", os.getenv("MYSOFTWARE").."/.nextflow_singular
 {% if spec.name == 'singularity' or spec.name == 'singularityce' %}setenv("SINGULARITY_CACHEDIR", os.getenv("MYSOFTWARE").."/.singularity")
 -- Singularity configuration START
 -- get libfabric version from environment variable
-local handle = io.popen("echo $LD_LIBRARY_PATH | sed \"s:libfabric/: :g\" | awk '{print $2}' | sed \"s:/lib64: :g\" | awk '{print $1}'")
+local handle = io.popen("echo ${__LMOD_PROTECTED_LD_LIBRARY_PATH:-$LD_LIBRARY_PATH} | sed \"s:libfabric/: :g\" | awk '{print $2}' | sed \"s:/lib64: :g\" | awk '{print $1}'")
 local libfabric_version = (handle:read("*a")):match("^%s*(.-)%s*$") -- trim whitespace
 handle:close()
 -- get cray mpich version from environment variable
@@ -119,7 +119,7 @@ singularity_ld_path = singularity_ld_path .. ":/opt/cray/pe/mpich/" .. cray_mpic
 singularity_ld_path = singularity_ld_path .. ":/opt/cray/libfabric/" .. libfabric_version .. "/lib64/"
 -- add MPI END
 -- add CURRENT_HOST_LD_PATH START
-singularity_ld_path = singularity_ld_path .. ":$LD_LIBRARY_PATH"
+singularity_ld_path = singularity_ld_path .. ":${__LMOD_PROTECTED_LD_LIBRARY_PATH:-$LD_LIBRARY_PATH}"
 -- add CURRENT_HOST_LD_PATH END
 setenv("SINGULARITYENV_LD_LIBRARY_PATH", singularity_ld_path)
 
