@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 #
 # Pawsey-developed recipe for Qiskit plus locally built Qiskit Aer with CUDA
-# and cuQuantum support on setonix-q.
+# and cuQuantum support on Setonix-Q and Ella.
 
 import glob
 import os
@@ -65,6 +65,8 @@ class PyQiskit(PythonPackage, CudaPackage):
 
     depends_on("c", type="build")
     depends_on("cxx", type="build")
+    depends_on("blas", type=("build", "link", "run"))
+    depends_on("lapack", type=("build", "link", "run"))
     depends_on("python@3.10:", when="@2:", type=("build", "run"))
     depends_on("python@3.9:", when="@1:", type=("build", "run"))
 
@@ -225,11 +227,16 @@ class PyQiskit(PythonPackage, CudaPackage):
             "-DCMAKE_CXX_STANDARD_REQUIRED=ON",
             "-DCMAKE_CUDA_STANDARD=17",
             "-DCMAKE_CUDA_STANDARD_REQUIRED=ON",
+            "-DAER_BLAS_LIB_PATH={0}".format(spec["blas"].prefix),
             "-DCUQUANTUM_ROOT={0}".format(spec["cuquantum"].prefix),
             "-DCUTENSOR_ROOT={0}".format(spec["cutensor"].prefix),
             "-DAER_MPI={0}".format("True" if "+mpi" in spec else "False"),
             "-DAER_ENABLE_CUQUANTUM=true",
         ]
+
+        # Both systems select OpenBLAS, which supplies BLAS and LAPACK.
+        if spec["blas"].name == "openblas":
+            cmake_args.append("-DBLA_VENDOR=OpenBLAS")
 
         gtl_path = self._gtl_lib_path()
         if "+mpi" in spec and gtl_path:
