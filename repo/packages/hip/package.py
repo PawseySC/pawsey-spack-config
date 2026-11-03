@@ -285,6 +285,7 @@ class Hip(CMakePackage):
     patch("0014-remove-compiler-rt-linkage-for-host.6.1.patch", when="@6.1")
     patch("0015-reverting-operator-mixup-fix-for-slate.patch", when="@:6.0")
     patch("0018-reverting-hipMemoryType-with-memoryType.patch", when="@6.0:6.2")
+    patch("guard-cuda-13.1-apis.patch", when="@7.16.0 +cuda")
 
     # See https://github.com/ROCm/HIP/pull/3206
     patch(

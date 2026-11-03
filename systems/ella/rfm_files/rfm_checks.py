@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import reframe as rfm
+from reframe.core.backends import getlauncher
 import reframe.utility.sanity as sn
 import reframe.utility.udeps as udeps
 
@@ -285,6 +286,12 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
 
     @run_after('setup')
     def configure_ella_step(self):
+        # HPC-X cannot use Slurm's PMI2 interface. Commands that initialize
+        # MPI use its mpirun inside this Slurm allocation, without outer srun.
+        if self.executable == 'mpirun':
+            self.job.launcher = getlauncher('local')()
+            return
+
         # Override the unavailable pmix default for srun-launched checks.
         self.job.launcher.options += ['--mpi=pmi2']
 

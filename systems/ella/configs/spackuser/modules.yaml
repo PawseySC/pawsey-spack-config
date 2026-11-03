@@ -13,9 +13,11 @@ modules:
       # so lockfile-backed module regeneration cannot encounter name clashes.
       hide_implicits: true
 
-      # Select all packages that depend on python, or r, or java,
+      # Select all packages that depend on python, perl, r, or java,
       # and set these modules to autoload their dependencies
       ^python:
+        autoload: direct
+      ^perl:
         autoload: direct
       ^r:
         autoload: direct
