@@ -311,6 +311,11 @@ class Adios2(CMakePackage, CudaPackage, ROCmPackage):
             self.define("ADIOS2_USE_IME", False),
         ]
 
+        if spec.satisfies("+sst ^openmpi ^cmake@3.22:") and spec["mpi"].external:
+            # HPC-X UCX pkg-config files can retain paths from the build machine.
+            # Derive each package's prefix from its installed .pc file instead.
+            args.append(self.define("PKG_CONFIG_ARGN", "--define-prefix"))
+
         if spec.satisfies("+sst"):
             args.extend(
                 [
