@@ -21,66 +21,35 @@ after it is installed; the script to run as root is in the Spack installation's
 
 The full-stack installer runs
 [`scripts/generate_singularity_modules.sh`](scripts/generate_singularity_modules.sh)
-after installing environments. SingularityCE must already be installed in that
-stack, and the configured stack Python/Lmod modules must be available. The driver
-renders the current checkout's template with the installed Spack into a fresh
-private staging run, then uses the existing
+after installing environments. SingularityCE must already be installed in the
+selected stack. The script uses the installed Spack configuration and the
+[`modulefile.lua`](systems/setonix/templates/modules/modulefile.lua) template to
+render private base modulefiles, then calls
 [`create_custom_singularity_modules_from_general_singularity_container_engine.sh`](scripts/create_custom_singularity_modules_from_general_singularity_container_engine.sh)
-generator to create custom variants. The general Spack installer remains
-unchanged; the SHPC-only installer checks that its configured Singularity
-modules can be loaded and does not regenerate them.
-
-The driver requires `--install-type official|testing` and `--version VERSION|all`.
-A selected version (or all selected with `--version all`) must already be installed
-for the configured architecture and GCC compiler. Omit `--flavour` to generate
-all seven variants (`nompi`, `mpi`, `mpi-gpu`, `askap`, `askap-gpu`, `nohost`,
-and `slurm`), or provide one comma-separated `--flavour` list to choose a
-subset. Empty entries are rejected; duplicate valid names are generated once.
-For example:
-
-```bash
-./scripts/generate_singularity_modules.sh --install-type testing \
-  --stack-prefix /software/setonix/2026.11 \
-  --version 4.3.5 --flavour mpi,mpi-gpu --suffix qa
-```
-
-`--date-tag`, `--stack-prefix`, and `--prefix` select the stack release, existing
-stack, and staging parent. Defaults are derived from the current settings and
-environment; the staging parent defaults to
-`$MYSCRATCH/singularity-module-updates/<date-tag>`. The staging parent must be
-strictly below `MYSCRATCH`; the existing input stack can be outside scratch,
-including under `/software`. Each invocation creates a new staging run. Testing mode
-validates and retains its generated files there without publishing them.
-Official mode publishes only validated custom variants and BASH_ENV compatibility
-patch files. `--suffix`
-labels only custom variants. Spack base modules are rendered privately and
+to generate the requested custom flavours. Private Spack base modulefiles are
 never published.
 
-The driver validates generated Lua with `luac` and checks each selected custom
-module with Lmod. It does not execute containers. It stages the two shared
-BASH_ENV compatibility patch files alongside variants; replacing one may affect
-every module that uses it. Generated variants preserve the template's absolute
-patch path in the selected installed stack.
-For identical inputs, testing and official modes generate identical modulefiles.
-After loading and functionally testing the retained files from staging, you can
-copy them unchanged to the reported official variants directory. The required
-patch files must already be installed at the template's path.
-If those files are missing or unreadable during first-time setup, the driver
-reports that limitation and uses separate disposable copies with staged patches
-for Lmod validation. These copies are never publication candidates; retained
-deliverables still require the installed patches before they can be loaded.
-The Spack generation timestamp is omitted from custom variants so unchanged
-content remains identical across runs. Before publishing, the driver lists every destination, reuses
-identical files, and reports all differing files before writing. `--force` is
-available only for official installs; it atomically replaces differences.
-Symlink destinations and parent directories are rejected, and publication is
-serialized under a stack-wide lock. No backups or automatic deletions are made.
-Partial publication failures report exact changed paths and retain staging.
+The generator can also be run independently after installation to regenerate,
+validate, and publish customized SingularityCE modulefiles without repeating the
+complete software-stack installation. This supports later modulefile changes,
+such as adding a new library-injection pattern to one or more flavours.
 
-### Software stack modulefile
+Use `--install-type testing` to validate and retain staged artifacts without
+modifying the installed stack. Use `--install-type official` to publish validated
+variants and the shared BASH_ENV compatibility patch files. These patch files are
+shared by installed Singularity modules, so force-replacing them may affect
+modules outside the versions selected in the current run.
 
-The platforms team will need to install the `$INSTALL_PREFIX/staff_modulefiles/pawseyenv/*lua` module such that it will be loaded before the Cray compilers. They will also need to update user account creation process, following the updated `$INSTALL_PREFIX/spack/bin/spack_create_user_moduletree.sh`.
+Run the following command for the complete option reference, prerequisites,
+examples, validation scope, staging details, and publication behavior:
 
+```bash
+./scripts/generate_singularity_modules.sh --help
+```
+
+The general Spack installer remains unchanged. The SHPC-only installer verifies
+that its configured Singularity modules can be loaded and does not regenerate
+them.
 
 ## Repository structure
 
@@ -97,7 +66,7 @@ The `scripts/install_software_stack.sh` is the top-level script that executes th
 
 ## The `scripts` directory
 
-This project makes up a build system for the scientific software stack on Pawsey supercomputers. On a high level, there are two logical compontents to it: 
+This project makes up a build system for the scientific software stack on Pawsey supercomputers. On a high level, there are two logical compontents to it:
 one to deploy Spack and SHPC (a software package to manage containers), and the other to use the tools mentioned before to install scientific software.
 
 The deployment of Spack and SHPC is implemented through the following executables BASH scripts within the `scripts` directory:
@@ -109,7 +78,7 @@ The deployment of Spack and SHPC is implemented through the following executable
 The software stack deployment is implemented in these scripts instead:
 * `concretize_environments.sh` runs the concretization step for all Spack environments to be installed.
 * `install_environments.sh` will install all Spack environments using Spack.
-* `install_shpc_containers.sh` will pull Pawsey-supported containers and install them using SHPC. 
+* `install_shpc_containers.sh` will pull Pawsey-supported containers and install them using SHPC.
 * `post_installation_operations.sh` refreshes Lmod modulefiles for the installed software, applies permissions to licensed software, and other operations needed after the full stack deployment executed by Spack.
 
 
@@ -152,6 +121,6 @@ This is where system specific configurations are placed. In particular, the foll
 
 ### Testing Modules
 
-Current `modules.yaml` and the template `modulefile.lua` rely on additional features of Spack found in the feature/improved-lmod-modules (https://github.com/PawseySC/spack/tree/feature/improved-lmod-modules).  
-The update provides extra tokens that can be used when creating the module name and also extra keywords to the template.  
-These features have now been packaged in a patch, that is applied by `install_spack.sh`.  
+Current `modules.yaml` and the template `modulefile.lua` rely on additional features of Spack found in the feature/improved-lmod-modules (https://github.com/PawseySC/spack/tree/feature/improved-lmod-modules).
+The update provides extra tokens that can be used when creating the module name and also extra keywords to the template.
+These features have now been packaged in a patch, that is applied by `install_spack.sh`.
