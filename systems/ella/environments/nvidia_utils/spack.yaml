@@ -10,7 +10,7 @@ spack:
     - nextflow@22.10.0 #supports DSL-1
     - nextflow@24.10.0 #supports DSL-2
     - parallel@20240822
-    - mpifileutils@0.11.1+lustre
+    - mpifileutils@0.11.1 ~lustre
     - feh@3.10
     - nano@8.2
     - cmake@3.31.7
