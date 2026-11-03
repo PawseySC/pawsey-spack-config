@@ -27,12 +27,17 @@ class PyNvmathPython(PythonPackage):
     conflicts("+cu12", when="+cu13", msg="Cannot enable both CUDA 12 and CUDA 13 support")
     conflicts("~cu12~cu13", msg="Must enable either +cu12 or +cu13")
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
     depends_on("python@3.10:3.13", type=("build", "run"))
     depends_on("py-setuptools@77:", type="build")
     depends_on("py-cython@3.2:", type="build")
     depends_on("py-tomli@2:", type="build", when="^python@:3.10")
     depends_on("py-numpy@1.25:2", type=("build", "run"))
-    depends_on("py-cuda-python", type=("build", "run"))
+    depends_on("py-cuda-bindings@12", when="+cu12", type=("build", "run"))
+    depends_on("py-cuda-bindings@13", when="+cu13", type=("build", "run"))
+    depends_on("py-cuda-core@0.3.2:0.3", type=("build", "run"))
+    depends_on("py-cuda-pathfinder@1.2.1:1", type=("build", "run"))
     depends_on("cuda@12:12", when="+cu12", type=("build", "run"))
     depends_on("cuda@13", when="+cu13", type=("build", "run"))
     depends_on("cutensor@2.3.1:", type=("build", "run"))
@@ -55,11 +60,3 @@ class PyNvmathPython(PythonPackage):
         if self.spec.satisfies("+cu12") or self.spec.satisfies("+cu13"):
             env.set("CUDA_HOME", self.spec["cuda"].prefix)
             env.set("CUDA_PATH", self.spec["cuda"].prefix)
-
-        # Make cuda-python headers (Cython .pxd) visible to the build
-        pyver = ".".join(str(x) for x in self.spec["python"].version.up_to(2))
-        cuda_py_path = join_path(
-            self.spec["py-cuda-python"].prefix, "lib", f"python{pyver}", "site-packages"
-        )
-        env.prepend_path("PYTHONPATH", cuda_py_path)
-        env.prepend_path("CYTHON_INCLUDE_PATH", cuda_py_path)

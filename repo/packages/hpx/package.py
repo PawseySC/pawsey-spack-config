@@ -267,6 +267,11 @@ class Hpx(CMakePackage, CudaPackage, ROCmPackage):
         if spec.satisfies("@1.7:"):
             args += [self.define("HPX_WITH_UNITY_BUILD", True)]
 
+        if "+cuda" in spec:
+            cuda_arch = spec.variants["cuda_arch"].value
+            if "none" not in cuda_arch:
+                args += [self.define("CMAKE_CUDA_ARCHITECTURES", ";".join(cuda_arch))]
+
         # HIP support requires compiling with hipcc
         if self.spec.satisfies("+rocm"):
             args += [self.define("CMAKE_CXX_COMPILER", self.spec["hip"].hipcc)]
