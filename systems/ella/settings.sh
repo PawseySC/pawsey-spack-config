@@ -58,7 +58,7 @@ SPACK_INSTALL_MANIFEST=${INSTALLATION_METADATA_DIR}/spack_install_manifest.json
 SPACK_POPULATE_CACHE=0
 # Cap build parallelism well below single node core count. To prevent OOM errors when building large packages (e.g. LLVM).
 NCPUS=32
-# Limit reuse to installed Python in configs/site/concretizer.yaml; broad
+# Disable installed-package reuse in configs/site/concretizer.yaml; broad
 # --reuse previously caused quantum environment concretization to hang.
 SPACK_SPEC_ARGS=""
 SPACK_INSTALL_ARGS=" --no-checksum "
