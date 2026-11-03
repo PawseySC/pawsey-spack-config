@@ -1,26 +1,45 @@
 #!/bin/bash
-# Generate custom Singularity modules from already installed SingularityCE specs.
+# Generate and validate custom SingularityCE module variants from software that
+# is already installed in an existing Spack stack.
+#
+# The script uses the stack's Spack installation to discover installed specs and
+# render fresh base modulefiles in a private per-run directory. It then generates
+# requested custom flavours, stages their shared BASH_ENV compatibility patch
+# files, validates every artifact, and either retains the testing output or
+# publishes the validated files into the official stack.
+#
 # Workflow:
-# 1) parse CLI, 2) load settings and validate paths, 3) render private base
-# modules with installed Spack, 4) generate requested variants + helpers,
-# 5) validate staged output, 6) retain staging (testing) or publish variants and
-# helpers (official). Spack base modules are never published.
+# 1) Parse and validate command-line options.
+# 2) Load system settings and resolve canonical stack paths.
+# 3) Create an isolated per-run staging directory below MYSCRATCH.
+# 4) Discover installed SingularityCE specs and render private base modulefiles.
+# 5) Generate requested variants and stage shared compatibility patch files.
+# 6) Validate Lua and Bash syntax and evaluate modulefiles with Lmod.
+# 7) Retain validated staging for testing, or publish validated files officially
+#    with locking, conflict detection, and safe per-file replacement.
 #
-# Notes:
-# - This script does not install software, concretize, or execute containers.
-# - The input stack is read-only for both install types.
-# - Publication touches only custom variants and two shared helpers.
-# - No backup/restore is performed; failed publication leaves staging for review.
+# Operational boundaries:
+# - The script does not install software, concretize specs, or execute containers.
+# - Installed package prefixes and Spack metadata are read-only inputs.
+# - Privately rendered Spack base modulefiles are never published.
+# - Testing mode leaves the installed stack unchanged and retains the full run.
+# - Official mode publishes only custom variants and the two shared BASH_ENV
+#   compatibility patch files.
+# - Differing destinations require --force. No backup or rollback is performed,
+#   so a publication failure may leave files published earlier in the loop changed.
+# - Staging and logs are retained for inspection and troubleshooting.
 #
-# - Designed by Alexis Espinosa and initially implemented with assistance from
-#   GPT-6.1 Sol via GitHub Copilot; reviewed and tested by Alexis Espinosa.
+# Designed by Alexis Espinosa and initially implemented with assistance from
+# GPT-6.1 Sol via GitHub Copilot; reviewed and tested by Alexis Espinosa.
 set -e -o pipefail
 
+# Function for reporting a fatal error consistently and terminating the script.
 die() {
     printf 'ERROR: %s\n' "$*" >&2
     exit 1
 }
 
+# Function for printing syntax, options, operational notes, and usage examples.
 usage() {
     cat <<'USAGE'
 Usage: generate_singularity_modules.sh --install-type official|testing \
@@ -38,9 +57,25 @@ Usage: generate_singularity_modules.sh --install-type official|testing \
   --force               Replace differing destinations (official only).
   -h, --help            Show this help.
 
+Examples:
+  Validate all flavours for one installed version without publishing:
+    generate_singularity_modules.sh --install-type testing --version 4.2.2
+
+  Validate selected flavours with a suffix in a custom staging parent:
+    generate_singularity_modules.sh --install-type testing --version 4.2.2 \
+      --flavour mpi,mpi-gpu --suffix trial --prefix "$MYSCRATCH/module-testing"
+
+  Publish all flavours for every installed SingularityCE version:
+    generate_singularity_modules.sh --install-type official --version all
+
+  Force replacement of reviewed conflicts for selected flavours:
+    generate_singularity_modules.sh --install-type official --version 4.2.2 \
+      --flavour mpi,mpi-gpu --force
+
 Each run renders selected installed Spack modules into fresh private staging,
 generates and validates only requested custom variants, then safely publishes
-those variants and the two required shared Lmod helpers. Spack base modules are
+those variants and the two shared BASH_ENV compatibility patch files required
+by the generated modules. Spack base modules are
 never published. Identical destinations are reused; conflicts are reported
 before publication. Existing destination files are not backed up or removed;
 temporary publication files are cleaned up. No container runtime tests occur.
@@ -50,6 +85,7 @@ USAGE
 # ------------------------------------------------------------------------------
 # Step 1: parse and validate command-line arguments.
 # ------------------------------------------------------------------------------
+# Initialize option state, using supported environment defaults where available.
 install_type=""
 version=""
 suffix=""
@@ -60,6 +96,7 @@ force=0
 flavour_option_seen=0
 declare -a requested_flavours=()
 
+# Parse long options explicitly so malformed or unsupported input fails early.
 while [ "$#" -gt 0 ]; do
     case "$1" in
         --install-type|--version|--flavour|--suffix|--date-tag|--stack-prefix|--prefix)
@@ -112,6 +149,7 @@ done
 # ------------------------------------------------------------------------------
 # Step 2: load settings and resolve canonical input/output roots.
 # ------------------------------------------------------------------------------
+# Resolve the repository root and selected system configuration.
 PAWSEY_SPACK_CONFIG_REPO=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 SYSTEM=${SYSTEM:-${PAWSEY_CLUSTER:-setonix}}
 [[ "$SYSTEM" =~ ^[A-Za-z0-9_-]+$ ]] || die "Invalid SYSTEM name."
@@ -137,7 +175,8 @@ export INSTALL_GROUP="${INSTALL_GROUP:-$(id -gn)}"
 # Settings use an include guard; clear an inherited guard so this process loads
 # the selected system's definitions rather than silently skipping the file.
 unset __PSC_SETTINGS__
-# Export settings variables to Spack and helper processes that consume them.
+# Export variables defined by settings.sh so Spack and other child processes
+# inherit the selected system configuration.
 set -a
 # shellcheck source=/dev/null
 . "$PAWSEY_SPACK_CONFIG_REPO/systems/$SYSTEM/settings.sh"
@@ -157,6 +196,7 @@ scratch=$(realpath -e "$MYSCRATCH")
 : "${singularity_name:?Missing singularity_name in settings.sh}"
 : "${singularity_name_general:?Missing singularity_name_general in settings.sh}"
 : "${singularity_symlink_module_dir:?Missing singularity_symlink_module_dir in settings.sh}"
+# Derive and validate the relative module paths used for rendering and publication.
 source_relative="modules/$cpu_arch/gcc/$gcc_version/utilities/$singularity_name_general"
 variants_relative=$singularity_symlink_module_dir
 for relative in "$source_relative" "$variants_relative"; do
@@ -166,6 +206,7 @@ done
 
 # A missing flavour option means all supported outputs. Repeated names within
 # the one comma-list are harmless, and are collapsed before invoking the generator.
+# Expand the default flavour set or deduplicate the explicitly requested list.
 if [ "${#requested_flavours[@]}" -eq 0 ]; then
     flavours=(nompi mpi mpi-gpu askap askap-gpu nohost slurm)
 else
@@ -181,6 +222,7 @@ fi
 # ------------------------------------------------------------------------------
 # Step 3: allocate an isolated per-run staging directory.
 # ------------------------------------------------------------------------------
+# Resolve a safe staging prefix and allocate a unique retained run directory.
 prefix=$(realpath -m "${prefix:-$scratch/singularity-module-updates/$DATE_TAG}")
 [[ "$prefix" == "$scratch/"* && "$prefix" != "$scratch" ]] ||
     die "The staging prefix must be strictly below MYSCRATCH."
@@ -199,10 +241,12 @@ printf 'Run directory: %s\nInstall type: %s\nStack prefix: %s\n' \
     "$run" "$install_type" "$stack_prefix"
 printf 'Preparing private Spack rendering and installed-spec discovery; this may take a minute or two...\n'
 
+# Track publication progress and temporary state for cleanup and diagnostics.
 published_created=()
 published_replaced=()
 publication_started=0
 file_temp=""
+# Function for cleaning temporary publication state and reporting partial changes.
 on_exit() {
     local status=$?
     if [ -n "$file_temp" ] && [ -e "$file_temp" ]; then
@@ -214,6 +258,7 @@ on_exit() {
         printf 'Files replaced: %s\n' "${published_replaced[*]:-none}" >&2
     fi
 }
+# Run cleanup and partial-publication reporting whenever the script exits.
 trap on_exit EXIT
 
 # ------------------------------------------------------------------------------
@@ -224,6 +269,7 @@ spack="$stack_prefix/spack/bin/realspack"
 generator="$PAWSEY_SPACK_CONFIG_REPO/scripts/create_custom_singularity_modules_from_general_singularity_container_engine.sh"
 mkdir -p "$run/templates" "$run/site" "$run/staff" \
     "$run/overrides" "$run/cache" "$rendered/$source_relative"
+# Copy templates and module configuration into the private run for safe rewriting.
 cp -R "$PAWSEY_SPACK_CONFIG_REPO/systems/$SYSTEM/templates/." "$run/templates/"
 cp "$PAWSEY_SPACK_CONFIG_REPO/systems/$SYSTEM/configs/site/modules.yaml" "$run/site/"
 cp "$PAWSEY_SPACK_CONFIG_REPO/systems/$SYSTEM/configs/spackuser/modules.yaml" "$run/staff/"
@@ -272,6 +318,7 @@ export PYTHONDONTWRITEBYTECODE=1
 # Any banner text would pollute path parsing and break deterministic checks.
 export PYTHONSTARTUP=""
 # -E ignores ambient SPACK_* state; explicit roots keep this run deterministic.
+# Build one Spack command prefix that always uses isolated configuration.
 spack_command=("$spack" -E -C "$run/site" -C "$run/staff" -C "$run/overrides")
 type module >/dev/null 2>&1 || die "The Lmod module command must be available."
 # Load the stack Python required by Spack's renderer (child shell only).
@@ -298,6 +345,7 @@ if [ "${#hashes[@]}" -eq 0 ] ||
     die "Expected installed $query for $cpu_arch/GCC $gcc_version; found ${#hashes[@]}. See $run/installed-specs.txt."
 fi
 
+# Render and verify one deterministic private base module per selected version.
 declare -A output_versions=()
 for index in "${!hashes[@]}"; do
     hash=${hashes[$index]}
@@ -334,18 +382,23 @@ for index in "${!hashes[@]}"; do
 done
 
 printf 'Generating requested variants from rendered base modules...\n'
+
 # ------------------------------------------------------------------------------
-# Step 5: generate requested custom variants and stage helper candidates.
+# Step 5: generate requested custom variants and stage the shared BASH_ENV compatibility patch files.
 # ------------------------------------------------------------------------------
+# Prepare the variant staging directory, collect the rendered base modulefiles,
+# and initialize the artifact tracking arrays and generation log.
 variant_directory="$stage/$variants_relative"
 mkdir -p "$variant_directory"
-helper_relative=$(realpath -m --relative-to="$variant_directory" "$stage/pawsey/lmod-variable-fixes")
 shopt -s nullglob
 base_modules=("$rendered/$source_relative/"*.lua)
 [ "${#base_modules[@]}" -gt 0 ] || die "Spack rendered no installed base modules."
 declare -a candidates=() target_relatives=() generated_module_names=()
 variant_log="$run/variant-generation.log"
 : > "$variant_log"
+
+# Generate each requested flavour from every rendered base module, normalize its
+# provenance header, and record the staged candidate and publication metadata.
 for base_module in "${base_modules[@]}"; do
     module_version=${base_module##*/}
     module_version=${module_version%.lua}
@@ -361,35 +414,75 @@ for base_module in "${base_modules[@]}"; do
             "$module_version" "$flavour" "$variant_directory/$filename" >> "$variant_log"
         "$generator" "${variant_args[@]}" >> "$variant_log" 2>&1 ||
             die "Variant generation failed; see $variant_log"
-        # Resolve helpers beside the module tree in staging and after publication.
-        # Discard only Spack's generation timestamp so unchanged content is reusable.
+
+        # Keep stable provenance without a generation timestamp.
         sed -i \
-            -e "s|^local patch_dir = .*|local patch_dir = pathJoin(dirname(myFileName()), \"$helper_relative\")|" \
             -e '/^-- Module file created by spack /s/ on .*//' \
+            -e '/^-- Module file created by spack /a\
+-- Customized by PawseySC/pawsey-spack-config:\
+--   scripts/generate_singularity_modules.sh (driver)\
+--   scripts/create_custom_singularity_modules_from_general_singularity_container_engine.sh (flavour transformations)' \
             "$variant_directory/$filename"
+
         candidates+=("$variant_directory/$filename")
         target_relatives+=("$variants_relative/$filename")
         module_name="$singularity_name/${filename%.lua}"
         generated_module_names+=("$module_name")
-        printf 'Generated module: %s\n' "$module_name"
     done
 done
 
-# Stage shared helper candidates together with variants.
-helper_directory="$stage/pawsey/lmod-variable-fixes"
-mkdir -p "$helper_directory"
-for helper in pawsey_fix_initial_bash.lua pawsey_init_bash; do
-    cp -p -- "$PAWSEY_SPACK_CONFIG_REPO/scripts/$helper" "$helper_directory/$helper"
-    candidates+=("$helper_directory/$helper")
-    target_relatives+=("pawsey/lmod-variable-fixes/$helper")
+# Report module candidates before shared patch files join the candidate list.
+printf 'Generated staged module candidates under:\n'
+printf '  %s\n' "$variant_directory"
+printf 'Staged module candidates:\n'
+for index in "${!generated_module_names[@]}"; do
+    printf '  %s -> %s\n' \
+        "${generated_module_names[$index]}" "${candidates[$index]##*/}"
 done
 
-printf 'Validating generated modules and helpers...\n'
+# Stage the shared BASH_ENV compatibility patch files and register them as
+# validation and publication candidates.
+bash_env_patch_directory="$stage/pawsey/lmod-variable-fixes"
+mkdir -p "$bash_env_patch_directory"
+for bash_env_patch_file in pawsey_fix_initial_bash.lua pawsey_init_bash; do
+    cp -p -- "$PAWSEY_SPACK_CONFIG_REPO/scripts/$bash_env_patch_file" "$bash_env_patch_directory/$bash_env_patch_file"
+    candidates+=("$bash_env_patch_directory/$bash_env_patch_file")
+    target_relatives+=("pawsey/lmod-variable-fixes/$bash_env_patch_file")
+done
+
+printf 'Validating generated modules and BASH_ENV compatibility patch files...\n'
+
 # ------------------------------------------------------------------------------
 # Step 6: validate staged artifacts before any official publication.
 # ------------------------------------------------------------------------------
-command -v luac >/dev/null 2>&1 || die "luac is required to validate generated modulefiles."
+# Require the Lua compiler for syntax-checking generated modulefiles and patch files.
+command -v luac >/dev/null 2>&1 ||
+    die "luac is required to validate generated modulefiles and patch files."
+
+# Select the modulefiles used for Lmod validation. Use the staged candidates when
+# the installed BASH_ENV compatibility patches are readable; otherwise create
+# disposable copies that reference the staged patches, leaving candidates unchanged.
 variant_module_root=$(dirname "$variant_directory")
+validation_directory=$variant_directory
+if [ ! -r "$stack_prefix/pawsey/lmod-variable-fixes/pawsey_fix_initial_bash.lua" ] ||
+    [ ! -r "$stack_prefix/pawsey/lmod-variable-fixes/pawsey_init_bash" ]; then
+    # A fresh stack cannot evaluate the template's patch path until publication.
+    # Only disposable validation copies use staged patches; candidates stay intact.
+    validation_directory="$run/validation/$singularity_name"
+    mkdir -p "$validation_directory"
+    cp -- "$variant_directory/"*.lua "$validation_directory/"
+    sed -i \
+        "s|^local patch_dir = .*|local patch_dir = \"$bash_env_patch_directory\"|" \
+        "$validation_directory/"*.lua
+    printf 'Installed BASH_ENV compatibility patches are missing or unreadable.\n'
+    printf 'Lmod checks will use disposable copies with staged patches: %s\n' "$validation_directory"
+    printf 'Deliverable modulefiles are unchanged; loading them requires patches at: %s\n' \
+        "$stack_prefix/pawsey/lmod-variable-fixes"
+fi
+
+# Validate every staged candidate with the parser appropriate to its file type.
+# Generated modulefiles also undergo Lmod resolution and evaluation checks to
+# confirm that Lmod selects and successfully evaluates the intended staged file.
 for index in "${!candidates[@]}"; do
     candidate=${candidates[$index]}
     [ -s "$candidate" ] || die "Empty generated candidate: $candidate"
@@ -397,31 +490,39 @@ for index in "${!candidates[@]}"; do
         luac -p "$candidate"
         module_name="$singularity_name/${candidate##*/}"
         module_name=${module_name%.lua}
+        validation_candidate="$validation_directory/${candidate##*/}"
         (
             # This subshell is in an OR-list, where Bash disables errexit.
             module unload "$singularity_name" || exit 1
-            module use "$variant_module_root" || exit 1
+            module use "$(dirname "$validation_directory")" || exit 1
             location=$(module --ignore-cache --redirect --location show "$module_name") || exit 1
-            [ "$location" = "$candidate" ] || {
+            [ "$location" = "$validation_candidate" ] || {
                 printf 'Lmod selected a non-staged module: %s\n' "$location" >&2
                 exit 1
             }
             module --ignore-cache --redirect show "$module_name"
         ) > "$run/${candidate##*/}.show.log" 2>&1 ||
             die "Lmod validation failed; see $run/${candidate##*/}.show.log"
-    elif [[ "$candidate" == "$helper_directory/"*.lua ]]; then
+    elif [[ "$candidate" == "$bash_env_patch_directory/"*.lua ]]; then
         luac -p "$candidate"
     else
         bash -n "$candidate"
     fi
 done
-helper_count=2
-variant_count=$((${#candidates[@]} - helper_count))
-printf 'Validated %s custom modules and %s helpers.\n' "$variant_count" "$helper_count"
+
+bash_env_patch_file_count=2
+variant_count=$((${#candidates[@]} - bash_env_patch_file_count))
+printf 'Validated staged artifacts:\n'
+printf '  Custom module candidates: %s\n' "$variant_count"
+printf '  BASH_ENV compatibility patch files: %s\n' "$bash_env_patch_file_count"
+
+# For testing installations, report the validated staged artifacts and example
+# module commands, retain the complete run for inspection, and exit without
+# publishing any files to the installed stack.
 if [ "$install_type" = testing ]; then
     # Testing is intentionally side-effect free on the installed stack.
     printf 'Generated variants directory: %s\n' "$variant_directory"
-    printf 'Generated helper directory: %s\n' "$helper_directory"
+    printf 'Generated BASH_ENV compatibility patch directory: %s\n' "$bash_env_patch_directory"
     printf 'Generated module names:\n'
     for module_name in "${generated_module_names[@]}"; do
         printf '  %s\n' "$module_name"
@@ -435,7 +536,11 @@ if [ "$install_type" = testing ]; then
     printf 'Next actions:\n'
     printf '  1) Inspect staged modules under: %s\n' "$variant_directory"
     printf '  2) Load from staging with the example commands above.\n'
-    printf '  3) Re-run with --install-type official when ready.\n'
+    printf '  3) After functional testing, copy the modulefiles unchanged to: %s\n' \
+        "$stack_prefix/$variants_relative"
+    printf '     Alternatively, re-run with --install-type official.\n'
+    printf 'Required installed BASH_ENV compatibility patches: %s\n' \
+        "$stack_prefix/pawsey/lmod-variable-fixes"
     printf 'Logs:\n  %s\n  %s\n' "$run/spack-refresh.log" "$variant_log"
     printf 'Testing output retained without publishing: %s\n' "$run"
     exit 0
@@ -444,12 +549,16 @@ fi
 # ------------------------------------------------------------------------------
 # Step 7: publish officially with lock, preflight, and atomic per-file writes.
 # ------------------------------------------------------------------------------
+# Use flock to acquire an exclusive lock and serialize official publication,
+# ensuring that only one process modifies the stack at a time.
 command -v flock >/dev/null 2>&1 || die "flock is required for safe publication."
 lock_file="$stack_prefix/.singularity-module-update.lock"
 [ ! -L "$lock_file" ] || die "Refusing a symlink lock path: $lock_file"
 exec 9>>"$lock_file"
 flock -x 9
 
+# Function for validating a relative publication path and safely creating its
+# parent directories under the stack prefix without following symlinks.
 ensure_safe_parent() {
     local relative=$1 current=$stack_prefix component
     local -a components
@@ -473,8 +582,9 @@ ensure_safe_parent() {
     done
 }
 
-# Build a publication plan first so no file is changed before conflict checks.
-declare -a conflicts=() shared_helper_conflicts=() target_paths=() planned_states=()
+# Build a complete publication plan before changing any destination file. Record
+# whether each target is identical, missing, or conflicting with its candidate.
+declare -a conflicts=() bash_env_patch_conflicts=() target_paths=() planned_states=()
 for index in "${!candidates[@]}"; do
     candidate=${candidates[$index]}
     relative=${target_relatives[$index]}
@@ -488,7 +598,7 @@ for index in "${!candidates[@]}"; do
         else
             conflicts+=("$target")
             [[ "$relative" == pawsey/lmod-variable-fixes/* ]] &&
-                shared_helper_conflicts+=("$target")
+                bash_env_patch_conflicts+=("$target")
             planned_states+=(conflict)
         fi
     else
@@ -496,6 +606,7 @@ for index in "${!candidates[@]}"; do
     fi
     target_paths+=("$target")
 done
+# Report every planned action before enforcing conflicts or modifying the stack.
 printf 'Publication plan:\n'
 for index in "${!candidates[@]}"; do
     case "${planned_states[$index]}" in
@@ -504,23 +615,29 @@ for index in "${!candidates[@]}"; do
         conflict) printf '  conflict  %s\n' "${target_paths[$index]}" ;;
     esac
 done
+# Stop before publication if any existing destination differs from its staged
+# candidate and --force was not specified.
 if [ "${#conflicts[@]}" -gt 0 ] && [ "$force" -eq 0 ]; then
     printf 'ERROR: Differing destinations were found; no files were published:\n' >&2
     printf '  %s\n' "${conflicts[@]}" >&2
-    if [ "${#shared_helper_conflicts[@]}" -gt 0 ]; then
-        printf 'A shared helper conflict affects every module that loads that helper.\n' >&2
+    if [ "${#bash_env_patch_conflicts[@]}" -gt 0 ]; then
+        printf 'A shared BASH_ENV compatibility patch conflict affects every generated module.\n' >&2
     fi
     die "Use --force only for an official installation to replace these files."
 fi
-if [ "${#shared_helper_conflicts[@]}" -gt 0 ]; then
-    printf 'WARNING: Forced replacement of a shared helper affects every module that loads it:\n' >&2
-    printf '  %s\n' "${shared_helper_conflicts[@]}" >&2
+# Warn before force-replacing shared BASH_ENV compatibility patch files because
+# the change may affect installed Singularity modules outside the current update.
+if [ "${#bash_env_patch_conflicts[@]}" -gt 0 ]; then
+    printf 'WARNING: This forced publication will replace shared BASH_ENV compatibility patch files.\n' >&2
+    printf 'The change may affect every installed Singularity module that uses these files, not only the modules updated by this run:\n' >&2
+    printf '  %s\n' "${bash_env_patch_conflicts[@]}" >&2
 fi
 
-# Apply the plan after preflight. Each target is created/replaced atomically;
-# the full set is not one filesystem transaction.
+# Publish each validated file safely, one at a time. Each destination changes
+# from the complete old file to the complete new file without exposing a partial
+# copy. If a later publication fails, files published earlier remain changed.
 publication_started=1
-printf 'Publishing validated variants/helpers into the official tree...\n'
+printf 'Publishing validated variants and BASH_ENV compatibility patch files into the official tree...\n'
 for index in "${!candidates[@]}"; do
     candidate=${candidates[$index]}
     target=${target_paths[$index]}
@@ -568,13 +685,15 @@ for index in "${!candidates[@]}"; do
         fi
     fi
 done
+# Mark publication as successfully completed so the exit handler no longer
+# reports a partial publication, then print the final results and usage details.
 publication_started=0
 printf 'Publication complete. Created: %s; replaced: %s; reused: %s.\n' \
     "${#published_created[@]}" "${#published_replaced[@]}" \
     "$((${#candidates[@]} - ${#published_created[@]} - ${#published_replaced[@]}))"
 printf 'Published variants directory: %s\n' "$stack_prefix/$variants_relative"
-printf 'Published helper directory: %s\n' "$stack_prefix/pawsey/lmod-variable-fixes"
-printf 'Generated module names:\n'
+printf 'Published BASH_ENV compatibility patch directory: %s\n' "$stack_prefix/pawsey/lmod-variable-fixes"
+printf 'Published module names:\n'
 for module_name in "${generated_module_names[@]}"; do
     printf '  %s\n' "$module_name"
 done

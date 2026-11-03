@@ -11,8 +11,10 @@ if [ -z ${SYSTEM+x} ]; then
 fi
 
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
-# shellcheck disable=SC1090
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
+
+# Instead of generating Singularity modules here, check that the configured
+# default and, when needed, MPI variants can be loaded for downstream SHPC setup.
 : "${singularity_name:?Missing singularity_name in settings.sh}"
 : "${singularity_version:?Missing singularity_version in settings.sh}"
 : "${singularity_mpi_version:?Missing singularity_mpi_version in settings.sh}"
@@ -29,9 +31,10 @@ check_singularity_prerequisite() {
     fi
 }
 
-# SHPC setup now consumes existing Singularity modules; generation/publication
-# is intentionally handled by the dedicated Singularity module driver.
-echo "Checking Singularity modules required by the configured containers..."
+# This script now consumes existing Singularity modules; generation/publication
+# is intentionally handled by the call to generate_singularity_modules.sh from
+# the `install_software_stack.sh` script, or from an independent invocation.
+echo "Checking that the configured Singularity modules can be loaded…"
 check_singularity_prerequisite "${singularity_name}/${singularity_version}"
 if [[ -n "${container_list_mpi//[[:space:]]/}" ]]; then
     check_singularity_prerequisite "${singularity_name}/${singularity_mpi_version}"

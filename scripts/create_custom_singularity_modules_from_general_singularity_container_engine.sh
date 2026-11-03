@@ -3,7 +3,9 @@ set -o pipefail
 
 # This script generates user-facing singularity modules from one rendered
 # singularityce base module. It keeps the original flavour transformations while
-# exposing an explicit interface for the wrapper workflow.
+# exposing an explicit interface for the wrapper workflow who is now controlling the
+# generation of multiple versions and flavours of Singularity modules.
+
 #
 usage() {
     cat <<'USAGE'
@@ -82,16 +84,14 @@ output_module="$output_dir/$version-$flavour${suffix:+-$suffix}.lua"
 #    D. singularity/x.x.x-nohost : nothing from the host is injected, does mount file systems
 #    E. singularity/x.x.x-slurm : like nompi but also mounts directories related to running slurm in a container
 #
-# The wrapper selects one flavour at a time; the transformations below preserve
+# The caller wrapper selects one flavour at a time; the transformations below preserve
 # the original sed expressions for each flavour.
 case "$flavour" in
-    # 1.C.2 singularity-askap-gpu is just the original module
-    askap-gpu)
-        cp -p -- "$source_module" "$output_module"
-        ;;
-    # 1.C.1 singularity-askap keeps Slurm but removes GPUMPI lines
-    askap)
+    # 1.A.1 singularity-mpi also removes GPUMPI block
+    mpi)
         sed \
+            -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
+            -e '/^-- add SLURM START/,/^-- add SLURM END/{/^-- add SLURM START/!{/^-- add SLURM END/!d}}' \
             -e '/^-- add GPUMPI START/,/^-- add GPUMPI END/{/^-- add GPUMPI START/!{/^-- add GPUMPI END/!d}}' \
             "$source_module" > "$output_module"
         ;;
@@ -102,14 +102,6 @@ case "$flavour" in
             -e '/^-- add SLURM START/,/^-- add SLURM END/{/^-- add SLURM START/!{/^-- add SLURM END/!d}}' \
             "$source_module" > "$output_module"
         ;;
-    # 1.A.1 singularity-mpi also removes GPUMPI block
-    mpi)
-        sed \
-            -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
-            -e '/^-- add SLURM START/,/^-- add SLURM END/{/^-- add SLURM START/!{/^-- add SLURM END/!d}}' \
-            -e '/^-- add GPUMPI START/,/^-- add GPUMPI END/{/^-- add GPUMPI START/!{/^-- add GPUMPI END/!d}}' \
-            "$source_module" > "$output_module"
-        ;;
     # 1.B singularity-nompi removes MPI, Slurm, and GPUMPI blocks
     nompi)
         sed \
@@ -118,6 +110,16 @@ case "$flavour" in
             -e '/^-- add SLURM START/,/^-- add SLURM END/{/^-- add SLURM START/!{/^-- add SLURM END/!d}}' \
             -e '/^-- add GPUMPI START/,/^-- add GPUMPI END/{/^-- add GPUMPI START/!{/^-- add GPUMPI END/!d}}' \
             "$source_module" > "$output_module"
+        ;;
+    # 1.C.1 singularity-askap keeps Slurm but removes GPUMPI lines
+    askap)
+        sed \
+            -e '/^-- add GPUMPI START/,/^-- add GPUMPI END/{/^-- add GPUMPI START/!{/^-- add GPUMPI END/!d}}' \
+            "$source_module" > "$output_module"
+        ;;
+    # 1.C.2 singularity-askap-gpu is just the original module
+    askap-gpu)
+        cp -p -- "$source_module" "$output_module"
         ;;
     # 1.D singularity-nohost removes host injections and host LD path wiring
     nohost)

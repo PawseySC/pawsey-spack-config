@@ -51,15 +51,24 @@ environment; the staging parent defaults to
 strictly below `MYSCRATCH`; the existing input stack can be outside scratch,
 including under `/software`. Each invocation creates a new staging run. Testing mode
 validates and retains its generated files there without publishing them.
-Official mode publishes only validated custom variants and helpers. `--suffix`
+Official mode publishes only validated custom variants and BASH_ENV compatibility
+patch files. `--suffix`
 labels only custom variants. Spack base modules are rendered privately and
 never published.
 
 The driver validates generated Lua with `luac` and checks each selected custom
-module with Lmod. It does not execute containers. It stages the two shared Lmod
-helpers alongside variants; replacing a shared helper may affect every module
-that loads it. Generated variants locate these helpers relative to their module
-tree, so testing uses the staged helpers even before a first publication.
+module with Lmod. It does not execute containers. It stages the two shared
+BASH_ENV compatibility patch files alongside variants; replacing one may affect
+every module that uses it. Generated variants preserve the template's absolute
+patch path in the selected installed stack.
+For identical inputs, testing and official modes generate identical modulefiles.
+After loading and functionally testing the retained files from staging, you can
+copy them unchanged to the reported official variants directory. The required
+patch files must already be installed at the template's path.
+If those files are missing or unreadable during first-time setup, the driver
+reports that limitation and uses separate disposable copies with staged patches
+for Lmod validation. These copies are never publication candidates; retained
+deliverables still require the installed patches before they can be loaded.
 The Spack generation timestamp is omitted from custom variants so unchanged
 content remains identical across runs. Before publishing, the driver lists every destination, reuses
 identical files, and reports all differing files before writing. `--force` is
