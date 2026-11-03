@@ -350,7 +350,10 @@ packages:
   curl:
     version: [8.14.1]
   openssh:
-    version: [9.6p1]
+    externals:
+    - spec: openssh@9.9p1
+      prefix: /usr
+    buildable: false
   keyutils:
     prefer: ['@1.6.3']
   openldap:
