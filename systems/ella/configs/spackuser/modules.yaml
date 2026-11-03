@@ -71,6 +71,8 @@ modules:
         autoload: direct
       cuda:
         autoload: direct
+      hip:
+        autoload: direct
       cuquantum:
         autoload: direct
       cutensor:
@@ -265,6 +267,7 @@ modules:
         rust: 'programming-languages/{name}/{version}'
 
         # utilities 
+        hip: 'utilities/{name}/{version}'
         autoconf: 'utilities/{name}/{version}'
         automake: 'utilities/{name}/{version}'
         libtool: 'utilities/{name}/{version}'

@@ -65,6 +65,7 @@ utilities:
   feh: ['feh', '--version', 'feh']
   nano: ['nano', '--version', 'GNU nano']
   nvtop: ['nvtop', '--version', 'nvtop']
+  hip: ['bash', '-lc ''hip_check_dir=$(mktemp -d) && trap "rm -rf \"$hip_check_dir\"" EXIT && printf "#include <hip/hip_runtime.h>\n__global__ void baseline_kernel() {}\nint main() { return 0; }\n" > "$hip_check_dir/sanity.cu" && hipcc -std=c++17 -arch=sm_90 "$hip_check_dir/sanity.cu" -o "$hip_check_dir/sanity" && test -x "$hip_check_dir/sanity" && echo "HIP baseline OK"''', 'HIP baseline OK']
   meson/1.5.1: ['meson', '--version', '1.5.1']
   ffmpeg/7.0.2: ['ffmpeg', '-version', 'ffmpeg version 7.0.2']
   gnuplot/6.0.0: ['gnuplot', '--version', 'gnuplot 6.0 patchlevel 0']

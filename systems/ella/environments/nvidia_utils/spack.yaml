@@ -17,6 +17,8 @@ spack:
     - meson@1.5.1
     - perl-data-dumper@2.173 
   - gpu-packages:
+    - hip@7.2.4 +cuda ~rocm
+    - hip@7.16.0 +cuda ~rocm
     - nvtop support=nvidia +cuda cuda_arch=90
   specs:
   - matrix:
