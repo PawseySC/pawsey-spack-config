@@ -32,6 +32,11 @@ class standalone_module_check(rfm.RunOnlyRegressionTest):
         self.executable_opts = ['--version']
         self.expected_version = version
 
+    @run_after('setup')
+    def configure_ella_step(self):
+        # Use Ella's available Slurm plugin instead of its pmix default.
+        self.job.launcher.options += ['--mpi=pmi2']
+
     @sanity_function
     def assert_version(self):
         return sn.assert_found(re.escape(self.expected_version), self.stdout)
