@@ -12,7 +12,7 @@
 #
 # The script then generates the requested custom flavours, stages their shared
 # BASH_ENV compatibility patch files, validates every artifact, and either retains
-# the testing output or publishes the validated files into the official stack.
+# the testing output or publishes the validated files into the selected destination.
 #
 # Workflow:
 # 1) Parse and validate command-line options.
@@ -21,18 +21,21 @@
 # 4) Discover installed SingularityCE specs and render private base modulefiles.
 # 5) Generate requested variants and stage shared compatibility patch files.
 # 6) Validate Lua and Bash syntax and evaluate modulefiles with Lmod.
-# 7) Retain validated staging for testing, or publish validated files officially
-#    with locking, conflict detection, and safe per-file replacement.
+# 7) Retain validated staging for testing, or publish validated files with
+#    locking, conflict detection, backups, and safe per-file replacement.
 #
 # Operational boundaries:
 # - The script does not install software, concretize specs, or execute containers.
 # - Installed package prefixes and Spack metadata are read-only inputs.
 # - Privately rendered Spack base modulefiles are never published.
 # - Testing mode leaves the installed stack unchanged and retains the full run.
+#   An optional testing publication tree below MYSCRATCH can exercise publication without
+#   changing the installed stack.
 # - Official mode publishes only custom variants and the two shared BASH_ENV
 #   compatibility patch files.
-# - Differing destinations require --force. No backup or rollback is performed,
-#   so a publication failure may leave files published earlier in the loop changed.
+# - Differing destinations require --force. Replaced modulefiles and shared patch
+#   files get hidden, timestamped backups. No rollback is performed.
+#   A publication failure may leave files published earlier in the loop changed.
 # - Staging and logs are retained for inspection and troubleshooting.
 #
 # Note:
@@ -65,8 +68,10 @@ Usage: generate_singularity_modules.sh --install-type official|testing \
   --suffix LABEL        Append -LABEL to generated custom module names.
   --date-tag TAG        Stack release; defaults to DATE_TAG or the stack basename.
   --stack-prefix DIR    Existing Spack stack; defaults to settings.sh.
-  --prefix DIR          Staging parent strictly below MYSCRATCH.
-  --force               Replace differing destinations (official only).
+  --staging-prefix DIR  Staging parent strictly below MYSCRATCH.
+  --testing-publication-prefix DIR  Testing-only publication root strictly below MYSCRATCH.
+  --force               Replace differing destinations (official, or testing
+                        with --testing-publication-prefix).
   -h, --help            Show this help.
 
 Examples:
@@ -75,7 +80,12 @@ Examples:
 
   Validate selected flavours with a suffix in a custom staging parent:
     generate_singularity_modules.sh --install-type testing --version 4.2.2 \
-      --flavour mpi,mpi-gpu --suffix trial --prefix "$MYSCRATCH/module-testing"
+      --flavour mpi,mpi-gpu --suffix trial --staging-prefix "$MYSCRATCH/module-testing"
+
+  Exercise publication and backups in a persistent scratch destination:
+    generate_singularity_modules.sh --install-type testing --version 4.2.2 \
+      --flavour mpi,mpi-gpu --staging-prefix "$MYSCRATCH/singularity-development/staging" \
+      --testing-publication-prefix "$MYSCRATCH/singularity-development/published" --force
 
   Publish all flavours for every installed SingularityCE version:
     generate_singularity_modules.sh --install-type official --version all
@@ -89,8 +99,14 @@ generates and validates only requested custom variants, then safely publishes
 those variants and the two shared BASH_ENV compatibility patch files required
 by the generated modules. Spack base modules are
 never published. Identical destinations are reused; conflicts are reported
-before publication. Existing destination files are not backed up or removed;
-temporary publication files are cleaned up. No container runtime tests occur.
+before publication. Replaced modulefiles and shared patch files are backed up
+beside the originals as .<filename>.<UTC-timestamp>.bkp. No automatic
+rollback is performed. Temporary publication files are cleaned up.
+The --testing-publication-prefix option is testing-only and publishes into a persistent
+testing tree below MYSCRATCH using the same safety checks as official publication. Generated
+modulefiles always reference the selected stack's installed BASH_ENV patches,
+not the copies in the staging or testing publication tree.
+No container runtime tests occur.
 USAGE
 }
 
@@ -104,6 +120,7 @@ suffix=""
 date_tag=${DATE_TAG:-${PAWSEY_STACK_VERSION:-}}
 stack_dir_override=""
 staging_parent_dir=""
+testing_publication_prefix_override=""
 force=0
 flavour_option_seen=0
 declare -a requested_flavours_arr=()
@@ -111,7 +128,7 @@ declare -a requested_flavours_arr=()
 # Parse long options explicitly so malformed or unsupported input fails early.
 while [ "$#" -gt 0 ]; do
     case "$1" in
-        --install-type|--version|--flavour|--suffix|--date-tag|--stack-prefix|--prefix)
+        --install-type|--version|--flavour|--suffix|--date-tag|--stack-prefix|--staging-prefix|--testing-publication-prefix)
             if [ "$#" -lt 2 ] || [ -z "$2" ]; then
                 die "Missing value for $1."
             fi
@@ -132,7 +149,8 @@ while [ "$#" -gt 0 ]; do
                 --suffix) suffix=$2 ;;
                 --date-tag) date_tag=$2 ;;
                 --stack-prefix) stack_dir_override=$2 ;;
-                --prefix) staging_parent_dir=$2 ;;
+                --staging-prefix) staging_parent_dir=$2 ;;
+                --testing-publication-prefix) testing_publication_prefix_override=$2 ;;
             esac
             shift 2
             ;;
@@ -144,8 +162,10 @@ done
 
 [[ "$install_type" = official || "$install_type" = testing ]] ||
     die "--install-type must be official or testing."
-[ "$force" -eq 0 ] || [ "$install_type" = official ] ||
-    die "--force is available only for official installation."
+[ -z "$testing_publication_prefix_override" ] || [ "$install_type" = testing ] ||
+    die "--testing-publication-prefix is available only with --install-type testing."
+[ "$force" -eq 0 ] || [ "$install_type" = official ] || [ -n "$testing_publication_prefix_override" ] ||
+    die "--force is available only for official installation or testing with --testing-publication-prefix."
 [ -n "$version" ] || die "Supply --version VERSION|all."
 [[ "$version" = all || "$version" =~ ^[0-9]+(\.[0-9]+)*$ ]] ||
     die "Supply --version VERSION|all."
@@ -194,6 +214,12 @@ stack_dir=$(realpath -e "$INSTALL_PREFIX") || die "Stack prefix does not exist: 
 [[ -n "${MYSCRATCH:-}" && -d "$MYSCRATCH" ]] || die "MYSCRATCH must be an existing directory."
 scratch_dir=$(realpath -e "$MYSCRATCH")
 
+# Function to determine whether a canonical path is the root itself or lies beneath it.
+path_is_within() {
+    local path=$1 root=$2
+    [[ "$path" == "$root" || "$path" == "$root/"* ]]
+}
+
 # Require all settings used to construct Spack, Python, and Singularity paths and names.
 : "${cpu_arch:?Missing cpu_arch in settings.sh}"
 : "${gcc_version:?Missing gcc_version in settings.sh}"
@@ -229,13 +255,42 @@ fi
 # ------------------------------------------------------------------------------
 # Step 3: allocate an isolated per-run staging directory.
 # ------------------------------------------------------------------------------
-# Resolve a safe staging prefix and allocate a unique retained run directory.
+# Resolve and validate the staging and optional publication roots before creating
+# either tree, preventing overlap with the installed stack or with each other.
 staging_parent_dir=$(realpath -m "${staging_parent_dir:-$scratch_dir/singularity-module-updates/$DATE_TAG}")
-[[ "$staging_parent_dir" == "$scratch_dir/"* && "$staging_parent_dir" != "$scratch_dir" ]] ||
+if ! path_is_within "$staging_parent_dir" "$scratch_dir" ||
+    [ "$staging_parent_dir" = "$scratch_dir" ]; then
     die "The staging prefix must be strictly below MYSCRATCH."
-[[ "$staging_parent_dir/" != "$stack_dir/"* ]] || die "Keep staging outside the stack."
+fi
+if path_is_within "$staging_parent_dir" "$stack_dir" ||
+    path_is_within "$stack_dir" "$staging_parent_dir"; then
+    die "Keep staging separate from the installed stack."
+fi
+testing_publication_dir=""
+if [ -n "$testing_publication_prefix_override" ]; then
+    testing_publication_dir=$(realpath -m "$testing_publication_prefix_override") ||
+        die "Could not resolve testing publication prefix: $testing_publication_prefix_override"
+    if ! path_is_within "$testing_publication_dir" "$scratch_dir" ||
+        [ "$testing_publication_dir" = "$scratch_dir" ]; then
+        die "The testing publication prefix must be strictly below MYSCRATCH."
+    fi
+    if path_is_within "$testing_publication_dir" "$stack_dir" ||
+        path_is_within "$stack_dir" "$testing_publication_dir"; then
+        die "Keep the testing publication prefix separate from the installed stack."
+    fi
+    if path_is_within "$testing_publication_dir" "$staging_parent_dir" ||
+        path_is_within "$staging_parent_dir" "$testing_publication_dir"; then
+        die "Keep the staging and testing publication prefixes separate and non-overlapping."
+    fi
+fi
+
+# Create user-owned roots and allocate a unique retained run directory.
 mkdir -p "$staging_parent_dir"
 [ -O "$staging_parent_dir" ] || die "The staging prefix must belong to the current user."
+if [ -n "$testing_publication_dir" ]; then
+    mkdir -p "$testing_publication_dir"
+    [ -O "$testing_publication_dir" ] || die "The testing publication prefix must belong to the current user."
+fi
 run_stamp=$(date -u +%Y%m%dT%H%M%SZ)
 # Preserve the normal umask so retained modules can be inspected with Lmod.
 run_dir=$(mktemp -d "$staging_parent_dir/$run_stamp-XXXXXXXX") ||
@@ -246,6 +301,9 @@ rendered_dir="$run_dir/rendered"
 mkdir -p "$stage_dir" "$rendered_dir"
 printf 'Run directory: %s\nInstall type: %s\nStack prefix: %s\n' \
     "$run_dir" "$install_type" "$stack_dir"
+if [ -n "$testing_publication_dir" ]; then
+    printf 'Testing publication prefix: %s\n' "$testing_publication_dir"
+fi
 printf 'Preparing private Spack rendering and installed-spec discovery; this may take a minute or two...\n'
 
 # Track publication progress and temporary state for cleanup and diagnostics.
@@ -483,10 +541,49 @@ for bash_env_patch_file in pawsey_fix_initial_bash.lua pawsey_init_bash; do
     target_relatives_arr+=("pawsey/lmod-variable-fixes/$bash_env_patch_file")
 done
 
+# Compare staged patches with the selected stack's installed copies and warn
+# prominently whenever either official file is missing, unreadable, or different.
+official_patch_dir="$stack_dir/pawsey/lmod-variable-fixes"
+declare -a patch_differences_arr=()
+for bash_env_patch_file in pawsey_fix_initial_bash.lua pawsey_init_bash; do
+    official_patch_file="$official_patch_dir/$bash_env_patch_file"
+    staged_patch_file="$bash_env_patch_dir/$bash_env_patch_file"
+    if [ ! -r "$official_patch_file" ]; then
+        patch_differences_arr+=("$bash_env_patch_file (missing or unreadable in official installation)")
+    elif ! cmp -s -- "$staged_patch_file" "$official_patch_file"; then
+        patch_differences_arr+=("$bash_env_patch_file (differs from official installation)")
+    fi
+done
+if [ "${#patch_differences_arr[@]}" -gt 0 ]; then
+    printf '\n' >&2
+    printf '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n' >&2
+    printf '!!! WARNING: STAGED BASH_ENV PATCHES DIFFER FROM THE OFFICIAL STACK !!!\n' >&2
+    printf '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n' >&2
+    printf 'Different or unavailable patch files:\n' >&2
+    printf '  %s\n' "${patch_differences_arr[@]}" >&2
+    printf 'Generated modulefiles keep the absolute official patch path:\n  %s\n' \
+        "$official_patch_dir" >&2
+    if [ "$install_type" = official ]; then
+        printf 'If publication succeeds, the staged patches will be installed at that path.\n' >&2
+        printf 'It requires an authorized installation account and can affect other modules.\n' >&2
+    else
+        printf 'Testing modules use files at that official path, not staged or scratch copies.\n' >&2
+        printf 'To use the staged patches, an authorized installation account must install them\n' >&2
+        printf 'in the official directory above. Testing publication does not do that.\n' >&2
+    fi
+    if [ ! -r "$official_patch_dir/pawsey_fix_initial_bash.lua" ] ||
+        [ ! -r "$official_patch_dir/pawsey_init_bash" ]; then
+        printf 'Modules may fail to load until the required official patch files are installed.\n' >&2
+    fi
+    printf 'If you manually redirect a modulefile to test staged patches, edit only a\n' >&2
+    printf 'disposable copy. NEVER copy that redirected modulefile to an official destination.\n' >&2
+    printf '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n' >&2
+fi
+
 printf 'Validating generated modules and BASH_ENV compatibility patch files...\n'
 
 # ------------------------------------------------------------------------------
-# Step 6: validate staged artifacts before any official publication.
+# Step 6: validate staged artifacts before any publication.
 # ------------------------------------------------------------------------------
 # Require the Lua compiler for syntax-checking generated modulefiles and patch files.
 command -v luac >/dev/null 2>&1 ||
@@ -549,11 +646,9 @@ printf 'Validated staged artifacts:\n'
 printf '  Custom module candidates: %s\n' "$variant_count"
 printf '  BASH_ENV compatibility patch files: %s\n' "$bash_env_patch_file_count"
 
-# For testing installations, report the validated staged artifacts and example
-# module commands, retain the complete run for inspection, and exit without
-# publishing any files to the installed stack.
-if [ "$install_type" = testing ]; then
-    # Testing is intentionally side-effect free on the installed stack.
+# For testing without a testing publication prefix, report the validated
+# staged artifacts and exit without publishing any files.
+if [ "$install_type" = testing ] && [ -z "$testing_publication_dir" ]; then
     printf 'Generated variants directory: %s\n' "$variant_dir"
     printf 'Generated BASH_ENV compatibility patch directory: %s\n' "$bash_env_patch_dir"
     printf 'Generated module names:\n'
@@ -580,20 +675,25 @@ if [ "$install_type" = testing ]; then
 fi
 
 # ------------------------------------------------------------------------------
-# Step 7: publish officially with lock, preflight, and atomic per-file writes.
+# Step 7: publish with locking, preflight, backups, and atomic per-file writes.
 # ------------------------------------------------------------------------------
-# Use flock to acquire an exclusive lock and serialize official publication,
-# ensuring that only one process modifies the stack at a time.
+# Select the installed stack for official runs or the isolated testing tree below MYSCRATCH for
+# testing publication, then serialize writers with a destination-local lock.
+if [ "$install_type" = official ]; then
+    publication_dir=$stack_dir
+else
+    publication_dir=$testing_publication_dir
+fi
 command -v flock >/dev/null 2>&1 || die "flock is required for safe publication."
-lock_file="$stack_dir/.singularity-module-update.lock"
+lock_file="$publication_dir/.singularity-module-update.lock"
 [ ! -L "$lock_file" ] || die "Refusing a symlink lock path: $lock_file"
 exec 9>>"$lock_file"
 flock -x 9
 
 # Function for validating a relative publication path and safely creating its
-# parent directories under the stack prefix without following symlinks.
+# parent directories under the selected publication root without following symlinks.
 ensure_safe_parent() {
-    local target_relative=$1 current_dir=$stack_dir component
+    local target_relative=$1 current_dir=$publication_dir component
     local -a components_arr
     [[ "$target_relative" =~ ^[A-Za-z0-9._/-]+$ && ! "$target_relative" =~ (^|/)\.\.?(/|$) ]] ||
         die "Unsafe target path: $target_relative"
@@ -601,7 +701,7 @@ ensure_safe_parent() {
     for component in "${components_arr[@]}"; do
         [ -n "$component" ] || continue
         current_dir="$current_dir/$component"
-        # Reject symlinks at every level; otherwise a seemingly in-stack target
+        # Reject symlinks at every level; otherwise a seemingly in-tree target
         # could redirect publication to an unrelated tree.
         [ ! -L "$current_dir" ] || die "Refusing symlink target directory: $current_dir"
         if [ -e "$current_dir" ]; then
@@ -622,7 +722,7 @@ for index in "${!candidates_arr[@]}"; do
     candidate=${candidates_arr[$index]}
     target_relative=${target_relatives_arr[$index]}
     ensure_safe_parent "$target_relative"
-    target="$stack_dir/$target_relative"
+    target="$publication_dir/$target_relative"
     [ ! -L "$target" ] || die "Refusing symlink destination: $target"
     if [ -e "$target" ]; then
         [ -f "$target" ] || die "Destination is not a regular file: $target"
@@ -654,15 +754,20 @@ if [ "${#conflicts_arr[@]}" -gt 0 ] && [ "$force" -eq 0 ]; then
     printf 'ERROR: Differing destinations were found; no files were published:\n' >&2
     printf '  %s\n' "${conflicts_arr[@]}" >&2
     if [ "${#bash_env_patch_conflicts_arr[@]}" -gt 0 ]; then
-        printf 'A shared BASH_ENV compatibility patch conflict affects every generated module.\n' >&2
+        printf 'A shared BASH_ENV compatibility patch conflict affects modules using these destination files.\n' >&2
     fi
-    die "Use --force only for an official installation to replace these files."
+    die "Use --force only when you intend to replace these differing destinations."
 fi
 # Warn before force-replacing shared BASH_ENV compatibility patch files because
-# the change may affect installed Singularity modules outside the current update.
+# an official replacement may affect Singularity modules outside this update.
 if [ "${#bash_env_patch_conflicts_arr[@]}" -gt 0 ]; then
-    printf 'WARNING: This forced publication will replace shared BASH_ENV compatibility patch files.\n' >&2
-    printf 'The change may affect every installed Singularity module that uses these files, not only the modules updated by this run:\n' >&2
+    printf 'WARNING: This forced publication will replace shared BASH_ENV compatibility patch files in:\n' >&2
+    printf '  %s\n' "$publication_dir" >&2
+    if [ "$install_type" = official ]; then
+        printf 'The change may affect every installed Singularity module that uses these files, not only the modules updated by this run:\n' >&2
+    else
+        printf 'These are scratch copies; the installed stack and its modules will not be changed.\n' >&2
+    fi
     printf '  %s\n' "${bash_env_patch_conflicts_arr[@]}" >&2
 fi
 
@@ -670,7 +775,8 @@ fi
 # from the complete old file to the complete new file without exposing a partial
 # copy. If a later publication fails, files published earlier remain changed.
 publication_started=1
-printf 'Publishing validated variants and BASH_ENV compatibility patch files into the official tree...\n'
+printf 'Publishing validated variants and BASH_ENV compatibility patch files into:\n  %s\n' \
+    "$publication_dir"
 for index in "${!candidates_arr[@]}"; do
     candidate=${candidates_arr[$index]}
     target=${target_paths_arr[$index]}
@@ -691,6 +797,11 @@ for index in "${!candidates_arr[@]}"; do
         die "Could not allocate a publication file beside $target."
     cp -p -- "$candidate" "$publication_temp_file"
     if [ "$state" = replaced ]; then
+        backup_file="${target%/*}/.${target##*/}.$(date -u +%Y%m%dT%H%M%S.%NZ).bkp"
+        # Preserve the old file without leaving a gap at the live destination.
+        ln -T -- "$target" "$backup_file" ||
+            die "Could not back up destination file: $target"
+        printf 'Backed up: %s\n' "$backup_file"
         if mv -fT -- "$publication_temp_file" "$target"; then
             published_replaced_arr+=("$target")
             publication_temp_file=""
@@ -721,20 +832,56 @@ done
 # Mark publication as successfully completed so the exit handler no longer
 # reports a partial publication, then print the final results and usage details.
 publication_started=0
-printf 'Publication complete. Created: %s; replaced: %s; reused: %s.\n' \
-    "${#published_created_arr[@]}" "${#published_replaced_arr[@]}" \
-    "$((${#candidates_arr[@]} - ${#published_created_arr[@]} - ${#published_replaced_arr[@]}))"
-printf 'Published variants directory: %s\n' "$stack_dir/$variant_module_relative_dir"
-printf 'Published BASH_ENV compatibility patch directory: %s\n' "$stack_dir/pawsey/lmod-variable-fixes"
+# Split publication results by artifact type so shared patch files are not
+# confused with the requested modulefile count.
+modulefiles_created_count=0
+patch_files_created_count=0
+modulefiles_replaced_count=0
+patch_files_replaced_count=0
+modulefiles_target_prefix="$publication_dir/$variant_module_relative_dir/"
+for published_target in "${published_created_arr[@]}"; do
+    if [[ "$published_target" == "$modulefiles_target_prefix"* ]]; then
+        modulefiles_created_count=$((modulefiles_created_count + 1))
+    else
+        patch_files_created_count=$((patch_files_created_count + 1))
+    fi
+done
+for published_target in "${published_replaced_arr[@]}"; do
+    if [[ "$published_target" == "$modulefiles_target_prefix"* ]]; then
+        modulefiles_replaced_count=$((modulefiles_replaced_count + 1))
+    else
+        patch_files_replaced_count=$((patch_files_replaced_count + 1))
+    fi
+done
+modulefiles_reused_count=$((
+    variant_count - modulefiles_created_count - modulefiles_replaced_count
+))
+patch_files_reused_count=$((
+    bash_env_patch_file_count - patch_files_created_count - patch_files_replaced_count
+))
+printf 'Publication complete:\n'
+printf '  Modulefiles: %s created, %s replaced, %s reused (%s total).\n' \
+    "$modulefiles_created_count" "$modulefiles_replaced_count" \
+    "$modulefiles_reused_count" "$variant_count"
+printf '  BASH_ENV patch files: %s created, %s replaced, %s reused (%s total).\n' \
+    "$patch_files_created_count" "$patch_files_replaced_count" \
+    "$patch_files_reused_count" "$bash_env_patch_file_count"
+printf 'Published variants directory: %s\n' "$publication_dir/$variant_module_relative_dir"
+printf 'Published BASH_ENV compatibility patch directory: %s\n' \
+    "$publication_dir/pawsey/lmod-variable-fixes"
 printf 'Published module names:\n'
 for module_name in "${generated_module_names_arr[@]}"; do
     printf '  %s\n' "$module_name"
 done
 if [ "${#generated_module_names_arr[@]}" -gt 0 ]; then
     printf 'Next actions:\n'
-    printf '  1) module use %q\n' "$(dirname "$stack_dir/$variant_module_relative_dir")"
+    printf '  1) module use %q\n' "$(dirname "$publication_dir/$variant_module_relative_dir")"
     printf '  2) module load %q\n' "${generated_module_names_arr[0]}"
     printf '  3) module --ignore-cache show %q\n' "${generated_module_names_arr[0]}"
+fi
+if [ "$install_type" = testing ]; then
+    printf 'Scratch publication complete; the installed stack was not modified.\n'
+    printf 'These modulefiles still use official BASH_ENV patches at: %s\n' "$official_patch_dir"
 fi
 printf 'Logs:\n  %s\n  %s\n' "$run_dir/spack-refresh.log" "$variant_generation_log"
 printf 'Staging and validation logs retained at: %s\n' "$run_dir"

@@ -18,6 +18,10 @@ PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /d
 : "${singularity_name:?Missing singularity_name in settings.sh}"
 : "${singularity_version:?Missing singularity_version in settings.sh}"
 : "${singularity_mpi_version:?Missing singularity_mpi_version in settings.sh}"
+[ -r "${INSTALL_PREFIX}/pawsey/lmod-variable-fixes/pawsey_init_bash" ] || {
+    echo "ERROR: Missing or unreadable BASH_ENV patch: ${INSTALL_PREFIX}/pawsey/lmod-variable-fixes/pawsey_init_bash" >&2
+    exit 1
+}
 
 check_singularity_prerequisite() {
     local module_name=$1

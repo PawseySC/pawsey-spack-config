@@ -40,6 +40,24 @@ variants and the shared BASH_ENV compatibility patch files. These patch files ar
 shared by installed Singularity modules, so force-replacing them may affect
 modules outside the versions selected in the current run.
 
+The generator keeps its per-run workspace below `MYSCRATCH`; set
+`--staging-prefix` to choose a different parent. For testing publication and backup behavior without modifying the installed
+stack, use `--testing-publication-prefix` with a separate persistent directory
+below `MYSCRATCH`. This option is valid only with `--install-type testing`. The
+testing publication tree uses the same conflict checks, locking, atomic
+replacements, and backups as official publication. `--force` is available for
+this mode, but only when `--testing-publication-prefix` is supplied. Keep the
+staging and testing-publication trees separate.
+
+Generated modulefiles always retain the selected stack's absolute BASH_ENV patch
+path. They use patches installed in that stack, not copies in staging or in a
+scratch publication tree. When staged patches differ from the installed copies,
+the generator displays a prominent warning. To use changed patches with generated
+modules, an authorized installation account must install them in the official
+patch directory. Any modulefile manually redirected to a staging path for
+testing must remain disposable and must never be copied into an official
+destination.
+
 Run the following command for the complete option reference, prerequisites,
 examples, validation scope, staging details, and publication behavior:
 
