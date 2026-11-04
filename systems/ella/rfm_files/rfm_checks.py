@@ -4,7 +4,6 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import reframe as rfm
-from reframe.core.backends import getlauncher
 import reframe.utility.sanity as sn
 import reframe.utility.udeps as udeps
 
@@ -246,11 +245,6 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
 
     @run_after('setup')
     def configure_ella_step(self):
-        # Commands explicitly using mpirun launch inside the allocation.
-        if self.executable == 'mpirun':
-            self.job.launcher = getlauncher('local')()
-            return
-
         # Override the unavailable pmix default for srun-launched checks.
         self.job.launcher.options += ['--mpi=pmi2']
 

@@ -72,7 +72,7 @@ utilities:
   meson/1.5.1: ['meson', '--version', '1.5.1']
   ffmpeg/7.0.2: ['ffmpeg', '-version', 'ffmpeg version 7.0.2']
   gnuplot/6.0.0: ['gnuplot', '--version', 'gnuplot 6.0 patchlevel 0']
-  mpifileutils/0.11.1: ['mpirun', '-n 1 dcp -h', 'Usage: dcp']
+  mpifileutils/0.11.1: ['dcp', '-h', 'Usage: dcp']
 # no viz packages
 #visualisation:
 python-packages:
@@ -100,10 +100,10 @@ python-packages:
   py-qiskit: ['python3', '-c "import qiskit; print(qiskit)"', "module 'qiskit'"]
   py-qiskit-nompi: ['python3', '-c "import qiskit; print(qiskit)"', "module 'qiskit'"]
 benchmarking:
-  osu-micro-benchmarks/7.5.2-cuda-gh200: ['mpirun', '-n 1 osu_init', '# OSU MPI Init Test']
+  osu-micro-benchmarks/7.5.2-cuda-gh200: ['osu_init', '', '# OSU MPI Init Test']
   # Want alternative command for hpl
-  hpl: ['mpirun', '-n 1 xhpl', 'function HPL_pdinfo']
-  ior/3.3.0: ['mpirun', '-n 1 ior -h', 'Synopsis .*ior']
+  hpl: ['xhpl', '', 'function HPL_pdinfo']
+  ior/3.3.0: ['ior', '-h', 'Synopsis .*ior']
 developer-tools:
   hpcviewer: ['hpcviewer', '-h', 'hpcviewer ']
 dependencies:
