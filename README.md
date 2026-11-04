@@ -22,16 +22,11 @@ whether installed binaries are published to it.
 Ella starts Spack with the system GCC Toolset and Python, then concretizes and
 installs the `bootstrap` environment before the application environments:
 external GCC 13.3.1, the NVIDIA HPC SDK 26.1 with CUDA 13.1, CUDA-aware
-Open MPI 4.1.8 with PMI2, Python 3.11.6, and ReFrame 3.12.0.
-
-The SDK installs at `$INSTALL_PREFIX/software/nvhpc-26.1` and Open MPI at
-`$INSTALL_PREFIX/software/openmpi-4.1.8`; application environments use them
-through the external declarations in Ella's configuration. The `openmpi/4.1.8`
-module sets `SLURM_MPI_TYPE=pmi2`, and `pawseyenv` exposes the SDK as
-`nvhpc-nompi/26.1`. Use the normal stack installation script for both fresh
-installations and retries. Before rebuilding the applications, validate
-`ompi_info --param pmix s2` and a two-node CUDA-aware MPI test launched with
-`srun --mpi=pmi2`.
+Open MPI 4.1.8 with PMI2, Python 3.11.6, and ReFrame 3.12.0. The SDK and
+Open MPI install under `$INSTALL_PREFIX/software`, where application
+environments use them through the external declarations in Ella's
+configuration. The normal stack installation script handles both fresh
+installations and retries.
 
 ### Setonix-Q bootstrap
 
@@ -43,21 +38,12 @@ installations.
 ### Installation metadata
 
 Completed Setonix-Q and Ella deployments publish
-`$INSTALL_PREFIX/installation_metadata/spack_install_manifest.json`. It records
-the installed packages of the selected bootstrap and application environments,
-with their source environments, installation prefixes, and module paths. It is
-the authoritative input to the module tests on both systems, and the Spack
-environments used for checks and installation are saved alongside it under
-`installation_metadata/environments`.
-
-The shared tooling and its commands are documented in
-[scripts/install_manifest](scripts/install_manifest/README.md). The manifest
-can be inspected with any standard JSON tool:
-
-```bash
-python3 -m json.tool \
-  "$INSTALL_PREFIX/installation_metadata/spack_install_manifest.json"
-```
+`$INSTALL_PREFIX/installation_metadata/spack_install_manifest.json`, a plain
+JSON record of the installed packages with their source environments,
+installation prefixes, and module paths. It is the input to the module tests
+on both systems, and the Spack environments used for the installation are
+saved alongside it. The tooling is documented in
+[scripts/install_manifest](scripts/install_manifest/README.md).
 
 ### Singularity
 
