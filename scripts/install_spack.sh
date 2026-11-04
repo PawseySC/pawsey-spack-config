@@ -99,6 +99,7 @@ if [ "${site_config_dir}" != "${INSTALL_PREFIX}/spack/etc/spack" ]; then
   config_files+=("${site_config_dir}/"*.yaml)
 fi
 sed -i \
+  -e "s|SPACK_BUILDCACHE_PATH|${SPACK_BUILDCACHE_PATH:-}|g" \
   -e "s|GCC_INSTALL_PREFIX|${GCC_INSTALL_PREFIX:-}|g" \
   -e "s|NVHPC_INSTALL_PREFIX|${NVHPC_INSTALL_PREFIX:-}|g" \
   -e "s|MPI_PREFIX|${MPI_PREFIX:-}|g" \
