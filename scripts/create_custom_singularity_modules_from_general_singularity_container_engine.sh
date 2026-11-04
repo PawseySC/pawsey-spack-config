@@ -65,14 +65,14 @@ case "$flavour" in
     *) printf 'ERROR: Unsupported flavour: %s\n' "$flavour" >&2; exit 2 ;;
 esac
 
-source_module="$input_dir/$version.lua"
-if [ ! -f "$source_module" ] || [ -L "$source_module" ]; then
-    printf 'ERROR: Expected a regular rendered base module: %s\n' "$source_module" >&2
+source_modulefile="$input_dir/$version.lua"
+if [ ! -f "$source_modulefile" ] || [ -L "$source_modulefile" ]; then
+    printf 'ERROR: Expected a regular rendered base module: %s\n' "$source_modulefile" >&2
     exit 1
 fi
 
 mkdir -p "$output_dir"
-output_module="$output_dir/$version-$flavour${suffix:+-$suffix}.lua"
+output_modulefile="$output_dir/$version-$flavour${suffix:+-$suffix}.lua"
 
 # Original flavour model (one flavour generated per invocation):
 # 1. Create one of several variants with different default behaviour:
@@ -93,14 +93,14 @@ case "$flavour" in
             -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
             -e '/^-- add SLURM START/,/^-- add SLURM END/{/^-- add SLURM START/!{/^-- add SLURM END/!d}}' \
             -e '/^-- add GPUMPI START/,/^-- add GPUMPI END/{/^-- add GPUMPI START/!{/^-- add GPUMPI END/!d}}' \
-            "$source_module" > "$output_module"
+            "$source_modulefile" > "$output_modulefile"
         ;;
     # 1.A.2 singularity-mpi-gpu removes /askapbuffer and Slurm block
     mpi-gpu)
         sed \
             -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
             -e '/^-- add SLURM START/,/^-- add SLURM END/{/^-- add SLURM START/!{/^-- add SLURM END/!d}}' \
-            "$source_module" > "$output_module"
+            "$source_modulefile" > "$output_modulefile"
         ;;
     # 1.B singularity-nompi removes MPI, Slurm, and GPUMPI blocks
     nompi)
@@ -109,17 +109,17 @@ case "$flavour" in
             -e '/^-- add MPI START/,/^-- add MPI END/{/^-- add MPI START/!{/^-- add MPI END/!d}}' \
             -e '/^-- add SLURM START/,/^-- add SLURM END/{/^-- add SLURM START/!{/^-- add SLURM END/!d}}' \
             -e '/^-- add GPUMPI START/,/^-- add GPUMPI END/{/^-- add GPUMPI START/!{/^-- add GPUMPI END/!d}}' \
-            "$source_module" > "$output_module"
+            "$source_modulefile" > "$output_modulefile"
         ;;
     # 1.C.1 singularity-askap keeps Slurm but removes GPUMPI lines
     askap)
         sed \
             -e '/^-- add GPUMPI START/,/^-- add GPUMPI END/{/^-- add GPUMPI START/!{/^-- add GPUMPI END/!d}}' \
-            "$source_module" > "$output_module"
+            "$source_modulefile" > "$output_modulefile"
         ;;
     # 1.C.2 singularity-askap-gpu is just the original module
     askap-gpu)
-        cp -p -- "$source_module" "$output_module"
+        cp -p -- "$source_modulefile" "$output_modulefile"
         ;;
     # 1.D singularity-nohost removes host injections and host LD path wiring
     nohost)
@@ -130,7 +130,7 @@ case "$flavour" in
             -e '/^-- add GPUMPI START/,/^-- add GPUMPI END/{/^-- add GPUMPI START/!{/^-- add GPUMPI END/!d}}' \
             -e '/^-- add CRAY_PATHS START/,/^-- add CRAY_PATHS END/{/^-- add CRAY_PATHS START/!{/^-- add CRAY_PATHS END/!d}}' \
             -e '/^-- add CURRENT_HOST_LD_PATH START/,/^-- add CURRENT_HOST_LD_PATH END/{/^-- add CURRENT_HOST_LD_PATH START/!{/^-- add CURRENT_HOST_LD_PATH END/!d}}' \
-            "$source_module" > "$output_module"
+            "$source_modulefile" > "$output_modulefile"
         ;;
     # 1.E singularity-slurm removes MPI and GPUMPI but keeps Slurm mounts
     slurm)
@@ -138,9 +138,9 @@ case "$flavour" in
             -e '/singularity_bindpath *=/ s;/askapbuffer;;g' \
             -e '/^-- add MPI START/,/^-- add MPI END/{/^-- add MPI START/!{/^-- add MPI END/!d}}' \
             -e '/^-- add GPUMPI START/,/^-- add GPUMPI END/{/^-- add GPUMPI START/!{/^-- add GPUMPI END/!d}}' \
-            "$source_module" > "$output_module"
+            "$source_modulefile" > "$output_modulefile"
         ;;
 esac
 
 # Module variants must not pull dependency loads implicitly.
-sed -i '/^load("/d' "$output_module"
+sed -i '/^load("/d' "$output_modulefile"
