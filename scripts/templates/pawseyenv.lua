@@ -198,13 +198,11 @@ prepend_path("MODULEPATH", pathJoin(install_prefix, utilities_modules_dir))
 
 -- Spack modules
 local spack_root = pathJoin(install_prefix, "modules", arch)
-local generic_core_root = pathJoin(install_prefix, "modules", generic_arch, "Core")
+local generic_spack_root = pathJoin(install_prefix, "modules", generic_arch)
 for _, category in ipairs(module_categories) do
-  -- Spack 1.1 assigns generic targets to external packages.
-  local external_core = pathJoin(generic_core_root, category)
-  if isDir(external_core) then
-    prepend_path("MODULEPATH", external_core)
-  end
+  -- External packages can use generic targets in Core or compiler hierarchies.
+  -- Add these first so architecture-specific modules keep precedence.
+  prepend_compiler_paths(generic_spack_root, category)
   prepend_compiler_paths(spack_root, category)
 end
 
