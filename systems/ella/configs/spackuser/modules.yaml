@@ -16,7 +16,11 @@ modules:
       # Generate no LLVM modules, public or hidden, and omit LLVM autoloads.
       # Loading LLVM's compiler module as a dependency can replace GCC.
       # Replaces the LLVM load/depends_on edits in scripts/cr_operations.sh.
-      exclude: [llvm]
+      # Exclude external Open MPI wrappers to avoid clashes with bootstrap MPI.
+      # Keep the bootstrap module, identified by its slurm-pmi2 dependency.
+      exclude: [llvm, openmpi]
+      include:
+       - "openmpi ^slurm-pmi2"
 
       # Select all packages that depend on python, perl, r, or java,
       # and set these modules to autoload their dependencies
@@ -28,7 +32,7 @@ modules:
         autoload: direct
       ^java:
         autoload: direct
-      # External specs omit MPI's dependencies; load its bootstrap module too.
+      # External MPI specs omit runtime dependencies; load the bootstrap module.
       "^openmpi":
         autoload: direct
         load: [openmpi/4.1.8]
