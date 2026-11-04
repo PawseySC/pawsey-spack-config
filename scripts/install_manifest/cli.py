@@ -68,7 +68,6 @@ def main(argv=None):
             if args.command == "validate":
                 with output.open() as stream:
                     validate(json.load(stream), args.system, prefix, args.environment, published=False)
-                print(output)
                 return 0
             from install_manifest import spack_adapter as spack
             if args.command == "cleanup":

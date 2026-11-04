@@ -10,7 +10,7 @@ set_modulepaths_for_arch
 . "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh"
 
 if [ "${SYSTEM}" != "setonix-q" ] && [ "${SYSTEM}" != "ella" ]; then
-  echo "Deployment inventories are enabled for setonix-q and ella."
+  echo "Deployment inventories are only enabled for setonix-q and ella."
   exit 1
 fi
 
