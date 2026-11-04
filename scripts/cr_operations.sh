@@ -14,13 +14,14 @@ fi
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
+if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
+    # Staff modules.yaml excludes LLVM modules and their automatic loads.
+    exit 0
+fi
+
 # Remove llvm load and depends_on statements from affected module files
 grep -Elr "^load\(.*\.llvm.*\)" ${INSTALL_PREFIX}/modules | xargs -r sed -i "s/\(load(.*llvm.*)\)/--\1/"
 grep -Elr "^depends_on\(.*\.llvm.*\)" ${INSTALL_PREFIX}/modules | xargs -r sed -i "s/\(depends_on(.*llvm.*)\)/--\1/"
-
-if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
-    exit 0
-fi
 
 # Fix modules with '++' (boost and log4cxx variants)
 find ${INSTALL_PREFIX}/modules -type f -name '*__*' -exec bash -c 'echo mv "$1" "${1//__/++}"' _ {} \;

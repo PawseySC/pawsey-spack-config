@@ -49,6 +49,7 @@ export gcc_version=${gcc_version}
 export python_version=${python_version}
 export reframe_version=${reframe_version}
 export pawseyenv_version=${pawseyenv_version}
+export spack_version
 export env_list
 export cray_env_list
 if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
@@ -59,7 +60,7 @@ if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
         --system "${SYSTEM}"
         --install-prefix "${INSTALL_PREFIX}"
     )
-    for env in $env_list $cray_env_list; do
+    for env in ${bootstrap_environment:-} $env_list $cray_env_list; do
         manifest_args+=(--environment "${env}")
     done
     "${SPACK_PYTHON:-python3}" \
@@ -82,7 +83,7 @@ module load reframe/${reframe_version} || exit 1
 if [ "${SYSTEM}" = "setonix" ]; then
     env_list+="rocm"
 fi
-for env in $env_list; do
+for env in ${bootstrap_environment:-} $env_list; do
   echo "Running ReFrame tests for modules in env $env"
   export SPACK_ENV=${env}
   reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_install_report_${env}.json -t installation -r || exit 1

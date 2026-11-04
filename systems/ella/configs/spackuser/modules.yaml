@@ -13,6 +13,11 @@ modules:
       # so lockfile-backed module regeneration cannot encounter name clashes.
       hide_implicits: true
 
+      # Generate no LLVM modules, public or hidden, and omit LLVM autoloads.
+      # Loading LLVM's compiler module as a dependency can replace GCC.
+      # Replaces the LLVM load/depends_on edits in scripts/cr_operations.sh.
+      exclude: [llvm]
+
       # Select all packages that depend on python, perl, r, or java,
       # and set these modules to autoload their dependencies
       ^python:

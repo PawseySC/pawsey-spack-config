@@ -40,6 +40,10 @@ function concretize_environment()
     echo "Concretization for env ${env} completed but did not create ${envpath}/spack.lock."
     exit 1
   fi
+
+  if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
+    snapshot_spack_environment "${envpath}" || exit 1
+  fi
 }
 
 for env in $env_list ; do

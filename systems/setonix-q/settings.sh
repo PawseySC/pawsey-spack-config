@@ -49,7 +49,7 @@ BOOTSTRAP_PATH='$user_cache_path/bootstrap'
 # Set a new mirror where to fetch prebuilt binaries, if any.
 SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
 # Durable, release-scoped provenance for the environment lockfile DAGs that
-# were installed, plus standalone Python and ReFrame concrete specs.
+# were installed, including the bootstrap environment.
 INSTALLATION_METADATA_DIR=${INSTALL_PREFIX}/installation_metadata
 SPACK_INSTALL_MANIFEST=${INSTALLATION_METADATA_DIR}/spack_install_manifest.json
 # When SPACK_POPULATE_CACHE=1, spack will push binaries in the above cache location for later use.
@@ -131,7 +131,10 @@ developer-tools
 dependencies
 "
 
-# list of spack build environments
+# Install Python and ReFrame together before application builds.
+bootstrap_environment="bootstrap"
+
+# list of application build environments
 env_list="
 python
 quantum

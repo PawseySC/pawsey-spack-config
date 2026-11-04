@@ -4,15 +4,11 @@ set_spack_config_repo
 check_installation_environment
 set_compilation_sets_for_arch
 
-# Use Ella's native interpreter until Spack Python is installed.
-if [ "${SYSTEM}" = "ella" ]; then
-    export SPACK_PYTHON="${SPACK_PYTHON:-${BOOTSTRAP_PYTHON}}"
-else
-    module load cray-python
-    if [ "${SYSTEM}" = "setonix-q" ]; then
-        SPACK_PYTHON="$CRAY_PYTHON_PREFIX/bin/python3"
-    fi
+if [ -n "${bootstrap_environment:-}" ]; then
+    exec "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_bootstrap.sh"
 fi
+
+module load cray-python
 
 # initialise spack 
 . "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh"
@@ -25,33 +21,15 @@ if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
 fi
 
 # make sure Clingo is bootstrapped
-if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
-    echo "Running 'spack spec nano target=${main_arch} %${main_compiler}_compiler' to bootstrap Clingo.."
-    spack spec nano target=${main_arch} %${main_compiler}_compiler
-else
-    echo "Running 'spack spec nano' to bootstrap Clingo.."
-    spack spec nano
-fi
-
-if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
-    reset_spack_install_receipt standalone python
-fi
+echo "Running 'spack spec nano' to bootstrap Clingo.."
+spack spec nano
 
 # first thing we need is Python
 for comp in ${pythoncompilers[@]}; do
     for arch in ${archs[@]}; do
         echo "Concretization of Python with $comp for $arch .."
         echo "Installing Python with $comp for $arch.."
-        if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
-            python_spec="python@${python_version} target=${arch} %${comp%%@*}_compiler"
-            install_and_record_spack_root standalone python "${python_spec}" root
-        else
-            spack spec python@${python_version} %$comp target=${arch}
-            sg $INSTALL_GROUP -c "spack install -j${NCPUS} --no-checksum python@${python_version} %$comp target=${arch}"
-        fi
+        spack spec python@${python_version} %$comp target=$arch
+        sg $INSTALL_GROUP -c "spack install -j${NCPUS} --no-checksum python@${python_version} %$comp target=$arch"
     done
 done
-
-if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
-    seal_spack_install_receipt standalone python
-fi

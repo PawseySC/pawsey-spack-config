@@ -16,7 +16,7 @@ set_compilation_sets_for_arch
 echo "Setting up spack.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_spack.sh"
 
-initialize_spack_install_manifest
+invalidate_spack_install_manifest
 
 echo "Installing bootstrap packages.."
 if [ -n "${bootstrap_environment:-}" ]; then
@@ -30,7 +30,7 @@ fi
 
 if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
     echo "Regenerating bootstrap modules.."
-    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/refresh_standalone_modules.sh"
+    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/refresh_bootstrap_modules.sh"
 fi
 
 echo "Run concretization.."
@@ -43,6 +43,8 @@ echo "Install environments.."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_environments.sh"
 # Next line is not required as it is included in install_environments.sh
 # "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_cray_environments.sh"
+
+cleanup_software_stack || exit 1
 
 echo "Update singularity modules.."
 # note that moving forward using the singularityce recipes. Comment out the singularity_modules, kept for reference

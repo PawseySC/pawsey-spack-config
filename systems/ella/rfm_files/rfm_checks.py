@@ -11,48 +11,49 @@ import reframe.utility.udeps as udeps
 import re
 import os
 import sys
+import shlex
+from pathlib import Path
 
 # Import file with helper methods for processing spack files needed by below tests
 curr_dir = os.path.dirname(__file__).replace('\\','/')
 parent_dir = os.path.abspath(os.path.join(curr_dir, os.pardir))
 sys.path.append(parent_dir)
 from rfm_files.rfm_helper_methods import *
-from rfm_files.install_manifest import (
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'scripts'))
+from install_manifest import (
+    get_module,
+    get_module_name,
+    get_expected_autoloads,
+    module_identity_commands,
     get_library_path,
     get_module_dependencies,
     get_module_paths,
-    installation_manifest_is_complete,
 )
 
 # Dictionary holding commands for every package used in baseline sanity check
 pkg_cmds = get_pkg_cmds()
 
 
-def get_module_paths_if_installed():
-    # ReFrame imports this file before applying tag filters. Do not let
-    # installation-test parameter generation hide concretization failures or
-    # derive expected installation hashes from the environment lockfile.
-    if not installation_manifest_is_complete():
-        return []
-
-    return get_module_paths()
+# The shared reader returns no modules in explicit concretization-only mode;
+# normal installation checks require a published inventory.
+full_mod_paths = get_module_paths()
 
 
-# List of full absolute paths for every installed root module. This is empty
-# until the installation manifest has been finalized.
-full_mod_paths = get_module_paths_if_installed()
-
-
-def module_setup_commands():
+def module_setup_commands(module_path=None):
     date_tag = os.environ.get('DATE_TAG') or os.environ.get('pawseyenv_version', '2026.08')
     install_prefix = os.environ.get('INSTALL_PREFIX', '${INSTALL_PREFIX}')
+    compiler = (get_module(module_path).get('compiler') if module_path else None) or {}
+    compiler_module = (
+        'nvhpc-nompi/' + compiler['version'] if compiler.get('name') == 'nvhpc'
+        else 'gcc/' + os.environ['gcc_version']
+    )
 
     return [
         'module purge',
         'module load pawsey',
-        f'module use {install_prefix}/staff_modulefiles',
+        f"module use {shlex.quote(install_prefix + '/staff_modulefiles')}",
         f'module load pawseyenv/{date_tag}',
-        f'module load gcc/{os.environ["gcc_version"]}',
+        f'module load {compiler_module}',
     ]
 
 
@@ -74,8 +75,17 @@ class concretise_check(rfm.RunOnlyRegressionTest):
         self.num_tasks = self.num_tasks_per_node = self.num_cpus_per_task = 1
 
         # Execution
-        self.executable = 'echo'
-        self.executable_opts = ['Checking conretisation success']
+        self.prerun_cmds = module_setup_commands() + [
+            f'module load spack/{os.environ["spack_version"]}'
+        ]
+        self.executable = 'spack'
+        helper = Path(__file__).resolve().parents[3] / 'scripts/reframe_concretization.py'
+        metadata = Path(os.getenv('INSTALLATION_METADATA_DIR') or
+                        Path(os.environ['INSTALL_PREFIX']) / 'installation_metadata')
+        environment = metadata / 'environments' / os.environ['SPACK_ENV']
+        self.executable_opts = [shlex.quote(str(value)) for value in (
+            '-E', 'python', helper, environment
+        )]
 
         self.tags = {'spack', 'concretization', 'software_stack'}
     
@@ -88,42 +98,8 @@ class concretise_check(rfm.RunOnlyRegressionTest):
 
     @sanity_function
     def assert_concretisation(self):
-        abstract_specs = get_abstract_specs()
-        root_specs = get_root_specs()
-        abstract_name_ver = [None] * len(abstract_specs)
-        root_name_ver = [None] * len(root_specs)
+        return sn.assert_found('Concretization verified:', self.stdout)
 
-        # All abstract specs in {name}/{version} format
-        abstract_pattern = r'([\w-]+@*=*[\w.]+).*'
-        idx = 0
-        for s in abstract_specs:
-            match = re.match(abstract_pattern, s)
-            if match != None:
-                if '@' in match.groups()[0]:
-                    abstract_name_ver[idx] = match.groups()[0].split('@')[0] + '/' + match.groups()[0].split('@')[1].replace('=', '')
-                else:
-                    abstract_name_ver[idx] = match.groups()[0]
-            idx += 1
-
-        # All concretised specs in {name}/{version} format
-        concrete_pattern = r'^([\w-]+@*=*[\w.]+)'
-        idx = 0
-        for s in root_specs:
-            match = re.match(concrete_pattern, s).groups()[0]
-            if '@' in match:
-                root_name_ver[idx] = match.split('@')[0] + '/' + match.split('@')[1].replace('=', '')
-            else:
-                root_name_ver[idx] = match
-            idx += 1
-
-        # Check if an abstract spec is missing from the list of concretised specs
-        num_failed = 0
-        for spec in abstract_name_ver:
-            # True if empty list
-            if not [m for m in root_name_ver if spec in m]:
-                num_failed += 1
-
-        return sn.assert_lt(num_failed, 1)
 
 @rfm.simple_test
 class module_existence_check(rfm.RunOnlyRegressionTest):
@@ -140,13 +116,13 @@ class module_existence_check(rfm.RunOnlyRegressionTest):
 
         # Execution - ls to check the module exists
         self.executable = 'ls'
-        self.executable_opts = [self.mod]
+        self.executable_opts = [shlex.quote(self.mod)]
         # Get dependencies for the module and add ls commands for those
         dependencies = get_module_dependencies(self.mod)
         if len(dependencies) > 0:
-            self.postrun_cmds = [f'ls {d}' for d in dependencies]
+            self.postrun_cmds = [f'ls {shlex.quote(d)}' for d in dependencies]
 
-        self.tags = {'spack', 'installation', 'software_stack'}
+        self.tags = {'spack', 'installation', 'software_stack', get_module(self.mod)['hash']}
     
     # Test parameter - list of full absolute paths for every module in the environment
     mod = parameter(full_mod_paths)
@@ -172,16 +148,16 @@ class module_load_check(rfm.RunOnlyRegressionTest):
 
         # Execution
         self.executable = 'module'
-        self.name_ver = '/'.join(self.mod.split('/')[-2:])[:-4]
-        self.executable_opts = ['load', self.name_ver]
+        self.name_ver = get_module_name(self.mod)
+        self.executable_opts = ['load', shlex.quote(self.name_ver)]
 
         # module show to check the exact modulefile selected for this test
-        self.prerun_cmds += module_setup_commands()
-        self.prerun_cmds += [f'module show {self.name_ver}']
+        self.prerun_cmds += module_setup_commands(self.mod)
+        self.prerun_cmds += [f'module show {shlex.quote(self.name_ver)}']
         # Check main module is loaded
-        self.postrun_cmds = [f'if module is-loaded {self.name_ver} ; then echo "main package is loaded"; fi']
+        self.postrun_cmds = [f'if module is-loaded {shlex.quote(self.name_ver)} ; then echo "main package is loaded"; fi']
 
-        self.tags = {'spack', 'installation', 'software_stack'}
+        self.tags = {'spack', 'installation', 'software_stack', get_module(self.mod)['hash']}
 
     # Test parameter - list of full absolute paths for each module in the environment    
     mod = parameter(full_mod_paths)
@@ -197,42 +173,25 @@ class module_load_check(rfm.RunOnlyRegressionTest):
         self.depends_on(testdep_name, udeps.by_env)
     
     @run_before('run')
-    def check_dependency_lines(self):
-        # Get dependencies from both load() statements and depends_on() statements.
-        dependency_pattern = re.compile(r'^\s*(?:load|depends_on)\("([^"]+)"\)')
-        with open(self.mod) as module_file:
-            self.dependency_modules = []
-            for line in module_file:
-                match = dependency_pattern.match(line)
-                if match:
-                    self.dependency_modules.append(match.group(1))
-        ndependencies = len(self.dependency_modules)
-        # `++` breaks the regex search, so replace ++ with \+\+ if present
-        for i in range(ndependencies):
-            if '++' in self.dependency_modules[i]:
-                module_name = self.dependency_modules[i]
-                self.dependency_modules[i] = module_name.replace('++', '\\+\\+')
-        # Check all dependencies are loaded
+    def check_expected_autoloads(self):
+        self.dependency_modules = get_expected_autoloads(self.mod)
         self.postrun_cmds += [
-            f'if module is-loaded {dep_mod} ; then echo "dependency is loaded"; fi'
-            for dep_mod in self.dependency_modules
+            f'if module is-loaded {shlex.quote(name)}; then echo "dependency is loaded"; fi'
+            for name in self.dependency_modules
         ]
+        self.postrun_cmds += module_identity_commands(self.mod)
 
     @sanity_function
     def assert_module_loaded(self):
-        # '+' breaks regex search, need to replace with '\+' in all modules it is present
-        if '+' in self.mod:
-            self.mod = self.mod.replace('+', '\\+')
-        if '+' in self.name_ver:
-            self.name_ver = self.name_ver.replace('+', '\\+')
-        
         return sn.all([
             sn.assert_found("main package is loaded", self.stdout),
             sn.assert_eq(
                 sn.count(sn.extractall('dependency is loaded', self.stdout)),
                 len(self.dependency_modules),
             ),
-            sn.assert_found(self.name_ver, self.stderr),
+            sn.assert_found(re.escape(self.name_ver), self.stderr),
+            sn.assert_found(re.escape('manifest module verified: ' + get_module(self.mod)['hash']),
+                            self.stdout),
             sn.assert_not_found('Failed', self.stderr),
             sn.assert_not_found('Error', self.stderr),
         ])
@@ -252,9 +211,10 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
         self.num_tasks = self.num_tasks_per_node = self.num_cpus_per_task = 1
 
         # Load the module we are testing
-        self.name_ver = '/'.join(self.mod.split('/')[-2:])[:-4]
-        self.prerun_cmds += module_setup_commands()
-        self.prerun_cmds += [f'module load {self.name_ver}']
+        self.name_ver = get_module_name(self.mod)
+        self.prerun_cmds += module_setup_commands(self.mod)
+        self.prerun_cmds += [f'module load {shlex.quote(self.name_ver)}']
+        self.prerun_cmds += module_identity_commands(self.mod)
 
         # Execution - call executable with `--help` or `--version` option
         self.base_name = self.mod.split('/')[-2] # Extract package/library name from full module path
@@ -282,12 +242,11 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
         else:
             self.executable_opts = [self.baseline_cmd[1] + ' 2>&1']
         
-        self.tags = {'spack', 'installation', 'software_stack'}
+        self.tags = {'spack', 'installation', 'software_stack', get_module(self.mod)['hash']}
 
     @run_after('setup')
     def configure_ella_step(self):
-        # HPC-X cannot use Slurm's PMI2 interface. Commands that initialize
-        # MPI use its mpirun inside this Slurm allocation, without outer srun.
+        # Commands explicitly using mpirun launch inside the allocation.
         if self.executable == 'mpirun':
             self.job.launcher = getlauncher('local')()
             return
@@ -311,7 +270,9 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
     def assert_functioning(self):
         # For libraries we check if all libraries are present
         if self.executable == 'ldd':
-            return sn.assert_not_found('not found', self.stdout)
+            return sn.all([sn.assert_found('manifest module verified:', self.stdout),
+                           sn.assert_not_found('not found', self.stdout)])
         # For software we do a basic check (e.g. --help or --version)
         else:
-            return sn.assert_found(self.baseline_cmd[2], self.stdout)
+            return sn.all([sn.assert_found('manifest module verified:', self.stdout),
+                           sn.assert_found(self.baseline_cmd[2], self.stdout)])

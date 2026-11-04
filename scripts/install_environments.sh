@@ -43,7 +43,14 @@ fi
 # list of environments included in variables.sh (sourced above)
 envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 
-ensure_spack_install_manifest_run
+if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
+  manifest_args=(validate --install-prefix "${INSTALL_PREFIX}" --system "${SYSTEM}"
+                 --manifest "${SPACK_INSTALL_MANIFEST}")
+  for env in ${bootstrap_environment} $env_list $cray_env_list; do
+    manifest_args+=(--environment "${env}")
+  done
+  "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" "${manifest_args[@]}" || exit 1
+fi
 
 echo "Running installation with $NCPUS cores.."
 
@@ -59,9 +66,16 @@ for env in $cray_env_list; do
 done
 
 if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
-  deployment_environments=($env_list $cray_env_list)
-  "${PAWSEY_SPACK_CONFIG_REPO}/scripts/publish_spack_install_manifest.sh" \
-    "${deployment_environments[@]}" || exit 1
+  "${PAWSEY_SPACK_CONFIG_REPO}/scripts/publish_spack_install_manifest.sh" || exit 1
+  # Upload public roots only after the inventory and module tree are published.
+  if [ "${SPACK_POPULATE_CACHE}" -eq 1 ]; then
+    public_hashes=$("${SPACK_PYTHON:-python3}" -c \
+      'import json, sys; print(" ".join(h for h, p in json.load(open(sys.argv[1]))["packages"].items() if p["public"]))' \
+      "${SPACK_INSTALL_MANIFEST}")
+    for hash in $public_hashes; do
+      spack buildcache push systemwide_buildcache "/${hash}"
+    done
+  fi
 else
   # The legacy Setonix publication path refreshes the store without a manifest.
   if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
@@ -74,10 +88,6 @@ else
     spack module lmod refresh -y /$hash
   done
 fi
-
-# Remove .llvm from module files to stop it replacing gcc/cce at module load which breaks reframe tests
-# Done post-installation, so commented out here
-#grep -Elr "^load\(.*\.llvm.*\)" ${INSTALL_PREFIX}/modules | xargs sed -i "s/\(load(.*llvm.*)\)/--\1/"
 
 # Generate commands for sysadmins to execute to fix Singularity permissions.
 echo """Singularity fix permissions:
