@@ -8,10 +8,15 @@ from spack.package import *
 
 
 class PyCudaBindings(BuiltinPyCudaBindings):
-    """CUDA Python bindings with CUDA 13 support for Setonix-Q."""
+    """CUDA Python bindings for the CUDA 13.0 and 13.1 software stacks."""
 
     license("LicenseRef-NVIDIA-SOFTWARE-LICENSE")
 
+    version(
+        "13.1.1",
+        sha256="67d3664c91687c2799b9531ca94fb41908857b06b045cdf51343f4176fae63ac",
+        url="https://github.com/NVIDIA/cuda-python/archive/refs/tags/v13.1.1.tar.gz",
+    )
     version(
         "13.0.3",
         sha256="4885b7898ba30735cdf8a07b52496ecfe2b8f7d119245f3ced190f9ad445ffd4",
@@ -28,9 +33,17 @@ class PyCudaBindings(BuiltinPyCudaBindings):
         depends_on("py-pyclibrary@0.1.7:", type=("build", "run"))
         depends_on("py-cuda-pathfinder@1.1:1", type="run")
 
-    variant("cufile", default=False, when="@13.0.3", description="Build cuFile bindings")
+    with when("@13.1.1"):
+        depends_on("cuda@13.1", type=("build", "link", "run"))
+        depends_on("python@3.10:", type=("build", "run"))
+        depends_on("py-cython@3.2:3.2", type="build")
+        depends_on("py-setuptools@77:", type="build")
+        depends_on("py-pyclibrary@0.1.7:", type=("build", "run"))
+        depends_on("py-cuda-pathfinder@1.1:1", type="run")
 
-    @when("@13.0.3 ~cufile")
+    variant("cufile", default=False, when="@13.0.3,13.1.1", description="Build cuFile bindings")
+
+    @when("@13.0.3,13.1.1 ~cufile")
     def patch(self):
         setup = join_path(self.stage.source_path, "cuda_bindings", "setup.py")
         # Exclude both the public and generated internal cuFile extensions.
