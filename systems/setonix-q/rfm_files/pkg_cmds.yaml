@@ -42,7 +42,7 @@ libraries:
   trilinos/16.2.1: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <Teuchos_Version.hpp>\n" | CC -E -x c++ - > "$tmp" 2>&1 && grep -m1 "trilinos-16.2.1" "$tmp"''', 'trilinos-16.2.1']
 # No petsc baseline command added yet.
 programming-languages:
-  python: ['python', '-h', 'usage: python']
+  python: ['python', '-h', 'usage: .*python'] # srun may use the full executable path in the usage line.
   perl: ['perl', '--version', 'This is perl']
   go: ['go', 'version', 'go version']
   openjdk: ['java', '-version', 'openjdk version']
