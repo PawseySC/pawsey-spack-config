@@ -80,6 +80,8 @@ modules:
       #    environment_blacklist: ['CPATH']
 
       projections:
+        # Match the bootstrap MPI module used by application environments.
+        openmpi: '{name}/{version}'
         # we want to keep these simple for user-specific installations
         # name, version, hash to avoid conflicts, no categories
         # explicit usage of versions now enforced in lua template
