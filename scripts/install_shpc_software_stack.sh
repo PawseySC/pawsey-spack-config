@@ -13,10 +13,36 @@ fi
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
-echo "Update singularity modules.."
-# note that moving forward using the singularityce recipes. Comment out the singularity_modules, kept for reference
-#"${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_custom_singularity_modules.sh"
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_custom_singularity_modules_from_general_singularity_container_engine.sh"
+# Instead of generating Singularity modules here, check that the configured
+# default and, when needed, MPI variants can be loaded for downstream SHPC setup.
+: "${singularity_name:?Missing singularity_name in settings.sh}"
+: "${singularity_version:?Missing singularity_version in settings.sh}"
+: "${singularity_mpi_version:?Missing singularity_mpi_version in settings.sh}"
+[ -r "${INSTALL_PREFIX}/pawsey/lmod-variable-fixes/pawsey_init_bash" ] || {
+    echo "ERROR: Missing or unreadable BASH_ENV patch: ${INSTALL_PREFIX}/pawsey/lmod-variable-fixes/pawsey_init_bash" >&2
+    exit 1
+}
+
+check_singularity_prerequisite() {
+    local module_name=$1
+    type module >/dev/null 2>&1 || {
+        echo "ERROR: Lmod is required to verify ${module_name}." >&2
+        exit 1
+    }
+    if ! module load "$module_name"; then
+        echo "ERROR: Required Singularity module is unavailable: ${module_name}" >&2
+        exit 1
+    fi
+}
+
+# This script now consumes existing Singularity modules; generation/publication
+# is intentionally handled by the call to generate_singularity_modules.sh from
+# the `install_software_stack.sh` script, or from an independent invocation.
+echo "Checking that the configured Singularity modules can be loaded…"
+check_singularity_prerequisite "${singularity_name}/${singularity_version}"
+if [[ -n "${container_list_mpi//[[:space:]]/}" ]]; then
+    check_singularity_prerequisite "${singularity_name}/${singularity_mpi_version}"
+fi
 
 echo "Installing shpc..."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_shpc.sh"

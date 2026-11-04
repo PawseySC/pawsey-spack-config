@@ -36,7 +36,13 @@ echo "Install environments.."
 echo "Update singularity modules.."
 # note that moving forward using the singularityce recipes. Comment out the singularity_modules, kept for reference
 #"${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_custom_singularity_modules.sh"
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_custom_singularity_modules_from_general_singularity_container_engine.sh"
+# Using new wrapper: generate_singularity_modules.sh that also allows for easy regeneration of modules after installation.
+# For its use here:
+# --install-type official : generates modulefiles in the official deployment path
+# --version all : generates modulefiles for all installed SingularityCE versions.
+# --force : replaces existing modulefiles (allows reruns of this main script without needing previous manual cleanup of existing modulefiles)
+"${PAWSEY_SPACK_CONFIG_REPO}/scripts/generate_singularity_modules.sh" \
+    --install-type official --version all --force
 
 echo "Installing shpc..."
 "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_shpc.sh"
