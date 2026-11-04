@@ -283,6 +283,7 @@ modules:
         # programing languages 
         gcc: 'programming-languages/{name}/{version}'
         go: 'programming-languages/{name}/{version}'
+        hip: 'programming-languages/{name}/{version}'
         julia: 'programming-languages/{name}/{version}'
         nvhpc: 'programming-languages/{name}/{version}'
         openjdk: 'programming-languages/{name}/{version}'
@@ -293,7 +294,6 @@ modules:
         rust: 'programming-languages/{name}/{version}'
 
         # utilities 
-        hip: 'utilities/{name}/{version}'
         autoconf: 'utilities/{name}/{version}'
         automake: 'utilities/{name}/{version}'
         libtool: 'utilities/{name}/{version}'
