@@ -49,7 +49,7 @@ BOOTSTRAP_PATH='$user_cache_path/bootstrap'
 # Set a new mirror where to fetch prebuilt binaries, if any.
 SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
 # Durable, release-scoped provenance for the environment lockfile DAGs that
-# were installed, plus standalone Python and ReFrame concrete specs.
+# were installed, including the bootstrap environment.
 INSTALLATION_METADATA_DIR=${INSTALL_PREFIX}/installation_metadata
 SPACK_INSTALL_MANIFEST=${INSTALLATION_METADATA_DIR}/spack_install_manifest.json
 # When SPACK_POPULATE_CACHE=1, spack will push binaries in the above cache location for later use.
@@ -74,19 +74,17 @@ RFM_TEST_FILE=${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/rfm_files/rfm_checks
 archs="neoverse_v2"
 # Match Setonix-Q using Ella's installed GCC Toolset 13.
 gcc_version="13.3.1"
-nvidia_version="25.9"
-# NVHPC 25.9 includes CUDA 13.0, matching the Setonix-Q application toolkit pin.
-cuda_version="13.0"
+nvidia_version="26.1"
+# The Spack-managed NVIDIA HPC SDK supplies the complete CUDA 13.1 stack.
+cuda_version="13.1"
 cuda_arch="90"
 main_compiler="gcc"
 main_arch="neoverse_v2"
 
-# Reuse system GCC; install NVIDIA separately from Spack's software tree.
-TOOLCHAIN_PREFIX="${TOOLCHAIN_PREFIX:-${INSTALL_PREFIX}/toolchains}"
-TOOLCHAIN_MODULE_PREFIX="${TOOLCHAIN_MODULE_PREFIX:-${TOOLCHAIN_PREFIX}/modules}"
-TOOLCHAIN_BUILD_PREFIX="${TOOLCHAIN_BUILD_PREFIX:-${TMPDIR:-/tmp}/${USER}/ella/${DATE_TAG}/toolchains}"
+# Reuse system GCC to install the NVIDIA SDK through Spack. The SDK path
+# matches its install projection in configs/spackuser/config.yaml.
 GCC_INSTALL_PREFIX="${GCC_INSTALL_PREFIX:-/opt/rh/gcc-toolset-13/root/usr}"
-NVHPC_INSTALL_PREFIX="${TOOLCHAIN_PREFIX}/nvhpc-${nvidia_version}"
+NVHPC_INSTALL_PREFIX="${INSTALL_PREFIX}/software/nvhpc-${nvidia_version}"
 NVHPC_MODULE_PREFIX="${NVHPC_INSTALL_PREFIX}/modulefiles"
 BOOTSTRAP_PYTHON="${BOOTSTRAP_PYTHON:-/usr/bin/python3}"
 gcc_module="gcc/${gcc_version}"
@@ -145,7 +143,10 @@ developer-tools
 dependencies
 "
 
-# list of spack build environments
+# Install this environment and generate its modules before application builds.
+bootstrap_environment="bootstrap"
+
+# list of application build environments
 env_list="
 python
 quantum

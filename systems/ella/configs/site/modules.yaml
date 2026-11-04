@@ -68,10 +68,10 @@ modules:
       cuda:
         environment:
           prepend_path:
-            CPATH: '{prefix}/../../math_libs/13.0/targets/sbsa-linux/include'
-            LIBRARY_PATH: '{prefix}/../../math_libs/13.0/targets/sbsa-linux/lib'
-            LD_LIBRARY_PATH: '{prefix}/../../math_libs/13.0/targets/sbsa-linux/lib'
-            CMAKE_PREFIX_PATH: '{prefix}/../../math_libs/13.0/targets/sbsa-linux'
+            CPATH: '{prefix}/../../math_libs/13.1/targets/sbsa-linux/include'
+            LIBRARY_PATH: '{prefix}/../../math_libs/13.1/targets/sbsa-linux/lib'
+            LD_LIBRARY_PATH: '{prefix}/../../math_libs/13.1/targets/sbsa-linux/lib'
+            CMAKE_PREFIX_PATH: '{prefix}/../../math_libs/13.1/targets/sbsa-linux'
 
       # needed by bug in cray-mpich logic,
       # see https://github.com/spack/spack/issues/21696

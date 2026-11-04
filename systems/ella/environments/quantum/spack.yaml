@@ -26,15 +26,13 @@ spack:
       require: "@2.7.4"
 
     cuda:
-      require: "@13.0.0"
+      require: "@13.1.0"
 
     cuquantum:
       require: "@25.11.1 +mpi %gcc_compiler"
 
     cutensor:
       require: "@2.4.1.4 %gcc_compiler"
-      buildable: true
-      externals: []
 
   definitions:
   - quantum_libraries:

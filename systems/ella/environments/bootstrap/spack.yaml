@@ -1,0 +1,13 @@
+spack:
+  definitions:
+    - bootstrap_packages:
+        - gcc@13.3.1 languages=c,c++,fortran
+        - nvhpc@26.1 default_cuda=13.1 ~mpi target=neoverse_v2
+        - python@3.11.6 +optimizations +ssl +zlib target=neoverse_v2 %gcc_compiler
+        - reframe@3.12.0 target=neoverse_v2 %gcc_compiler
+  specs:
+    - matrix:
+        - [$bootstrap_packages]
+  concretizer:
+    unify: true
+  view: false

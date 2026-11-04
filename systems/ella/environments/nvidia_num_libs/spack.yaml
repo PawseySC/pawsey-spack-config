@@ -48,7 +48,7 @@ spack:
     #  - petsc@3.21.1 +fftw +hwloc +openmp +cuda cuda_arch=90
   specs:
   # Build the GPU numerical libraries with gcc as the host compiler and consume
-  # CUDA via the external cuda/13.0 module (configs/site/packages.yaml)
+  # CUDA comes from the Spack-managed NVIDIA SDK (configs/site/packages.yaml).
   # Mirrors the quantum environment and avoids the nvhpc (nvc++) failures with 
   # jemalloc, asio, boost and kokkos.
   - matrix:

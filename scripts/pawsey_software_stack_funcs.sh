@@ -157,14 +157,10 @@ function resolve_compatible_python_interpreter()
 
 function bootstrap()
 {
-    # Prepare the system toolchains and Python before setting up Spack.
+    # Prepare the host compiler and Python before setting up Spack.
     if [ "${SYSTEM}" = "ella" ]; then
-        echo "Bootstrapping Ella toolchains.."
-        export TOOLCHAIN_PREFIX TOOLCHAIN_MODULE_PREFIX TOOLCHAIN_BUILD_PREFIX GCC_INSTALL_PREFIX
-        "${PAWSEY_SPACK_CONFIG_REPO}/systems/ella/bootstrap_toolchains.sh" || return 1
-        module use "${TOOLCHAIN_MODULE_PREFIX}" "${NVHPC_MODULE_PREFIX}" "${MPI_MODULE_PATH}" || return 1
-        module unload gcc || return 1
-        module load "${gcc_module}" || return 1
+        export PATH="${GCC_INSTALL_PREFIX}/bin:${PATH}"
+        export LD_LIBRARY_PATH="${GCC_INSTALL_PREFIX}/lib64:${GCC_INSTALL_PREFIX}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
         export SPACK_PYTHON="${BOOTSTRAP_PYTHON}"
     else
         resolve_compatible_python_interpreter || return 1

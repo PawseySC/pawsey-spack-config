@@ -138,6 +138,17 @@ modules:
       ior:
         autoload: direct
 
+      # The SDK also provides BLAS/LAPACK, whose rules above load dependencies.
+      # Keep its runtime GCC from replacing the active compiler module.
+      nvhpc:
+        autoload: none
+
+      gcc:
+        environment:
+          set:
+            GCC_ROOT: '{prefix}'
+            GCC_VERSION: '{version}'
+
 
       projections:
         # modules on magnus have one of [apps, tools, python, devel] as start of module name 
@@ -259,8 +270,10 @@ modules:
         parallel-netcdf: 'libraries/{name}/{version}'
 
         # programing languages 
+        gcc: 'programming-languages/{name}/{version}'
         go: 'programming-languages/{name}/{version}'
         julia: 'programming-languages/{name}/{version}'
+        nvhpc: 'programming-languages/{name}/{version}'
         openjdk: 'programming-languages/{name}/{version}'
         python: 'programming-languages/{name}/{version}'
         r: 'programming-languages/{name}/{version}'

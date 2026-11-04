@@ -3,9 +3,9 @@ packages:
   # Provider lists express preferences. Compiler packages now provide the
   # language virtuals; packages:all:compiler is ignored by Spack 1.x.
     providers:
-      c: [ gcc@13.3.1, nvhpc@25.9 ]
-      cxx: [ gcc@13.3.1, nvhpc@25.9 ]
-      fortran: [ gcc@13.3.1, nvhpc@25.9 ]
+      c: [ gcc@13.3.1, nvhpc@26.1 ]
+      cxx: [ gcc@13.3.1, nvhpc@26.1 ]
+      fortran: [ gcc@13.3.1, nvhpc@26.1 ]
       mpi: [ openmpi ]
       blas: [ openblas ]
       lapack: [ openblas, netlib-lapack ]
@@ -30,9 +30,10 @@ packages:
   fortran:
     require: gcc@13.3.1
 
-# don't build virtuals with an external provider
+  # Keep MPI consumers on Ella's external HPC-X. Marking the virtual
+  # non-buildable would also block NVHPC, which can optionally provide MPI.
   mpi:
-    buildable: false
+    require: openmpi@4.1.7a1
 #  blas:
 #    buildable: false
   blas:
@@ -47,14 +48,12 @@ packages:
 # Edit: FFTW buildable, otherwise in Spack 0.17.0 the concretiser crashes
 #  fftw-api:
 #    buildable: false
-# don't build compilers neither
+  # Reuse Ella's installed GCC; Spack installs the NVIDIA SDK below.
   gcc:
     buildable: false
     externals:
     - spec: gcc@13.3.1 languages=c,c++,fortran arch=linux-rocky9-aarch64
       prefix: GCC_INSTALL_PREFIX
-      modules:
-      - gcc/13.3.1
       extra_attributes:
         compilers:
           c: GCC_INSTALL_PREFIX/bin/gcc
@@ -74,29 +73,8 @@ packages:
             GOFLAGS: "-ldflags=-extldflags=-fuse-ld=bfd"
         extra_rpaths: [GCC_INSTALL_PREFIX/lib64, GCC_INSTALL_PREFIX/lib]
   nvhpc:
-    buildable: false
-    externals:
-    - spec: nvhpc@25.9 ~mpi arch=linux-rocky9-aarch64
-      prefix: NVHPC_INSTALL_PREFIX
-      modules:
-      - gcc/13.3.1
-      - nvhpc-nompi/25.9
-      extra_attributes:
-        compilers:
-          c: NVHPC_INSTALL_PREFIX/Linux_aarch64/25.9/compilers/bin/nvc
-          cxx: NVHPC_INSTALL_PREFIX/Linux_aarch64/25.9/compilers/bin/nvc++
-          fortran: NVHPC_INSTALL_PREFIX/Linux_aarch64/25.9/compilers/bin/nvfortran
-        flags:
-          cflags: -O3
-          cxxflags: -O3
-          cppflags: -O3
-          fflags: -O3
-        environment:
-          set:
-            CARGO_HOME: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/ella/DATE_TAG/software/$USER/cargo
-            GOCACHE: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/ella/DATE_TAG/software/$USER/go-cache/build
-            GOMODCACHE: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/ella/DATE_TAG/software/$USER/go-cache/mod
-        extra_rpaths: [NVHPC_INSTALL_PREFIX/Linux_aarch64/25.9/compilers/lib]
+    buildable: true
+    require: "@26.1 default_cuda=13.1 ~mpi"
 
   # GENERAL NOTES:
   # 1. for each package, only one entry must exist in this yaml
@@ -383,60 +361,60 @@ packages:
           set:
             OPAL_PREFIX: MPI_PREFIX
 
-  # NVIDIA libraries from the bootstrapped SDK, using the CUDA 13.0 variant.
+  # NVIDIA libraries from the Spack-managed SDK, using the CUDA 13.1 variant.
   cuda:
     buildable: false
     externals:
-    - spec: cuda@13.0.0
-      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/25.9/cuda/13.0
+    - spec: cuda@13.1.0
+      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/cuda/13.1
       # The SDK keeps CUDA's math libraries outside the core toolkit prefix.
       # Mirror these paths in the generated CUDA module's environment as well.
       extra_attributes:
         environment:
           prepend_path:
-            CPATH: NVHPC_INSTALL_PREFIX/Linux_aarch64/25.9/math_libs/13.0/targets/sbsa-linux/include
-            LIBRARY_PATH: NVHPC_INSTALL_PREFIX/Linux_aarch64/25.9/math_libs/13.0/targets/sbsa-linux/lib
-            LD_LIBRARY_PATH: NVHPC_INSTALL_PREFIX/Linux_aarch64/25.9/math_libs/13.0/targets/sbsa-linux/lib
-            CMAKE_PREFIX_PATH: NVHPC_INSTALL_PREFIX/Linux_aarch64/25.9/math_libs/13.0/targets/sbsa-linux
+            CPATH: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1/targets/sbsa-linux/include
+            LIBRARY_PATH: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1/targets/sbsa-linux/lib
+            LD_LIBRARY_PATH: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1/targets/sbsa-linux/lib
+            CMAKE_PREFIX_PATH: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1/targets/sbsa-linux
 
   cutensor:
-    buildable: true
+    buildable: false
     externals:
-    - spec: cutensor@2.3.0
-      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/25.9/math_libs/13.0/targets/sbsa-linux
+    - spec: cutensor@2.4.1.4 target=neoverse_v2
+      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1
 
   nccl:
     buildable: false
     externals:
-    - spec: nccl@2.27.7 +cuda cuda_arch=90
-      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/25.9/comm_libs/13.0/nccl
+    - spec: nccl@2.29.2 +cuda cuda_arch=90
+      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/comm_libs/13.1/nccl
 
   cublas:
     buildable: false
     externals:
-    - spec: cublas@13.0.0
-      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/25.9/math_libs/13.0
+    - spec: cublas@13.2.0.9
+      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1
 
   cufft:
     buildable: false
     externals:
-    - spec: cufft@12.0.0
-      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/25.9/math_libs/13.0
+    - spec: cufft@12.1.0.31
+      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1
 
   curand:
     buildable: false
     externals:
-    - spec: curand@10.4.0
-      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/25.9/math_libs/13.0
+    - spec: curand@10.4.1.34
+      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1
 
   cusolver:
     buildable: false
     externals:
-    - spec: cusolver@12.0.3
-      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/25.9/math_libs/13.0
+    - spec: cusolver@12.0.7.41
+      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1
 
   cusparse:
     buildable: false
     externals:
-    - spec: cusparse@12.6.2
-      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/25.9/math_libs/13.0
+    - spec: cusparse@12.7.2.19
+      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1

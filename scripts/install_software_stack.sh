@@ -18,14 +18,18 @@ echo "Setting up spack.."
 
 initialize_spack_install_manifest
 
-echo "Running first python install"
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_python.sh"
-
-echo "Running first reframe install"
-"${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_reframe.sh"
+echo "Installing bootstrap packages.."
+if [ -n "${bootstrap_environment:-}" ]; then
+    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_bootstrap.sh" || exit 1
+else
+    echo "Running first python install"
+    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_python.sh"
+    echo "Running first reframe install"
+    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_reframe.sh"
+fi
 
 if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
-    echo "Regenerating standalone Python and ReFrame modules.."
+    echo "Regenerating bootstrap modules.."
     "${PAWSEY_SPACK_CONFIG_REPO}/scripts/refresh_standalone_modules.sh"
 fi
 

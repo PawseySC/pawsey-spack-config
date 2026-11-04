@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-# Clear the module tree once, then restore standalone Python and ReFrame.
+# Clear the module tree once, then restore the bootstrap package modules.
 
 scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 . "${scriptdir}/pawsey_software_stack_funcs.sh"
@@ -33,7 +33,38 @@ function refresh_module_specs()
   done
 }
 
-if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
+if [ -n "${bootstrap_environment:-}" ]; then
+  bootstrap_candidate="${INSTALLATION_METADATA_DIR}/bootstrap_manifest.candidate.json"
+  bootstrap_plan="${INSTALLATION_METADATA_DIR}/bootstrap_module_plan.tsv"
+
+  "${SPACK_PYTHON:-python3}" "$(spack_install_manifest_tool)" assemble \
+    --metadata-root "${INSTALLATION_METADATA_DIR}" \
+    --output "${bootstrap_candidate}" --plan "${bootstrap_plan}" \
+    --environment "${bootstrap_environment}"
+
+  bootstrap_specs=()
+  bootstrap_roots=()
+  python_specs=()
+  other_specs=()
+  while IFS=$'\t' read -r hash name _version role _rest; do
+    [ "${hash}" != "hash" ] || continue
+    bootstrap_specs+=("/${hash}")
+    if [ "${role}" = "root" ]; then
+      bootstrap_roots+=("/${hash}")
+    fi
+    if [ "${name}" = "python" ]; then
+      python_specs+=("/${hash}")
+    else
+      other_specs+=("/${hash}")
+    fi
+  done < "${bootstrap_plan}"
+
+  spack mark --implicit "${bootstrap_specs[@]}"
+  spack mark --explicit "${bootstrap_roots[@]}"
+
+  echo "Regenerating bootstrap environment modules.."
+  refresh_module_specs 1 "${python_specs[@]}" "${other_specs[@]}"
+elif [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
   python_candidate="${INSTALLATION_METADATA_DIR}/standalone_python_manifest.candidate.json"
   python_plan="${INSTALLATION_METADATA_DIR}/standalone_python_module_plan.tsv"
   standalone_candidate="${INSTALLATION_METADATA_DIR}/standalone_manifest.candidate.json"

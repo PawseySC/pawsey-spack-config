@@ -32,9 +32,12 @@ assemble_args=(
   --metadata-root "${INSTALLATION_METADATA_DIR}"
   --output "${candidate}"
   --plan "${plan}"
-  --standalone python
-  --standalone reframe
 )
+if [ -n "${bootstrap_environment:-}" ]; then
+  assemble_args+=(--environment "${bootstrap_environment}")
+else
+  assemble_args+=(--standalone python --standalone reframe)
+fi
 for env in "$@"; do
   assemble_args+=(--environment "${env}")
 done

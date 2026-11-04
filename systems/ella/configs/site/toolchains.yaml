@@ -12,9 +12,9 @@ toolchains:
 
   nvhpc_compiler:
   - spec: target=neoverse_v2
-  - spec: "%c=nvhpc@25.9"
+  - spec: "%c=nvhpc@26.1"
     when: "%c"
-  - spec: "%cxx=nvhpc@25.9"
+  - spec: "%cxx=nvhpc@26.1"
     when: "%cxx"
-  - spec: "%fortran=nvhpc@25.9"
+  - spec: "%fortran=nvhpc@26.1"
     when: "%fortran"
