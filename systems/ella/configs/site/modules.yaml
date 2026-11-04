@@ -73,6 +73,13 @@ modules:
             LD_LIBRARY_PATH: '{prefix}/../../math_libs/13.1/targets/sbsa-linux/lib'
             CMAKE_PREFIX_PATH: '{prefix}/../../math_libs/13.1/targets/sbsa-linux'
 
+      # External cuTENSOR has no CUDA dependency to autoload, but its public
+      # headers include cuda_runtime.h from the SDK's separate toolkit prefix.
+      cutensor:
+        environment:
+          prepend_path:
+            CPATH: '{prefix}/../../cuda/13.1/include'
+
       # needed by bug in cray-mpich logic,
       # see https://github.com/spack/spack/issues/21696
       #cray-mpich:
