@@ -147,8 +147,15 @@ def cleanup_candidates(manifest, prefix):
     """Select obsolete local installs without crossing deployment boundaries."""
     require(ev.active_environment() is None, "Run cleanup through spack -E python")
     prefix = Path(prefix).resolve()
-    retained = [Path(entry["prefix"]).resolve() for entry in manifest["packages"].values()
-                if entry["prefix"] is not None]
+    retained = []
+    for node_hash, entry in manifest["packages"].items():
+        if entry["prefix"] is None:
+            continue
+        path = Path(entry["prefix"]).resolve()
+        # Only prefixes within this deployment participate in cleanup checks.
+        if path != prefix and prefix not in path.parents:
+            continue
+        retained.append((node_hash, path))
     candidates = []
     for spec in spack.store.STORE.db.query_local():
         if spec.external or spec.installed_upstream or spec.dag_hash() in manifest["packages"]:
@@ -159,9 +166,10 @@ def cleanup_candidates(manifest, prefix):
         # Native uninstall recomputes its deletion path from the current layout.
         require(Path(spack.store.STORE.layout.path_for_spec(spec)).resolve() == path,
                 "Install layout has changed for cleanup candidate: " + str(spec.prefix))
-        require(not any(path == keep or path in keep.parents or keep in path.parents
-                        for keep in retained),
-                "Cleanup candidate overlaps a retained prefix: " + str(spec.prefix))
+        for keep_hash, keep in retained:
+            require(not (path == keep or path in keep.parents or keep in path.parents),
+                    "Cleanup candidate overlaps a retained prefix: {}\n"
+                    "  retained /{}: {}".format(spec.prefix, keep_hash, keep))
         candidates.append(spec)
     return sorted(candidates, key=lambda spec: (spec.name, str(spec.version), spec.dag_hash()))
 
