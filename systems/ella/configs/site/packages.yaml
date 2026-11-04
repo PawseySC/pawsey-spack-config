@@ -30,10 +30,10 @@ packages:
   fortran:
     require: gcc@13.3.1
 
-  # Keep MPI consumers on Ella's external HPC-X. Marking the virtual
+  # Keep MPI consumers on the bootstrap-built Open MPI. Marking the virtual
   # non-buildable would also block NVHPC, which can optionally provide MPI.
   mpi:
-    require: openmpi@4.1.7a1
+    require: openmpi@4.1.8
 #  blas:
 #    buildable: false
   blas:
@@ -146,7 +146,7 @@ packages:
     variants: '+movies'
   py-mpi4py:
     version: [4.0.1]
-    # HPC-X supplies GPU-aware MPI without Cray's GTL library.
+    # Open MPI supplies GPU-aware MPI without Cray's GTL library.
     require: '@4.0.1 ~gtl'
   py-meson-python:
     version: [0.16.0]
@@ -348,18 +348,20 @@ packages:
   nvidia-nsight-systems:
     prefer: ['@2024.3.2']
 
-  # Existing Ella HPC-X MPI; its module configures the accompanying transports.
+  # Reuse the system scheduler/client; slurm-pmi2 supplies its matching header.
+  slurm:
+    buildable: false
+    externals:
+    - spec: slurm@25.11.8
+      prefix: /usr
+
+  # Bootstrap builds this single CUDA-aware PMI2 provider before applications.
   openmpi:
     buildable: false
     externals:
-    - spec: openmpi@4.1.7a1 +cuda arch=linux-rocky9-aarch64
+    - spec: openmpi@4.1.8 +cuda cuda_arch=90 +pmi +legacylaunchers schedulers=slurm fabrics=ucx arch=linux-rocky9-neoverse_v2
       prefix: MPI_PREFIX
-      modules: [hpcx-mt-ompi]
-      # Preserve HPC-X relocation after Open MPI's build hook clears OPAL_*.
-      extra_attributes:
-        environment:
-          set:
-            OPAL_PREFIX: MPI_PREFIX
+      modules: [openmpi/4.1.8]
 
   # NVIDIA libraries from the Spack-managed SDK, using the CUDA 13.1 variant.
   cuda:

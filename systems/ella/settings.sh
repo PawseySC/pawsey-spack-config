@@ -5,7 +5,7 @@ __PSC_SETTINGS__=1
 # EDIT at each rebuild of the software stack
 DATE_TAG="${DATE_TAG:-2026.08}"
 
-# Ella has native GCC/NVHPC toolchains and HPC-X MPI, without the Cray PE.
+# Ella has native GCC/NVHPC toolchains and bootstrap-built Open MPI.
 PAWSEY_CLUSTER="ella"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
@@ -88,19 +88,15 @@ NVHPC_INSTALL_PREFIX="${INSTALL_PREFIX}/software/nvhpc-${nvidia_version}"
 NVHPC_MODULE_PREFIX="${NVHPC_INSTALL_PREFIX}/modulefiles"
 BOOTSTRAP_PYTHON="${BOOTSTRAP_PYTHON:-/usr/bin/python3}"
 gcc_module="gcc/${gcc_version}"
-# Use the SDK's MPI-free module to keep Ella's system HPC-X MPI independent.
+# Use the SDK's MPI-free module alongside the bootstrap-built Open MPI.
 nvhpc_module="nvhpc-nompi/${nvidia_version}"
 
-# Existing system MPI. These values describe HPC-X's Open MPI installation,
-# whose version differs from the HPC-X distribution version (2.20).
+# Bootstrap installs one CUDA-aware PMI2 provider for all application environments.
 mpi_provider="openmpi"
-mpi_version="4.1.7a1"
-MPI_PREFIX="/software/hpcx/2.20/ompi"
-MPI_MODULE_PATH="/software/hpcx/2.20/modulefiles"
-mpi_module="hpcx-mt-ompi"
+mpi_version="4.1.8"
+MPI_PREFIX="${INSTALL_PREFIX}/software/openmpi-${mpi_version}"
+mpi_module="openmpi/${mpi_version}"
 mpi_launcher="srun"
-# The srun --mpi mode still needs validation against the installed Open MPI;
-# do not copy Setonix-Q's PMIx launch flags into Ella's tests unchecked.
 
 # module-tree paths to create for user/project installations
 module_tree_arch_list="neoverse_v2"

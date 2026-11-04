@@ -6,6 +6,7 @@ config:
     projections:
       # Keep bundled CUDA/library external prefixes predictable.
       nvhpc: 'nvhpc-{version}'
+      openmpi: 'openmpi-{version}'
       all: '{architecture.platform}-{architecture.target}/{name}-{version}-{hash}'
 
   # Temporary locations Spack can try to use for builds.

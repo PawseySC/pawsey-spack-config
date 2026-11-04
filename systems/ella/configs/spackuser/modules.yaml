@@ -28,10 +28,10 @@ modules:
         autoload: direct
       ^java:
         autoload: direct
-      # Packages linked to the CUDA-aware OpenMPI external must load
-      # its hidden wrapper so the matching runtime modules are propagated.
+      # External specs omit MPI's dependencies; load its bootstrap module too.
       "^openmpi":
         autoload: direct
+        load: [openmpi/4.1.8]
 
       # overwrite for packages that don't need python at runtime
       cp2k:
@@ -65,11 +65,11 @@ modules:
         autoload: direct
       charmpp:
         autoload: direct
-      # Reproduce the CUDA-aware MPI external's module at runtime so
-      # MPI-linked executables can resolve the matching HPC-X libraries.
       openmpi:
-        load:
-          - hpcx-mt-ompi
+        autoload: direct
+        environment:
+          set:
+            SLURM_MPI_TYPE: pmi2
 
       # numerical libraries
       arpack-ng:
@@ -273,6 +273,8 @@ modules:
         netcdf-cxx4: 'libraries/{name}/{version}'
         netcdf-fortran: 'libraries/{name}/{version}'
         parallel-netcdf: 'libraries/{name}/{version}'
+
+        openmpi: 'libraries/{name}/{version}'
 
         # programing languages 
         gcc: 'programming-languages/{name}/{version}'

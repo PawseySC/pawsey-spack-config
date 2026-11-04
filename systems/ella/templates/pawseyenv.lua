@@ -15,7 +15,6 @@ end
 setenv("PAWSEY_STACK_VERSION", "DATE_TAG")
 setenv("PAWSEYENV_ARCH", arch)
 prepend_path("MODULEPATH", "NVHPC_MODULE_PREFIX")
-prepend_path("MODULEPATH", "MPI_MODULE_PATH")
 prepend_path("MODULEPATH", pathJoin(prefix, "UTILITIES_MODULES_DIR"))
 
 for _, target in ipairs({ arch, "aarch64" }) do
