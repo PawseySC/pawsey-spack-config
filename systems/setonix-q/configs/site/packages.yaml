@@ -593,10 +593,14 @@ packages:
     # Provide cuda via the Cray PE module rather than a bare prefix. The NVIDIA
     # HPC SDK splits the toolkit across cuda/<ver> (core runtime) and
     # math_libs/<ver> (libcublas, libcufft, libcusolver, ...). 
-    # The Cray PE module ensures that both are on LD_LIBRARY_PATH/CPATH.
+    # The Cray PE module sets LD_LIBRARY_PATH/CPATH; CMake also needs the math prefix.
     - spec: cuda@13.0.0
       modules:
       - cuda/13.0
+      extra_attributes:
+        environment:
+          prepend_path:
+            CMAKE_PREFIX_PATH: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/13.0/targets/sbsa-linux
 
   cutensor:
       buildable: true
