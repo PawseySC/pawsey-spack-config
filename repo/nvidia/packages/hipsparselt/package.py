@@ -15,10 +15,10 @@ class Hipsparselt(HipMathPackage):
     depends_on("hipsparse@10.1.0 +cuda ~rocm", when="@10.1.0")
     patch("fix-cuda-cmake.patch")
 
-    @property
-    def git_sparse_paths(self):
+    @classmethod
+    def git_sparse_paths(cls):
         # Exclude the AMD Tensile kernel corpus from the CUDA checkout.
-        return [self.root_cmakelists_dir + "/" + path for path in
+        return ["projects/" + cls.name + "/" + path for path in
                 ("cmake", "library/include", "library/src/include", "library/src/nvcc_detail")] + [
             "shared/ctest"
         ]

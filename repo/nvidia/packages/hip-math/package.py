@@ -38,19 +38,22 @@ class HipMathPackage(CMakePackage, CudaPackage, ROCmPackage):
     def root_cmakelists_dir(self):
         return "projects/" + self.name
 
-    @property
-    def git_sparse_paths(self):
-        return [self.root_cmakelists_dir, "shared/ctest"]
+    @classmethod
+    def git_sparse_paths(cls):
+        return ["projects/" + cls.name, "shared/ctest"]
 
     def cmake_args(self):
-        return [
+        args = [
             self.define("HIP_PLATFORM", "nvidia"),
-            self.define("CMAKE_MODULE_PATH", self.spec["hip"].prefix.lib.cmake.hip),
             self.define("CMAKE_INSTALL_LIBDIR", "lib"),
             self.define("BUILD_TESTING", False),
             self.define("BUILD_CLIENTS_TESTS", False),
             self.define("BUILD_CLIENTS_SAMPLES", False),
         ]
+        # hipFORT treats CMAKE_MODULE_PATH as a single directory in include().
+        if self.name != "hipfort":
+            args.append(self.define("CMAKE_MODULE_PATH", self.spec["hip"].prefix.lib.cmake.hip))
+        return args
 
 
 class HipMath(BundlePackage):
