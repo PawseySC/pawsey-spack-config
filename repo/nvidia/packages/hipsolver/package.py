@@ -2,12 +2,14 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
+from spack.package import *
 from spack.pkg.pawsey_nvidia.hip_math import HipMathPackage
 
 
 class Hipsolver(HipMathPackage):
     """HIP solver interfaces backed by NVIDIA cuSOLVER."""
 
+    license("MIT")
     libraries = ["libhipsolver"]
 
     def cmake_args(self):

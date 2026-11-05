@@ -10,7 +10,6 @@ class HipMathPackage(CMakePackage, CudaPackage):
 
     homepage = "https://github.com/ROCm/rocm-libraries"
     git = "https://github.com/ROCm/rocm-libraries.git"
-    license("MIT")
     version(
         "10.1.0",
         tag="therock-10.1",

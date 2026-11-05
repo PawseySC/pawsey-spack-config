@@ -9,6 +9,8 @@ from spack.pkg.pawsey_nvidia.hip_math import HipMathPackage
 class Hipblas(HipMathPackage):
     """HIP BLAS interfaces backed by NVIDIA cuBLAS."""
 
+    # LICENSE.md also includes the LAPACK BSD terms with the patent disclaimer.
+    license("MIT AND BSD-3-Clause-Open-MPI")
     libraries = ["libhipblas"]
     for ver in ("7.2.4", "10.1.0"):
         depends_on(f"hipblas-common@{ver}", when=f"@{ver}")

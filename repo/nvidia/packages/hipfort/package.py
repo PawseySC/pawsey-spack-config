@@ -8,6 +8,7 @@ from spack.pkg.pawsey_nvidia.hip_math import HipMathPackage
 class Hipfort(HipMathPackage):
     """Fortran interfaces to HIP and NVIDIA CUDA libraries."""
 
+    license("MIT")
     homepage = "https://github.com/ROCm/hipfort"
     git = None
     version(

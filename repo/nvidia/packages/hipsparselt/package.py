@@ -8,6 +8,7 @@ from spack.pkg.pawsey_nvidia.hip_math import HipMathPackage
 class Hipsparselt(HipMathPackage):
     """HIP structured sparse matrix operations backed by NVIDIA cuSPARSELt."""
 
+    license("MIT")
     depends_on("cusparselt@0.8.1.1")
     depends_on("python@3.6:", type="build")
     depends_on("hipsparse@7.2.4 +cuda ~rocm", when="@7.2.4")

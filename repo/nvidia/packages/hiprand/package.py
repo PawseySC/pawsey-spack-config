@@ -8,6 +8,8 @@ from spack.pkg.pawsey_nvidia.hip_math import HipMathPackage
 class Hiprand(HipMathPackage):
     """HIP random number generation backed by NVIDIA cuRAND."""
 
+    license("MIT")
+
     def cmake_args(self):
         args = super().cmake_args() + [
             self.define("BUILD_WITH_LIB", "CUDA"),
