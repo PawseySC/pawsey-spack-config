@@ -8,7 +8,7 @@ if [ -n "${bootstrap_environment:-}" ]; then
     exec "${PAWSEY_SPACK_CONFIG_REPO}/scripts/install_bootstrap.sh"
 fi
 
-module load cray-python
+resolve_compatible_python_interpreter || exit 1
 
 # initialise spack 
 . "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh"
