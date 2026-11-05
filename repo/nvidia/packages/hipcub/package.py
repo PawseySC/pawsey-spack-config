@@ -8,6 +8,7 @@ from spack.pkg.pawsey_nvidia.hip_math import HipMathPackage
 class Hipcub(HipMathPackage):
     """HIP parallel primitives backed by NVIDIA CUB."""
 
+    license("BSD-3-Clause")
     depends_on("cccl@2.8.2", type=("build", "link", "run"))
 
     def cmake_args(self):
