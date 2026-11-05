@@ -84,6 +84,26 @@ modules:
         autoload: direct
       hip:
         autoload: direct
+      hip-math:
+        autoload: direct
+      hipblas-common:
+        autoload: direct
+      hipblas:
+        autoload: direct
+      hipfft:
+        autoload: direct
+      hiprand:
+        autoload: direct
+      hipsolver:
+        autoload: direct
+      hipsparse:
+        autoload: direct
+      hipcub:
+        autoload: direct
+      hipfort:
+        autoload: direct
+      hipsparselt:
+        autoload: direct
       cuquantum:
         autoload: direct
       cutensor:
@@ -196,6 +216,16 @@ modules:
         ncview: 'applications/{name}/{version}'
 
         # numerical or parallelisation libraries 
+        hip-math: 'libraries/{name}/{version}'
+        hipblas-common: 'libraries/{name}/{version}'
+        hipblas: 'libraries/{name}/{version}'
+        hipfft: 'libraries/{name}/{version}'
+        hiprand: 'libraries/{name}/{version}'
+        hipsolver: 'libraries/{name}/{version}'
+        hipsparse: 'libraries/{name}/{version}'
+        hipcub: 'libraries/{name}/{version}'
+        hipfort: 'libraries/{name}/{version}'
+        hipsparselt: 'libraries/{name}/{version}'
         arpack-ng: 'libraries/{name}/{version}'
         memkind: 'libraries/{name}/{version}'
         cuquantum: 'libraries/{name}/{version}-cuda-gh200'

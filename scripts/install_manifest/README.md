@@ -54,8 +54,12 @@ python3 "$tool" validate
   a fresh registration. To remove an environment from a deployment, invalidate
   and snapshot only the wanted environments.
 * `cleanup` previews local installed packages missing from the published
-  inventory; `--apply` uninstalls them. External and upstream packages, and
-  installations outside the manifest's prefix, are never touched.
+  inventory; `--apply` uninstalls them. Candidates must resolve strictly beneath
+  the manifest's installation prefix (`INSTALL_PREFIX`); the prefix itself,
+  external and upstream packages, and paths that resolve outside it are never
+  removed. Retained-prefix overlap checks use the same deployment boundary,
+  including the prefix itself, so paths outside it (such as a system glibc at
+  `/`) do not block cleanup.
 
 ```bash
 cleanup_spack_installation "$SPACK_INSTALL_MANIFEST"

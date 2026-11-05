@@ -7,6 +7,16 @@ bio-applications:
 # No cppzmq (no suitable command found yet)
 astro-applications:
 libraries:
+  hip-math: ['hipcc', '--version', 'HIP version:']
+  hipblas-common: ['bash', '-lc ''printf "#include <hipblas-common/hipblas-common.h>\\n" | g++ -std=c++17 -D__HIP_PLATFORM_NVIDIA__ -E -x c++ - >/dev/null && echo "hipblas-common ok"''', 'hipblas-common ok']
+  hipblas: ['bash', '-lc ''printf "#include <hipblas/hipblas.h>\\n" | g++ -std=c++17 -D__HIP_PLATFORM_NVIDIA__ -E -x c++ - >/dev/null && echo "hipblas ok"''', 'hipblas ok']
+  hipfft: ['bash', '-lc ''printf "#include <hipfft/hipfft.h>\\n" | g++ -std=c++17 -D__HIP_PLATFORM_NVIDIA__ -E -x c++ - >/dev/null && echo "hipfft ok"''', 'hipfft ok']
+  hiprand: ['bash', '-lc ''printf "#include <hiprand/hiprand.h>\\n" | g++ -std=c++17 -D__HIP_PLATFORM_NVIDIA__ -E -x c++ - >/dev/null && echo "hiprand ok"''', 'hiprand ok']
+  hipsolver: ['bash', '-lc ''printf "#include <hipsolver/hipsolver.h>\\n" | g++ -std=c++17 -D__HIP_PLATFORM_NVIDIA__ -E -x c++ - >/dev/null && echo "hipsolver ok"''', 'hipsolver ok']
+  hipsparse: ['bash', '-lc ''printf "#include <hipsparse/hipsparse.h>\\n" | g++ -std=c++17 -D__HIP_PLATFORM_NVIDIA__ -E -x c++ - >/dev/null && echo "hipsparse ok"''', 'hipsparse ok']
+  hipcub: ['bash', '-lc ''test -f "$PAWSEY_HIPCUB_HOME/include/hipcub/hipcub.hpp" && echo "hipcub ok"''', 'hipcub ok']
+  hipfort: ['bash', '-lc ''printf "program baseline\\nuse hipfort\\nend program\\n" | gfortran -I"$PAWSEY_HIPFORT_HOME/include/hipfort/nvptx" -x f95 -fsyntax-only - && echo "hipfort ok"''', 'hipfort ok']
+  hipsparselt: ['bash', '-lc ''printf "#include <hipsparselt/hipsparselt.h>\\n" | g++ -std=c++17 -D__HIP_PLATFORM_NVIDIA__ -E -x c++ - >/dev/null && echo "hipsparselt ok"''', 'hipsparselt ok']
   openmpi: ['ompi_info', '--param pmix s2', 'MCA pmix: s2']
   adios2/2.10.2-hdf5: ['adios2-config', '--version', 'ADIOS 2.10.2']
   adios2/2.10.2-hdf5-nopython: ['adios2-config', '--version', 'ADIOS 2.10.2']
