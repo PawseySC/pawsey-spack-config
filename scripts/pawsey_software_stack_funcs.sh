@@ -130,31 +130,32 @@ function set_compilation_sets_for_arch()
 
 function check_python_version()
 {
-    command -v python >/dev/null 2>&1 || return 1
-    python -c 'import sys; sys.exit(0 if sys.version_info >= (3, 8) else 1)' >/dev/null 2>&1
+    local python_interpreter="${1-python}"
+    "${python_interpreter}" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 8) else 1)' >/dev/null 2>&1
 }
 
 
 function resolve_compatible_python_interpreter()
 {
-    # We need Python 3.8+ as some Spack packages use the walrus operator
-    if check_python_version; then
-        return 0
+    local python_interpreter="${1-${SPACK_PYTHON:-python}}"
+
+    # If no interpreter is explicitly provided and SPACK_PYTHON is not set, attempt to load a suitable module.
+    if [ "$#" -eq 0 ] && [ -z "${SPACK_PYTHON:-}" ] && ! check_python_version "${python_interpreter}"; then
+        # Try Spack-provided Python first, then fall back to cray-python.
+        if ! module load "python/${python_version}" 2>/dev/null; then
+            module load cray-python || {
+                echo "Could not load python/${python_version} or cray-python." >&2
+                return 1
+            }
+        fi
     fi
 
-    # Try to load spack-provided Python module first, then fall back to cray-python.
-    if ! module load "python/${python_version}" 2>/dev/null; then
-        module load cray-python || {
-            echo "Could not load python/${python_version} or cray-python." >&2
-            return 1
-        }
-    fi
-
-    if ! check_python_version; then
-        echo "Python 3.8+ is required to run Spack and the installation manifest tool." >&2
-        echo "Please load a compatible Python module." >&2
+    if ! check_python_version "${python_interpreter}"; then
+        echo "Python interpreter '${python_interpreter}' is not compatible; must be +3.8." >&2
         return 1
     fi
+
+    export SPACK_PYTHON="$(command -v "${python_interpreter}")"
 }
 
 function bootstrap()
@@ -163,10 +164,9 @@ function bootstrap()
     if [ "${SYSTEM}" = "ella" ]; then
         export PATH="${GCC_INSTALL_PREFIX}/bin:${PATH}"
         export LD_LIBRARY_PATH="${GCC_INSTALL_PREFIX}/lib64:${GCC_INSTALL_PREFIX}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
-        export SPACK_PYTHON="${BOOTSTRAP_PYTHON}"
+        resolve_compatible_python_interpreter "${BOOTSTRAP_PYTHON}"
     else
-        resolve_compatible_python_interpreter || return 1
-        export SPACK_PYTHON="${SPACK_PYTHON:-$(command -v python)}"
+        resolve_compatible_python_interpreter
     fi
 }
 

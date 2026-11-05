@@ -6,7 +6,7 @@ scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 set_spack_config_repo
 check_installation_environment
 if [ "${SYSTEM}" = "ella" ]; then
-  export SPACK_PYTHON="${SPACK_PYTHON:-${BOOTSTRAP_PYTHON}}"
+  resolve_compatible_python_interpreter "${SPACK_PYTHON:-${BOOTSTRAP_PYTHON}}"
 else
   resolve_compatible_python_interpreter
 fi
