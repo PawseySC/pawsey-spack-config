@@ -5,7 +5,8 @@
 from spack.package import *
 
 
-class HipMathPackage(CMakePackage, CudaPackage):
+# Retain ROCm variants for consumers' inactive +rocm dependency constraints.
+class HipMathPackage(CMakePackage, CudaPackage, ROCmPackage):
     """Shared sources and NVIDIA build settings for Pawsey's HIP wrappers."""
 
     homepage = "https://github.com/ROCm/rocm-libraries"
@@ -22,7 +23,6 @@ class HipMathPackage(CMakePackage, CudaPackage):
     )
 
     variant("cuda", default=True, description="Build the NVIDIA backend")
-    variant("rocm", default=False, description="Build the AMD backend")
     conflicts("~cuda", msg="These Pawsey recipes require the NVIDIA backend")
     conflicts("+rocm", msg="These Pawsey recipes require the NVIDIA backend")
 
