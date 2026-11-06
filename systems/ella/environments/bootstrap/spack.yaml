@@ -11,7 +11,7 @@ spack:
           ~internal-pmix schedulers=slurm fabrics=ucx,ucc,cma target=neoverse_v2 %gcc_compiler
           ^ucx@1.20.1 +cuda cuda_arch=90 +thread_multiple +cma +verbs +rc +ud +rdmacm +mlx5_dv +dc +dm
           ^ucc@1.5.1 +cuda cuda_arch=90 +nccl
-          ^pmix@5.0.8 ^prrte@3.0.11
+          ^pmix@5.0.8 +munge ^prrte@3.0.11
           ^rdma-core ~pyverbs
         - python@3.11.6 +optimizations +ssl +zlib target=neoverse_v2 %gcc_compiler
         - reframe@3.12.0 target=neoverse_v2 %gcc_compiler

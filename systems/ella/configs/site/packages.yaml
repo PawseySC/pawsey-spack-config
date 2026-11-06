@@ -358,6 +358,15 @@ packages:
     - spec: slurm@25.11.8 +pmix
       prefix: /usr
 
+  #munge is required for PMIx authentication on Ella.
+  pmix:
+    require: '@5.0.8 +munge'
+  munge:
+    buildable: false
+    externals:
+    - spec: munge@0.5.13
+      prefix: /usr
+
   # Bootstrap builds this CUDA-aware UCX/UCC provider before applications.
   openmpi:
     buildable: false
