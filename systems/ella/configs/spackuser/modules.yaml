@@ -17,10 +17,9 @@ modules:
       # Loading LLVM's compiler module as a dependency can replace GCC.
       # Replaces the LLVM load/depends_on edits in scripts/cr_operations.sh.
       # Exclude external Open MPI wrappers to avoid clashes with bootstrap MPI.
-      # Keep the bootstrap module, identified by its slurm-pmi2 dependency.
       exclude: [llvm, openmpi]
       include:
-       - "openmpi ^slurm-pmi2"
+       - "openmpi ^pmix"
 
       # Select all packages that depend on python, perl, r, or java,
       # and set these modules to autoload their dependencies
@@ -35,7 +34,7 @@ modules:
       # External MPI specs omit runtime dependencies; load the bootstrap module.
       "^openmpi":
         autoload: direct
-        load: [openmpi/4.1.8]
+        load: [openmpi/5.0.11]
 
       # overwrite for packages that don't need python at runtime
       cp2k:
@@ -73,7 +72,10 @@ modules:
         autoload: direct
         environment:
           set:
-            SLURM_MPI_TYPE: pmi2
+            # Prefer UCC's supported collectives, including its CUDA/NCCL
+            # transport; other Open MPI collective modules remain fallbacks.
+            OMPI_MCA_coll_ucc_enable: '1'
+            OMPI_MCA_coll_ucc_priority: '100'
 
       # numerical libraries
       arpack-ng:

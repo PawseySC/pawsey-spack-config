@@ -3,12 +3,15 @@ spack:
     - bootstrap_packages:
         - gcc@13.3.1 languages=c,c++,fortran
         - nvhpc@26.1 default_cuda=13.1 ~mpi target=neoverse_v2
-        # Disable optional rdma-core Python bindings as there is a
-        # syntax error in version 59.0 and they are not required.
+        # Grace CPU shared memory and CUDA-aware UCX point-to-point/RMA,
+        # plus UCC/NCCL collectives for Hopper. Leave transport/device
+        # selection to UCX so it can use the detected node/NIC topology.
         - >-
-          openmpi@4.1.8 +cuda cuda_arch=90 +pmi +legacylaunchers
-          schedulers=slurm fabrics=ucx target=neoverse_v2 %gcc_compiler
-          ^ucx +cuda cuda_arch=90 +thread_multiple +verbs +rc +ud +rdmacm
+          openmpi@5.0.11 +cuda cuda_arch=90 +fortran +atomics ~debug ~memchecker
+          ~internal-pmix schedulers=slurm fabrics=ucx,ucc,cma target=neoverse_v2 %gcc_compiler
+          ^ucx@1.20.1 +cuda cuda_arch=90 +thread_multiple +cma +verbs +rc +ud +rdmacm +mlx5_dv +dc +dm
+          ^ucc@1.5.1 +cuda cuda_arch=90 +nccl
+          ^pmix@5.0.8 ^prrte@3.0.11
           ^rdma-core ~pyverbs
         - python@3.11.6 +optimizations +ssl +zlib target=neoverse_v2 %gcc_compiler
         - reframe@3.12.0 target=neoverse_v2 %gcc_compiler

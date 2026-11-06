@@ -91,9 +91,9 @@ gcc_module="gcc/${gcc_version}"
 # Use the SDK's MPI-free module alongside the bootstrap-built Open MPI.
 nvhpc_module="nvhpc-nompi/${nvidia_version}"
 
-# Bootstrap installs one CUDA-aware PMI2 provider for all application environments.
+# Bootstrap installs one CUDA-aware MPI provider.
 mpi_provider="openmpi"
-mpi_version="4.1.8"
+mpi_version="5.0.11"
 MPI_PREFIX="${INSTALL_PREFIX}/software/openmpi-${mpi_version}"
 mpi_module="openmpi/${mpi_version}"
 mpi_launcher="srun"
