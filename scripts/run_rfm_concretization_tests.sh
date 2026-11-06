@@ -5,12 +5,12 @@
 scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 . "${scriptdir}/pawsey_software_stack_funcs.sh"
 
-check_installation_environment
 set_spack_config_repo
+check_installation_environment
 set_compilation_sets_for_arch
 
-if [ "${SYSTEM}" = "setonix-q" ]; then
-  set_modulepaths_for_arch
+if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
+  set_modulepaths_for_arch || exit 1
 else
   # Preserve the Setonix module setup from main.
   module use ${INSTALL_PREFIX}/staff_modulefiles
@@ -21,15 +21,16 @@ else
 fi
 
 # These need to be exported to be visible within Reframe
+export SYSTEM INSTALL_PREFIX DATE_TAG
 export PAWSEY_SPACK_CONFIG_REPO=${PAWSEY_SPACK_CONFIG_REPO}
 export cce_version=${cce_version}
 export gcc_version=${gcc_version}
 export python_version=${python_version}
 export reframe_version=${reframe_version}
+export spack_version
 export env_list
 export cray_env_list
-
-if [ "${SYSTEM}" = "setonix-q" ]; then
+if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
   # ReFrame imports installation checks before applying tag filters. Keep the
   # concretization run independent of any manifest from an earlier deployment.
   export SPACK_INSTALL_MANIFEST="${INSTALL_PREFIX}/installation_metadata/.concretization-only"
@@ -41,6 +42,9 @@ function check_concretized_environment()
 {
   local env="$1"
   local lock_file="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments/${env}/spack.lock"
+  if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
+    lock_file="${INSTALLATION_METADATA_DIR}/environments/${env}/spack.lock"
+  fi
 
   if [ ! -f "${lock_file}" ]; then
     echo "Missing ${lock_file}; run scripts/concretize_environments.sh before ReFrame concretization tests."
@@ -55,12 +59,12 @@ if [[ $hn == *"nid"* ]]; then
 fi
 
 # Reframe testing for concretization
-module load reframe/${reframe_version}
+module load reframe/${reframe_version} || exit 1
 for env in $env_list; do
   echo "Running ReFrame tests for concretization in env $env"
   check_concretized_environment "${env}"
   export SPACK_ENV=${env}
-  reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_conc_report_${env}.json -t concretization -r
+  reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_conc_report_${env}.json -t concretization -r || exit 1
   unset SPACK_ENV
   mv reframe.out ${RFM_STORAGE_DIR}/reframe_${env}_conc.out
   mv reframe.log ${RFM_STORAGE_DIR}/reframe_${env}_conc.log
@@ -70,7 +74,7 @@ for env in $cray_env_list; do
   echo "Running ReFrame tests for concretization in env $env"
   check_concretized_environment "${env}"
   export SPACK_ENV=${env}
-  reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_conc_report_${env}.json -t concretization -l -v
+  reframe -C ${RFM_SETTINGS_FILE} -c ${RFM_TEST_FILE} --prefix=${RFM_STORAGE_DIR} --report-file=${RFM_STORAGE_DIR}/rfm_conc_report_${env}.json -t concretization -r || exit 1
   unset SPACK_ENV   
   mv reframe.out ${RFM_STORAGE_DIR}/reframe_${env}_conc.out
   mv reframe.log ${RFM_STORAGE_DIR}/reframe_${env}_conc.log

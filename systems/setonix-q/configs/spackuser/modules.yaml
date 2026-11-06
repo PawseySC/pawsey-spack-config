@@ -13,6 +13,12 @@ modules:
       # so lockfile-backed module regeneration cannot encounter name clashes.
       hide_implicits: true
 
+      # Generate no LLVM modules, public or hidden, and omit LLVM autoloads.
+      # Loading LLVM's compiler module as a dependency can replace GCC.
+      # LLVM packages can still be installed; only module generation is excluded.
+      # Replaces the LLVM load/depends_on edits in scripts/cr_operations.sh.
+      exclude: [llvm]
+
       # Select all packages that depend on python, or r, or java,
       # and set these modules to autoload their dependencies
       ^python:
@@ -76,6 +82,28 @@ modules:
         autoload: direct
         load:
           - cuda/13.0
+      hip:
+        autoload: direct
+      hip-math:
+        autoload: direct
+      hipblas-common:
+        autoload: direct
+      hipblas:
+        autoload: direct
+      hipfft:
+        autoload: direct
+      hiprand:
+        autoload: direct
+      hipsolver:
+        autoload: direct
+      hipsparse:
+        autoload: direct
+      hipcub:
+        autoload: direct
+      hipfort:
+        autoload: direct
+      hipsparselt:
+        autoload: direct
       cuquantum:
         autoload: direct
       cutensor:
@@ -177,6 +205,16 @@ modules:
         ncview: 'applications/{name}/{version}'
 
         # numerical or parallelisation libraries 
+        hip-math: 'libraries/{name}/{version}'
+        hipblas-common: 'libraries/{name}/{version}'
+        hipblas: 'libraries/{name}/{version}'
+        hipfft: 'libraries/{name}/{version}'
+        hiprand: 'libraries/{name}/{version}'
+        hipsolver: 'libraries/{name}/{version}'
+        hipsparse: 'libraries/{name}/{version}'
+        hipcub: 'libraries/{name}/{version}'
+        hipfort: 'libraries/{name}/{version}'
+        hipsparselt: 'libraries/{name}/{version}'
         arpack-ng: 'libraries/{name}/{version}'
         memkind: 'libraries/{name}/{version}'
         cuquantum: 'libraries/{name}/{version}-cuda-gh200'
@@ -261,6 +299,7 @@ modules:
 
         # programing languages 
         go: 'programming-languages/{name}/{version}'
+        hip: 'programming-languages/{name}/{version}'
         julia: 'programming-languages/{name}/{version}'
         openjdk: 'programming-languages/{name}/{version}'
         python: 'programming-languages/{name}/{version}'

@@ -1,0 +1,75 @@
+# CUDA runtime execution contexts and detached-stream errors require CUDA 13.1.
+# Keep HIP's existing CUDA 13.0 support while enabling those APIs with newer SDKs.
+--- a/projects/hipother/hipnv/include/hip/nvidia_detail/nvidia_hip_runtime_api.h
++++ b/projects/hipother/hipnv/include/hip/nvidia_detail/nvidia_hip_runtime_api.h
+@@ -465,6 +465,8 @@
+ typedef enum cudaFuncAttribute hipFuncAttribute;
+ typedef enum cudaFuncCache hipFuncCache_t;
+ typedef CUcontext hipCtx_t;
++// CUDA runtime execution-context APIs were introduced in CUDA 13.1.
++#if CUDA_VERSION >= 13010
+ typedef cudaExecutionContext_t hipExecutionCtx_t;
+ typedef cudaDevResourceDesc_t hipDevResourceDesc_t;
+ typedef cudaDevResource hipDevResource;
+@@ -486,6 +488,7 @@
+ typedef cudaDevSmResource hipDevSmResource;
+ typedef cudaDevWorkqueueConfigResource hipDevWorkqueueConfigResource;
+ typedef cudaDevWorkqueueResource hipDevWorkqueueResource;
++#endif
+ typedef enum cudaSharedMemConfig hipSharedMemConfig;
+ typedef CUfunc_cache hipFuncCache;
+ typedef CUjitInputType hipJitInputType;
+@@ -1187,8 +1190,10 @@
+       return hipErrorInvalidResourceType;
+     case cudaErrorInvalidResourceConfiguration:
+       return hipErrorInvalidResourceConfiguration;
++#if CUDA_VERSION >= 13010
+     case cudaErrorStreamDetached:
+       return hipErrorStreamDetached;
++#endif
+     case cudaErrorUnknown:
+     default:
+       return hipErrorUnknown;  // Note - translated error.
+@@ -1319,8 +1324,10 @@
+       return hipErrorStreamCaptureWrongThread;
+     case CUDA_ERROR_GRAPH_EXEC_UPDATE_FAILURE:
+       return hipErrorGraphExecUpdateFailure;
++#if CUDA_VERSION >= 13010
+     case CUDA_ERROR_STREAM_DETACHED:
+       return hipErrorStreamDetached;
++#endif
+     case CUDA_ERROR_UNKNOWN:
+     default:
+       return hipErrorUnknown;  // Note - translated error.
+@@ -1451,8 +1458,10 @@
+       return CUDA_ERROR_STREAM_CAPTURE_WRONG_THREAD;
+     case hipErrorGraphExecUpdateFailure:
+       return CUDA_ERROR_GRAPH_EXEC_UPDATE_FAILURE;
++#if CUDA_VERSION >= 13010
+     case hipErrorStreamDetached:
+       return CUDA_ERROR_STREAM_DETACHED;
++#endif
+     case hipErrorUnknown:
+     default:
+       return CUDA_ERROR_UNKNOWN;  // Note - translated error.
+@@ -1647,8 +1656,10 @@
+       return cudaErrorInvalidResourceType;
+     case hipErrorInvalidResourceConfiguration:
+       return cudaErrorInvalidResourceConfiguration;
++#if CUDA_VERSION >= 13010
+     case hipErrorStreamDetached:
+       return cudaErrorStreamDetached;
++#endif
+     // HSA: does not exist in CUDA
+     case hipErrorRuntimeMemory:
+     // HSA: does not exist in CUDA
+@@ -3658,3 +3669,4 @@
++#if CUDA_VERSION >= 13010
+ inline static hipError_t hipDevResourceGenerateDesc(hipDevResourceDesc_t* desc,
+                                                     hipDevResource* resources,
+                                                     unsigned int nbResources) {
+@@ -3731,3 +3743,4 @@
++#endif
+ inline static hipError_t hipCtxPopCurrent(hipCtx_t* ctx) {
+   return hipCUResultTohipError(cuCtxPopCurrent(ctx));
+ }

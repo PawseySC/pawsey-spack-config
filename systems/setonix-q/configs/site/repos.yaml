@@ -1,6 +1,7 @@
 repos:
   # User/project repositories are added by the wrapper when they exist.
   # Pawsey overrides take precedence over the separately versioned builtin repo.
+  pawsey_nvidia: INSTALL_PREFIX/spack/var/spack/repos/pawsey/nvidia
   pawsey_repo: INSTALL_PREFIX/spack/var/spack/repos/pawsey
   builtin:
     git: https://github.com/spack/spack-packages.git

@@ -1,0 +1,25 @@
+spack:
+  definitions:
+    - bootstrap_packages:
+        - gcc@13.3.1 languages=c,c++,fortran
+        - nvhpc@26.1 default_cuda=13.1 ~mpi target=neoverse_v2
+        # Disable optional rdma-core Python bindings as there is a
+        # syntax error in version 59.0 and they are not required.
+        - >-
+          openmpi@4.1.8 +cuda cuda_arch=90 +pmi +legacylaunchers
+          schedulers=slurm fabrics=ucx target=neoverse_v2 %gcc_compiler
+          ^ucx +cuda cuda_arch=90 +thread_multiple +verbs +rc +ud +rdmacm
+          ^rdma-core ~pyverbs
+        - python@3.11.6 +optimizations +ssl +zlib target=neoverse_v2 %gcc_compiler
+        - reframe@3.12.0 target=neoverse_v2 %gcc_compiler
+  specs:
+    - matrix:
+        - [$bootstrap_packages]
+  concretizer:
+    unify: true
+  packages:
+    # Bootstrap builds the MPI that application environments use as an external.
+    openmpi:
+      buildable: true
+      externals:: []
+  view: false

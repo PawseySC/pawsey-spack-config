@@ -25,7 +25,7 @@ PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /d
 . "${PAWSEY_SPACK_CONFIG_REPO}/scripts/pawsey_software_stack_funcs.sh"
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
 
-if [ "${SYSTEM}" = "setonix-q" ]; then
+if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
     echo "Creating all missing module directories.."
     "${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_system_moduletree.sh"
 

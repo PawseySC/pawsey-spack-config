@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 #
 # Pawsey-developed recipe for Qiskit plus locally built Qiskit Aer with CUDA
-# and cuQuantum support on setonix-q.
+# and cuQuantum support on Setonix-Q and Ella.
 
 import glob
 import os
@@ -65,6 +65,8 @@ class PyQiskit(PythonPackage, CudaPackage):
 
     depends_on("c", type="build")
     depends_on("cxx", type="build")
+    depends_on("blas", type=("build", "link", "run"))
+    depends_on("lapack", type=("build", "link", "run"))
     depends_on("python@3.10:", when="@2:", type=("build", "run"))
     depends_on("python@3.9:", when="@1:", type=("build", "run"))
 
@@ -94,7 +96,7 @@ class PyQiskit(PythonPackage, CudaPackage):
     depends_on("cuquantum@25.11.1:", type=("build", "link", "run"))
     depends_on("cutensor@2.4.1.4:", type=("build", "link", "run"))
     depends_on("mpi", when="+mpi", type=("build", "link", "run"))
-    depends_on("py-mpi4py+gtl", when="+mpi", type=("build", "run"))
+    depends_on("py-mpi4py", when="+mpi", type=("build", "run"))
 
     def url_for_version(self, version):
         aer_version = _aer_versions[str(version)]
@@ -186,9 +188,9 @@ class PyQiskit(PythonPackage, CudaPackage):
         if "+mpi" in self.spec:
             env.set("MPICC", self.spec["mpi"].mpicc)
             env.set("MPICXX", self.spec["mpi"].mpicxx)
-            env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
-            env.set("MPICH_GPU_IPC_ENABLED", "0")
-
+            if self.spec["mpi"].name == "cray-mpich":
+                env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
+                env.set("MPICH_GPU_IPC_ENABLED", "0")
             gtl_path = self._gtl_lib_path()
             if gtl_path:
                 env.prepend_path("LD_LIBRARY_PATH", gtl_path)
@@ -196,8 +198,9 @@ class PyQiskit(PythonPackage, CudaPackage):
 
     def setup_run_environment(self, env):
         if "+mpi" in self.spec:
-            env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
-            env.set("MPICH_GPU_IPC_ENABLED", "0")
+            if self.spec["mpi"].name == "cray-mpich":
+                env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
+                env.set("MPICH_GPU_IPC_ENABLED", "0")
             gtl_path = self._gtl_lib_path()
             if gtl_path:
                 env.prepend_path("LD_LIBRARY_PATH", gtl_path)
@@ -224,11 +227,16 @@ class PyQiskit(PythonPackage, CudaPackage):
             "-DCMAKE_CXX_STANDARD_REQUIRED=ON",
             "-DCMAKE_CUDA_STANDARD=17",
             "-DCMAKE_CUDA_STANDARD_REQUIRED=ON",
+            "-DAER_BLAS_LIB_PATH={0}".format(spec["blas"].prefix),
             "-DCUQUANTUM_ROOT={0}".format(spec["cuquantum"].prefix),
             "-DCUTENSOR_ROOT={0}".format(spec["cutensor"].prefix),
             "-DAER_MPI={0}".format("True" if "+mpi" in spec else "False"),
             "-DAER_ENABLE_CUQUANTUM=true",
         ]
+
+        # Both systems select OpenBLAS, which supplies BLAS and LAPACK.
+        if spec["blas"].name == "openblas":
+            cmake_args.append("-DBLA_VENDOR=OpenBLAS")
 
         gtl_path = self._gtl_lib_path()
         if "+mpi" in spec and gtl_path:

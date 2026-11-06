@@ -65,15 +65,21 @@ setenv("LMOD_{{ name|upper() }}_VERSION", "{{ version_part }}")
 {% endif %}
 {% endblock %}
 
+{% if spec.name == 'hip' or 'hip' in spec %}
+{% set hip = spec if spec.name == 'hip' else spec['hip'] %}
+-- Keep the runtime and independently loaded math libraries on one HIP version.
+local hip_stack = os.getenv("PAWSEY_HIP_STACK_VERSION")
+if mode() == "load" and hip_stack and hip_stack ~= "{{ hip.version }}" then
+    LmodError("Unload the HIP " .. hip_stack .. " stack before loading HIP {{ hip.version }}.")
+end
+pushenv("PAWSEY_HIP_STACK_VERSION", "{{ hip.version }}")
+{% endif %}
+
 {% block autoloads %}
 {% for module in autoload %}
 {% set module_name = module |replace("astro-applications/", "") |replace("bio-applications/", "") |replace("py-keras-applications/", "pawsey-temporary-string/") |replace("applications/", "") |replace("pawsey-temporary-string/", "py-keras-applications/") |replace("libraries/", "") |replace("programming-languages/", "") |replace("utilities/", "") |replace("visualisation/", "") |replace("python-packages/", "") |replace("benchmarking/", "") |replace("developer-tools/", "") |replace("dependencies/", "") |replace("project-apps/", "") |replace("user-apps/", "") %}
-{# CUDA is provided by the site module cuda/<major.minor>, not by a Spack wrapper module. #}
-{% if module_name.startswith("cuda/") or module_name.startswith(".cuda/") %}
-{% set cuda_version_parts = module_name.split('/')[1].split('-')[0].split('.') %}
-{% set cuda_version = cuda_version_parts[0] ~ "." ~ cuda_version_parts[1] %}
-{% set module_name = "cuda/" ~ cuda_version %}
-{% endif %}
+{# Preserve dependency identities recorded in the manifest.
+   The hidden CUDA wrapper loads the site CUDA module via modules.yaml. #}
 {% if verbose %}
 LmodMessage("Autoloading {{ module_name }}")
 {% endif %}

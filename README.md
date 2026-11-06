@@ -13,24 +13,37 @@ Here is how to launch the software stack installation.
 5. Set and export the `SYSTEM` variable to the system you want to run the installation for, if it differs from the content of the `PAWSEY_CLUSTER` environment variable.
 6. Run the `scripts/install_software_stack.sh` script, preferably in a Slurm job or as a process detached from the login shell to prevent the installation from being aborted in case the SSH connection were to be interrupted unexpectedly.
 
-### Setonix-Q installation metadata
+Build-cache mirrors are declared in each system's `configs/site/mirrors.yaml`.
+`SPACK_BUILDCACHE_PATH` sets the local cache path; `SPACK_POPULATE_CACHE` controls
+whether installed binaries are published to it.
 
-A completed Setonix-Q deployment publishes
-`$INSTALL_PREFIX/installation_metadata/spack_install_manifest.json`. It records
-the concrete hashes actually installed, their source environments, installation
-prefixes, and generated module paths. This is the authoritative input to the
-Setonix-Q module tests. The environment lockfiles remain the record of the
-earlier validation concretization and may differ when installation reconcretizes
-individual roots to reuse software already in the store.
+### Ella NVIDIA SDK
 
-The same directory retains each concrete spec used by the installer and a
-small receipt for each installation source. The final manifest can be inspected
-with any standard JSON tool:
+Ella starts Spack with the system GCC Toolset and Python, then concretizes and
+installs the `bootstrap` environment before the application environments:
+external GCC 13.3.1, the NVIDIA HPC SDK 26.1 with CUDA 13.1, CUDA-aware
+Open MPI 4.1.8 with PMI2, Python 3.11.6, and ReFrame 3.12.0. The SDK and
+Open MPI install under `$INSTALL_PREFIX/software`, where application
+environments use them through the external declarations in Ella's
+configuration. The normal stack installation script handles both fresh
+installations and retries.
 
-```bash
-python3 -m json.tool \
-  "$INSTALL_PREFIX/installation_metadata/spack_install_manifest.json"
-```
+### Setonix-Q bootstrap
+
+Setonix-Q uses the same bootstrap environment workflow as Ella to install
+Python 3.11.6 and ReFrame 3.12.0 with its existing external GNU compiler.
+NVIDIA compiler and CUDA packages continue to use the system-provided
+installations.
+
+### Installation metadata
+
+Completed Setonix-Q and Ella deployments publish
+`$INSTALL_PREFIX/installation_metadata/spack_install_manifest.json`, a plain
+JSON record of the installed packages with their source environments,
+installation prefixes, and module paths. It is the input to the module tests
+on both systems, and the Spack environments used for the installation are
+saved alongside it. The tooling is documented in
+[scripts/install_manifest](scripts/install_manifest/README.md).
 
 ### Singularity
 
@@ -62,7 +75,8 @@ one to deploy Spack and SHPC (a software package to manage containers), and the 
 The deployment of Spack and SHPC is implemented through the following executables BASH scripts within the `scripts` directory:
 
 * `install_spack.sh` installs Spack on the system and creates the directory structure for the system-wide software stack installation.
-* `install_python.sh` installs Python using Spack. To do so, and only in this case, Spack chooses `cray-python` as interpreter. Once Python is installed for different architectures and versions, `cray-python` won't be used anymore.
+* `install_bootstrap.sh` installs the configured bootstrap environment before the application environments.
+* `install_python.sh` installs standalone Python on systems that use separate bootstrap installers.
 * `install_shpc.sh` installs SHPC, a tool used to deploy containers.
 
 The software stack deployment is implemented in these scripts instead:

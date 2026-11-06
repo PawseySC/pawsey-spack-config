@@ -22,6 +22,10 @@ fi
 load_system_settings
 check_installation_environment
 
+if [ -f "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/templates/pawseyenv.lua" ]; then
+    TEMPLATE_FILE="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/templates/pawseyenv.lua"
+fi
+
 if [ ! -f "${TEMPLATE_FILE}" ]; then
     echo "Error: Template file not found: ${TEMPLATE_FILE}"
     exit 1
@@ -56,6 +60,9 @@ aocc_lmod_ver="${aocc_compat_version//./_}"
 nvidia_lmod_ver="${nvidia_compat_version//./_}"  # 23.11 -> 23_11
 
 sed \
+    -e "s;TOOLCHAIN_MODULE_PREFIX;${TOOLCHAIN_MODULE_PREFIX:-};g" \
+    -e "s;NVHPC_MODULE_PREFIX;${NVHPC_MODULE_PREFIX:-};g" \
+    -e "s;MPI_MODULE_PATH;${MPI_MODULE_PATH:-};g" \
     -e "s;INSTALL_PREFIX;${INSTALL_PREFIX};g" \
     -e "s;SYSTEM;${SYSTEM};g" \
     -e "s;DATE_TAG;${DATE_TAG};g" \

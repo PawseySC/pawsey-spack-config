@@ -1,0 +1,33 @@
+# Library portions of upstream 53d15b325d2544967f41cd412ed90264c24514d6.
+# CUDA 13 removes obsolete cuFFT errors; SDKs may have multiple include paths.
+--- a/projects/hipfft/library/CMakeLists.txt
++++ b/projects/hipfft/library/CMakeLists.txt
+@@ -158,7 +158,9 @@ foreach( lib ${HIPFFT_LIBRARY_TARGETS} )
+ endforeach()
+ 
+ if( BUILD_WITH_LIB STREQUAL "CUDA" )
+-  target_include_directories( hipfft PUBLIC $<BUILD_INTERFACE:${CUDAToolkit_INCLUDE_DIRS}> )
++  foreach( include_dir ${CUDAToolkit_INCLUDE_DIRS} )
++    target_include_directories( hipfft PUBLIC $<BUILD_INTERFACE:${include_dir}> )
++  endforeach()
+ endif()
+ 
+ if (BUILD_WITH_COMPILER STREQUAL "HIP-NVCC" )
+--- a/projects/hipfft/library/src/nvidia_detail/hipfft.cpp
++++ b/projects/hipfft/library/src/nvidia_detail/hipfft.cpp
+@@ -83,15 +83,9 @@ static hipfftResult_t cufftResultToHipResult(cufftResult_t cufft_result)
+     case CUFFT_UNALIGNED_DATA:
+         return HIPFFT_UNALIGNED_DATA;
+ 
+-    case CUFFT_INCOMPLETE_PARAMETER_LIST:
+-        return HIPFFT_INCOMPLETE_PARAMETER_LIST;
+-
+     case CUFFT_INVALID_DEVICE:
+         return HIPFFT_INVALID_DEVICE;
+ 
+-    case CUFFT_PARSE_ERROR:
+-        return HIPFFT_PARSE_ERROR;
+-
+     case CUFFT_NO_WORKSPACE:
+         return HIPFFT_NO_WORKSPACE;
+ 

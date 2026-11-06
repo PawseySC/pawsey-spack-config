@@ -6,8 +6,8 @@
 scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 . "${scriptdir}/pawsey_software_stack_funcs.sh"
 
-check_installation_environment
 set_spack_config_repo
+check_installation_environment
 set_compilation_sets_for_arch
 
 # Reject a different Spack version before changing any existing configuration.
@@ -99,6 +99,10 @@ if [ "${site_config_dir}" != "${INSTALL_PREFIX}/spack/etc/spack" ]; then
   config_files+=("${site_config_dir}/"*.yaml)
 fi
 sed -i \
+  -e "s|SPACK_BUILDCACHE_PATH|${SPACK_BUILDCACHE_PATH:-}|g" \
+  -e "s|GCC_INSTALL_PREFIX|${GCC_INSTALL_PREFIX:-}|g" \
+  -e "s|NVHPC_INSTALL_PREFIX|${NVHPC_INSTALL_PREFIX:-}|g" \
+  -e "s|MPI_PREFIX|${MPI_PREFIX:-}|g" \
   -e "s|INSTALL_PREFIX|${INSTALL_PREFIX}|g" \
   -e "s|DATE_TAG|$DATE_TAG|g"\
   -e "s|USER_PERMANENT_FILES_PREFIX|${USER_PERMANENT_FILES_PREFIX}|g"\

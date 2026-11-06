@@ -7,6 +7,16 @@ bio-applications:
 # No cppzmq (no suitable command found yet)
 astro-applications:
 libraries:
+  hip-math: ['hipcc', '--version', 'HIP version:']
+  hipblas-common: ['bash', '-lc ''printf "#include <hipblas-common/hipblas-common.h>\\n" | CC -std=c++17 -D__HIP_PLATFORM_NVIDIA__ -E -x c++ - >/dev/null && echo "hipblas-common ok"''', 'hipblas-common ok']
+  hipblas: ['bash', '-lc ''printf "#include <hipblas/hipblas.h>\\n" | CC -std=c++17 -D__HIP_PLATFORM_NVIDIA__ -E -x c++ - >/dev/null && echo "hipblas ok"''', 'hipblas ok']
+  hipfft: ['bash', '-lc ''printf "#include <hipfft/hipfft.h>\\n" | CC -std=c++17 -D__HIP_PLATFORM_NVIDIA__ -E -x c++ - >/dev/null && echo "hipfft ok"''', 'hipfft ok']
+  hiprand: ['bash', '-lc ''printf "#include <hiprand/hiprand.h>\\n" | CC -std=c++17 -D__HIP_PLATFORM_NVIDIA__ -E -x c++ - >/dev/null && echo "hiprand ok"''', 'hiprand ok']
+  hipsolver: ['bash', '-lc ''printf "#include <hipsolver/hipsolver.h>\\n" | CC -std=c++17 -D__HIP_PLATFORM_NVIDIA__ -E -x c++ - >/dev/null && echo "hipsolver ok"''', 'hipsolver ok']
+  hipsparse: ['bash', '-lc ''printf "#include <hipsparse/hipsparse.h>\\n" | CC -std=c++17 -D__HIP_PLATFORM_NVIDIA__ -E -x c++ - >/dev/null && echo "hipsparse ok"''', 'hipsparse ok']
+  hipcub: ['bash', '-lc ''test -f "$PAWSEY_HIPCUB_HOME/include/hipcub/hipcub.hpp" && echo "hipcub ok"''', 'hipcub ok']
+  hipfort: ['bash', '-lc ''printf "program baseline\\nuse hipfort\\nend program\\n" | gfortran -I"$PAWSEY_HIPFORT_HOME/include/hipfort/nvptx" -x f95 -fsyntax-only - && echo "hipfort ok"''', 'hipfort ok']
+  hipsparselt: ['bash', '-lc ''printf "#include <hipsparselt/hipsparselt.h>\\n" | CC -std=c++17 -D__HIP_PLATFORM_NVIDIA__ -E -x c++ - >/dev/null && echo "hipsparselt ok"''', 'hipsparselt ok']
   adios2/2.10.2-hdf5: ['adios2-config', '--version', 'ADIOS 2.10.2']
   adios2/2.10.2-hdf5-nopython: ['adios2-config', '--version', 'ADIOS 2.10.2']
   adios2/2.10.2: ['adios2-config', '--version', 'ADIOS 2.10.2']
@@ -42,7 +52,8 @@ libraries:
   trilinos/16.2.1: ['bash', '-lc ''tmp=$(mktemp) && trap "rm -f \"$tmp\"" EXIT && printf "#include <Teuchos_Version.hpp>\n" | CC -E -x c++ - > "$tmp" 2>&1 && grep -m1 "trilinos-16.2.1" "$tmp"''', 'trilinos-16.2.1']
 # No petsc baseline command added yet.
 programming-languages:
-  python: ['python', '-h', 'usage: python']
+  hip: ['bash', '-lc ''hip_check_dir=$(mktemp -d) && trap "rm -rf \"$hip_check_dir\"" EXIT && printf "#include <hip/hip_runtime.h>\n__global__ void baseline_kernel() {}\nint main() { return 0; }\n" > "$hip_check_dir/sanity.cu" && hipcc -std=c++17 -arch=sm_90 "$hip_check_dir/sanity.cu" -o "$hip_check_dir/sanity" && test -x "$hip_check_dir/sanity" && echo "HIP baseline OK"''', 'HIP baseline OK']
+  python: ['python', '-h', 'usage: .*python'] # srun may use the full executable path in the usage line.
   perl: ['perl', '--version', 'This is perl']
   go: ['go', 'version', 'go version']
   openjdk: ['java', '-version', 'openjdk version']
@@ -81,7 +92,7 @@ python-packages:
   py-numba: ['python3', '-c "import numba; print(numba)"', "module 'numba'"]
   py-cuda-python: ['python3', '-c "import cuda.bindings; print(cuda.bindings)"', "module 'cuda.bindings'"]
   py-cupy: ['python3', '-c "import cupy; print(cupy)"', "module 'cupy'"]
-  py-numba-cuda: ['python3', '-c "import numba_cuda; print(numba_cuda)"', "module 'numba_cuda'"]
+  py-numba-cuda: ['python3', '-c "from numba import cuda; print(cuda.__file__)"', 'numba_cuda/numba/cuda']
   py-nvmath-python: ['python3', '-c "import nvmath; print(nvmath)"', "module 'nvmath'"]
   py-scikit-learn: ['python3', '-c "import sklearn; print(sklearn)"', "module 'sklearn'"]
   py-h5py: ['python3', '-c "import h5py; print(h5py)"', "module 'h5py'"]

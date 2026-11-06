@@ -72,7 +72,7 @@ class PyPennylane(PythonPackage, CudaPackage):
     depends_on("cuquantum@25.11.1:", when="+cuda", type=("build", "link", "run"))
     depends_on("cutensor@2.4.1.4:", when="+tensor", type=("build", "link", "run"))
     depends_on("mpi", when="+mpi", type=("build", "link", "run"))
-    depends_on("py-mpi4py+gtl", when="+mpi", type=("build", "run"))
+    depends_on("py-mpi4py", when="+mpi", type=("build", "run"))
 
     def _cuda_architectures(self):
         archs = self.spec.variants["cuda_arch"].value
@@ -108,9 +108,9 @@ class PyPennylane(PythonPackage, CudaPackage):
 
         env.set("MPICC", self.spec["mpi"].mpicc)
         env.set("MPICXX", self.spec["mpi"].mpicxx)
-        env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
-        env.set("MPICH_GPU_IPC_ENABLED", "0")
-
+        if self.spec["mpi"].name == "cray-mpich":
+            env.set("MPICH_GPU_SUPPORT_ENABLED", "1")
+            env.set("MPICH_GPU_IPC_ENABLED", "0")
         gtl_path = self._gtl_lib_path()
         if gtl_path:
             env.prepend_path("LD_LIBRARY_PATH", gtl_path)

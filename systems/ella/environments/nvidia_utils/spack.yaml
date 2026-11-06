@@ -1,0 +1,44 @@
+spack:
+# note: preferred versions are set in packages.yaml
+  definitions:
+  - packages:
+# py-pip and py-setuptools: installed in env_langs
+# snakemake: docs recommend to install with conda
+    - ffmpeg@7.0.2 +doc +drawtext +libaom +libmp3lame +libopenjpeg +libopus +libsnappy +libspeex +libvorbis +libvpx +libwebp +libxml2 +libzmq +lzma +nonfree +openssl +sdl2 ^texinfo@7.1
+    - gnuplot@6.0.0
+## for now    - llvm@15.0.4 ~polly ~gold # Ilkhom: ~omp_as_runtime variant is removed from spack/0.21.0
+    - nextflow@22.10.0 #supports DSL-1
+    - nextflow@24.10.0 #supports DSL-2
+    - parallel@20240822
+    - mpifileutils@0.11.1 ~lustre
+    - feh@3.10
+    - nano@8.2
+    - cmake@3.31.7
+    - meson@1.5.1
+    - perl-data-dumper@2.173 
+  - gpu-packages:
+    - hip@7.2.4 +cuda ~rocm
+    - hip@7.16.0 +cuda ~rocm
+    - hip-math@7.2.4
+    - hip-math@7.16.0
+    - nvtop support=nvidia +cuda cuda_arch=90
+  # Explicit roots keep the components visible for selective module loading.
+  - hip-math-components:
+    - hipblas-common
+    - hipblas
+    - hipfft
+    - hiprand
+    - hipsolver
+    - hipsparse
+    - hipcub
+    - hipfort
+    - hipsparselt
+  specs:
+  - matrix:
+    - [$packages, $gpu-packages]
+    - ['%gcc_compiler']
+  - matrix:
+    - [$hip-math-components]
+    - ['@7.2.4', '@10.1.0']
+    - ['+cuda ~rocm cuda_arch=90 %gcc_compiler']
+  view: false

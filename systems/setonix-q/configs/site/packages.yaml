@@ -184,10 +184,8 @@ packages:
   gettext:
     version: [0.22.5]
   py-cython:
-    # py-cuda and py-nvmath-python require the newer 3.2.3 version, but this 
-    # breaks older packages in the stack. Listing the two versions here avoids 
-    # increases instances of 'accidental' reuse when not using '--reuse' in
-    # during concretization.
+    # Prefer nvmath's newer Cython; bindings and other consumers constrain
+    # their own compatible versions.
     version: [3.2.3, 3.0.11]
   py-dask:
     version: [2024.7.1]
@@ -595,10 +593,14 @@ packages:
     # Provide cuda via the Cray PE module rather than a bare prefix. The NVIDIA
     # HPC SDK splits the toolkit across cuda/<ver> (core runtime) and
     # math_libs/<ver> (libcublas, libcufft, libcusolver, ...). 
-    # The Cray PE module ensures that both are on LD_LIBRARY_PATH/CPATH.
+    # The Cray PE module sets LD_LIBRARY_PATH/CPATH; CMake also needs the math prefix.
     - spec: cuda@13.0.0
       modules:
       - cuda/13.0
+      extra_attributes:
+        environment:
+          prepend_path:
+            CMAKE_PREFIX_PATH: /opt/nvidia/hpc_sdk/Linux_aarch64/25.9/math_libs/13.0/targets/sbsa-linux
 
   cutensor:
       buildable: true

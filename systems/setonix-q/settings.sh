@@ -9,7 +9,11 @@ DATE_TAG="${DATE_TAG:-2026.08}"
 PAWSEY_CLUSTER="setonix-q"
 
 if [ -z ${INSTALL_PREFIX+x} ]; then
-    INSTALL_PREFIX="/software/setonix-q/${DATE_TAG}"
+    if [ -n "${BASE_INSTALL_DIR:-}" ]; then
+        INSTALL_PREFIX="${BASE_INSTALL_DIR}/setonix-q/aarch64/${DATE_TAG}"
+    else
+        INSTALL_PREFIX="/software/setonix-q/${DATE_TAG}"
+    fi
 fi
 
 if [ "${INSTALL_PREFIX%$DATE_TAG}" = "${INSTALL_PREFIX}" ]; then
@@ -45,7 +49,7 @@ BOOTSTRAP_PATH='$user_cache_path/bootstrap'
 # Set a new mirror where to fetch prebuilt binaries, if any.
 SPACK_BUILDCACHE_PATH=${INSTALL_PREFIX}/build_cache
 # Durable, release-scoped provenance for the environment lockfile DAGs that
-# were installed, plus standalone Python and ReFrame concrete specs.
+# were installed, including the bootstrap environment.
 INSTALLATION_METADATA_DIR=${INSTALL_PREFIX}/installation_metadata
 SPACK_INSTALL_MANIFEST=${INSTALLATION_METADATA_DIR}/spack_install_manifest.json
 # When SPACK_POPULATE_CACHE=1, spack will push binaries in the above cache location for later use.
@@ -127,7 +131,10 @@ developer-tools
 dependencies
 "
 
-# list of spack build environments
+# Install Python and ReFrame together before application builds.
+bootstrap_environment="bootstrap"
+
+# list of application build environments
 env_list="
 python
 quantum

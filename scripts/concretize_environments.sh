@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
-check_installation_environment
 set_spack_config_repo
+check_installation_environment
 set_compilation_sets_for_arch
 . "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh"
 
@@ -39,6 +39,10 @@ function concretize_environment()
   if [ ! -f "${envpath}/spack.lock" ]; then
     echo "Concretization for env ${env} completed but did not create ${envpath}/spack.lock."
     exit 1
+  fi
+
+  if [ "${SYSTEM}" = "setonix-q" ] || [ "${SYSTEM}" = "ella" ]; then
+    snapshot_spack_environment "${envpath}" || exit 1
   fi
 }
 

@@ -17,9 +17,28 @@ spack:
     - meson@1.5.1
     - perl-data-dumper@2.173 
   - gpu-packages:
+    - hip@7.2.4 +cuda ~rocm
+    - hip@7.16.0 +cuda ~rocm
+    - hip-math@7.2.4
+    - hip-math@7.16.0
     - nvtop +cuda cuda_arch=90
+  # Explicit roots keep the components visible for selective module loading.
+  - hip-math-components:
+    - hipblas-common
+    - hipblas
+    - hipfft
+    - hiprand
+    - hipsolver
+    - hipsparse
+    - hipcub
+    - hipfort
+    - hipsparselt
   specs:
   - matrix:
     - [$packages, $gpu-packages]
     - ['%gcc_compiler']
+  - matrix:
+    - [$hip-math-components]
+    - ['@7.2.4', '@10.1.0']
+    - ['+cuda ~rocm cuda_arch=90 %gcc_compiler']
   view: false

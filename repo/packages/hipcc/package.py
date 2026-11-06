@@ -1,0 +1,103 @@
+# Copyright Spack Project Developers. See COPYRIGHT file for details.
+#
+# SPDX-License-Identifier: (Apache-2.0 OR MIT)
+
+# Pawsey: companion to the HIP 7.2.4 / 7.16.0 CUDA backport, based on
+# spack-packages v2025.11.0 (119680aeee8e). Pin the matching LLVM release
+# commits and fetch only amd/hipcc instead of the entire compiler source tree.
+
+import re
+
+from spack.package import *
+
+
+class Hipcc(CMakePackage):
+    """HIPCC: HIP compiler driver"""
+
+    homepage = "https://github.com/ROCm/llvm-project"
+    git = "https://github.com/ROCm/llvm-project.git"
+
+    def url_for_version(self, version):
+        if version <= Version("6.0.2"):
+            url = "https://github.com/ROCm/HIPCC/archive/rocm-{0}.tar.gz"
+        else:
+            url = "https://github.com/ROCm/llvm-project/archive/rocm-{0}.tar.gz"
+        return url.format(version)
+
+    maintainers("srekolam", "renjithravindrankannath", "afzpatel")
+    tags = ["rocm"]
+    executables = ["hipcc"]
+
+    license("MIT")
+    version(
+        "7.16.0",
+        tag="therock-10.1",
+        commit="d6f6cb691863e9258034ab48c1dfce21689d5606",
+        git_sparse_paths=["amd/hipcc"],
+    )
+    version(
+        "7.2.4",
+        tag="rocm-7.2.4",
+        commit="f58b06dce1f9c15707c5f808fd002e18c2accf7e",
+        git_sparse_paths=["amd/hipcc"],
+    )
+    version("7.0.2", sha256="fd612fa750bebd0c3be0ea642b2cae8ff5c7e00a2280b22b9ea16ee86a11d763")
+    version("7.0.0", sha256="3d479a2aa615b6bb35cd3521122fbff34188dc0cc52d8b0acda59f9f55198211")
+    version("6.4.3", sha256="7a484b621d568eef000ee8c4d2d46d589e5682b950f1f410ce7215031f1f3ad7")
+    version("6.4.2", sha256="9f42cb73d90bd4561686c0366f60f6e58cfd32ff24b094c69e8259fb5d177457")
+    version("6.4.1", sha256="460ad28677092b9eb86ffdc49bcb4d01035e32b4f05161d85f90c9fa80239f50")
+    version("6.4.0", sha256="dca1c145a23f05229d5d646241f9d1d3c5dbf1d745b338ae020eabe33beb965c")
+    version("6.3.3", sha256="4df9aba24e574edf23844c0d2d9dda112811db5c2b08c9428604a21b819eb23d")
+    version("6.3.2", sha256="1f52e45660ea508d3fe717a9903fe27020cee96de95a3541434838e0193a4827")
+    version("6.3.1", sha256="e9c2481cccacdea72c1f8d3970956c447cec47e18dfb9712cbbba76a2820552c")
+    version("6.3.0", sha256="79580508b039ca6c50dfdfd7c4f6fbcf489fe1931037ca51324818851eea0c1c")
+    version("6.2.4", sha256="7af782bf5835fcd0928047dbf558f5000e7f0207ca39cf04570969343e789528")
+    version("6.2.1", sha256="4840f109d8f267c28597e936c869c358de56b8ad6c3ed4881387cf531846e5a7")
+    version("6.2.0", sha256="12ce17dc920ec6dac0c5484159b3eec00276e4a5b301ab1250488db3b2852200")
+    version("6.1.2", sha256="300e9d6a137dcd91b18d5809a316fddb615e0e7f982dc7ef1bb56876dff6e097")
+    version("6.1.1", sha256="f1a67efb49f76a9b262e9735d3f75ad21e3bd6a05338c9b15c01e6c625c4460d")
+    version("6.1.0", sha256="6bd9912441de6caf6b26d1323e1c899ecd14ff2431874a2f5883d3bc5212db34")
+    version("6.0.2", sha256="d6209b14fccdd00d7231dec4b4f962aa23914b9dde389ba961370e8ba918bde5")
+    version("6.0.0", sha256="e9cfaaecaf0e6ed363946439197f340c115e8e1189f96dbd716cf20245c29255")
+    version("5.7.1", sha256="d47d27ef2b5de7f49cdfd8547832ac9b437a32e6fc6f0e9c1646f4b704c90aee")
+    version("5.7.0", sha256="9f839bf7226e5e26f3150f8ba6eca507ab9a668e68b207736301b3bb9040c973")
+
+    depends_on("c", type="build")  # generated
+    depends_on("cxx", type="build")  # generated
+    depends_on("fortran", type="build")  # generated
+
+    depends_on("numactl")
+
+    patch("0014-remove-compiler-rt-linkage-for-host.6.0.patch", when="@6.0")
+    patch("0014-remove-compiler-rt-linkage-for-host.6.1.patch", when="@6.1")
+    patch("0001-Update-the-ROCMINFO-HIPCLANG-PATHS-inside-hipcc-6.2.0.patch", when="@6.2:6")
+    patch("0002-Update-rocm-agent-enumerator-path.patch", when="@7.0:")
+
+    @property
+    def root_cmakelists_dir(self):
+        if self.spec.satisfies("@:6.0"):
+            return "."
+        else:
+            return join_path("amd", "hipcc")
+
+    @classmethod
+    def determine_version(cls, exe):
+        output = Executable(exe)("--version", output=str, error=str)
+        match = re.search(r"roc-(\S+)", output)
+        return match.group(1) if match else None
+
+    def patch(self):
+        numactl = self.spec["numactl"].prefix.lib
+        if self.spec.satisfies("@:6.0"):
+            with working_dir("bin"):
+                filter_shebang("hipconfig")
+        elif self.spec.satisfies("@:6.2"):
+            with working_dir("amd/hipcc/bin"):
+                filter_shebang("hipconfig")
+
+        if self.spec.satisfies("@:6.0"):
+            with working_dir("src"):
+                filter_file(" -lnuma", f" -L{numactl} -lnuma", "hipBin_amd.h")
+        else:
+            with working_dir("amd/hipcc/src"):
+                filter_file(" -lnuma", f" -L{numactl} -lnuma", "hipBin_amd.h")

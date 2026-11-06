@@ -1,0 +1,422 @@
+packages:
+  all:
+  # Provider lists express preferences. Compiler packages now provide the
+  # language virtuals; packages:all:compiler is ignored by Spack 1.x.
+    providers:
+      c: [ gcc@13.3.1, nvhpc@26.1 ]
+      cxx: [ gcc@13.3.1, nvhpc@26.1 ]
+      fortran: [ gcc@13.3.1, nvhpc@26.1 ]
+      mpi: [ openmpi ]
+      blas: [ openblas ]
+      lapack: [ openblas, netlib-lapack ]
+      scalapack: [ netlib-scalapack ]
+      fftw-api: [ fftw ]
+      pkgconfig: [ pkgconf, pkg-config ]
+      zlib-api: [ zlib-ng ]
+    permissions:
+      read: world
+      # this should be user, we do not want pawsey0001 users 
+      # to accidentally edit the system wide installation
+      write: user
+      # using default group
+      # fine, considering world readable and user writable
+      # could not use $PAWSEY_PROJECT, as variables are apparently not evaluated here
+
+  # Use GCC for host compilation; CUDA supplies the device compiler separately.
+  c:
+    require: gcc@13.3.1
+  cxx:
+    require: gcc@13.3.1
+  fortran:
+    require: gcc@13.3.1
+
+  # Keep MPI consumers on the bootstrap-built Open MPI. Marking the virtual
+  # non-buildable would also block NVHPC, which can optionally provide MPI.
+  mpi:
+    require: openmpi@4.1.8
+#  blas:
+#    buildable: false
+  blas:
+    # Keep OpenBLAS consistent across the CPU and CUDA environments.
+    require: openblas
+#  lapack:
+#    buildable: false
+#  scalapack:
+#    buildable: false
+# FFTW non buildable, to avoid proliferation of variants, 
+# that are ultimately a subset of the system-wide one (num_libs)
+# Edit: FFTW buildable, otherwise in Spack 0.17.0 the concretiser crashes
+#  fftw-api:
+#    buildable: false
+  # Reuse Ella's installed GCC; Spack installs the NVIDIA SDK below.
+  gcc:
+    buildable: false
+    externals:
+    - spec: gcc@13.3.1 languages=c,c++,fortran arch=linux-rocky9-aarch64
+      prefix: GCC_INSTALL_PREFIX
+      extra_attributes:
+        compilers:
+          c: GCC_INSTALL_PREFIX/bin/gcc
+          cxx: GCC_INSTALL_PREFIX/bin/g++
+          fortran: GCC_INSTALL_PREFIX/bin/gfortran
+        flags:
+          cflags: -O3
+          cxxflags: -O3
+          cppflags: -O3
+          # Keep package-specific GNU compatibility flags local to the package.
+          fflags: -O3
+        environment:
+          set:
+            CARGO_HOME: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/ella/DATE_TAG/software/$USER/cargo
+            GOCACHE: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/ella/DATE_TAG/software/$USER/go-cache/build
+            GOMODCACHE: USER_TEMP_FILES_PREFIX/$PAWSEY_PROJECT/$USER/ella/DATE_TAG/software/$USER/go-cache/mod
+            GOFLAGS: "-ldflags=-extldflags=-fuse-ld=bfd"
+        extra_rpaths: [GCC_INSTALL_PREFIX/lib64, GCC_INSTALL_PREFIX/lib]
+  nvhpc:
+    buildable: true
+    require: "@26.1 default_cuda=13.1 ~mpi"
+
+  # GENERAL NOTES:
+  # 1. for each package, only one entry must exist in this yaml
+  # otherwise only the last one is considered, and the previous ones are ingored
+  # 2. when externals are specified, the preferred version is respected only if it is one of the externals
+
+  #TODO for next stack builds: consider adding more +pic as default variant
+
+  # preferred versions and variants, dependencies
+  # required by devel/hpctoolkit, but good to have for everything
+  libunwind:
+    variants: '+pic'
+  mbedtls:
+    variants: '+pic'
+#  libseccomp:
+#    version: [2.5.4]
+  zlib:
+    version: [1.3.1]
+  zstd:
+    version: [1.5.6]
+  json-c:
+    version: [0.16]
+  krb5:
+    version: [1.21.3]
+  # Prefer the usual CMake build while allowing an environment to select a
+  # compatible alternative. Dependency-only modules are hidden and hashed.
+  cmake:
+    version: [3.31.7]
+    variants: ~doc+ncurses+ownlibs~qtgui
+  ffmpeg:
+    version: [7.0.2]
+  meson:
+    version: [1.5.1]
+    require: '@1.5.1'
+  gnuplot:
+    version: [6.0.0]
+    variants: '+X'
+  llvm:
+    # Prefer a lean llvm for py-llvmlite, but keep +clang possible: binder (via
+    # trilinos +python) needs llvm+clang, so ~clang must stay a soft preference.
+    # ~gold is hard-required: the gold linker is not installed on this system.
+    require: '~gold targets=aarch64,nvptx'
+    prefer:
+      - '~clang ~lldb ~flang ~polly'
+  # preferred versions and variants, python
+  python:
+    version: [3.11.6]
+    variants: '+optimizations +zlib +ssl'
+  gdbm:
+    version: [1.24]
+  apr:
+    version: [1.7.5] #subversion needs older apr version
+  gettext:
+    version: [0.22.5]
+  py-cython:
+    # py-cuda and py-nvmath-python require the newer 3.2.3 version, but this 
+    # breaks older packages in the stack. Listing the two versions here avoids 
+    # increases instances of 'accidental' reuse when not using '--reuse' in
+    # during concretization.
+    version: [3.2.3, 3.0.11]
+  py-dask:
+    version: [2024.7.1]
+  py-h5py:
+    version: [3.12.1]
+  py-ipython:
+    version: [8.28.0]
+  py-matplotlib:
+    version: [3.9.2]
+    variants: '+movies'
+  py-mpi4py:
+    version: [4.0.1]
+    # Open MPI supplies GPU-aware MPI without Cray's GTL library.
+    require: '@4.0.1 ~gtl'
+  py-meson-python:
+    version: [0.16.0]
+    require: '@0.16.0'
+  py-numba:
+    version: [0.61.0]
+    require: '@0.61.0'
+  py-numpy:
+    # This cannot be a global requirement: Boost 1.86 requires NumPy 1.x.
+    # Python packages that must share 2.1.2 constrain it individually.
+    version: [2.1.2]
+  py-pandas:
+    version: [2.2.3]
+  py-pip:
+    # This remains a preference because py-fastrlock and py-symengine require
+    # pip <=23.0. Modern consumers constrain 23.1.2 in their requirements.
+    version: [23.1.2]
+  py-plotly:
+    version: [5.20.0]
+  py-pybind11:
+    # Pinning to 2.13.4 to share one pybind11 build across the Qiskit Aer
+    # and SciPy DAGs. Qiskit Aer 0.17.2 requires >2.6, while Spack's
+    # SciPy 1.14.1 recipe permits @2.12.
+    version: [2.13.4]
+    require: '@2.13.4'
+  py-scikit-learn:
+    version: [1.5.2]
+  py-scipy:
+    version: [1.14.1]
+    require: '@1.14.1'
+  py-setuptools:
+    # This remains a preference because NumPy <=1.25 requires setuptools
+    # <=63. Modern consumers constrain 80.0.0 in their requirements.
+    version: [80.0.0]
+  py-pennylane:
+    version: [0.45.0]
+    require: '@0.45.0'
+  # preferred versions and variants, compilers
+  go:
+    version: [1.25.5]
+  julia:
+     version: [1.11.0]
+  openjdk:
+    version: [17.0.8.1_1]
+#    version: [21.0.3_9]
+  r:
+    version: [4.4.1]
+  perl:
+    version: [5.40.0]
+  ruby:
+    version: [3.3.5]
+  blaspp:
+    version: [2024.10.26]
+    variants: '~cuda build_type=Release'
+    require: '@2024.10.26 build_type=Release'
+  boost:
+    version: [1.86.0]
+    variants: '+mpi +numpy +python'
+  eigen:
+    version: [3.4.0]
+    variants: 'build_type=Release'
+  fftw:
+    version: [3.3.10,2.1.5]
+    variants: '+openmp precision=float,double,long_double'
+  gsl:
+    version: [2.8]
+  hpx:
+    version: [1.11.0]
+    variants: '+async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi cxxstd=17 build_type=Release'
+    require: '^asio@1.30.2'
+  kokkos:
+    version: [4.7.04]
+    variants: '+hwloc +memkind +numactl +openmp +tuning cxxstd=17 build_type=Release'
+  netlib-lapack:
+    version: [3.11.0]
+    variants: 'build_type=Release'
+  openblas:
+    version: [0.3.28]
+    variants: 'threads=openmp'
+  opencv:
+     version: [4.13.0]
+     variants: 'build_type=Release'
+  plasma:
+    version: [24.8.7]
+    variants: 'build_type=Release'
+  petsc:
+    version: [3.22.1]
+    variants: '+fftw' # commenting out trilinos as per environment note # +trilinos'
+  plumed:
+    version: [2.9.2]
+  netlib-scalapack:
+    version: [2.2.0]
+  slate:
+    version: [2024.10.29]
+    variants: '~cuda build_type=Release'
+  trilinos:
+    version: [15.0.0]
+    variants: '+adios2 +openmp +python build_type=Release'
+# preferred versions and variants, io_libs
+  hdf5:
+    version: [1.14.5]
+    variants: 'api=v112 +hl +fortran +szip build_type=Release'
+  hdf:
+    version: [4.2.15]
+    variants: '+shared+external-xdr'
+  adios2:
+    version: [2.10.2]
+    variants: '+python +hdf5 build_type=Release'
+  netcdf-c:
+    version: [4.9.2]
+    variants: '+hdf4 +parallel-netcdf'
+  netcdf-cxx:
+    version: [4.2]
+  netcdf-cxx4:
+    version: [4.3.1]
+  netcdf-fortran:
+    version: [4.6.1]
+  parallel-netcdf:
+    version: [1.12.3]
+  py-h5netcdf:
+    version: [1.3.0]
+  py-netcdf4:
+    version: [1.6.5]
+# for end users apps, prefer cmake variant build_type=Release
+  caliper:
+    variants: 'build_type=Release'
+  gromacs:
+    variants: 'build_type=Release'
+  lammps:
+    variants: 'build_type=Release'
+  nektar:
+    variants: 'build_type=Release'
+  visit:
+    variants: 'build_type=Release'
+
+  #for astro packages prefer release
+  casacore:
+    variants: 'build_type=Release'
+  everybeam:
+    variants: 'build_type=Release'
+  wsclean:
+    variants: 'build_type=Release'
+  idg:
+    variants: 'build_type=Release'
+  cghcentre:
+    variants: 'build_type=Release'
+
+  # Native externals verified on Ella; retain version preferences for builds.
+  pkgconf:
+    externals:
+    - spec: pkgconf@1.7.3
+      prefix: /usr
+  pkg-config:
+    version: [0.29.2]
+  hwloc:
+    prefer: ['@2.11.2']
+  numactl:
+    version: [2.0.14]
+  pcre2:
+    version: [10.42]
+  libssh:
+    prefer: ['@0.9.8']
+  libseccomp:
+    version: [2.5.3]
+  grep:
+    version: [3.11]
+  sed:
+    version: [4.9]
+  binutils:
+    version: [2.45]
+  libfabric:
+    version: [1.22.0]
+  openssl:
+    prefer: ['@3.5.0']
+    externals:
+    - spec: openssl@3.5.8 +shared certs=system
+      prefix: /usr
+  brotli:
+    version: [1.0.7]
+  curl:
+    version: [8.14.1]
+  openssh:
+    externals:
+    - spec: openssh@9.9p1
+      prefix: /usr
+    buildable: false
+  keyutils:
+    prefer: ['@1.6.3']
+  openldap:
+    prefer: ['@2.5.20']
+  libpsl:
+    prefer: ['@0.20.1']
+  nghttp2:
+    version: [1.64.0]
+  libidn2:
+    prefer: ['@2.2.0']
+  libyaml:
+    version: [0.1.7]
+  nvidia-nsight-systems:
+    prefer: ['@2024.3.2']
+
+  # Reuse the system scheduler/client; slurm-pmi2 supplies its matching header.
+  slurm:
+    buildable: false
+    externals:
+    - spec: slurm@25.11.8
+      prefix: /usr
+
+  # Bootstrap builds this single CUDA-aware PMI2 provider before applications.
+  openmpi:
+    buildable: false
+    externals:
+    - spec: openmpi@4.1.8 +cuda cuda_arch=90 +pmi +legacylaunchers schedulers=slurm fabrics=ucx arch=linux-rocky9-neoverse_v2
+      prefix: MPI_PREFIX
+      modules: [openmpi/4.1.8]
+
+  # NVIDIA libraries from the Spack-managed SDK, using the CUDA 13.1 variant.
+  cuda:
+    buildable: false
+    externals:
+    - spec: cuda@13.1.0
+      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/cuda/13.1
+      # The SDK keeps CUDA's math libraries outside the core toolkit prefix.
+      # Mirror these paths in the generated CUDA module's environment as well.
+      extra_attributes:
+        environment:
+          prepend_path:
+            CPATH: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1/targets/sbsa-linux/include
+            LIBRARY_PATH: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1/targets/sbsa-linux/lib
+            LD_LIBRARY_PATH: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1/targets/sbsa-linux/lib
+            CMAKE_PREFIX_PATH: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1/targets/sbsa-linux
+
+  cutensor:
+    buildable: false
+    externals:
+    - spec: cutensor@2.4.1.4 target=neoverse_v2
+      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1
+
+  nccl:
+    buildable: false
+    externals:
+    - spec: nccl@2.29.2 +cuda cuda_arch=90
+      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/comm_libs/13.1/nccl
+
+  cublas:
+    buildable: false
+    externals:
+    - spec: cublas@13.2.0.9
+      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1
+
+  cufft:
+    buildable: false
+    externals:
+    - spec: cufft@12.1.0.31
+      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1
+
+  curand:
+    buildable: false
+    externals:
+    - spec: curand@10.4.1.34
+      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1
+
+  cusolver:
+    buildable: false
+    externals:
+    - spec: cusolver@12.0.7.41
+      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1
+
+  cusparse:
+    buildable: false
+    externals:
+    - spec: cusparse@12.7.2.19
+      prefix: NVHPC_INSTALL_PREFIX/Linux_aarch64/26.1/math_libs/13.1

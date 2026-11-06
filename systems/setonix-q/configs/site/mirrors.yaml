@@ -1,0 +1,2 @@
+mirrors:
+  systemwide_buildcache: file://SPACK_BUILDCACHE_PATH
