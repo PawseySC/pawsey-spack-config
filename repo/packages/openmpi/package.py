@@ -7,14 +7,6 @@ from spack.package import *
 
 
 class Openmpi(BuiltinOpenmpi):
-    """Use the matching PMI2 header alongside Ella's external Slurm library."""
-
-    depends_on("slurm-pmi2@25.11.8", when="@4 +pmi ^slurm@25.11.8")
-
-    def configure_args(self):
-        args = super().configure_args()
-        if "^slurm-pmi2" in self.spec:
-            pmi2 = self.spec["slurm-pmi2"].prefix
-            args = [arg for arg in args if not arg.startswith("--with-pmi=")]
-            args += [f"--with-pmi={pmi2}", f"--with-pmi-libdir={pmi2.lib}"]
-        return args
+    """Most recent stable Open MPI release at time of commit."""
+    # https://www.open-mpi.org/software/ompi/v5.0/
+    version("5.0.11", sha256="e668a3c4acd50c41dc204c8a6dd98a611e0f26af89cf677577fa9be8a2698003")

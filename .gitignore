@@ -19,6 +19,5 @@ logs/
 *.tar.bz2
 patch*
 slurm-*
-!repo/packages/slurm-pmi2/
 spack*/
 setonix-q-*-rfm_results/

@@ -33,7 +33,7 @@ packages:
   # Keep MPI consumers on the bootstrap-built Open MPI. Marking the virtual
   # non-buildable would also block NVHPC, which can optionally provide MPI.
   mpi:
-    require: openmpi@4.1.8
+    require: openmpi@5.0.11
 #  blas:
 #    buildable: false
   blas:
@@ -302,7 +302,10 @@ packages:
   pkg-config:
     version: [0.29.2]
   hwloc:
-    prefer: ['@2.11.2']
+    # Share MPI's CPU/GPU/NIC topology library with application environments.
+    require: '@2.12.2 +cuda cuda_arch=90 +pci +nvml'
+  libevent:
+    require: '@2.1.12'
   numactl:
     version: [2.0.14]
   pcre2:
@@ -348,20 +351,29 @@ packages:
   nvidia-nsight-systems:
     prefer: ['@2024.3.2']
 
-  # Reuse the system scheduler/client; slurm-pmi2 supplies its matching header.
+  # Reuse the system scheduler/client, whose default MPI plugin is PMIx.
   slurm:
     buildable: false
     externals:
-    - spec: slurm@25.11.8
+    - spec: slurm@25.11.8 +pmix
       prefix: /usr
 
-  # Bootstrap builds this single CUDA-aware PMI2 provider before applications.
+  #munge is required for PMIx authentication on Ella.
+  pmix:
+    require: '@5.0.8 +munge'
+  munge:
+    buildable: false
+    externals:
+    - spec: munge@0.5.13
+      prefix: /usr
+
+  # Bootstrap builds this CUDA-aware UCX/UCC provider before applications.
   openmpi:
     buildable: false
     externals:
-    - spec: openmpi@4.1.8 +cuda cuda_arch=90 +pmi +legacylaunchers schedulers=slurm fabrics=ucx arch=linux-rocky9-neoverse_v2
+    - spec: openmpi@5.0.11 +cuda cuda_arch=90 +fortran +atomics ~debug ~memchecker ~internal-pmix schedulers=slurm fabrics=ucx,ucc,cma arch=linux-rocky9-neoverse_v2
       prefix: MPI_PREFIX
-      modules: [openmpi/4.1.8]
+      modules: [openmpi/5.0.11]
 
   # NVIDIA libraries from the Spack-managed SDK, using the CUDA 13.1 variant.
   cuda:

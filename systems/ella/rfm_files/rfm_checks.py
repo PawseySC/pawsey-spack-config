@@ -90,11 +90,6 @@ class concretise_check(rfm.RunOnlyRegressionTest):
     
     env = parameter([os.environ['SPACK_ENV']])
 
-    @run_after('setup')
-    def configure_ella_step(self):
-        # Ella provides pmi2; its default pmix plugin is unavailable.
-        self.job.launcher.options += ['--mpi=pmi2']
-
     @sanity_function
     def assert_concretisation(self):
         return sn.assert_found('Concretization verified:', self.stdout)
@@ -242,11 +237,6 @@ class baseline_sanity_check(rfm.RunOnlyRegressionTest):
             self.executable_opts = [self.baseline_cmd[1] + ' 2>&1']
         
         self.tags = {'spack', 'installation', 'software_stack', get_module(self.mod)['hash']}
-
-    @run_after('setup')
-    def configure_ella_step(self):
-        # Override the unavailable pmix default for srun-launched checks.
-        self.job.launcher.options += ['--mpi=pmi2']
 
     # Dependency - this test only runs if the corresponding `module_load_check` test passes
     @run_after('init')
