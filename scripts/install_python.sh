@@ -1,20 +1,18 @@
 #!/bin/bash -e
 
-if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
-    SYSTEM="$PAWSEY_CLUSTER"
-fi
+scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+. "${scriptdir}/pawsey_software_stack_funcs.sh"
 
-if [ -z ${SYSTEM+x} ]; then
-    echo "The 'SYSTEM' variable is not set. Please specify the system you want to
-    build Spack for."
-    exit 1
-fi
-
-PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
-. "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
+check_installation_environment
+set_spack_config_repo
+set_compilation_sets_for_arch
 
 # for first run, use cray-python, because there is no Spack python yet
 module load cray-python
+if [ "${SYSTEM}" = "setonix-q" ]; then
+    SPACK_PYTHON="$CRAY_PYTHON_PREFIX/bin/python3"
+fi
+
 # initialise spack 
 . "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh"
 
@@ -29,25 +27,37 @@ if [ ${SPACK_POPULATE_CACHE} -eq 1 ]; then
 fi
 
 # make sure Clingo is bootstrapped
-echo "Running 'spack spec nano' to bootstrap Clingo.."
-spack spec nano
+if [ "${SYSTEM}" = "setonix-q" ]; then
+    echo "Running 'spack spec nano target=${main_arch} %${main_compiler}_compiler' to bootstrap Clingo.."
+    spack spec nano target=${main_arch} %${main_compiler}_compiler
+else
+    echo "Running 'spack spec nano' to bootstrap Clingo.."
+    spack spec nano
+fi
+
+if [ "${SYSTEM}" = "setonix-q" ]; then
+    reset_spack_install_receipt standalone python
+fi
 
 # first thing we need is Python
-# spec gcc
-echo "Concretization of Python.."
-spack spec python@${python_version} %gcc_compiler
-spack spec python@${python_version} %gcc_compiler_zen2
-spack spec python@${python_version} %cce_compiler
-spack spec python@${python_version} %cce_compiler_zen2
+for comp in ${pythoncompilers[@]}; do
+    for arch in ${archs[@]}; do
+        echo "Concretization of Python with $comp for $arch .."
+        echo "Installing Python with $comp for $arch.."
+        toolchain="${comp%%@*}_compiler"
+        if [ "${SYSTEM}" = "setonix" ] && [ "${arch}" = "zen2" ]; then
+            toolchain+="_zen2"
+        fi
+        python_spec="python@${python_version} target=${arch} %${toolchain}"
+        if [ "${SYSTEM}" = "setonix-q" ]; then
+            install_and_record_spack_root standalone python "${python_spec}" root
+        else
+            spack spec ${python_spec}
+            sg $INSTALL_GROUP -c "spack install -j${NCPUS} --no-checksum ${python_spec}"
+        fi
+    done
+done
 
-echo "Installing Python with default compilers.."
-sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %gcc_compiler"
-sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %gcc_compiler_zen2"
-sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %cce_compiler"
-sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %cce_compiler_zen2"
-
-#for arch in $archs; do
-#    echo "target=$arch"
-#    sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %gcc_compiler target=$arch"
-#    sg $INSTALL_GROUP -c "spack install -j128 --no-checksum python@${python_version} %cce_compiler target=$arch"
-#done
+if [ "${SYSTEM}" = "setonix-q" ]; then
+    seal_spack_install_receipt standalone python
+fi
