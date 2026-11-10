@@ -17,7 +17,7 @@ libraries:
   hipcub: ['bash', '-lc ''test -f "$PAWSEY_HIPCUB_HOME/include/hipcub/hipcub.hpp" && echo "hipcub ok"''', 'hipcub ok']
   hipfort: ['bash', '-lc ''printf "program baseline\\nuse hipfort\\nend program\\n" | gfortran -I"$PAWSEY_HIPFORT_HOME/include/hipfort/nvptx" -x f95 -fsyntax-only - && echo "hipfort ok"''', 'hipfort ok']
   hipsparselt: ['bash', '-lc ''printf "#include <hipsparselt/hipsparselt.h>\\n" | g++ -std=c++17 -D__HIP_PLATFORM_NVIDIA__ -E -x c++ - >/dev/null && echo "hipsparselt ok"''', 'hipsparselt ok']
-  openmpi: ['ompi_info', '--param pmix s2', 'MCA pmix: s2']
+  openmpi: ['ompi_info', '--version', 'Open MPI v5\.0\.11']
   adios2/2.10.2-hdf5: ['adios2-config', '--version', 'ADIOS 2.10.2']
   adios2/2.10.2-hdf5-nopython: ['adios2-config', '--version', 'ADIOS 2.10.2']
   adios2/2.10.2: ['adios2-config', '--version', 'ADIOS 2.10.2']
