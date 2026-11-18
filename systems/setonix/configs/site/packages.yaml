@@ -158,17 +158,14 @@ packages:
     version: [0.16]
   krb5:
     version: [1.21.3]
-  # cmake can have multiple entries so set default
+  # Use the existing Setonix module rather than specifying the cmake prefix manually.
   cmake:
     version: [3.31.9]
-    variants: ~doc+ncurses+ownlibs~qt
-# Commented out - see GENERAL NOTES above
-#    externals:
-#  # manual addition with the latest version
-#    - spec: cmake@3.21.4
-#      prefix: /lus/joey/home/mdelapierre/Spack-sprints/v0.17.0_new/spack/opt/spack/cray-sles15-zen2/gcc-10.3.0/cmake-3.21.4-dgyicf6mmctyfw2fdzeja2jt5jf5gzl5
-#    - spec: cmake@3.10.2
-#      prefix: /usr
+    buildable: false
+    externals:
+    - spec: cmake@3.31.9
+      modules:
+      - cmake/3.31.9
   ffmpeg:
     version: [7.0.2]
   gnuplot:
