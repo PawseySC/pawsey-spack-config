@@ -217,7 +217,7 @@ class Hpx(CMakePackage, CudaPackage, ROCmPackage):
 
     patch("fix_restricted_thread_pool_executor.hpp.patch", when="@1.9.1 %gcc@14:")
     patch("fix_restricted_thread_pool_executor.hpp.patch", when="@1.9.1 %cce@19:")
-    patch("cuda13_any_sender_constexpr.patch", when="@1.11.0")
+    patch("cuda13_any_sender_constexpr.patch", when="@1.11.0 ^cuda@13:")
 
     def url_for_version(self, version):
         if version >= Version("1.9.0"):
