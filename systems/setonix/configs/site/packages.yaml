@@ -83,6 +83,11 @@ packages:
           environment:
             set:
               PE_ENV: "CRAY"
+            prepend_path:
+              # Add path so Spack's pkgconf can find Cray wrapper .pc files
+              # To resolve "C compiler cannot create executables"
+              # when building the util-linux-uuid Python dependency.
+              PKG_CONFIG_PATH: /usr/lib64/pkgconfig
 
 #  gcc:
 #    buildable: false
@@ -119,6 +124,8 @@ packages:
             set:
               PE_ENV: "GNU"
             prepend_path:
+              # Cray wrappers need system .pc files even with Spack's pkgconf.
+              PKG_CONFIG_PATH: /usr/lib64/pkgconfig
               LD_LIBRARY_PATH: /opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3/lib:/opt/cray/pe/mpich/9.1.0/gtl/lib
 #              LD_LIBRARY_PATH: ${CRAY_LD_LIBRARY_PATH} 
 
