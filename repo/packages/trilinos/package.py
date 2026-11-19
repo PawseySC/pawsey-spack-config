@@ -552,8 +552,8 @@ class Trilinos(CMakePackage, CudaPackage, ROCmPackage):
         when="@13.0.0:13.0.1 +teko gotype=long",
     )
     # patch("fix_gather_ETI.patch", when="@15.1.1")
-    # ROCm-only compatibility fix; CUDA sources do not contain this file.
-    patch("fix_Kokkos_HIP_Instance.cpp.patch", when="@:16.0.0 +rocm")
+    # Patch for setonix system only, expects the Kokkos source in 15.0.0.
+    patch("fix_Kokkos_HIP_Instance.cpp.patch", when="@15.0.0")
 
     patch(
     "fix_kokkos_kernels_spadd_sort_option.patch",
