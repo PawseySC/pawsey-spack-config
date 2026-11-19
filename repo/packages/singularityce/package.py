@@ -5,6 +5,7 @@
 import os
 import shlex
 import shutil
+from typing import List
 
 from spack_repo.builtin.build_systems.makefile import MakefilePackage
 
@@ -33,6 +34,8 @@ class SingularityBase(MakefilePackage):
     depends_on("autoconf", type="build", when="@4.0:")
     depends_on("automake", type="build", when="@4.0:")
     depends_on("libtool", type="build", when="@4.0:")
+    depends_on("go@1.25:", when="@4.3:")
+    depends_on("binutils+ld", type="build")
 
     conflicts("platform=darwin", msg="singularity requires a Linux VM on Windows & Mac")
 
@@ -107,9 +110,21 @@ class SingularityBase(MakefilePackage):
     build_targets = ["-C", "builddir", "parallel=False"]
     install_targets = ["install", "-C", "builddir", "parallel=False"]
 
-    def setup_build_environment(self, env: EnvironmentModifications) -> None:
+    def setup_build_environment(self, env):
         # Point GOPATH at the top of the staging dir for the build step.
         env.prepend_path("GOPATH", self.gopath)
+        # Resolve linker tools from the declared build dependency.
+        binutils_path = str(self.spec["binutils"].prefix.bin)
+        # Some systems do not provide ld.gold, may be request by Singularity's Go link step
+        # Force bfd when ld.gold is unavailable.
+        if shutil.which("ld.gold", path=binutils_path) is None:
+            ld_bfd = shutil.which("ld.bfd", path=binutils_path)
+            if ld_bfd:
+                env.append_flags("GOFLAGS", "-ldflags=-extldflags=-fuse-ld=bfd")
+                env.append_flags("CGO_LDFLAGS", "-fuse-ld=bfd")
+                env.set("LD", ld_bfd)
+            else:
+                tty.warn("ld.gold is unavailable and ld.bfd was not found; leaving linker flags unchanged")
 
     # `singularity` has a fixed path where it will look for
     # mksquashfs.  If it lives somewhere else you need to specify the

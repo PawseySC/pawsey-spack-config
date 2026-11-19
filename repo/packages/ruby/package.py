@@ -136,12 +136,7 @@ class AutotoolsBuilder(autotools.AutotoolsBuilder, SetupEnvironment):
 
     @run_after("install")
     def post_install(self):
-        """RubyGems updated their SSL certificates at some point, so
-        new certificates must be installed after Ruby is installed
-        in order to download gems; see
-        https://guides.rubygems.org/ssl-certificate-update/
-        for details.
-        """
+        """Record the underlying compiler paths for Ruby extension builds."""
         rbconfig = find(self.prefix, "rbconfig.rb")[0]
         filter_file(
             r'^(\s*CONFIG\["CXX"\]\s*=\s*).*', r'\1"{0}"'.format(self.pkg.compiler.cxx), rbconfig

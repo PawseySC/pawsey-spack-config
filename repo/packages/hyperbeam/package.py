@@ -7,7 +7,6 @@
 from spack.package import *
 
 import os
-#import llnl.util.filesystem as fs
 from pathlib import Path
 import shutil
 
@@ -70,6 +69,7 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
     def setup_build_environment(self, env):
         build_dir = self.stage.source_path
         env.set("CARGO_HOME", f"{build_dir}/.cargo")
+        env.set("CARGO_BUILD_JOBS", str(make_jobs))
         if self.spec.satisfies("+rocm"):
             amdgpu_target = ",".join(self.spec.variants["amdgpu_target"].value)
             env.set("HYPERBEAM_HIP_ARCH", amdgpu_target)
@@ -82,7 +82,7 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
                 env.set("HIP_PATH", rocm_dir)
                 env.set("ROCM_PATH", rocm_dir)
         if self.spec.satisfies("+cuda"):
-            cuda_arch = spec.variants["cuda_arch"].value
+            cuda_arch = self.spec.variants["cuda_arch"].value
             env.set("HYPERBEAM_CUDA_COMPUTE", cuda_arch)
             cuda_dir = self.spec["cuda"].prefix
             # print(f"cuda_dir: {cuda_dir}, cuda_arch: {cuda_arch}")
@@ -102,7 +102,6 @@ class Hyperbeam(Package, ROCmPackage, CudaPackage):
     def install(self, spec, prefix):
         cargo = Executable("cargo")
         features = self.get_features()
-        #with fs.working_dir(self.stage.source_path):
         with working_dir(self.stage.source_path):
             cargo("build", "--locked", "--release", f"--features={','.join(features)}")
             shutil.copytree("include", f"{prefix}/include")

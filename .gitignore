@@ -19,3 +19,5 @@ logs/
 *.tar.bz2
 patch*
 slurm-*
+spack*/
+setonix-q-*-rfm_results/

@@ -1,0 +1,20 @@
+toolchains:
+  # Bind only the languages a package actually uses. This also lets pure
+  # Python and binary packages participate in a compiler-selected environment.
+  gcc_compiler:
+  - spec: target=neoverse_v2
+  - spec: "%c=gcc@13.3.1"
+    when: "%c"
+  - spec: "%cxx=gcc@13.3.1"
+    when: "%cxx"
+  - spec: "%fortran=gcc@13.3.1"
+    when: "%fortran"
+
+  nvhpc_compiler:
+  - spec: target=neoverse_v2
+  - spec: "%c=nvhpc@25.9"
+    when: "%c"
+  - spec: "%cxx=nvhpc@25.9"
+    when: "%cxx"
+  - spec: "%fortran=nvhpc@25.9"
+    when: "%fortran"

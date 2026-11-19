@@ -1,0 +1,57 @@
+spack:
+# They are currently buildable,
+# because cray-libsci and cray-fftw are not in use (see packages.yaml)
+  packages:
+    'fftw-api:':
+      buildable: true
+    # Constrain Python where needed without requiring it in every root's DAG.
+    python:
+      require: "@3.11.6 +optimizations +zlib +ssl %gcc_compiler"
+  definitions:
+
+  - parallel:
+    - blaspp@2024.10.26 +cuda cuda_arch=90 build_type=Release ^openblas%gcc_compiler ^cmake ~doc~qtgui %gcc_compiler
+    # hpx bumped 1.9.1 -> 1.11.0: 1.9.1 headers (just.hpp/pack.hpp) don't compile
+    # under CUDA-13 nvcc. 1.11.0 closes the Grace Hopper (#6563) and Kokkos (#6696)
+    # build issues. 1.11.0 is the last HPX supporting C++17.
+    - hpx@1.11.0 +cuda cuda_arch=90 +async_mpi malloc=jemalloc max_cpu_count=128 networking=mpi 
+      build_type=Release ^boost %gcc_compiler ^cmake ~doc~qtgui %gcc_compiler ^asio %gcc_compiler
+    # rather silly kokkos has std=98,11, etc setting cxxstd. BUT all other packages 
+    # use the flag cxxstd ... Update in recipes might fix this but for the moment, we fix 
+    # this in our repo
+    - kokkos@4.7.04 +cuda cuda_arch=90 +hwloc +memkind +numactl +openmp +tuning +wrapper build_type=Release ^cmake ~doc~qtgui %gcc_compiler
+    # for hpx must explicitly set openmp off 
+    - kokkos@4.7.04 +cuda cuda_arch=90 +wrapper +hwloc +memkind +numactl +hpx +hpx_async_dispatch +tuning ~openmp
+      build_type=Release ^hpx@1.11.0 +async_mpi max_cpu_count=128 networking=mpi build_type=Release ^cmake ~doc~qtgui %gcc_compiler
+    - magma@master ~rocm +cuda cuda_arch=90
+    # Re-enabled to retry after the kokkos/CUDA-13 nvcc_wrapper (sm_80) fix.
+    # Previously slate failed: openmp taskloops not implemented in the cuda
+    # compiler, and it needs nvcc/nvc++ for cuda to be enabled.
+    - slate@2024.10.29 +cuda cuda_arch=90 build_type=Release
+    # CPU plasma build is installed by cpu_num_libs.
+    #- plasma@24.8.7 build_type=Release ^openblas
+    # some heavier numerical library builds
+    # opencv 4.13.0 is the newest non-deprecated release that supports CUDA 13
+    # Add CUDA contrib + python3 bindings + the common CUDA algorithm modules
+    - opencv@4.13.0 +cuda cuda_arch=90 +contrib
+      +imgproc +imgcodecs +calib3d +features2d +flann +objdetect +photo +video +dnn +ml +stitching +protobuf
+      +python3 +python_bindings_generator +png +jpeg +tiff
+      +cudev +cudaarithm +cublas +cufft +cudafilters +cudaimgproc +cudawarping +cudafeatures2d
+      build_type=Release
+
+    # Failing to build on arm with CUDA 13.0 and gcc 13.3.
+    #- trilinos@16.2.1 +cuda cuda_arch=90 +adios2 +openmp ^adios2@2.9.2 build_type=Release ^hdf5@1.14.3 build_type=Release ^adios2%gcc
+    #- trilinos@16.2.1 ~rocm +adios2 +openmp +tpetra +kokkos +zoltan ~cuda ^adios2@2.9.2 build_type=Release ^adios2%gcc
+
+    # Build without trilinos on arm not tested
+    #- petsc-set:
+    #  - petsc@3.21.1 +fftw +hwloc +openmp +cuda cuda_arch=90
+  specs:
+  # Build the GPU numerical libraries with gcc as the host compiler and consume
+  # CUDA via the external cuda/13.0 module (configs/site/packages.yaml)
+  # Mirrors the quantum environment and avoids the nvhpc (nvc++) failures with 
+  # jemalloc, asio, boost and kokkos.
+  - matrix:
+    - [$parallel]
+    - ['%gcc_compiler']
+  view: false

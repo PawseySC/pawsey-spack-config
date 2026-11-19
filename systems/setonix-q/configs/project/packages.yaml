@@ -1,0 +1,7 @@
+# project_wide: enable group writing to the stack
+
+packages:
+  all:
+    permissions:
+      read: world
+      write: group

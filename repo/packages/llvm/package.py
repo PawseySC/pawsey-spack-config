@@ -6,11 +6,16 @@ import re
 import sys
 import shutil
 
-from spack_repo.builtin.build_systems.cmake import CMakePackage, generator
+import spack.util.executable
+from spack_repo.builtin.build_systems.cmake import (
+    CMakePackage,
+    generator,
+    get_cmake_prefix_path,
+)
 from spack_repo.builtin.build_systems.compiler import CompilerPackage
 from spack_repo.builtin.build_systems.cuda import CudaPackage
-
 from spack.package import *
+from spack.package_base import PackageBase
 
 
 class LlvmDetection(PackageBase):

@@ -22,6 +22,9 @@ class Log4cxx(CMakePackage):
         "cxxstd", default="20", description="C++ standard", values=("11", "17", "20"), multi=False
     )
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+
     depends_on("cmake@3.13:", type="build")
 
     depends_on("apr-util")

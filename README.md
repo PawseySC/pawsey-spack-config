@@ -13,6 +13,25 @@ Here is how to launch the software stack installation.
 5. Set and export the `SYSTEM` variable to the system you want to run the installation for, if it differs from the content of the `PAWSEY_CLUSTER` environment variable.
 6. Run the `scripts/install_software_stack.sh` script, preferably in a Slurm job or as a process detached from the login shell to prevent the installation from being aborted in case the SSH connection were to be interrupted unexpectedly.
 
+### Setonix-Q installation metadata
+
+A completed Setonix-Q deployment publishes
+`$INSTALL_PREFIX/installation_metadata/spack_install_manifest.json`. It records
+the concrete hashes actually installed, their source environments, installation
+prefixes, and generated module paths. This is the authoritative input to the
+Setonix-Q module tests. The environment lockfiles remain the record of the
+earlier validation concretization and may differ when installation reconcretizes
+individual roots to reuse software already in the store.
+
+The same directory retains each concrete spec used by the installer and a
+small receipt for each installation source. The final manifest can be inspected
+with any standard JSON tool:
+
+```bash
+python3 -m json.tool \
+  "$INSTALL_PREFIX/installation_metadata/spack_install_manifest.json"
+```
+
 ### Singularity
 
 You will need to ask the platforms team to apply root permissions to Singularity ss soon as it is installed. The script to run as root is found in the `bin` directory within the spack installation prefix.
