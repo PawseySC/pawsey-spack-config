@@ -156,7 +156,6 @@ function resolve_compatible_python_interpreter()
 
 function set_modulepaths_for_arch()
 {
-
     if [ "$( uname -m )" == "x86_64" ]; then
         module load "cpe/${cpe_version}"
         # The Setonix module is named for its major/minor version (14.2), while
@@ -169,7 +168,6 @@ function set_modulepaths_for_arch()
         #module swap PrgEnv-gnu PrgEnv-cray
         #module swap PrgEnv-cray PrgEnv-gnu
         module use $INSTALL_PREFIX/modules/${mainarch}/gcc/${gcc_version}/programming-languages
-        module load spack/${spack_version}
     elif [ "$( uname -m )" == "aarch64" ]; then
         if [ "${SYSTEM}" != "setonix-q" ]; then
             echo "The aarch64 module path setup is only configured for SYSTEM=setonix-q."
@@ -194,10 +192,14 @@ function set_modulepaths_for_arch()
         # load spack` pulls in) is exposed via the pawseyenv + gcc-native
         # handshake (LMOD_CUSTOM_COMPILER_GNU_* prepended to MODULEPATH), so no
         # explicit `module use` of the programming-languages trees is needed.
-        module load spack/${spack_version}
     else
         echo "The architecture '$( uname -m )' is not supported."
         exit 1
+    fi
+
+    # The Spack module is created before its Python dependency is installed.
+    if module --ignore-cache is-avail "spack/${spack_version}" "${python_name}/${python_version}"; then
+        module --ignore-cache load "spack/${spack_version}"
     fi
 }
 

@@ -6,6 +6,7 @@ scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 check_installation_environment
 set_spack_config_repo
 set_compilation_sets_for_arch
+set_modulepaths_for_arch
 
 # initialise spack 
 . "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh"
