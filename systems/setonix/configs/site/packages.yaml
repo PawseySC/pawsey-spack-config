@@ -101,6 +101,7 @@ packages:
     buildable: false
     externals:
       - spec: gcc@14.2.0 languages='c,c++,fortran'
+        prefix: /opt/cray/pe/gcc-native/14/bin
         modules:
           - PrgEnv-gnu
           - gcc-native/14.2
@@ -108,7 +109,7 @@ packages:
           - craype-x86-milan
           - craype-network-ofi
           - cray-mpich/9.1.0
-          - cray-libsci
+          - cray-libsci/26.03.0
           - xpmem
         extra_attributes:
           compilers:
