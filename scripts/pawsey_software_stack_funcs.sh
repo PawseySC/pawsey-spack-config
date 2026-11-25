@@ -160,6 +160,7 @@ function set_modulepaths_for_arch()
         module load "cpe/${cpe_version}"
         # The Setonix module is named for its major/minor version (14.2), while
         # the Spack compiler and module tree use the full version (14.2.0).
+        module load PrgEnv-gnu
         module load gcc-native/${gcc_version%.*}
         module use ${INSTALL_PREFIX}/staff_modulefiles
         # we need the python module to be available in order to run spack
