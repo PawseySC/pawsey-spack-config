@@ -83,6 +83,11 @@ packages:
           environment:
             set:
               PE_ENV: "CRAY"
+            prepend_path:
+              # Add path so Spack's pkgconf can find Cray wrapper .pc files
+              # To resolve "C compiler cannot create executables"
+              # when building the util-linux-uuid Python dependency.
+              PKG_CONFIG_PATH: /usr/lib64/pkgconfig
 
 #  gcc:
 #    buildable: false
@@ -96,6 +101,7 @@ packages:
     buildable: false
     externals:
       - spec: gcc@14.2.0 languages='c,c++,fortran'
+        prefix: /opt/cray/pe/gcc-native/14/bin
         modules:
           - PrgEnv-gnu
           - gcc-native/14.2
@@ -103,7 +109,7 @@ packages:
           - craype-x86-milan
           - craype-network-ofi
           - cray-mpich/9.1.0
-          - cray-libsci
+          - cray-libsci/26.03.0
           - xpmem
         extra_attributes:
           compilers:
@@ -119,6 +125,8 @@ packages:
             set:
               PE_ENV: "GNU"
             prepend_path:
+              # Cray wrappers need system .pc files even with Spack's pkgconf.
+              PKG_CONFIG_PATH: /usr/lib64/pkgconfig
               LD_LIBRARY_PATH: /opt/cray/pe/mpich/9.1.0/ofi/gnu/12.3/lib:/opt/cray/pe/mpich/9.1.0/gtl/lib
 #              LD_LIBRARY_PATH: ${CRAY_LD_LIBRARY_PATH} 
 
@@ -158,17 +166,14 @@ packages:
     version: [0.16]
   krb5:
     version: [1.21.3]
-  # cmake can have multiple entries so set default
+  # Use the existing Setonix module rather than specifying the cmake prefix manually.
   cmake:
     version: [3.31.9]
-    variants: ~doc+ncurses+ownlibs~qt
-# Commented out - see GENERAL NOTES above
-#    externals:
-#  # manual addition with the latest version
-#    - spec: cmake@3.21.4
-#      prefix: /lus/joey/home/mdelapierre/Spack-sprints/v0.17.0_new/spack/opt/spack/cray-sles15-zen2/gcc-10.3.0/cmake-3.21.4-dgyicf6mmctyfw2fdzeja2jt5jf5gzl5
-#    - spec: cmake@3.10.2
-#      prefix: /usr
+    buildable: false
+    externals:
+    - spec: cmake@3.31.9
+      modules:
+      - cmake/3.31.9
   ffmpeg:
     version: [7.0.2]
   gnuplot:

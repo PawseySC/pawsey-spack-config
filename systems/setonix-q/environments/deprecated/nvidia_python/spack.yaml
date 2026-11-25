@@ -1,0 +1,13 @@
+spack:
+# fixing some versions to have only one version per package in this environment
+# note: these preferred versions are now set in packages.yaml
+  definitions:
+  - packages:
+    - py-numba@0.58.1 ^openblas%gcc ^py-numpy%gcc ^py-llvmlite %gcc ^llvm %gcc 
+
+  specs:
+  - matrix:
+    - [$packages]
+    - [^python@3.11.6 +optimizations+zlib]
+    - ['%gcc@13.3.1']
+  view: false

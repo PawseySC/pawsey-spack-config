@@ -1,0 +1,7 @@
+# project_wide: use appropriate install locations
+
+config:
+  install_tree:
+    root: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/setonix-q/DATE_TAG/software
+
+  environments_root: USER_PERMANENT_FILES_PREFIX/$PAWSEY_PROJECT/setonix-q/DATE_TAG/environments

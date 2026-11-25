@@ -1,0 +1,347 @@
+# Copyright 2016-2021 Swiss National Supercomputing Centre (CSCS/ETH Zurich)
+# ReFrame Project Developers. See the top-level LICENSE file for details.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
+import reframe as rfm
+import reframe.utility.sanity as sn
+import reframe.utility.udeps as udeps
+
+import re
+import os
+import sys
+import yaml
+import json
+
+# Import file with helper methods for processing spack files needed by below tests
+curr_dir = os.path.dirname(__file__).replace('\\','/')
+parent_dir = os.path.abspath(os.path.join(curr_dir, os.pardir))
+sys.path.append(parent_dir)
+from rfm_files.rfm_helper_methods import *
+from rfm_files.install_manifest import (
+    get_library_path,
+    get_module_dependencies,
+    get_module_paths,
+    installation_manifest_is_complete,
+)
+
+# Dictionary holding commands for every package used in baseline sanity check
+pkg_cmds = get_pkg_cmds()
+
+
+def get_module_paths_if_installed():
+    # ReFrame imports this file before applying tag filters. Do not let
+    # installation-test parameter generation hide concretization failures or
+    # derive expected installation hashes from the environment lockfile.
+    if not installation_manifest_is_complete():
+        return []
+
+    return get_module_paths()
+
+
+# List of full absolute paths for every installed root module. This is empty
+# until the installation manifest has been finalized.
+full_mod_paths = get_module_paths_if_installed()
+
+
+def quantum_allocation_pack(num_gpus=1):
+    # Each GH200 pack requires 72 allocation tasks in the explicit node form.
+    return {
+        'gpu': {
+            'num_gpus': num_gpus,
+        },
+    }
+
+
+def quantum_step_options():
+    # Specify execution resources separately from the GPU allocation request.
+    return ['--nodes=1', '--ntasks=1', '--cpus-per-task=72', '--gpus=1']
+
+
+def use_pinned_quantum_node():
+    return bool(os.environ.get('SETONIX_Q_RFM_NODE'))
+
+
+def quantum_compute_system():
+    if use_pinned_quantum_node():
+        return 'setonix-q:quantum-node'
+
+    return 'setonix-q:quantum'
+
+
+def quantum_shell_system():
+    if use_pinned_quantum_node():
+        return 'setonix-q:quantum-node-shell'
+
+    return 'setonix-q:quantum-shell'
+
+
+def module_setup_commands():
+    date_tag = os.environ.get('DATE_TAG') or os.environ.get('pawseyenv_version', '2026.08')
+    install_prefix = os.environ.get('INSTALL_PREFIX', '${INSTALL_PREFIX}')
+
+    return [
+        'module purge',
+        'module load pawsey pawseytools',
+        f'module use {install_prefix}/staff_modulefiles',
+        f'module load pawseyenv/{date_tag}',
+        'module load PrgEnv-gnu',
+    ]
+
+
+def get_baseline_cmd(mod_category, base_name):
+    return (pkg_cmds.get(mod_category) or {}).get(base_name)
+
+
+@rfm.simple_test
+class concretise_check(rfm.RunOnlyRegressionTest):
+    def __init__(self):
+
+        # Metadata
+        self.descr = 'Test to check that every spec in an environment was concretised successfully'
+        self.maintainers = ['Craig Meyer']
+
+        # Valid systems and PEs
+        self.valid_systems = [quantum_compute_system()]
+        self.valid_prog_environs = ['PrgEnv-gnu']
+        self.extra_resources = quantum_allocation_pack()
+        self.num_tasks = self.num_tasks_per_node = 72
+
+        # Execution
+        self.executable = 'echo'
+        self.executable_opts = ['Checking conretisation success']
+
+        self.tags = {'spack', 'concretization', 'software_stack'}
+    
+    env = parameter([os.environ['SPACK_ENV']])
+
+    @run_after('setup')
+    def configure_quantum_step(self):
+        self.job.launcher.options += quantum_step_options()
+
+
+    @sanity_function
+    def assert_concretisation(self):
+        abstract_specs = get_abstract_specs()
+        root_specs = get_root_specs()
+        abstract_name_ver = [None] * len(abstract_specs)
+        root_name_ver = [None] * len(root_specs)
+
+        # All abstract specs in {name}/{version} format
+        abstract_pattern = r'([\w-]+@*=*[\w.]+).*'
+        idx = 0
+        for s in abstract_specs:
+            match = re.match(abstract_pattern, s)
+            if match != None:
+                if '@' in match.groups()[0]:
+                    abstract_name_ver[idx] = match.groups()[0].split('@')[0] + '/' + match.groups()[0].split('@')[1].replace('=', '')
+                else:
+                    abstract_name_ver[idx] = match.groups()[0]
+            idx += 1
+
+        # All concretised specs in {name}/{version} format
+        concrete_pattern = r'^([\w-]+@*=*[\w.]+)'
+        idx = 0
+        for s in root_specs:
+            match = re.match(concrete_pattern, s).groups()[0]
+            if '@' in match:
+                root_name_ver[idx] = match.split('@')[0] + '/' + match.split('@')[1].replace('=', '')
+            else:
+                root_name_ver[idx] = match
+            idx += 1
+
+        # Check if an abstract spec is missing from the list of concretised specs
+        num_failed = 0
+        for spec in abstract_name_ver:
+            # True if empty list
+            if not [m for m in root_name_ver if spec in m]:
+                num_failed += 1
+
+        return sn.assert_lt(num_failed, 1)
+
+@rfm.simple_test
+class module_existence_check(rfm.RunOnlyRegressionTest):
+    def __init__(self):
+
+        # Metadata
+        self.descr = 'Test to check for existence of a module during software stack installation'
+        self.maintainers = ['Craig Meyer']
+
+        # Valid systems and PEs
+        self.valid_systems = [quantum_shell_system()]
+        self.valid_prog_environs = ['PrgEnv-gnu']
+        self.extra_resources = quantum_allocation_pack()
+        self.num_tasks = self.num_tasks_per_node = 72
+
+        # Execution - ls to check the module exists
+        self.executable = 'ls'
+        self.executable_opts = [self.mod]
+        # Get dependencies for the module and add ls commands for those
+        dependencies = get_module_dependencies(self.mod)
+        if len(dependencies) > 0:
+            self.postrun_cmds = [f'ls {d}' for d in dependencies]
+
+        self.tags = {'spack', 'installation', 'software_stack'}
+    
+    # Test parameter - list of full absolute paths for every module in the environment
+    mod = parameter(full_mod_paths)
+
+    @sanity_function
+    def assert_module_exists(self):
+        return sn.assert_not_found('No such file or directory', self.stderr)
+
+
+
+@rfm.simple_test
+class module_load_check(rfm.RunOnlyRegressionTest):
+    def __init__(self):
+
+        # Metadata
+        self.descr = 'Test to check a module can load properly during software stack installation'
+        self.maintainers = ['Craig Meyer']
+
+        # Valid systems and PEs
+        self.valid_systems = [quantum_shell_system()]
+        self.valid_prog_environs = ['PrgEnv-gnu']
+        self.extra_resources = quantum_allocation_pack()
+        self.num_tasks = self.num_tasks_per_node = 72
+
+        # Execution
+        self.executable = 'module'
+        self.name_ver = '/'.join(self.mod.split('/')[-2:])[:-4]
+        self.executable_opts = ['load', self.name_ver]
+
+        # module show to check the exact modulefile selected for this test
+        self.prerun_cmds += module_setup_commands()
+        self.prerun_cmds += [f'module show {self.name_ver}']
+        # Check main module is loaded
+        self.postrun_cmds = [f'if module is-loaded {self.name_ver} ; then echo "main package is loaded"; fi']
+
+        self.tags = {'spack', 'installation', 'software_stack'}
+
+    # Test parameter - list of full absolute paths for each module in the environment    
+    mod = parameter(full_mod_paths)
+    
+    # Dependency - this test only runs if the corresponding `module_existence_check` test passes
+    @run_after('init')
+    def inject_dependencies(self):
+        testdep_name = f'module_existence_check_{self.mod}'
+        # ReFrame replaces instances of "/", ".", "-", and "+" in test name with "_"
+        chars = "/.-+"
+        for c in chars:
+            testdep_name = testdep_name.replace(c, '_')
+        self.depends_on(testdep_name, udeps.by_env)
+    
+    @run_before('run')
+    def check_dependency_lines(self):
+        # Get dependencies from both load() statements and depends_on() statements.
+        dependency_pattern = re.compile(r'^\s*(?:load|depends_on)\("([^"]+)"\)')
+        with open(self.mod) as module_file:
+            self.dependency_modules = []
+            for line in module_file:
+                match = dependency_pattern.match(line)
+                if match:
+                    self.dependency_modules.append(match.group(1))
+        ndependencies = len(self.dependency_modules)
+        # `++` breaks the regex search, so replace ++ with \+\+ if present
+        for i in range(ndependencies):
+            if '++' in self.dependency_modules[i]:
+                module_name = self.dependency_modules[i]
+                self.dependency_modules[i] = module_name.replace('++', '\\+\\+')
+        # Check all dependencies are loaded
+        self.postrun_cmds += [
+            f'if module is-loaded {dep_mod} ; then echo "dependency is loaded"; fi'
+            for dep_mod in self.dependency_modules
+        ]
+
+    @sanity_function
+    def assert_module_loaded(self):
+        # '+' breaks regex search, need to replace with '\+' in all modules it is present
+        if '+' in self.mod:
+            self.mod = self.mod.replace('+', '\\+')
+        if '+' in self.name_ver:
+            self.name_ver = self.name_ver.replace('+', '\\+')
+        
+        return sn.all([
+            sn.assert_found("main package is loaded", self.stdout),
+            sn.assert_eq(
+                sn.count(sn.extractall('dependency is loaded', self.stdout)),
+                len(self.dependency_modules),
+            ),
+            sn.assert_found(self.name_ver, self.stderr),
+            sn.assert_not_found('Failed', self.stderr),
+            sn.assert_not_found('Error', self.stderr),
+        ])
+
+
+@rfm.simple_test
+class baseline_sanity_check(rfm.RunOnlyRegressionTest):
+    def __init__(self):
+
+        # Metadata
+        self.descr = 'Test to check that, once the module is loaded, the software shows the most minimal functionality (--help or --version)'
+        self.amintainers = ['Craig Meyer']
+
+        # Valid systems and PEs
+        self.valid_systems = [quantum_compute_system()]
+        self.valid_prog_environs = ['PrgEnv-gnu']
+        self.extra_resources = quantum_allocation_pack()
+        self.num_tasks = self.num_tasks_per_node = 72
+
+        # Load the module we are testing
+        self.name_ver = '/'.join(self.mod.split('/')[-2:])[:-4]
+        self.prerun_cmds += module_setup_commands()
+        self.prerun_cmds += [f'module load {self.name_ver}']
+
+        # Execution - call executable with `--help` or `--version` option
+        self.base_name = self.mod.split('/')[-2] # Extract package/library name from full module path
+        self.mod_category = self.mod.split('/')[-3]
+        # Prefer a versioned command for projected modules that need one, then
+        # fall back to a generic command keyed by package name.
+        self.baseline_key = self.name_ver
+        self.baseline_cmd = get_baseline_cmd(self.mod_category, self.baseline_key)
+        if self.baseline_cmd is None:
+            self.baseline_key = self.base_name
+            self.baseline_cmd = get_baseline_cmd(self.mod_category, self.baseline_key)
+        if self.baseline_cmd is None:
+            self.skip_if(
+                True,
+                'Missing baseline sanity test coverage: '
+                f'no command configured in pkg_cmds.yaml for {self.mod}'
+            )
+            self.baseline_cmd = ['true', '', '']
+
+        self.executable = self.baseline_cmd[0]
+        # Set the executable options, which depends on if it's software or library
+        if self.executable == 'ldd':
+            lib_path = get_library_path(self.mod)
+            self.executable_opts = [lib_path + '/' + self.baseline_cmd[1]]
+        else:
+            self.executable_opts = [self.baseline_cmd[1] + ' 2>&1']
+        
+        self.tags = {'spack', 'installation', 'software_stack'}
+
+    @run_after('setup')
+    def configure_quantum_step(self):
+        self.job.launcher.options += quantum_step_options()
+
+    # Dependency - this test only runs if the corresponding `module_load_check` test passes
+    @run_after('init')
+    def inject_dependencies(self):
+        testdep_name = f'module_load_check_{self.mod}'
+        # ReFrame replaces instances of "/" and "." in test name with "_"
+        chars = "/.-+"
+        for c in chars:
+            testdep_name = testdep_name.replace(c, '_')
+        self.depends_on(testdep_name, udeps.by_env)
+
+    mod = parameter(full_mod_paths)
+
+    @sanity_function
+    def assert_functioning(self):
+        # For libraries we check if all libraries are present
+        if self.executable == 'ldd':
+            return sn.assert_not_found('not found', self.stdout)
+        # For software we do a basic check (e.g. --help or --version)
+        else:
+            return sn.assert_found(self.baseline_cmd[2], self.stdout)

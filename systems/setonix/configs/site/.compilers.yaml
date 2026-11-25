@@ -16,7 +16,7 @@ compilers:
     - craype-x86-milan
     - craype-network-ofi
     - cray-mpich/9.1.0
-    - cray-libsci
+    - cray-libsci/26.03.0
     - xpmem
     environment:
       set:

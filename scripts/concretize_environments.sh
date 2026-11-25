@@ -1,40 +1,56 @@
 #!/bin/bash -e
 
-if [ -n "${PAWSEY_CLUSTER}" ] && [ -z ${SYSTEM+x} ]; then
-    SYSTEM="$PAWSEY_CLUSTER"
+scriptdir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+. "${scriptdir}/pawsey_software_stack_funcs.sh"
+
+check_installation_environment
+set_spack_config_repo
+set_compilation_sets_for_arch
+. "${INSTALL_PREFIX}/spack/share/spack/setup-env.sh"
+
+# Preserve the Setonix/x86 PrgEnv refresh used by the previous concretization
+# setup. Setonix-Q gets its compiler/module setup from set_modulepaths_for_arch.
+if [ "$( uname -m )" == "x86_64" ]; then
+  module swap PrgEnv-gnu PrgEnv-cray
+  module swap PrgEnv-cray PrgEnv-gnu
 fi
 
-if [ -z ${SYSTEM+x} ]; then
-    echo "The 'SYSTEM' variable is not set. Please specify the system you want to
-    build Spack for."
-    exit 1
-fi
-
-PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
-. "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
-
-# swap is needed for the pawsey_temp module to work
-module swap PrgEnv-gnu PrgEnv-cray
-module swap PrgEnv-cray PrgEnv-gnu
-module load cpe/${cpe_version}
-module use ${INSTALL_PREFIX}/staff_modulefiles
-# we need the python module to be available in order to run spack
-module --ignore-cache load pawseyenv/${pawseyenv_version}
-module load gcc-native/14.2
-# swap is needed for the pawsey_temp module to work
-#module swap PrgEnv-gnu PrgEnv-cray
-#module swap PrgEnv-cray PrgEnv-gnu
-module use ${INSTALL_PREFIX}/modules/zen3/gcc/14.2.0/programming-languages
-module load spack/${spack_version}
+set_modulepaths_for_arch
 
 # list of environments included in variables.sh (sourced above)
 envdir="${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/environments"
 
-for env in $env_list ; do
-  echo "Concretizing env $env.."
-  spack env activate ${envdir}/${env} 
-  spack concretize -f -j4 #--reuse
+function concretize_environment()
+{
+  local env="$1"
+  local envpath="${envdir}/${env}"
+
+  if [ ! -f "${envpath}/spack.yaml" ]; then
+    echo "Environment '${env}' is missing ${envpath}/spack.yaml."
+    exit 1
+  fi
+
+  echo "Concretizing env ${env}.."
+  spack env activate "${envpath}"
+  local concretize_jobs=()
+  if [ "${SYSTEM}" = "setonix" ]; then
+    concretize_jobs=(-j4)
+  fi
+  if ! spack concretize -f "${concretize_jobs[@]}" ${SPACK_CONCRETIZE_ARGS}; then
+    spack env deactivate || true
+    echo "Concretization failed for env ${env}."
+    exit 1
+  fi
   spack env deactivate
+
+  if [ ! -f "${envpath}/spack.lock" ]; then
+    echo "Concretization for env ${env} completed but did not create ${envpath}/spack.lock."
+    exit 1
+  fi
+}
+
+for env in $env_list ; do
+  concretize_environment "${env}"
 done
 
 #echo "Concretizing env rocm.."
@@ -44,9 +60,5 @@ done
 
 
 for env in $cray_env_list ; do
-  echo "Concretizing env $env.."
-  spack env activate ${envdir}/${env}
-  spack concretize -f -j4
-  spack env deactivate
+  concretize_environment "${env}"
 done
-

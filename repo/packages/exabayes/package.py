@@ -2,6 +2,9 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
+
+from spack.package import *
+
 # Differences for the 'exabayes' package
 # 11,12c11,12
 # <     homepage = "https://cme.h-its.org/exelixis/web/software/exabayes/index.html"
@@ -52,8 +55,8 @@ class Exabayes(AutotoolsPackage):
 
     variant('mpi', default=True, description='Enable MPI parallel support')
 
-    depends_on("c", type="build")  # generated
-    depends_on("cxx", type="build")  # generated
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
 
     depends_on('mpi', when='+mpi')
 

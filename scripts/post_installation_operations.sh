@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-# this script goes through 5 steps
+# this script goes through the following steps:
 # 1. refresh spack modules
 # 2. create all missing module directories
 # 3. update singularity modules
@@ -22,7 +22,20 @@ if [ -z ${SYSTEM+x} ]; then
 fi
 
 PAWSEY_SPACK_CONFIG_REPO=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
+. "${PAWSEY_SPACK_CONFIG_REPO}/scripts/pawsey_software_stack_funcs.sh"
 . "${PAWSEY_SPACK_CONFIG_REPO}/systems/${SYSTEM}/settings.sh"
+
+if [ "${SYSTEM}" = "setonix-q" ]; then
+    echo "Creating all missing module directories.."
+    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/create_system_moduletree.sh"
+
+    echo "Executing CRs"
+    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/cr_operations.sh"
+
+    echo "Running spack reframe tests.."
+    "${PAWSEY_SPACK_CONFIG_REPO}/scripts/run_rfm_module_tests.sh"
+    exit 0
+fi
 
 module use ${INSTALL_PREFIX}/staff_modulefiles
 # we need the python module to be available in order to run spack

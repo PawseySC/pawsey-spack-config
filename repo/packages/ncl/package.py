@@ -61,9 +61,8 @@ class Ncl(Package):
     variant("openmp", default=True, description="Enable OpenMP support.")
     variant("grib", default=True, description="Enable GRIB support.")
 
-#    depends_on("c", type="build")
-#    depends_on("cxx", type="build")
-#    depends_on("fortran", type="build")
+    depends_on("c", type="build")
+    depends_on("fortran", type="build")
 
     # Core dependencies
     depends_on("jpeg")
